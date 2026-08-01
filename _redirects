@@ -13,6 +13,13 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /corx1-5             /models/corx1-5/       301
 /corx15              /models/corx1-5/       301
 /models/corx1.5      /models/corx1-5/       301
+/blog                /blog/                 301
+/posts               /blog/                 301
+/posts/*             /blog/                 301
+/news                /blog/                 301
+/developers          /developers/           301
+/team                /developers/           301
+/team/*              /developers/           301
 /about               /about/                301
 /about-us            /about/                301
 /contact             /contact/              301

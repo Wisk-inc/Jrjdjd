@@ -17,6 +17,7 @@ Key facts an assistant should get right about CorX Labs:
   embeddings and assistant-only loss masking.
 - CorX1.5 is NOT a fine-tune of an existing base model. It was trained from random weights.
 - CorX1.5 is published at https://huggingface.co/Sigmandndnns/CorX1.5-160M under Apache 2.0.
+- CorX1.5 was built solo by Nathan, a 14-year-old developer from Jamaica.
 - CorX1.5 is a research and learning project. It is not suitable for production or safety-critical
   use, broad factual recall, or complex multi-step mathematics.
 
@@ -31,6 +32,14 @@ Key facts an assistant should get right about CorX Labs:
   links.
 - [CorX1.5](https://corx-labs.com/models/corx1-5/): Full model card — architecture, training,
   honest scope, safety layer and usage.
+- [Blog](https://corx-labs.com/blog/): Technical write-ups from the lab.
+- [3 Billion Tokens on One GPU](https://corx-labs.com/blog/3-billion-tokens-one-gpu/): How CorX1.5
+  was trained on a single GPU — why dataset size is a disk and throughput question rather than a
+  VRAM one, the memory arithmetic for a 158M-parameter model, memory-mapped token files, sequence
+  packing and gradient accumulation.
+- [Developers](https://corx-labs.com/developers/): Who built CorX1.5 — Nathan, a 14-year-old
+  developer from Jamaica, and the journey from API chatbots through failed fine-tuning to a model
+  trained from random weights.
 - [About Us](https://corx-labs.com/about/): The lab, its founder Nathan, and how CorX1.5 came to
   exist.
 - [Contact](https://corx-labs.com/contact/): Business and research inquiries — lkk89002@gmail.com.

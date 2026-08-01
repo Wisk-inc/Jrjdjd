@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Blog — Notes From the Lab | CorX Labs</title>
+<meta name="description" content="Technical write-ups from CorX Labs on building language models from scratch in Jamaica — single-GPU training, architecture decisions, and what went wrong.">
+<link rel="canonical" href="https://corx-labs.com/blog/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/blog/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/blog/">
+<meta property="og:title" content="Blog — Notes From the Lab | CorX Labs">
+<meta property="og:description" content="Technical write-ups on building language models from scratch in Jamaica.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-blog.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CorX Labs blog — notes from the lab">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog — Notes From the Lab | CorX Labs">
+<meta name="twitter:description" content="Technical write-ups on building language models from scratch in Jamaica.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-blog.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Blog",
+      "@id": "https://corx-labs.com/blog/#blog",
+      "url": "https://corx-labs.com/blog/",
+      "name": "CorX Labs Blog",
+      "description": "Technical write-ups from CorX Labs on building language models from scratch.",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "blogPost": [
+        {
+          "@type": "BlogPosting",
+          "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#post",
+          "headline": "3 Billion Tokens on One GPU: How CorX1.5 Was Trained",
+          "url": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/",
+          "datePublished": "2026-08-01",
+          "dateModified": "2026-08-01",
+          "author": { "@id": "https://corx-labs.com/#nathan" },
+          "publisher": { "@id": "https://corx-labs.com/#organization" },
+          "image": "https://corx-labs.com/assets/img/og-post-3b.jpg",
+          "description": "Why 3 billion training tokens never need to fit in VRAM — and what actually does. Memory arithmetic, memory-mapped token files, sequence packing, gradient accumulation and throughput."
+        }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://corx-labs.com/blog/#webpage",
+      "url": "https://corx-labs.com/blog/",
+      "name": "Blog — Notes From the Lab",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "mainEntity": { "@id": "https://corx-labs.com/blog/#blog" },
+      "inLanguage": "en",
+      "dateModified": "2026-08-01",
+      "breadcrumb": { "@id": "https://corx-labs.com/blog/#breadcrumb" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/blog/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://corx-labs.com/blog/" }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/">Our Products</a>
+      <a href="/blog/" aria-current="page">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/documentation/">Documentation</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="/documentation/">Documentation</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><span aria-current="page">Blog</span></li>
+      </ol>
+    </nav>
+    <h1>Notes from the lab.</h1>
+    <p class="lede">Technical write-ups on building language models from scratch — the arithmetic,
+      the decisions, and the parts that went wrong. Written for people who want the working, not
+      the headline.</p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="post-list">
+        <a class="post-item" href="/blog/3-billion-tokens-one-gpu/">
+          <time datetime="2026-08-01">1 Aug 2026</time>
+          <div>
+            <h2>3 Billion Tokens on One GPU: How CorX1.5 Was Trained</h2>
+            <p>Everyone asks how 3 billion tokens fit on a single GPU. They never had to. Here is
+              what actually has to fit — the memory arithmetic for a 158M-parameter model, the 6 GB
+              memory-mapped token file, sequence packing, gradient accumulation, and why the whole
+              pretraining run is only about 5,700 optimiser steps.</p>
+            <div class="tag-row">
+              <span class="tag">Training</span>
+              <span class="tag">Single GPU</span>
+              <span class="tag">9 min read</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <p class="mt-l" style="color:var(--faint);font-size:.88rem">More posts as the work happens.
+        New releases also go out on the <a href="/feed.xml" style="text-decoration:underline;text-underline-offset:3px">RSS feed</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">The lab</p>
+        <h2 class="mt-s">Who's behind this.</h2>
+        <p>CorX Labs is a one-person research lab in Jamaica. Here is who built it and how it started.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/developers/">Meet the developers</a>
+          <a class="btn btn-ghost" href="/models/corx1-5/">See CorX1.5</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

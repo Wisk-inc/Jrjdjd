@@ -218,6 +218,9 @@ pre {
   color: var(--ink);
 }
 pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+/* Inline code can't scroll the way <pre> does, so let long identifiers break
+   rather than push the page sideways on a phone. */
+:not(pre) > code { overflow-wrap: anywhere; margin-inline: .06em; }
 
 /* --------------------------------------------------------------------------
    4. Layout
@@ -826,6 +829,184 @@ td { color: var(--muted); }
 .copy-btn[data-copied="true"] { color: var(--espresso); border-color: var(--espresso); }
 
 /* --------------------------------------------------------------------------
+   17b. Announcement / press release
+   -------------------------------------------------------------------------- */
+.announce {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(110% 130% at 96% 4%, var(--glow) 0%, transparent 55%),
+    var(--paper-raised);
+  padding: clamp(28px, 4vw, 48px);
+  overflow: hidden;
+}
+.announce-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  font-size: .705rem;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--espresso);
+}
+.announce-tag .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+.announce h2 {
+  margin-top: 20px;
+  font-size: clamp(1.8rem, 3.4vw, 2.7rem);
+  max-width: 22ch;
+}
+.announce .dateline {
+  margin-top: 20px;
+  font-size: .74rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.announce .prose { margin-top: 14px; }
+.announce blockquote {
+  margin: 26px 0 0;
+  padding-left: 22px;
+  border-left: 2px solid var(--espresso);
+  max-width: 62ch;
+}
+.announce blockquote p {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.35;
+  color: var(--ink-strong);
+}
+.announce blockquote cite {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--sans);
+  font-size: .8rem;
+  font-style: normal;
+  color: var(--faint);
+}
+
+/* --------------------------------------------------------------------------
+   17c. Blog
+   -------------------------------------------------------------------------- */
+.post-list { display: grid; gap: 1px; background: var(--line); border-block: 1px solid var(--line); }
+.post-item {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 28px;
+  background: var(--paper);
+  padding: clamp(24px, 3.2vw, 36px) 0;
+  transition: background var(--fast) var(--ease);
+}
+.post-item:hover { background: var(--paper-raised); }
+.post-item time {
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding-top: 6px;
+}
+.post-item h2 {
+  font-size: clamp(1.5rem, 2.8vw, 2.05rem);
+  max-width: 24ch;
+}
+.post-item p { margin-top: 12px; color: var(--muted); font-size: .95rem; max-width: 62ch; }
+.post-item .tag-row { margin-top: 18px; }
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin-top: 26px;
+  font-size: .82rem;
+  color: var(--faint);
+}
+.post-meta a { color: var(--muted); border-bottom: 1px solid var(--line-strong); }
+.post-meta a:hover { color: var(--ink-strong); }
+
+/* Pull-out for the one idea a section turns on. */
+.callout {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--espresso);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: var(--paper-raised);
+  padding: 22px 24px;
+  margin-block: 28px;
+  max-width: var(--measure);
+}
+.callout p { color: var(--ink); font-size: .97rem; }
+.callout p + p { margin-top: .8em; }
+.callout strong { font-weight: 600; }
+
+figure { margin: 28px 0; }
+figcaption {
+  margin-top: 12px;
+  font-size: .8rem;
+  color: var(--faint);
+  max-width: 62ch;
+}
+
+/* --------------------------------------------------------------------------
+   17d. Developer profile
+   -------------------------------------------------------------------------- */
+.dev-card {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+}
+.dev-portrait {
+  width: 132px;
+  height: 132px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  font-family: var(--serif);
+  font-size: 4.6rem;
+  line-height: 1;
+  color: var(--espresso);
+  padding-bottom: .08em;
+}
+.dev-card h3 { font-size: clamp(1.7rem, 3vw, 2.2rem); }
+.dev-role {
+  margin-top: 8px;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.dev-card .prose { margin-top: 20px; }
+
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline li {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: 24px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+.timeline li:last-child { border-bottom: 1px solid var(--line); }
+.timeline .when {
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding-top: 3px;
+}
+.timeline h3 { font-family: var(--sans); font-size: 1.02rem; font-weight: 600; letter-spacing: -.01em; }
+.timeline p { margin-top: 8px; color: var(--muted); font-size: .945rem; max-width: 62ch; }
+
+/* --------------------------------------------------------------------------
    18. CTA band
    -------------------------------------------------------------------------- */
 .cta-band {
@@ -941,6 +1122,10 @@ td { color: var(--muted); }
   body { font-size: 16px; }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .steps li { grid-template-columns: 44px 1fr; gap: 16px; }
+  .post-item, .timeline li { grid-template-columns: 1fr; gap: 10px; }
+  .post-item time { padding-top: 0; }
+  .dev-card { grid-template-columns: 1fr; }
+  .dev-portrait { width: 96px; height: 96px; font-size: 3.4rem; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   /* Long button labels must wrap rather than push the page sideways. */
   .btn-row .btn { flex: 1 1 100%; min-width: 0; white-space: normal; text-align: center; }

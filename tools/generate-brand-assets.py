@@ -14,7 +14,7 @@ INK = (33, 26, 19)
 MUTED = (109, 99, 87)
 FAINT = (147, 137, 124)
 
-CORMORANT = os.path.join(SCRATCH, "cormorant.ttf")
+CORMORANT = os.environ.get("CORMORANT_TTF", os.path.join(SCRATCH, "cormorant.ttf"))
 SANS = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
 SANS_BOLD = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
 
@@ -199,6 +199,15 @@ CARDS = [
     ("og-contact.jpg", "Contact",
      "Business and research inquiries.",
      "corx-labs.com/contact"),
+    ("og-blog.jpg", "Blog",
+     "Notes from the lab.",
+     "corx-labs.com/blog"),
+    ("og-post-3b.jpg", "Technical breakdown",
+     "3 billion tokens. One GPU.",
+     "corx-labs.com/blog \u00b7 How CorX1.5 was trained"),
+    ("og-developers.jpg", "Developers",
+     "The people who built CorX1.5.",
+     "corx-labs.com/developers"),
 ]
 for name, eyebrow, title, foot in CARDS:
     og_card(f"{OUT}/{name}", eyebrow, title, foot)

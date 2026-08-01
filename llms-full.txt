@@ -140,6 +140,91 @@ actually work underneath. It is open-sourced so other people can take it apart t
 - Open by default. Apache 2.0, published on Hugging Face, documented on corx-labs.com.
 
 ===============================================================================
+DEVELOPERS
+===============================================================================
+
+CorX Labs is a one-person research lab.
+
+Nathan — Founder and AI Researcher. A 14-year-old developer from Jamaica. He designed the
+architecture, trained the tokenizer, wrote the pretraining and fine-tuning pipelines, curated the
+data and ran every training job, solo, on a single GPU, from random weights. There is no team
+behind CorX1.5 and no base model underneath it.
+
+Journey:
+- Age 12 — built a chatbot on top of Gemini's API and customised its behaviour. Useful, but it was
+  somebody else's model wearing his configuration.
+- Age 13 — moved to fine-tuning existing base models. It failed: slow GPUs, training runs that took
+  far too long, and eventually he stopped.
+- Age 14 — wrote a model instead of adapting one. Custom decoder-only transformer, tokenizer
+  trained from scratch, ~3 billion tokens of pretraining across 25 open datasets, then distillation
+  and reasoning training. The result is CorX1.5.
+- Now — CorX1.5 is open-sourced under Apache 2.0 and still being trained, with updated checkpoints
+  released as new data is added.
+
+Contact: lkk89002@gmail.com
+
+===============================================================================
+BLOG: 3 BILLION TOKENS ON ONE GPU (2026-08-01)
+===============================================================================
+
+URL: https://corx-labs.com/blog/3-billion-tokens-one-gpu/
+Author: Nathan
+
+Core claim: 3 billion training tokens never need to fit in GPU memory. Tokens stream through the
+GPU a batch at a time and are discarded. What has to fit is the model weights, their gradients, the
+optimiser state, and the activations for one micro-batch — a couple of gigabytes for a 158M model,
+and that figure does not change with dataset size. Dataset size is a disk and wall-clock problem;
+model size is the memory problem.
+
+Memory arithmetic for 157.8M parameters:
+- Weights fp32: 4 bytes/param = 0.63 GB
+- Gradients fp32: 4 bytes/param = 0.63 GB
+- Adam first and second moments fp32: 8 bytes/param = 1.26 GB
+- Subtotal: 16 bytes/param = 2.52 GB
+- With 8-bit Adam moments (2 bytes/param instead of 8): 10 bytes/param = 1.58 GB
+Activation memory sits on top of this and scales with batch size and sequence length.
+
+The data pipeline: the corpus is tokenised once, offline, into a single flat binary file of raw
+token IDs. Because the vocabulary is 32,768 entries, every token fits in a uint16, so 3 billion
+tokens is exactly 6 GB on disk rather than 12 GB as int32. The file is read with numpy.memmap, so
+the OS pages in only the slices touched; RAM use stays bounded and the dataset never enters VRAM.
+Random window offsets are sampled per batch, which removes the need for a shuffle step and makes
+the dataset position trivially resumable.
+
+Packing: documents are concatenated with a separator and sliced at exactly 1,024 tokens, so no
+compute is spent on padding. A naive padded pipeline with 300-token average documents padded to
+1,024 wastes roughly 70% of every step. Assistant-only loss masking is the equivalent idea on the
+loss side — the model reads user tokens as context but is only ever graded on tokens it should
+produce.
+
+Gradient accumulation: micro-batch size is a memory constraint; effective batch size is a
+learning-dynamics constraint. Running several small forward/backward passes and summing gradients
+before one optimiser step decouples them. Worked example: 8 sequences x 1,024 tokens = 8,192 tokens
+per forward; 64 accumulation steps = 524,288 tokens per optimiser step; 3,000,000,000 / 524,288 is
+about 5,722 optimiser steps for the entire pretraining run.
+
+Cheap wins: bfloat16 autocast (halves activation memory, no loss scaling needed unlike fp16);
+fused/flash attention via scaled_dot_product_attention (never materialises the batch x heads x
+1024 x 1024 scores matrix, roughly 268 MB per layer at a micro-batch of 8 with 16 heads); gradient
+checkpointing as the escape hatch (about 30% slower, large activation saving); TF32 matmuls.
+
+Why 1,024 context: attention cost grows with the square of sequence length while everything else
+grows linearly. For a 158M model, spending a fixed budget on more tokens beats spending it on
+longer context.
+
+Wall-clock: 3 billion tokens takes about 83 hours at 10,000 tokens/second, 33 hours at 25,000,
+17 hours at 50,000, and 8 hours at 100,000. Optimisation effort belongs on tokens per second, and
+the most common bottleneck is a GPU idling while it waits for data.
+
+Surviving the run: checkpoints must contain the model state_dict, the optimiser state_dict, the
+scheduler state and step counter, the RNG state, and the config — written to a temporary file and
+renamed, so a crash mid-write cannot destroy the last good checkpoint.
+
+Stopping: a held-out validation split is carved out before training and never sampled from during
+training. Training loss tells you the optimiser is working; only validation loss tells you the
+model is.
+
+===============================================================================
 CONTACT
 ===============================================================================
 

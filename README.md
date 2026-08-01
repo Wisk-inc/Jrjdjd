@@ -15,6 +15,9 @@ any static host and it works.
 /documentation/         The main reference: lab, website, architecture, training, safety, usage
 /models/                Our Products — every model released
 /models/corx1-5/        CorX1.5 model page (Try it out → Hugging Face)
+/blog/                  Blog index
+/blog/3-billion-tokens-one-gpu/   Technical breakdown of the training run
+/developers/            Who built CorX1.5 — profile and journey
 /about/                 About Us — the lab and its founder
 /contact/               Contact — lkk89002@gmail.com
 /404.html               Not-found page
@@ -50,8 +53,9 @@ Everything below is already implemented and live in the files.
 **Structured data (JSON-LD)** — one connected `@graph` per page, with stable `@id`s so search
 engines and AI systems resolve CorX Labs, Nathan and CorX1.5 as *entities*, not just strings:
 `Organization` + `ResearchOrganization`, `Person`, `WebSite`, `WebPage`, `CollectionPage`,
-`AboutPage`, `ContactPage`, `TechArticle`, `SoftwareApplication` + `SoftwareSourceCode`, `Dataset`,
-`ItemList`, `BreadcrumbList`, `FAQPage`, and `SpeakableSpecification`.
+`AboutPage`, `ContactPage`, `ProfilePage`, `TechArticle`, `Blog`, `BlogPosting`, `NewsArticle`,
+`SoftwareApplication` + `SoftwareSourceCode`, `Dataset`, `ItemList`, `BreadcrumbList`, `FAQPage`,
+and `SpeakableSpecification`.
 
 **Answer-engine optimisation** — every page opens with an `.answer-box`: a self-contained
 definition paragraph written to be lifted verbatim into an AI Overview or a chatbot answer. FAQ
@@ -81,6 +85,12 @@ hover-intent prefetch of internal pages, immutable cache headers on images, and
 **Trust signals** — HSTS, CSP, `X-Content-Type-Options`, `Referrer-Policy` and `Permissions-Policy`
 in `_headers` / `netlify.toml` / `vercel.json`; a real 404 page; skip link, focus-visible outlines,
 ARIA labels and semantic landmarks throughout.
+
+**Content that targets real questions** — the blog post is written against searches like *"train
+a language model on one GPU"*, *"how much VRAM to train a 158M model"* and *"how big is 3 billion
+tokens on disk"*, with the answer stated plainly in the first paragraph of each section and
+mirrored in `FAQPage` markup. The `/developers/` page carries `ProfilePage` + `Person` markup,
+which is what search engines read for author identity and E-E-A-T.
 
 **Internal linking** — a hub-and-spoke cluster: `/models/` is the hub, `/models/corx1-5/` is the
 spoke, and `/documentation/` deep-links into both with descriptive anchor text. `_redirects` catches
@@ -124,7 +134,12 @@ apex (the redirect rules assume apex is canonical).
    built on repetition across sources.
 6. **Validate the markup** — [Rich Results Test](https://search.google.com/test/rich-results) and
    [Schema Markup Validator](https://validator.schema.org/) on each URL.
-7. **Keep `lastmod` honest.** When you change a page, update its `<lastmod>` in `sitemap.xml`, the
+7. **Check the figures in the blog post before you promote it.** Everything derived from published
+   specs is exact — the 2.52 GB of fp32 model and optimiser state at 157.8M parameters, the 6 GB
+   `uint16` token file, the ~5,722 optimiser steps. The worked example (micro-batch 8, 64
+   accumulation steps) and the throughput table are labelled as illustrations, not as a log of your
+   run. If your real numbers differ, swap them in — real numbers are more interesting anyway.
+8. **Keep `lastmod` honest.** When you change a page, update its `<lastmod>` in `sitemap.xml`, the
    `dateModified` in that page's JSON-LD, and re-ping IndexNow.
 
 ## Regenerating brand images

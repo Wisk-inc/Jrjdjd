@@ -140,6 +140,21 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       }
     },
     {
+      "@type": "NewsArticle",
+      "@id": "https://corx-labs.com/#announcement",
+      "headline": "CorX Labs releases CorX1.5, an open-source language model built from scratch in Jamaica",
+      "description": "CorX Labs, an independent AI research lab in Jamaica, announced the open-source release of CorX1.5 — a 158-million-parameter language model designed and trained entirely from scratch by a single developer on a single GPU.",
+      "url": "https://corx-labs.com/#announcement",
+      "mainEntityOfPage": { "@id": "https://corx-labs.com/#webpage" },
+      "datePublished": "2026-08-01",
+      "dateModified": "2026-08-01",
+      "inLanguage": "en",
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "image": "https://corx-labs.com/assets/img/og-default.jpg",
+      "about": { "@id": "https://corx-labs.com/models/corx1-5/#model" }
+    },
+    {
       "@type": "ItemList",
       "@id": "https://corx-labs.com/#products",
       "name": "Models released by CorX Labs",
@@ -217,6 +232,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
     <nav class="nav" aria-label="Primary">
       <a href="/documentation/">Documentation</a>
       <a href="/models/">Our Products</a>
+      <a href="/blog/">Blog</a>
+      <a href="/developers/">Developers</a>
       <a href="/about/">About Us</a>
       <a href="/contact/">Contact</a>
     </nav>
@@ -234,6 +251,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       <ul>
         <li><a href="/documentation/">Documentation <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
         <li><a href="/models/">Our Products <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
         <li><a href="/about/">About Us <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
         <li><a href="/contact/">Contact <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
       </ul>
@@ -268,6 +287,71 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
   </section>
 
   <div class="shell"><hr class="rule"></div>
+
+  <!-- ── Announcement / press release ───────────────────────────────────── -->
+  <section class="section-tight" id="announcement" aria-labelledby="announce-title">
+    <div class="shell">
+      <article class="announce" data-reveal>
+        <p class="announce-tag"><i class="dot" aria-hidden="true"></i> Announcement</p>
+
+        <h2 id="announce-title">CorX Labs releases CorX1.5, an open-source language model built from
+          scratch in Jamaica.</h2>
+
+        <p class="dateline">Jamaica &middot; <time datetime="2026-08-01">1 August 2026</time> &middot; For immediate release</p>
+
+        <div class="prose">
+          <p><strong>CorX Labs</strong>, an independent artificial intelligence research lab and
+            research station based in Jamaica, today announced the open-source release of
+            <strong>CorX1.5</strong> — a 158-million-parameter language model designed and trained
+            entirely from scratch by a single developer on a single GPU.</p>
+
+          <p>CorX1.5 is not a fine-tune of an existing base model. Its architecture, its
+            32,768-token tokenizer, its pretraining pipeline and its fine-tuning were all written in
+            house and trained from random weights. The model is a custom decoder-only transformer
+            using RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm, with 10 layers
+            and a 1,024-token context window, and it introduces learned <em>role embeddings</em> —
+            a signal that marks every token as user, assistant or raw text at the architecture level,
+            rather than leaving the model to infer it from special tokens.</p>
+
+          <p>Training ran in three stages: pretraining on approximately 3 billion tokens drawn from
+            25 open datasets spanning code, mathematics, reasoning, conversation and general text;
+            distillation from a larger teacher model with automated quality filtering; and reasoning
+            training, in which the model learns to show its working inside
+            <code>&lt;think&gt;</code> blocks before answering. A held-out validation split with
+            early stopping was used throughout.</p>
+
+          <p>The lab is publishing the model with an explicit statement of its limits. CorX1.5 is a
+            small model trained on billions of tokens where comparable models from major labs are
+            trained on trillions, and CorX Labs states plainly that it is not suitable for broad
+            factual recall, complex multi-step mathematics, or production and safety-critical use.
+            The model also ships with a hardcoded crisis-response layer, implemented in code rather
+            than left to the model's judgment.</p>
+
+          <blockquote>
+            <p>“For years I've shared a dream to build something great — my own AI. Today that dream
+              came through, and I can say I made it from scratch, from the ground up.”</p>
+            <cite>Nathan, founder of CorX Labs</cite>
+          </blockquote>
+
+          <p><strong>Availability.</strong> CorX1.5 is available now under the Apache 2.0 licence on
+            Hugging Face at
+            <a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/CorX1.5-160M</a>,
+            including weights, tokenizer and the model definition required to load it. Training is
+            ongoing, with updated checkpoints released as new data is added.</p>
+
+          <p><strong>About CorX Labs.</strong> CorX Labs is an independent AI research lab and
+            research station in Jamaica, in the Caribbean. It designs, trains and open-sources
+            language models built from the ground up. Media and business inquiries:
+            <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a>.</p>
+        </div>
+
+        <div class="btn-row mt-m">
+          <a class="btn btn-primary" href="/models/corx1-5/">Read the model card</a>
+          <a class="btn btn-ghost" href="/blog/3-billion-tokens-one-gpu/">How it was trained</a>
+        </div>
+      </article>
+    </div>
+  </section>
 
   <!-- ── What this is (answer-first block for search & AI assistants) ────── -->
   <section class="section-tight" id="what-this-is">
@@ -528,6 +612,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <h4>Lab</h4>
         <ul>
           <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
           <li><a href="/about/">About us</a></li>
           <li><a href="/contact/">Contact</a></li>
         </ul>

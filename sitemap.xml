@@ -56,6 +56,45 @@
   </url>
 
   <url>
+    <loc>https://corx-labs.com/blog/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/blog/"/>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/og-blog.jpg</image:loc>
+      <image:title>CorX Labs blog — notes from the lab</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://corx-labs.com/blog/3-billion-tokens-one-gpu/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/3-billion-tokens-one-gpu/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/blog/3-billion-tokens-one-gpu/"/>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/og-post-3b.jpg</image:loc>
+      <image:title>3 billion tokens on one GPU — how CorX1.5 was trained</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://corx-labs.com/developers/</loc>
+    <lastmod>2026-08-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/developers/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/developers/"/>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/og-developers.jpg</image:loc>
+      <image:title>The developers behind CorX1.5</image:title>
+    </image:image>
+  </url>
+
+  <url>
     <loc>https://corx-labs.com/about/</loc>
     <lastmod>2026-08-01</lastmod>
     <changefreq>monthly</changefreq>
