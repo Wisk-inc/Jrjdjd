@@ -1,0 +1,21 @@
+# Canonical host — one address, one set of rankings.
+https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
+
+# Legacy / alternate paths people and crawlers guess at.
+/docs                /documentation/        301
+/docs/*              /documentation/        301
+/documentation       /documentation/        301
+/products            /models/               301
+/products/*          /models/               301
+/model               /models/               301
+/models              /models/               301
+/corx1.5             /models/corx1-5/       301
+/corx1-5             /models/corx1-5/       301
+/corx15              /models/corx1-5/       301
+/models/corx1.5      /models/corx1-5/       301
+/about               /about/                301
+/about-us            /about/                301
+/contact             /contact/              301
+/index.html          /                      301
+
+/*                   /404.html              404

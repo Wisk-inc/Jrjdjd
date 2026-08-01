@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>CorX1.5 — Open-Source 158M Language Model Built From Scratch</title>
+<meta name="description" content="CorX1.5 is a 158M-parameter decoder-only transformer built from scratch in Jamaica — RoPE, SwiGLU, RMSNorm, custom BPE tokenizer. Apache 2.0 on Hugging Face.">
+<link rel="canonical" href="https://corx-labs.com/models/corx1-5/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/models/corx1-5/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/models/corx1-5/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/models/corx1-5/">
+<meta property="og:title" content="CorX1.5 — 158M Parameter Open-Source Language Model Built From Scratch">
+<meta property="og:description" content="A custom decoder-only transformer trained from zero on a single GPU in Jamaica. Open-source under Apache 2.0.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-corx1-5.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CorX1.5 — a 158M parameter model trained from zero">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CorX1.5 — 158M Parameter Open-Source Language Model Built From Scratch">
+<meta name="twitter:description" content="A custom decoder-only transformer trained from zero on a single GPU in Jamaica. Open-source under Apache 2.0.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-corx1-5.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+      "@id": "https://corx-labs.com/models/corx1-5/#model",
+      "name": "CorX1.5",
+      "alternateName": ["CorX1.5-160M", "CorX 1.5"],
+      "url": "https://corx-labs.com/models/corx1-5/",
+      "description": "CorX1.5 is an open-source language model with approximately 158 million parameters, built entirely from scratch by CorX Labs in Jamaica. It is a custom decoder-only transformer using RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm, with learned role embeddings and assistant-only loss masking, 10 layers, a 1,024-token context window and a 32,768-token custom BPE vocabulary.",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Language model",
+      "operatingSystem": "Cross-platform",
+      "softwareVersion": "1.5",
+      "programmingLanguage": "Python",
+      "codeRepository": "https://huggingface.co/Sigmandndnns/CorX1.5-160M",
+      "downloadUrl": "https://huggingface.co/Sigmandndnns/CorX1.5-160M",
+      "installUrl": "https://huggingface.co/Sigmandndnns/CorX1.5-160M",
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "isAccessibleForFree": true,
+      "datePublished": "2026-08-01",
+      "dateModified": "2026-08-01",
+      "inLanguage": "en",
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "creator": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "provider": { "@id": "https://corx-labs.com/#organization" },
+      "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
+      "keywords": "language model, text generation, transformer, from scratch, small language model, open source, Jamaica, Caribbean AI",
+      "featureList": [
+        "Custom decoder-only transformer architecture",
+        "RoPE positional encoding",
+        "SwiGLU feed-forward layers",
+        "RMSNorm normalisation",
+        "Learned role embeddings for user, assistant and raw text tokens",
+        "Assistant-only loss masking",
+        "32,768-token custom BPE vocabulary",
+        "Step-by-step reasoning inside <think> blocks",
+        "Hardcoded crisis-response safety layer"
+      ],
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+      "sameAs": ["https://huggingface.co/Sigmandndnns/CorX1.5-160M"],
+      "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/models/corx1-5/#webpage",
+      "url": "https://corx-labs.com/models/corx1-5/",
+      "name": "CorX1.5 — 158M Parameter Open-Source Language Model Built From Scratch",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "mainEntity": { "@id": "https://corx-labs.com/models/corx1-5/#model" },
+      "inLanguage": "en",
+      "dateModified": "2026-08-01",
+      "breadcrumb": { "@id": "https://corx-labs.com/models/corx1-5/#breadcrumb" },
+      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/models/corx1-5/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/" },
+        { "@type": "ListItem", "position": 3, "name": "CorX1.5", "item": "https://corx-labs.com/models/corx1-5/" }
+      ]
+    },
+    {
+      "@type": "Dataset",
+      "@id": "https://corx-labs.com/models/corx1-5/#training-data",
+      "name": "CorX1.5 pretraining corpus",
+      "description": "Approximately 3 billion tokens drawn from 25 open datasets spanning code, mathematics, reasoning, conversation and general web text, with a held-out validation split used for early stopping.",
+      "creator": { "@id": "https://corx-labs.com/#organization" },
+      "isBasedOn": "Open, publicly available datasets"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/" aria-current="page">Our Products</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Try it out</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Try it out</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><span aria-current="page">CorX1.5</span></li>
+      </ol>
+    </nav>
+
+    <div class="tag-row" style="margin-top:22px">
+      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
+      <span class="tag">Text generation</span>
+      <span class="tag">Apache 2.0</span>
+      <span class="tag">Built from scratch</span>
+    </div>
+
+    <h1>CorX1.5</h1>
+    <p class="lede">A ~158M parameter language model, built entirely from scratch by a single
+      developer. Architecture, tokenizer, pretraining pipeline and fine-tuning — all written and
+      trained solo, on a single GPU, from the ground up.</p>
+
+    <div class="btn-row mt-m">
+      <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">
+        Try it out on Hugging Face
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="/documentation/">Read the documentation</a>
+    </div>
+    <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
+      Repository: <code>Sigmandndnns/CorX1.5-160M</code> &middot; Developer: Nathan &middot; Origin: Jamaica
+    </p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <!-- Answer-first summary -->
+  <section class="section-tight" id="what-it-is">
+    <div class="shell">
+      <div class="answer-box" style="margin-top:0" data-reveal>
+        <p><strong>CorX1.5</strong> is an open-source language model with roughly 158 million
+          parameters, built from scratch by <a href="/about/">CorX Labs</a> in Jamaica. It is a custom
+          decoder-only transformer using RoPE positional encoding, SwiGLU feed-forward layers and
+          RMSNorm, with 10 layers, a 1,024-token context window and a 32,768-token custom BPE
+          vocabulary. It is <strong>not</strong> a fine-tune of an existing base model — it was
+          trained from random weights.</p>
+      </div>
+
+      <dl class="spec-list mt-m" data-reveal>
+        <div><dt>Parameters</dt><dd>157.8M</dd></div>
+        <div><dt>Layers</dt><dd>10</dd></div>
+        <div><dt>Context length</dt><dd>1,024 tokens</dd></div>
+        <div><dt>Vocabulary</dt><dd>32,768 custom BPE</dd></div>
+        <div><dt>Pretraining</dt><dd>~3B tokens, 25 datasets</dd></div>
+        <div><dt>Licence</dt><dd>Apache 2.0</dd></div>
+        <div><dt>Task</dt><dd>Text generation</dd></div>
+        <div><dt>Status</dt><dd>Actively trained</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section class="section-tight" id="architecture" aria-labelledby="arch-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Architecture</p>
+        <h2 id="arch-title">A custom decoder-only transformer.</h2>
+        <p class="lede">Not copied from an existing model family — designed and written here.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card" data-reveal>
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
+          </span>
+          <h3>Core stack</h3>
+          <p>RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm throughout — the
+            combination that gets the most quality out of a small parameter budget.</p>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="80">
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h8M8 14h5"/><path d="M21 12a9 9 0 1 1-3.2-6.9"/><path d="M21 4v5h-5"/></svg>
+          </span>
+          <h3>Role embeddings</h3>
+          <p>A learned signal marking every token as user, assistant or raw text, so the model always
+            knows whose turn it is. Most models infer this only from special tokens.</p>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="120">
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h13"/><path d="M17 10.5 19 12.5l3.5-3.5" /></svg>
+          </span>
+          <h3>Assistant-only loss masking</h3>
+          <p>Trained only to predict the tokens it should generate, never the user's side of the
+            conversation — cleaner learning signal per token spent.</p>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="160">
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+          </span>
+          <h3>Custom tokenizer</h3>
+          <p>A 32,768-token BPE vocabulary trained from the ground up for this model rather than
+            borrowed from another model family.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Training -->
+  <section class="section-tight" id="training" aria-labelledby="training-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Training</p>
+        <h2 id="training-title">Trained in stages, from zero.</h2>
+      </div>
+      <ol class="steps" data-reveal>
+        <li><div><h3>Pretraining</h3><p>~3 billion tokens across 25 open datasets covering code,
+          math, reasoning, conversation and general web text, with a held-out validation split and
+          early stopping to catch overfitting.</p></div></li>
+        <li><div><h3>Distillation</h3><p>Fine-tuned on responses generated by a larger teacher model
+          (Qwen2.5-Instruct), with automated quality filtering keeping only well-formatted,
+          non-repetitive, correctly-verified answers.</p></div></li>
+        <li><div><h3>Reasoning training</h3><p>Trained to show step-by-step work in
+          <code>&lt;think&gt;...&lt;/think&gt;</code> blocks before answering, including verified
+          worked arithmetic and debugging exercises with a known, injected bug to check against.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="section-tight" id="capabilities" aria-labelledby="cap-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Honest scope</p>
+        <h2 id="cap-title">What it does, and what it doesn't.</h2>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card" data-reveal>
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Good at</h3>
+          <ul class="check-list mt-s">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Holding a consistent identity and conversational style</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Short, direct answers to greetings and common everyday questions</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Declining what it genuinely can't do — no internet, no memory between chats, no tools — instead of fabricating</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Small worked arithmetic, shown step by step</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Recognising and explaining common Python bugs in a structured format</li>
+          </ul>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="80">
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Not built for</h3>
+          <ul class="check-list is-limits mt-s">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> Broad factual knowledge or general reasoning outside its training patterns</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> Complex or multi-step maths beyond basic arithmetic</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> Production or safety-critical use of any kind</li>
+          </ul>
+          <p style="margin-top:18px;font-size:.9rem">Models of a similar size from major labs are
+            typically trained on trillions of tokens. CorX1.5 was trained on billions — that gap
+            explains most of the above, and it is documented rather than glossed over.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Safety -->
+  <section class="section-tight" id="safety" aria-labelledby="safety-title">
+    <div class="shell">
+      <div class="card column-narrow" data-reveal>
+        <span class="icon-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.5-3 7.8-7.5 9-4.5-1.2-7.5-4.5-7.5-9V6z"/><path d="m9.2 12.2 2 2 3.6-3.8"/></svg>
+        </span>
+        <h3 id="safety-title" style="font-family:var(--sans);font-size:1.05rem;font-weight:600">Safety layer</h3>
+        <p style="margin-top:10px">CorX1.5 includes a hardcoded response layer for messages
+          indicating self-harm or crisis, which returns a fixed set of crisis resources rather than a
+          generated response. This is implemented in code, not left to the model's judgment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Usage -->
+  <section class="section-tight" id="usage" aria-labelledby="usage-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Usage</p>
+        <h2 id="usage-title">Running CorX1.5.</h2>
+        <p class="lede">CorX1.5 uses a custom architecture and is <strong>not</strong> compatible with
+          <code>AutoModel.from_pretrained()</code> out of the box.</p>
+      </div>
+
+      <pre data-reveal><code># Clone the repository — weights, tokenizer and model definition
+git lfs install
+git clone https://huggingface.co/Sigmandndnns/CorX1.5-160M
+cd CorX1.5-160M
+
+# Load with the bundled model definition (modeling_corx.py), not AutoModel
+python inference.py</code></pre>
+
+      <p class="mt-m" data-reveal><a class="arrow-link" href="/documentation/#usage">Full loading notes in the documentation
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">Open source</p>
+        <h2 class="mt-s">Download it, read it, take it apart.</h2>
+        <p>Weights, tokenizer and model definition are published under Apache 2.0 on Hugging Face.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">
+            Try it out
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="/models/">Back to all models</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>
