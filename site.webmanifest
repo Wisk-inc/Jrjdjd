@@ -1,0 +1,25 @@
+{
+  "name": "CorX Labs — AI research lab in Jamaica",
+  "short_name": "CorX Labs",
+  "description": "Independent AI research lab in the Caribbean, building open-source language models from scratch.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f2ec",
+  "theme_color": "#f4f2ec",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "developer", "productivity"],
+  "icons": [
+    { "src": "/assets/img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Documentation", "url": "/documentation/" },
+    { "name": "Our products", "url": "/models/" },
+    { "name": "CorX1.5", "url": "/models/corx1-5/" }
+  ]
+}

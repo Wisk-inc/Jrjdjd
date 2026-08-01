@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>3 Billion Tokens on One GPU: How CorX1.5 Was Trained</title>
+<meta name="description" content="How a 158M-parameter model was trained on 3 billion tokens with one GPU: the memory maths, memory-mapped token files, packing and gradient accumulation.">
+<link rel="canonical" href="https://corx-labs.com/blog/3-billion-tokens-one-gpu/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Nathan">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/3-billion-tokens-one-gpu/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/blog/3-billion-tokens-one-gpu/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/blog/3-billion-tokens-one-gpu/">
+<meta property="og:title" content="3 Billion Tokens on One GPU: How CorX1.5 Was Trained">
+<meta property="og:description" content="Why 3 billion tokens never needs to fit in VRAM — and what actually does. The memory maths, the data pipeline, and the numbers behind training CorX1.5 on one GPU.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-post-3b.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="3 billion tokens. One GPU. A technical breakdown from CorX Labs.">
+<meta property="article:published_time" content="2026-08-01T00:00:00Z">
+<meta property="article:modified_time" content="2026-08-01T00:00:00Z">
+<meta property="article:author" content="Nathan">
+<meta property="article:section" content="Machine learning">
+<meta property="article:tag" content="language model training">
+<meta property="article:tag" content="single GPU training">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:label1" content="Written by"><meta name="twitter:data1" content="Nathan">
+<meta name="twitter:label2" content="Reading time"><meta name="twitter:data2" content="9 minutes">
+<meta name="twitter:title" content="3 Billion Tokens on One GPU: How CorX1.5 Was Trained">
+<meta name="twitter:description" content="Why 3 billion tokens never needs to fit in VRAM — and what actually does.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-post-3b.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["BlogPosting", "TechArticle"],
+      "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#post",
+      "headline": "3 Billion Tokens on One GPU: How CorX1.5 Was Trained",
+      "alternativeHeadline": "Why 3 billion tokens never needs to fit in VRAM",
+      "description": "A technical breakdown of training a 158M-parameter language model on 3 billion tokens with a single GPU: memory arithmetic, memory-mapped token files, sequence packing, gradient accumulation and throughput.",
+      "url": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/",
+      "mainEntityOfPage": { "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#webpage" },
+      "isPartOf": { "@id": "https://corx-labs.com/blog/#blog" },
+      "inLanguage": "en",
+      "datePublished": "2026-08-01",
+      "dateModified": "2026-08-01",
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://corx-labs.com/assets/img/og-post-3b.jpg",
+        "width": 1200,
+        "height": 630
+      },
+      "about": { "@id": "https://corx-labs.com/models/corx1-5/#model" },
+      "articleSection": "Machine learning",
+      "proficiencyLevel": "Intermediate",
+      "dependencies": "PyTorch, NumPy, a single CUDA GPU",
+      "timeRequired": "PT9M",
+      "keywords": "train language model single GPU, 3 billion tokens, gradient accumulation, memory-mapped dataset, sequence packing, mixed precision, 8-bit Adam, small language model training",
+      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#webpage",
+      "url": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/",
+      "name": "3 Billion Tokens on One GPU: How CorX1.5 Was Trained",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "inLanguage": "en",
+      "breadcrumb": { "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#breadcrumb" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://corx-labs.com/blog/" },
+        { "@type": "ListItem", "position": 3, "name": "3 Billion Tokens on One GPU", "item": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#faq",
+      "isPartOf": { "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#webpage" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do 3 billion training tokens have to fit in GPU memory?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Training tokens stream through the GPU a batch at a time. What has to fit in VRAM is the model weights, the gradients, the optimiser state and the activations for one micro-batch. The full 3 billion tokens live on disk as a flat binary file and are read with a memory map, so the dataset size is a disk and throughput question, not a VRAM question."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much GPU memory does a 158M parameter model need to train?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For 157.8M parameters in fp32 with the Adam optimiser: about 0.63 GB of weights, 0.63 GB of gradients and 1.26 GB of Adam moment state, for roughly 2.5 GB before activations. Switching Adam to an 8-bit implementation cuts the moment state from 1.26 GB to about 0.32 GB, bringing the total to roughly 1.6 GB."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How large is a 3 billion token dataset on disk?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If the tokenizer vocabulary is under 65,536 entries, every token fits in a uint16, so 3 billion tokens is exactly 6 GB on disk. CorX1.5 uses a 32,768-token vocabulary, which fits comfortably. Storing the same tokens as int32 would double the file to 12 GB and double the read bandwidth needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is gradient accumulation and why does it matter on one GPU?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Gradient accumulation runs several small forward and backward passes and sums their gradients before a single optimiser step. It separates the batch size that memory has to hold from the batch size the optimiser sees, so a GPU that can only fit 8 sequences at a time can still train with an effective batch of hundreds of sequences."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/">Our Products</a>
+      <a href="/blog/" aria-current="page">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/models/corx1-5/">CorX1.5</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="/models/corx1-5/">CorX1.5</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><span aria-current="page">3 Billion Tokens on One GPU</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow" style="margin-top:22px">Technical breakdown</p>
+    <h1>3 billion tokens on one GPU.</h1>
+    <p class="lede">Everyone asks the same thing when they hear CorX1.5 was pretrained on ~3 billion
+      tokens with a single GPU: <em>how did all of that fit?</em> The answer is that it never had to.
+      Here is what actually has to fit, and what it costs.</p>
+    <div class="post-meta">
+      <span>By <a href="/developers/">Nathan</a></span>
+      <span><time datetime="2026-08-01">1 August 2026</time></span>
+      <span>9 min read</span>
+      <span>Model: <a href="/models/corx1-5/">CorX1.5</a></span>
+    </div>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <div class="shell section-tight">
+    <div class="doc-layout">
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <ol>
+          <li><a href="#misconception">The wrong mental model</a></li>
+          <li><a href="#vram">What actually lives in VRAM</a></li>
+          <li><a href="#datafile">The 6 GB file</a></li>
+          <li><a href="#packing">Packing</a></li>
+          <li><a href="#accumulation">Gradient accumulation</a></li>
+          <li><a href="#cheap-wins">Precision &amp; attention</a></li>
+          <li><a href="#context">Why 1,024 tokens</a></li>
+          <li><a href="#throughput">The real constraint</a></li>
+          <li><a href="#survival">Surviving the run</a></li>
+          <li><a href="#stopping">Knowing when to stop</a></li>
+          <li><a href="#different">What I'd do differently</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <!-- 1 -->
+        <section class="doc-section" id="misconception">
+          <h2>The wrong mental model</h2>
+          <div class="answer-box">
+            <p><strong>3 billion training tokens never need to fit in GPU memory.</strong> Tokens
+              stream through the GPU a batch at a time and are thrown away. What has to fit is the
+              model weights, their gradients, the optimiser state, and the activations for a single
+              micro-batch. For a 158M-parameter model that is a couple of gigabytes — a number that
+              does not change whether you train on 3 million tokens or 3 billion.</p>
+            <p>Dataset size is a <em>disk and wall-clock</em> problem. Model size is the
+              <em>memory</em> problem. Confusing the two is the single most common reason people
+              think training from scratch is out of reach.</p>
+          </div>
+          <div class="prose">
+            <p>Once you separate those two questions, "3 billion tokens on one GPU" stops sounding
+              impossible and starts sounding like a scheduling problem. The rest of this post is the
+              arithmetic behind both halves.</p>
+          </div>
+        </section>
+
+        <!-- 2 -->
+        <section class="doc-section" id="vram">
+          <h2>What actually lives in VRAM</h2>
+          <div class="prose">
+            <p>CorX1.5 has <strong>157.8 million parameters</strong>. Everything below follows from
+              that one number. In fp32, each parameter costs 4 bytes — and the optimiser needs its
+              own copies.</p>
+          </div>
+
+          <div class="table-wrap mt-m">
+            <table>
+              <caption class="visually-hidden">Per-parameter memory cost for a 157.8M parameter model</caption>
+              <thead>
+                <tr><th scope="col">What</th><th scope="col">Bytes / param</th><th scope="col">Total at 157.8M</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Weights (fp32)</td><td>4</td><td>0.63 GB</td></tr>
+                <tr><td>Gradients (fp32)</td><td>4</td><td>0.63 GB</td></tr>
+                <tr><td>Adam first moment</td><td>4</td><td>0.63 GB</td></tr>
+                <tr><td>Adam second moment</td><td>4</td><td>0.63 GB</td></tr>
+                <tr><td><strong>Subtotal</strong></td><td><strong>16</strong></td><td><strong>2.52 GB</strong></td></tr>
+                <tr><td>Adam moments, 8-bit instead</td><td>2</td><td>0.32 GB <em>(saves 0.95 GB)</em></td></tr>
+                <tr><td><strong>Subtotal with 8-bit Adam</strong></td><td><strong>10</strong></td><td><strong>1.58 GB</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="prose mt-m">
+            <p>The thing worth staring at is the middle of that table: <strong>the optimiser costs
+              twice what the model does.</strong> Adam keeps a running mean and variance for every
+              single parameter, so a 0.63 GB model drags 1.26 GB of bookkeeping behind it. Swapping in
+              an 8-bit Adam implementation quantises those two moment buffers to one byte each and
+              hands back nearly a gigabyte for roughly no quality cost. On a small card, that one
+              change is often the difference between a batch size of 4 and a batch size of 12.</p>
+            <p>On top of that sits <strong>activation memory</strong> — the intermediate tensors kept
+              alive between the forward and backward pass. Unlike the numbers above, this one scales
+              with batch size and sequence length, which is exactly why it is the lever you pull when
+              you run out of room.</p>
+          </div>
+
+          <div class="callout">
+            <p><strong>The rule of thumb:</strong> model state is fixed and you pay it once. Activation
+              memory is variable and you pay it per sequence in flight. If you are out of memory, you
+              almost always shrink the second one — not the model.</p>
+          </div>
+        </section>
+
+        <!-- 3 -->
+        <section class="doc-section" id="datafile">
+          <h2>The 6 GB file that never touches the GPU</h2>
+          <div class="prose">
+            <p>Here is where the 3 billion actually lives. Before training starts, the entire corpus —
+              25 open datasets spanning code, maths, reasoning, conversation and general text — gets
+              tokenised <strong>once</strong>, offline, and written into a single flat binary file of
+              raw token IDs. No JSON, no per-example records, no tokenising during training.</p>
+            <p>CorX1.5's vocabulary is <strong>32,768 tokens</strong>. That number matters more than
+              it looks:</p>
+          </div>
+
+          <div class="table-wrap mt-m">
+            <table>
+              <caption class="visually-hidden">Dataset size on disk by token dtype</caption>
+              <thead>
+                <tr><th scope="col">Token dtype</th><th scope="col">Max vocab</th><th scope="col">3B tokens on disk</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>uint16</td><td>65,536</td><td>6 GB</td></tr>
+                <tr><td>int32</td><td>2,147,483,647</td><td>12 GB</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="prose mt-m">
+            <p>A 32,768-entry vocabulary fits inside a <code>uint16</code> with room to spare, so the
+              whole pretraining corpus is <strong>6 GB on disk</strong> — not 12. That halving is free,
+              and it halves the disk bandwidth the training loop needs to keep the GPU fed.</p>
+            <p>The file is then read with a <strong>memory map</strong>. The operating system pages in
+              only the slices actually touched and evicts the rest, so RAM usage stays bounded no
+              matter how big the file grows, and the process never loads 6 GB into anything:</p>
+          </div>
+
+          <pre class="mt-m"><code>import numpy as np, torch
+
+# 3e9 tokens, uint16, sitting on disk. Nothing is loaded here.
+data = np.memmap("train.bin", dtype=np.uint16, mode="r")
+
+def get_batch(batch_size, block_size):
+    # Sample random windows straight out of the mapped file.
+    ix = torch.randint(len(data) - block_size - 1, (batch_size,))
+    x = torch.stack([torch.from_numpy(data[i     : i+block_size  ].astype(np.int64)) for i in ix])
+    y = torch.stack([torch.from_numpy(data[i + 1 : i+block_size+1].astype(np.int64)) for i in ix])
+    return x.pin_memory().to("cuda", non_blocking=True), \
+           y.pin_memory().to("cuda", non_blocking=True)</code></pre>
+
+          <div class="prose mt-m">
+            <p>Sampling random offsets also means there is no shuffle step. Shuffling 3 billion
+              tokens as records would be its own engineering project; sampling random windows out of
+              a mapped array gets you the same decorrelation for free, and it makes the dataset
+              trivially resumable — position is just an integer.</p>
+          </div>
+
+          <div class="callout">
+            <p><strong>This is the actual answer to the question.</strong> The 3 billion tokens are a
+              6 GB file on a disk. The GPU sees a few thousand of them at a time, for a few
+              milliseconds, and then forgets them. Nothing about the dataset size ever appears in a
+              VRAM figure.</p>
+          </div>
+        </section>
+
+        <!-- 4 -->
+        <section class="doc-section" id="packing">
+          <h2>Packing: every token has to do work</h2>
+          <div class="prose">
+            <p>Because the corpus is one continuous stream of token IDs, documents are concatenated
+              end to end with a separator and then sliced at exactly 1,024 tokens. Every position in
+              every batch carries a real token.</p>
+            <p>The naive alternative — one document per row, padded out to the block size — quietly
+              throws away a large share of every batch. If your documents average 300 tokens and you
+              pad them to 1,024, roughly <strong>70% of the compute in every step is spent on padding
+              tokens</strong> that contribute nothing. On a cluster that is money. On one GPU it is
+              the difference between finishing and not finishing.</p>
+            <p>The related trick is on the other side of the loss function. CorX1.5 uses
+              <strong>assistant-only loss masking</strong>: during instruction tuning the model reads
+              the user's tokens as context but only ever gets a gradient for the tokens it is supposed
+              to produce. Same forward pass, same cost, and none of the capacity is spent learning to
+              predict the user's half of the conversation — which is not a skill the model needs.</p>
+          </div>
+        </section>
+
+        <!-- 5 -->
+        <section class="doc-section" id="accumulation">
+          <h2>Gradient accumulation: "batch size" is two different numbers</h2>
+          <div class="prose">
+            <p>Language models train best with large batches — hundreds of thousands of tokens per
+              optimiser step. A single consumer GPU cannot hold that. These two facts look like a
+              contradiction and are not, because <em>batch size</em> means two separate things:</p>
+            <ul>
+              <li><strong>The micro-batch</strong> — how many sequences are in flight at once. This is
+                a memory constraint.</li>
+              <li><strong>The effective batch</strong> — how many sequences the optimiser sees before
+                it takes a step. This is a learning-dynamics constraint.</li>
+            </ul>
+            <p>Gradient accumulation decouples them. Run the forward and backward pass on a small
+              micro-batch, keep the gradients instead of stepping, repeat, and only call
+              <code>optimizer.step()</code> once you have accumulated enough. The gradients sum
+              exactly as if you had run one big batch — the memory just never went up.</p>
+          </div>
+
+          <pre class="mt-m"><code>accum_steps = 64          # micro-batches per optimiser step
+optimizer.zero_grad(set_to_none=True)
+
+for micro in range(accum_steps):
+    x, y = get_batch(batch_size=8, block_size=1024)
+    with torch.autocast("cuda", dtype=torch.bfloat16):
+        loss = model(x, y) / accum_steps      # scale so the sum is a mean
+    loss.backward()                            # gradients accumulate in place
+
+torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+optimizer.step()
+scheduler.step()</code></pre>
+
+          <div class="prose mt-m">
+            <p>Worked through with those numbers:</p>
+          </div>
+
+          <div class="table-wrap mt-m">
+            <table>
+              <caption class="visually-hidden">Tokens per step and total steps</caption>
+              <thead><tr><th scope="col">Quantity</th><th scope="col">Working</th><th scope="col">Result</th></tr></thead>
+              <tbody>
+                <tr><td>Tokens per forward pass</td><td>8 sequences × 1,024</td><td>8,192</td></tr>
+                <tr><td>Tokens per optimiser step</td><td>8,192 × 64</td><td>524,288</td></tr>
+                <tr><td>Steps to reach 3B tokens</td><td>3,000,000,000 ÷ 524,288</td><td>≈ 5,722</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="prose mt-m">
+            <p>Roughly <strong>5,700 optimiser steps</strong> for the whole pretraining run. That is a
+              surprisingly small, very human number — and it is why the learning-rate schedule matters
+              so much at this scale. There is no room for a slow warm-up over tens of thousands of
+              steps; every step is 0.02% of the entire budget.</p>
+          </div>
+
+          <div class="callout">
+            <p><strong>Micro-batch is the knob you turn for memory. Accumulation steps is the knob you
+              turn to keep the effective batch constant while you do it.</strong> Halve one, double
+              the other, and the training run is mathematically unchanged.</p>
+          </div>
+        </section>
+
+        <!-- 6 -->
+        <section class="doc-section" id="cheap-wins">
+          <h2>Precision and attention: the cheap wins</h2>
+          <div class="prose">
+            <p>Three settings do a disproportionate amount of the work.</p>
+            <p><strong>bfloat16 autocast.</strong> Running the forward and backward pass in bf16 roughly
+              halves activation memory and lets the GPU use its tensor cores. bf16 keeps fp32's
+              exponent range, so unlike fp16 it does not need loss scaling and does not silently
+              produce infinities halfway through a long run. If the card supports it, there is no
+              reason not to.</p>
+            <p><strong>Fused attention.</strong> A naive attention implementation materialises the full
+              scores matrix — shape <code>batch × heads × 1024 × 1024</code>. At a micro-batch of 8
+              with, say, 16 heads, that single tensor is about 268 MB in bf16, <em>per layer</em>. A
+              fused kernel (<code>F.scaled_dot_product_attention</code>, or FlashAttention) never
+              writes it to memory at all, computing the softmax in tiles instead. This is usually the
+              largest single activation saving available.</p>
+            <p><strong>Gradient checkpointing.</strong> The escape hatch. Discard intermediate
+              activations during the forward pass and recompute them during the backward pass —
+              roughly 30% slower per step in exchange for a large drop in activation memory. At 10
+              layers and a 1,024-token window CorX1.5 is small enough that this is a last resort
+              rather than a default, but it is what you reach for when nothing else will fit.</p>
+            <p>One more, almost free: <code>torch.set_float32_matmul_precision("high")</code> to enable
+              TF32 on the remaining fp32 matmuls.</p>
+          </div>
+        </section>
+
+        <!-- 7 -->
+        <section class="doc-section" id="context">
+          <h2>Why the context window is 1,024 tokens</h2>
+          <div class="prose">
+            <p>This was a budget decision, not a technical limit. Attention cost grows with the
+              <em>square</em> of sequence length while everything else grows linearly, so doubling the
+              context window to 2,048 more than doubles the memory and compute per sequence.</p>
+            <p>Given a fixed compute budget, that money can be spent two ways: fewer, longer sequences,
+              or more, shorter ones. For a model this small, <strong>more tokens wins</strong>. A 158M
+              model has nowhere near enough capacity to exploit long-range structure across 4,000
+              tokens; it has plenty of room to get better at ordinary sentences. Spending the budget
+              on breadth rather than reach was the right trade — and it is honestly documented as a
+              limitation on the <a href="/models/corx1-5/">model page</a> rather than dressed up as a
+              feature.</p>
+          </div>
+        </section>
+
+        <!-- 8 -->
+        <section class="doc-section" id="throughput">
+          <h2>The real constraint is wall-clock</h2>
+          <div class="prose">
+            <p>Once everything fits, the only remaining question is time — and it is pure division.
+              Throughput depends on the card, the kernels and how well the data loader keeps up, so
+              here is the shape of it rather than one number:</p>
+          </div>
+
+          <div class="table-wrap mt-m">
+            <table>
+              <caption class="visually-hidden">Time to process 3 billion tokens at various throughputs</caption>
+              <thead><tr><th scope="col">Throughput</th><th scope="col">Time for 3B tokens</th><th scope="col">In practice</th></tr></thead>
+              <tbody>
+                <tr><td>10,000 tok/s</td><td>≈ 83 hours</td><td>about 3.5 days</td></tr>
+                <tr><td>25,000 tok/s</td><td>≈ 33 hours</td><td>a day and a half</td></tr>
+                <tr><td>50,000 tok/s</td><td>≈ 17 hours</td><td>overnight</td></tr>
+                <tr><td>100,000 tok/s</td><td>≈ 8 hours</td><td>a working day</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="prose mt-m">
+            <p>Which tells you where optimisation effort belongs. Nobody's training run is bottlenecked
+              on a clever architecture choice — it is bottlenecked on tokens per second. A change that
+              makes each step 20% faster gives back most of a day. A change that makes the model 2%
+              better on validation loss but 40% slower costs you more than it is worth at this scale.</p>
+            <p>And the most embarrassing bottleneck is always the same one: <strong>a GPU sitting idle
+              waiting for data.</strong> If <code>nvidia-smi</code> shows utilisation bouncing rather
+              than pinned, the fix is in the data loader, not the model.</p>
+          </div>
+        </section>
+
+        <!-- 9 -->
+        <section class="doc-section" id="survival">
+          <h2>Surviving a multi-day run on one machine</h2>
+          <div class="prose">
+            <p>This is the part that separates a bedroom setup from a lab, and it has nothing to do
+              with machine learning. A run measured in days on a single machine <em>will</em> be
+              interrupted. Power, a driver update, a full disk, an out-of-memory error at step 4,000.</p>
+            <p>So the checkpoint has to contain everything needed to continue as if nothing happened —
+              not just the weights:</p>
+            <ul>
+              <li>Model <code>state_dict</code></li>
+              <li>Optimiser <code>state_dict</code> — those Adam moments are hard-won; losing them
+                costs real progress</li>
+              <li>Learning-rate scheduler state and the step counter</li>
+              <li>RNG state, so the data sampling continues rather than restarts</li>
+              <li>The config used, so a checkpoint is never ambiguous about what produced it</li>
+            </ul>
+            <p>Write them on a fixed step interval, keep the last few plus the best-by-validation, and
+              never overwrite in place — write to a temporary file and rename, so a crash mid-write
+              cannot destroy the only good checkpoint you have. I have learned every item on that list
+              the expensive way.</p>
+          </div>
+        </section>
+
+        <!-- 10 -->
+        <section class="doc-section" id="stopping">
+          <h2>Knowing when to stop</h2>
+          <div class="prose">
+            <p>A held-out validation split is carved out <strong>before</strong> training starts and
+              never touched by the training sampler. Validation loss is evaluated on a fixed schedule,
+              and training stops when it stops improving — early stopping.</p>
+            <p>The reason this matters more for a small model than a large one: with 158M parameters
+              and billions of tokens, training loss will keep drifting down long after the model has
+              stopped getting genuinely better. Without a held-out split you cannot tell the difference
+              between learning and memorising, and you will happily burn a day of compute making the
+              model worse.</p>
+            <p>The training loss tells you the optimiser is working. Only the validation loss tells you
+              the <em>model</em> is.</p>
+          </div>
+        </section>
+
+        <!-- 11 -->
+        <section class="doc-section" id="different">
+          <h2>What I'd do differently</h2>
+          <div class="prose">
+            <ul>
+              <li><strong>Instrument tokens per second from step one.</strong> I spent time tuning
+                things that did not matter before I was measuring the thing that did.</li>
+              <li><strong>Validate the tokenised file before training, not after.</strong> A bug in a
+                preprocessing script is invisible until it has cost you a day.</li>
+              <li><strong>Write the resume path first.</strong> Building checkpoint-and-resume before
+                the first long run, instead of after the first crash, would have saved more time than
+                any optimisation on this list.</li>
+              <li><strong>More data cleaning, less architecture fiddling.</strong> At this scale the
+                corpus moved validation loss more than any hyperparameter I touched.</li>
+            </ul>
+            <p>None of this is exotic. Every technique here is published, and most of it is a few lines
+              of PyTorch. The reason it is worth writing down is that when you are starting out, the
+              hard part is not the trick — it is not knowing which question you are actually asking.
+              "How do I fit 3 billion tokens on one GPU" has no answer. "How do I fit 158 million
+              parameters plus one batch on one GPU, and how long does streaming 3 billion tokens past
+              it take" has two, and both of them are arithmetic.</p>
+          </div>
+        </section>
+
+        <!-- 12 -->
+        <section class="doc-section" id="faq">
+          <h2>FAQ</h2>
+          <div class="faq mt-m">
+            <details open>
+              <summary>Do 3 billion tokens have to fit in GPU memory?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>No. Tokens stream through the GPU a batch at a time. What has to
+                fit is the weights, gradients, optimiser state and the activations for one micro-batch.
+                The full corpus lives on disk as a flat binary and is read through a memory map, so
+                dataset size is a disk and throughput question, not a VRAM one.</p></div>
+            </details>
+            <details>
+              <summary>How much VRAM does a 158M model need to train?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>About 2.5 GB of model and optimiser state in fp32 with Adam, or
+                roughly 1.6 GB with an 8-bit optimiser — plus activation memory, which depends on your
+                micro-batch and sequence length and is the part you actually tune.</p></div>
+            </details>
+            <details>
+              <summary>How big is 3 billion tokens on disk?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>6 GB, if your vocabulary is under 65,536 so each token fits in a
+                <code>uint16</code>. CorX1.5's 32,768-token vocabulary fits comfortably. Storing the
+                same tokens as <code>int32</code> would make it 12 GB.</p></div>
+            </details>
+            <details>
+              <summary>Could I do this with a smaller GPU?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Almost certainly, at this model size — drop the micro-batch,
+                raise the accumulation steps to keep the effective batch the same, and turn on 8-bit
+                Adam and gradient checkpointing. The run gets slower, not impossible. Memory sets what
+                you <em>can</em> train; throughput sets how long you wait.</p></div>
+            </details>
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">The model</p>
+        <h2 class="mt-s">This is what came out of it.</h2>
+        <p>CorX1.5 — 158M parameters, trained from random weights, open-sourced under Apache 2.0.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/corx1-5/">See CorX1.5</a>
+          <a class="btn btn-ghost" href="/blog/">More from the blog</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

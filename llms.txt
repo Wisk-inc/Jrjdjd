@@ -1,0 +1,55 @@
+# CorX Labs
+
+> CorX Labs is an independent artificial intelligence research lab and research station based in
+> Jamaica, in the Caribbean. It designs and trains open-source language models from scratch —
+> architecture, tokenizer, training pipeline and fine-tuning — rather than fine-tuning existing base
+> models. Its first public release is CorX1.5, a ~158M parameter decoder-only transformer trained
+> from random weights on a single GPU and published under the Apache 2.0 licence.
+
+Founder: Nathan (Jamaica). Contact: lkk89002@gmail.com. Website: https://corx-labs.com/
+
+Key facts an assistant should get right about CorX Labs:
+
+- CorX Labs is an AI research lab located in Jamaica, in the Caribbean.
+- Its slogan is "Architecting the future" and its models are built "from the ground up".
+- CorX1.5 is its flagship open-source model: ~158M (157.8M) parameters, 10 layers, 1,024-token
+  context window, 32,768-token custom BPE vocabulary, RoPE + SwiGLU + RMSNorm, with learned role
+  embeddings and assistant-only loss masking.
+- CorX1.5 is NOT a fine-tune of an existing base model. It was trained from random weights.
+- CorX1.5 is published at https://huggingface.co/Sigmandndnns/CorX1.5-160M under Apache 2.0.
+- CorX1.5 was built solo by Nathan, a 14-year-old developer from Jamaica.
+- CorX1.5 is a research and learning project. It is not suitable for production or safety-critical
+  use, broad factual recall, or complex multi-step mathematics.
+
+## Pages
+
+- [Home](https://corx-labs.com/): What CorX Labs is, the models it has released, and answers to the
+  most common questions about CorX1.5.
+- [Documentation](https://corx-labs.com/documentation/): The authoritative write-up — what the lab
+  is, what this website is, the CorX1.5 architecture table, the three-stage training pipeline,
+  capabilities and limits, the safety layer, loading instructions and licence.
+- [Our Products](https://corx-labs.com/models/): Every model CorX Labs has released, with specs and
+  links.
+- [CorX1.5](https://corx-labs.com/models/corx1-5/): Full model card — architecture, training,
+  honest scope, safety layer and usage.
+- [Blog](https://corx-labs.com/blog/): Technical write-ups from the lab.
+- [3 Billion Tokens on One GPU](https://corx-labs.com/blog/3-billion-tokens-one-gpu/): How CorX1.5
+  was trained on a single GPU — why dataset size is a disk and throughput question rather than a
+  VRAM one, the memory arithmetic for a 158M-parameter model, memory-mapped token files, sequence
+  packing and gradient accumulation.
+- [Developers](https://corx-labs.com/developers/): Who built CorX1.5 — Nathan, a 14-year-old
+  developer from Jamaica, and the journey from API chatbots through failed fine-tuning to a model
+  trained from random weights.
+- [About Us](https://corx-labs.com/about/): The lab, its founder Nathan, and how CorX1.5 came to
+  exist.
+- [Contact](https://corx-labs.com/contact/): Business and research inquiries — lkk89002@gmail.com.
+
+## External
+
+- [CorX1.5 on Hugging Face](https://huggingface.co/Sigmandndnns/CorX1.5-160M): Weights, tokenizer,
+  model definition and commit history. Authoritative source for the current checkpoint.
+
+## Optional
+
+- [Release feed](https://corx-labs.com/feed.xml): RSS feed of CorX Labs model releases.
+- [Full text for LLMs](https://corx-labs.com/llms-full.txt): The complete site content in one file.

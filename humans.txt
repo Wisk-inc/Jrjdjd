@@ -1,0 +1,15 @@
+/* TEAM */
+  Founder & AI Researcher: Nathan
+  Contact: lkk89002 [at] gmail.com
+  From: Jamaica, Caribbean
+
+/* THANKS */
+  The open-source datasets and tooling that made training CorX1.5 possible.
+  Everyone who downloads a model and takes it apart.
+
+/* SITE */
+  Site: corx-labs.com
+  Standards: HTML5, CSS3, JSON-LD, Schema.org
+  Components: none — hand-written static HTML and CSS
+  Language: English
+  Doctype: HTML5

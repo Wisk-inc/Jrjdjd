@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>CorX Labs — releases and notes</title>
+    <link>https://corx-labs.com/</link>
+    <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
+    <language>en</language>
+    <copyright>CorX Labs</copyright>
+    <lastBuildDate>Sat, 01 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>https://corx-labs.com/assets/img/logo.png</url>
+      <title>CorX Labs — model releases</title>
+      <link>https://corx-labs.com/</link>
+    </image>
+
+    <item>
+      <title>3 Billion Tokens on One GPU: How CorX1.5 Was Trained</title>
+      <link>https://corx-labs.com/blog/3-billion-tokens-one-gpu/</link>
+      <guid isPermaLink="true">https://corx-labs.com/blog/3-billion-tokens-one-gpu/</guid>
+      <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Technical breakdown</category>
+      <description><![CDATA[
+        <p>Everyone asks how 3 billion training tokens fit on a single GPU. They never had to.
+        A technical breakdown of what actually has to fit in VRAM for a 158M-parameter model, the
+        6 GB memory-mapped token file the dataset really lives in, sequence packing, gradient
+        accumulation, and why the whole pretraining run is only about 5,700 optimiser steps.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Announcement: CorX Labs releases CorX1.5</title>
+      <link>https://corx-labs.com/#announcement</link>
+      <guid isPermaLink="false">https://corx-labs.com/#announcement-2026-08-01</guid>
+      <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>CorX Labs</dc:creator>
+      <category>Announcement</category>
+      <description><![CDATA[
+        <p>CorX Labs, an independent AI research lab in Jamaica, has released CorX1.5 — a
+        158-million-parameter language model designed and trained entirely from scratch by a single
+        developer on a single GPU, under the Apache 2.0 licence.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>CorX1.5 — a 158M parameter language model built from scratch</title>
+      <link>https://corx-labs.com/models/corx1-5/</link>
+      <guid isPermaLink="true">https://corx-labs.com/models/corx1-5/</guid>
+      <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Language model</category>
+      <description><![CDATA[
+        <p>CorX1.5 is an open-source language model with roughly 158 million parameters, built
+        entirely from scratch by a single developer in Jamaica. It is a custom decoder-only
+        transformer using RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm, with
+        learned role embeddings, assistant-only loss masking, 10 layers, a 1,024-token context window
+        and a 32,768-token custom BPE vocabulary.</p>
+        <p>Trained in three stages — pretraining on ~3B tokens across 25 open datasets, distillation
+        from a larger teacher model, then reasoning training with step-by-step
+        &lt;think&gt; blocks. Released under Apache 2.0 on
+        <a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M">Hugging Face</a>.</p>
+      ]]></description>
+    </item>
+  </channel>
+</rss>
