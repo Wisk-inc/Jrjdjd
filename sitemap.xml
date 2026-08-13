@@ -5,7 +5,7 @@
 
   <url>
     <loc>https://corx-labs.com/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/"/>
@@ -31,7 +31,7 @@
 
   <url>
     <loc>https://corx-labs.com/models/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/models/"/>
@@ -52,6 +52,19 @@
     <image:image>
       <image:loc>https://corx-labs.com/assets/img/og-corx1-5.jpg</image:loc>
       <image:title>CorX1.5 — a 158M parameter model built from scratch</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://corx-labs.com/models/tristream-svs/</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/models/tristream-svs/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/models/tristream-svs/"/>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/og-tristream.jpg</image:loc>
+      <image:title>TriStream-SVS — singing voice synthesis, factored by design</image:title>
     </image:image>
   </url>
 

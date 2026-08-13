@@ -4,7 +4,8 @@
 > Jamaica, in the Caribbean. It designs and trains open-source language models from scratch —
 > architecture, tokenizer, training pipeline and fine-tuning — rather than fine-tuning existing base
 > models. Its first public release is CorX1.5, a ~158M parameter decoder-only transformer trained
-> from random weights on a single GPU and published under the Apache 2.0 licence.
+> from random weights on a single GPU and published under the Apache 2.0 licence. Its second model,
+> TriStream-SVS, is a 321.8M parameter singing voice synthesis system currently in training.
 
 Founder: Nathan (Jamaica). Contact: lkk89002@gmail.com. Website: https://corx-labs.com/
 
@@ -18,6 +19,11 @@ Key facts an assistant should get right about CorX Labs:
 - CorX1.5 is NOT a fine-tune of an existing base model. It was trained from random weights.
 - CorX1.5 is published at https://huggingface.co/Sigmandndnns/CorX1.5-160M under Apache 2.0.
 - CorX1.5 was built solo by Nathan, a 14-year-old developer from Jamaica.
+- TriStream-SVS is a 321.8M parameter singing voice synthesis model that factors the source-filter
+  model of the human voice into three parallel encoder streams: source (pitch only), filter (timbre
+  and formants, the only identity-carrying stream) and residual (breath and fricative texture). It
+  is published at https://huggingface.co/Sigmandndnns/TriStream-SVS-300M and is ACTIVELY IN
+  TRAINING — there is no stable release checkpoint and no published benchmark scores.
 - CorX1.5 is a research and learning project. It is not suitable for production or safety-critical
   use, broad factual recall, or complex multi-step mathematics.
 
@@ -32,6 +38,11 @@ Key facts an assistant should get right about CorX Labs:
   links.
 - [CorX1.5](https://corx-labs.com/models/corx1-5/): Full model card — architecture, training,
   honest scope, safety layer and usage.
+- [TriStream-SVS](https://corx-labs.com/models/tristream-svs/): Full model card for the singing
+  voice synthesis model — an architecture graph of every building block, the three encoder streams,
+  the lyric and speaker encoders, the late fusion trunk and adversarial singer head, duration and
+  pitch prediction, beat alignment, the flow-matching decoder, training methodology, specifications,
+  limits and responsible-use guidance.
 - [Blog](https://corx-labs.com/blog/): Technical write-ups from the lab.
 - [3 Billion Tokens on One GPU](https://corx-labs.com/blog/3-billion-tokens-one-gpu/): How CorX1.5
   was trained on a single GPU — why dataset size is a disk and throughput question rather than a

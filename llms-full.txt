@@ -17,7 +17,8 @@ Slogan: "Architecting the future." Positioning: "from the ground up."
 Founder: Nathan, a solo developer and independent AI researcher from Jamaica.
 Contact: lkk89002@gmail.com
 Website: https://corx-labs.com/
-First and current release: CorX1.5 — https://huggingface.co/Sigmandndnns/CorX1.5-160M
+Models: CorX1.5 (language model) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
+        TriStream-SVS (singing voice synthesis, in training) — https://huggingface.co/Sigmandndnns/TriStream-SVS-300M
 
 ===============================================================================
 CORX1.5 — MODEL CARD
@@ -111,6 +112,117 @@ provided inference script) alongside the checkpoint and tokenizer files.
 
 Apache 2.0. Use, modification and redistribution are permitted, including commercially, provided
 attribution and the licence notice are kept.
+
+===============================================================================
+TRISTREAM-SVS — MODEL CARD
+===============================================================================
+
+TriStream-SVS is a 321.8M parameter singing voice synthesis model built entirely from scratch by
+CorX Labs in Jamaica. Hugging Face repository: Sigmandndnns/TriStream-SVS-300M.
+STATUS: ACTIVELY IN TRAINING. No stable release checkpoint, no published benchmark scores.
+
+## The core idea
+
+Human voice production factors naturally into three components:
+- The glottal source: vibration of the vocal folds, the raw periodic pulse train that becomes
+  perceived pitch.
+- The vocal-tract filter: resonant shaping by the throat, mouth cavity and tongue position. This is
+  what makes a voice sound like a specific individual, and a given vowel sound like that vowel
+  regardless of who produces it.
+- Turbulent noise: breath, fricative consonants and non-tonal texture — the airy quality of a
+  breathy delivery, the hiss of an "s".
+
+Rather than hoping a neural network discovers this structure implicitly through training, TriStream
+builds it directly into the architecture as a hard constraint.
+
+## Building blocks
+
+1. Source stream — 3 transformer layers. Receives ONLY a log-scaled F0 pitch contour and a binary
+   voiced/unvoiced flag. It never receives the mel spectrogram, the singer embedding, or any
+   timbre-carrying signal. It is architecturally incapable of representing who is singing. This
+   makes the disentanglement structural rather than merely encouraged — there is no pathway through
+   which timbre could reach it.
+2. Filter stream — 5 transformer layers, the deepest, cross-attending to the lyric encoder.
+   Receives the mel spectrogram, a singer identity embedding and an emotion/technique embedding.
+   The ONLY stream that carries identity information.
+3. Residual stream — 2 transformer layers. Breath noise, fricative consonants, articulation texture.
+4. Lyric / phoneme encoder — 4 transformer layers, processed independently, conditioning the Filter
+   stream and the Fusion Trunk by cross-attention. Keeps "what should be sung" separate from "how it
+   should sound".
+5. Late fusion trunk — 8 transformer layers with cross-attention to the lyric encoder. The single
+   point where pitch, timbre and texture are permitted to interact. Placed as late as possible.
+6. Adversarial singer head — a classifier on the trunk output trained to identify the singer, whose
+   gradient passes through a gradient reversal layer. As the classifier improves, the trunk is
+   pushed the opposite way, degrading its own identifiability. Domain-adversarial training used
+   specifically as an ANTI-MEMORISATION mechanism.
+7. Speaker encoder — a separate convolutional network for zero-shot voice cloning. Dilated
+   convolutions for a wide receptive field, squeeze-excitation blocks for channel weighting, and
+   attentive statistics pooling (weighted mean and standard deviation) to collapse a variable-length
+   clip into a fixed-size embedding. Trained contrastively, so closeness in the embedding space
+   corresponds to sounding like the same person.
+8. Duration predictor — frames per phoneme, predicted in log space because note durations are
+   heavily skewed.
+9. Pitch predictor — separately predicts base pitch, a "scoop" component (sliding into a pitch
+   rather than hitting it instantly, one of the clearest tells separating human singing from robotic
+   synthesis), and vibrato depth and rate, ramped in over roughly a quarter-second. Because they are
+   separate, they remain independently adjustable after generation.
+10. Beat alignment — beat tracking on a supplied backing track, with SOFT quantisation and an
+    adjustable swing parameter, because perfectly quantised timing is a reliable tell of synthetic
+    vocals.
+11. Flow-matching decoder — 5 layers using rectified flow matching. Predicts a direct velocity field
+    from noise toward the target mel spectrogram instead of reversing a 100+ step diffusion process,
+    giving full-quality generation in roughly 32 sampling steps.
+
+## Two modes, one model
+
+Editing is the NATIVE training objective: random contiguous spans of real audio are masked and the
+model reconstructs them from surrounding context plus lyrics. "Regenerate this phrase with different
+lyrics" is the literal task it was trained on, not an inference trick added afterwards. Generation
+mode reuses the same components but starts from a fully masked target.
+
+## Training methodology
+
+- Singer-disjoint validation: held-out singers chosen by a stable hash and excluded at data-loading
+  time, so every validation score is measured against voices never seen in training. Stricter than a
+  random split, which can leak the same singer into both sets.
+- Crash-resilient autonomous checkpointing: pushes to a Hugging Face repo on validation improvement
+  and on a rolling interval; resumes from the latest checkpoint including full optimiser state after
+  any interruption. Hardened against real data-loader and Hub connectivity failures.
+- Data curation: dry, isolated vocals only. Instrumental bleed, heavy reverb and mixed-track audio
+  are excluded because they corrupt the mel reconstruction target. Large-scale speech data for
+  vocal-tract mechanics and phonetic coverage, plus smaller verified singing corpora for pitch,
+  technique and phrasing. Every dataset is probed and verified before inclusion.
+- Anti-overfitting: waveform augmentation (pitch shift, time stretch, gain), SpecAugment-style
+  frequency and time masking, mixup within batches, early stopping on the singer-disjoint score, and
+  preserving the best checkpoint by validation score rather than the most recent.
+
+## Specifications
+
+Total parameters: 321.8M. Custom transformer, source-filter factored. RoPE positional encoding.
+RMSNorm. SwiGLU feed-forward. Scaled dot-product attention with cross-attention conditioning.
+Rectified flow matching, ~32 sampling steps. 24 kHz sample rate (architecture supports 44.1 kHz).
+100 mel bands (scales to 128). Zero-shot speaker conditioning. Singer-disjoint validation.
+bf16 mixed precision.
+
+## Limits
+
+- NOT a stable release. No frozen checkpoint; behaviour changes between checkpoints.
+- NOT benchmarked. No published objective scores, no formal listening tests. Validation loss is the
+  only tracked signal, and loss is not the same as sounding good.
+- NOT full-band. Output is 24 kHz with 100 mel bands today; 44.1 kHz is a future configuration.
+- Sensitive to reference quality. Training is restricted to dry isolated vocals, so references with
+  instrumental bleed, heavy reverb or mixed audio are out of distribution and degrade cloning.
+- Bounded by its corpus. Phonetic and stylistic coverage extends only as far as the training data.
+- NOT for production or safety-critical use. Independent research project.
+- The model outputs a mel spectrogram; producing a listenable waveform requires a vocoder stage.
+
+## Responsible use
+
+TriStream-SVS can reproduce a person's vocal characteristics from a short reference clip, including
+people never in its training data. Clone a voice only with the consent of the person it belongs to.
+Do not use it to impersonate anyone, to produce material attributed to a real artist without their
+agreement, or to deceive listeners about who is singing. The adversarial singer head reduces
+memorisation of training singers; it does not address misuse of zero-shot cloning at inference time.
 
 ===============================================================================
 ABOUT CORX LABS

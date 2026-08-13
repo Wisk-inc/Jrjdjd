@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Our Products — Open-Source AI Models Released by CorX Labs</title>
-<meta name="description" content="Every AI model released by CorX Labs, the independent research lab in Jamaica — currently CorX1.5, a 158M-parameter open-source model built from scratch.">
+<title>Our Products — AI Models Built by CorX Labs</title>
+<meta name="description" content="Every AI model built by CorX Labs in Jamaica — CorX1.5, a 158M-parameter language model, and TriStream-SVS, a singing voice synthesis model.">
 <link rel="canonical" href="https://corx-labs.com/models/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -72,11 +72,28 @@
       "@id": "https://corx-labs.com/models/#list",
       "name": "AI models released by CorX Labs",
       "itemListOrder": "https://schema.org/ItemListOrderDescending",
-      "numberOfItems": 1,
+      "numberOfItems": 2,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "@id": "https://corx-labs.com/models/tristream-svs/#model",
+            "name": "TriStream-SVS",
+            "url": "https://corx-labs.com/models/tristream-svs/",
+            "applicationCategory": "MultimediaApplication",
+            "applicationSubCategory": "Singing voice synthesis",
+            "operatingSystem": "Cross-platform",
+            "description": "A 321.8M parameter singing voice synthesis model that factors pitch, timbre and breath texture into three parallel encoder streams. In training.",
+            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "publisher": { "@id": "https://corx-labs.com/#organization" },
+            "isAccessibleForFree": true
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/corx1-5/#model",
@@ -157,10 +174,48 @@
     <div class="shell">
       <div class="section-head" data-reveal>
         <p class="eyebrow">Released</p>
-        <h2 id="released-title">Available now</h2>
+        <h2 id="released-title">Our models</h2>
       </div>
 
       <article class="card model-card" data-reveal>
+        <div class="model-head">
+          <div>
+            <div class="tag-row" style="margin-bottom:14px">
+              <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> In training</span>
+              <span class="tag">Singing voice synthesis</span>
+              <span class="tag">321.8M params</span>
+              <span class="tag">Zero-shot cloning</span>
+            </div>
+            <h3>TriStream-SVS</h3>
+            <p class="lede" style="margin-top:12px">A singing voice synthesis model that builds the
+              source-filter theory of human voice production into its architecture as a hard
+              constraint — three parallel encoder streams for pitch, timbre and breath, combined only
+              in a late fusion trunk.</p>
+          </div>
+        </div>
+
+        <dl class="spec-list">
+          <div><dt>Parameters</dt><dd>321.8M</dd></div>
+          <div><dt>Encoder streams</dt><dd>3 parallel</dd></div>
+          <div><dt>Generation</dt><dd>Rectified flow matching</dd></div>
+          <div><dt>Sampling steps</dt><dd>~32</dd></div>
+          <div><dt>Sample rate</dt><dd>24 kHz</dd></div>
+          <div><dt>Status</dt><dd>In training</dd></div>
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/tristream-svs/">
+            View model details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">
+            View on Hugging Face
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card model-card mt-m" data-reveal>
         <div class="model-head">
           <div>
             <div class="tag-row" style="margin-bottom:14px">
@@ -199,7 +254,7 @@
 
       <div class="card mt-m" data-reveal style="background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-style:dashed;box-shadow:none">
         <div class="tag-row" style="margin-bottom:14px"><span class="tag">In training</span></div>
-        <h3 style="font-family:var(--sans);font-size:1.1rem;font-weight:600">More models are in progress.</h3>
+        <h3 style="font-family:var(--sans);font-size:1.1rem;font-weight:600">More is in progress.</h3>
         <p style="margin-top:10px">CorX Labs is a working research lab, not a finished catalogue.
           New checkpoints and new models are published as they are ready — the
           <a href="/feed.xml" style="text-decoration:underline;text-underline-offset:3px">release feed</a>
@@ -240,6 +295,7 @@
         <ul>
           <li><a href="/models/">All models</a></li>
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
         </ul>
       </nav>

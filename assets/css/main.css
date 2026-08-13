@@ -955,6 +955,57 @@ figcaption {
 }
 
 /* --------------------------------------------------------------------------
+   17c-bis. Architecture diagram
+   Inline SVG, theme-aware through the same tokens as the rest of the site.
+   Scrolls horizontally on narrow screens rather than shrinking to illegible.
+   -------------------------------------------------------------------------- */
+.diagram {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper-raised);
+  padding: clamp(16px, 2.4vw, 28px);
+  margin: 0;
+}
+.diagram-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+/* Scales down to the container when there is room, scrolls when there isn't —
+   never shrinks to the point the labels stop being readable. */
+.diagram svg { width: 100%; min-width: 900px; height: auto; display: block; }
+
+.dg-box   { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1; }
+.dg-box-a { fill: var(--paper-sunk); stroke: var(--line-strong); stroke-width: 1; }
+.dg-accent{ fill: var(--espresso); }
+.dg-title { fill: var(--ink-strong); font-family: var(--sans); font-size: 13px; font-weight: 600; }
+.dg-sub   { fill: var(--muted);     font-family: var(--sans); font-size: 11px; font-weight: 400; }
+.dg-tag   { fill: var(--faint);     font-family: var(--sans); font-size: 9px;  font-weight: 600;
+            letter-spacing: .12em; text-transform: uppercase; }
+.dg-edge  { stroke: var(--line-strong); stroke-width: 1.2; fill: none; }
+.dg-edge-dash { stroke: var(--faint); stroke-width: 1.1; fill: none; stroke-dasharray: 4 4; }
+.dg-arrow { fill: var(--line-strong); }
+.dg-arrow-soft { fill: var(--faint); }
+.dg-lane  { fill: none; stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 5; }
+
+.diagram-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: .8rem;
+  color: var(--muted);
+}
+.diagram-key span { display: inline-flex; align-items: center; gap: 8px; }
+.diagram-key i {
+  width: 22px; height: 0; flex: none;
+  border-top: 1.5px solid var(--line-strong);
+}
+.diagram-key i.is-dashed { border-top-style: dashed; border-top-color: var(--faint); }
+
+/* --------------------------------------------------------------------------
    17d. Developer profile
    -------------------------------------------------------------------------- */
 .dev-card {

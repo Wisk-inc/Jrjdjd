@@ -20,6 +20,10 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /developers          /developers/           301
 /team                /developers/           301
 /team/*              /developers/           301
+/tristream           /models/tristream-svs/ 301
+/tristream-svs       /models/tristream-svs/ 301
+/svs                 /models/tristream-svs/ 301
+/models/tristream    /models/tristream-svs/ 301
 /about               /about/                301
 /about-us            /about/                301
 /contact             /contact/              301

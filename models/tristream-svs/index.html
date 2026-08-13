@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>TriStream-SVS — Source-Filter Singing Voice Synthesis | CorX Labs</title>
+<meta name="description" content="TriStream-SVS is a 321.8M-parameter singing voice synthesis model with three parallel encoders for pitch, timbre and breath. Built from scratch in Jamaica.">
+<link rel="canonical" href="https://corx-labs.com/models/tristream-svs/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Nathan">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/models/tristream-svs/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/models/tristream-svs/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/models/tristream-svs/">
+<meta property="og:title" content="TriStream-SVS — Source-Filter Singing Voice Synthesis">
+<meta property="og:description" content="A 321.8M-parameter singing voice synthesis model that factors pitch, timbre and breath into three separate encoder streams as a hard architectural constraint.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-tristream.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TriStream-SVS — singing voice synthesis, factored by design">
+<meta property="article:modified_time" content="2026-08-13T00:00:00Z">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TriStream-SVS — Source-Filter Singing Voice Synthesis">
+<meta name="twitter:description" content="A 321.8M-parameter singing voice synthesis model that factors pitch, timbre and breath into three separate encoder streams.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-tristream.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+      "@id": "https://corx-labs.com/models/tristream-svs/#model",
+      "name": "TriStream-SVS",
+      "alternateName": ["TriStream-SVS-300M", "TriStream"],
+      "url": "https://corx-labs.com/models/tristream-svs/",
+      "description": "TriStream-SVS is a 321.8M-parameter singing voice synthesis model built from scratch by CorX Labs in Jamaica. It factors the source-filter model of human voice production directly into its architecture as three parallel encoder streams — a source stream for pitch, a filter stream for timbre and formants, and a residual stream for breath and fricative texture — which are combined only in a late fusion trunk. It supports zero-shot voice cloning through a dedicated contrastive speaker encoder and generates audio with rectified flow matching in roughly 32 sampling steps.",
+      "applicationCategory": "MultimediaApplication",
+      "applicationSubCategory": "Singing voice synthesis",
+      "operatingSystem": "Cross-platform",
+      "softwareVersion": "in training",
+      "programmingLanguage": "Python",
+      "codeRepository": "https://huggingface.co/Sigmandndnns/TriStream-SVS-300M",
+      "downloadUrl": "https://huggingface.co/Sigmandndnns/TriStream-SVS-300M",
+      "isAccessibleForFree": true,
+      "dateModified": "2026-08-13",
+      "inLanguage": "en",
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "creator": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "provider": { "@id": "https://corx-labs.com/#organization" },
+      "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
+      "keywords": "singing voice synthesis, SVS, source-filter model, zero-shot voice cloning, rectified flow matching, speaker encoder, adversarial disentanglement, mel spectrogram, vocal synthesis",
+      "featureList": [
+        "Three parallel encoder streams: source (pitch), filter (timbre), residual (breath and texture)",
+        "Structural disentanglement — the source stream has no architectural path to timbre information",
+        "Late fusion trunk, 8 transformer layers with cross-attention to a lyric encoder",
+        "Adversarial singer head with gradient reversal as an anti-memorisation mechanism",
+        "Zero-shot voice cloning via a contrastive speaker encoder",
+        "Separate base pitch, scoop and vibrato prediction",
+        "Soft beat quantisation with an adjustable swing parameter",
+        "Rectified flow-matching decoder, ~32 sampling steps",
+        "Audio editing as the native training objective, not a bolted-on inference trick",
+        "RoPE positional encoding, RMSNorm, SwiGLU feed-forward"
+      ],
+      "sameAs": ["https://huggingface.co/Sigmandndnns/TriStream-SVS-300M"],
+      "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/models/tristream-svs/#webpage",
+      "url": "https://corx-labs.com/models/tristream-svs/",
+      "name": "TriStream-SVS — Source-Filter Singing Voice Synthesis",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "mainEntity": { "@id": "https://corx-labs.com/models/tristream-svs/#model" },
+      "inLanguage": "en",
+      "dateModified": "2026-08-13",
+      "breadcrumb": { "@id": "https://corx-labs.com/models/tristream-svs/#breadcrumb" },
+      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/models/tristream-svs/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/" },
+        { "@type": "ListItem", "position": 3, "name": "TriStream-SVS", "item": "https://corx-labs.com/models/tristream-svs/" }
+      ]
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://corx-labs.com/models/tristream-svs/#architecture-diagram",
+      "name": "TriStream-SVS architecture diagram",
+      "caption": "The TriStream-SVS building blocks: three parallel encoder streams for pitch, timbre and breath texture, a lyric encoder, a zero-shot speaker encoder, a late fusion trunk with an adversarial singer head, duration and pitch predictors, and a rectified flow-matching decoder producing a mel spectrogram.",
+      "representativeOfPage": true
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/models/tristream-svs/#faq",
+      "isPartOf": { "@id": "https://corx-labs.com/models/tristream-svs/#webpage" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is TriStream-SVS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TriStream-SVS is a 321.8M-parameter singing voice synthesis model built from scratch by CorX Labs in Jamaica. It builds the source-filter model of human voice production directly into its architecture: a source stream handles pitch, a filter stream handles timbre and formants, and a residual stream handles breath and fricative texture. The three are processed separately and combined only in a late fusion trunk."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does TriStream-SVS separate pitch from voice identity?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Structurally rather than statistically. The source stream receives only a log-scaled F0 contour and a voiced/unvoiced flag — never the mel spectrogram, the singer embedding, or any other timbre-carrying signal. There is no pathway through which identity information could reach it, so the separation holds regardless of what training pressure is applied."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can TriStream-SVS clone a voice it has never heard?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — that is what the speaker encoder is for. A separate convolutional network with dilated convolutions, squeeze-excitation blocks and attentive statistics pooling turns an arbitrary reference clip into a fixed-size voice embedding. It is trained contrastively, so closeness in that embedding space corresponds to sounding like the same person, which is what makes zero-shot cloning of unseen voices possible."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is TriStream-SVS finished?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. TriStream-SVS is actively in training. The full architecture and pipeline run end to end and singer-disjoint validation loss has continued to improve, but there is no stable release checkpoint, no published objective benchmark scores, and no listening-test results. It should be treated as a research project in progress, not a finished product."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does TriStream-SVS use flow matching instead of diffusion?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Rectified flow matching learns to predict a direct velocity field from noise toward the target mel spectrogram, rather than learning to reverse a noise-adding process over 100 or more denoising steps. This allows full-quality generation in roughly 32 sampling steps — a substantial efficiency gain over the diffusion approach used in earlier singing synthesis systems such as the original DiffSinger."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/" aria-current="page">Our Products</a>
+      <a href="/blog/">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">View on Hugging Face</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">View on Hugging Face</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><span aria-current="page">TriStream-SVS</span></li>
+      </ol>
+    </nav>
+
+    <div class="tag-row" style="margin-top:22px">
+      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> In training</span>
+      <span class="tag">Singing voice synthesis</span>
+      <span class="tag">321.8M params</span>
+      <span class="tag">Zero-shot cloning</span>
+      <span class="tag">Built from scratch</span>
+    </div>
+
+    <h1>TriStream-SVS</h1>
+    <p class="lede">A singing voice synthesis model that takes the source-filter theory of human
+      voice production and builds it into the architecture as a hard constraint — three parallel
+      encoder streams for pitch, timbre and breath, combined only at the very end.</p>
+
+    <div class="btn-row mt-m">
+      <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">
+        View on Hugging Face
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="#architecture">Jump to the architecture</a>
+    </div>
+    <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
+      Repository: <code>Sigmandndnns/TriStream-SVS-300M</code> &middot; Developer: Nathan &middot; Origin: Jamaica
+    </p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <!-- Answer-first summary -->
+  <section class="section-tight" id="what-it-is">
+    <div class="shell">
+      <div class="answer-box" style="margin-top:0" data-reveal>
+        <p><strong>TriStream-SVS</strong> is a 321.8M-parameter singing voice synthesis model built
+          from scratch by <a href="/about/">CorX Labs</a> in Jamaica. Human voice production factors
+          naturally into three components — a <strong>glottal source</strong> (the vibration of the
+          vocal folds that becomes perceived pitch), a <strong>vocal-tract filter</strong> (the
+          resonant shaping by throat, mouth and tongue that makes a voice sound like a specific
+          person and a vowel sound like that vowel), and <strong>turbulent noise</strong> (breath,
+          fricatives, the airy texture of a delivery). Rather than hoping a neural network discovers
+          that structure implicitly during training, TriStream builds it directly into the
+          architecture as a hard constraint.</p>
+        <p>The model is <strong>actively in training</strong>. The full pipeline runs end to end, but
+          there is no stable release checkpoint and no published benchmark scores yet.</p>
+      </div>
+
+      <dl class="spec-list mt-m" data-reveal>
+        <div><dt>Parameters</dt><dd>321.8M</dd></div>
+        <div><dt>Task</dt><dd>Singing voice synthesis</dd></div>
+        <div><dt>Generative paradigm</dt><dd>Rectified flow matching</dd></div>
+        <div><dt>Sampling steps</dt><dd>~32</dd></div>
+        <div><dt>Sample rate</dt><dd>24 kHz</dd></div>
+        <div><dt>Speaker conditioning</dt><dd>Zero-shot</dd></div>
+        <div><dt>Status</dt><dd>In training</dd></div>
+      </dl>
+    </div>
+  </section>
+
+      <section class="section-tight" id="architecture" style="padding-top:0">
+<div class="shell">
+      <h2>1. Architecture graph</h2>
+      <div class="prose">
+        <p>Every building block, and how signal moves between them. Solid lines carry
+          representations forward; dashed lines are cross-attention conditioning and the reversed
+          adversarial gradient.</p>
+      </div>
+
+      <figure class="diagram mt-m" data-reveal>
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 1140 558" width="1140" height="558" role="img"
+               aria-labelledby="dg-title dg-desc">
+            <title id="dg-title">TriStream-SVS architecture</title>
+            <desc id="dg-desc">Inputs feed three parallel encoder streams — source, filter and
+              residual. A lyric encoder cross-attends into the filter stream and the fusion
+              trunk. A speaker encoder produces a singer embedding for the filter stream. The
+              three streams meet in an eight-layer late fusion trunk, which feeds an adversarial
+              singer head with a reversed gradient, a duration predictor, a pitch predictor, and
+              a five-layer rectified flow-matching decoder that outputs a mel spectrogram.</desc>
+
+            <defs>
+              <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow"/>
+              </marker>
+              <marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow-soft"/>
+              </marker>
+            </defs>
+
+            <!-- ============ INPUTS (column 1) ============ -->
+            <rect class="dg-box" x="16" y="94" width="172" height="52" rx="9"/>
+            <text class="dg-title" x="32" y="118">F0 contour</text>
+            <text class="dg-sub"   x="32" y="135">+ voiced/unvoiced flag</text>
+
+            <rect class="dg-box" x="16" y="190" width="172" height="46" rx="9"/>
+            <text class="dg-title" x="32" y="212">Mel spectrogram</text>
+            <text class="dg-sub"   x="32" y="228">target audio</text>
+
+            <rect class="dg-box-a" x="16" y="246" width="172" height="62" rx="9"/>
+            <rect class="dg-accent" x="16" y="246" width="3" height="62" rx="1.5"/>
+            <text class="dg-tag"   x="32" y="264">Zero-shot</text>
+            <text class="dg-title" x="32" y="282">Speaker encoder</text>
+            <text class="dg-sub"   x="32" y="298">→ singer + emotion emb.</text>
+
+            <rect class="dg-box" x="16" y="346" width="172" height="52" rx="9"/>
+            <text class="dg-title" x="32" y="370">Mel spectrogram</text>
+            <text class="dg-sub"   x="32" y="387">target audio</text>
+
+            <!-- ============ THREE STREAMS (column 2) ============ -->
+            <rect class="dg-box" x="228" y="88" width="196" height="64" rx="10"/>
+            <rect class="dg-accent" x="228" y="88" width="3" height="64" rx="1.5"/>
+            <text class="dg-title" x="246" y="114">Source stream</text>
+            <text class="dg-sub"   x="246" y="131">3 layers · pitch only</text>
+            <text class="dg-tag"   x="246" y="146">No timbre path</text>
+
+            <rect class="dg-box" x="228" y="190" width="196" height="118" rx="10"/>
+            <rect class="dg-accent" x="228" y="190" width="3" height="118" rx="1.5"/>
+            <text class="dg-title" x="246" y="216">Filter stream</text>
+            <text class="dg-sub"   x="246" y="233">5 layers · deepest stream</text>
+            <text class="dg-sub"   x="246" y="249">timbre + formants</text>
+            <text class="dg-sub"   x="246" y="265">cross-attends to lyrics</text>
+            <text class="dg-tag"   x="246" y="288">Only identity-carrying</text>
+
+            <rect class="dg-box" x="228" y="340" width="196" height="64" rx="10"/>
+            <rect class="dg-accent" x="228" y="340" width="3" height="64" rx="1.5"/>
+            <text class="dg-title" x="246" y="366">Residual stream</text>
+            <text class="dg-sub"   x="246" y="383">2 layers · breath, fricatives</text>
+            <text class="dg-sub"   x="246" y="398">articulation texture</text>
+
+            <!-- ============ FUSION TRUNK (column 3) ============ -->
+            <rect class="dg-box-a" x="468" y="150" width="176" height="210" rx="10"/>
+            <text class="dg-tag"   x="486" y="180">Late fusion</text>
+            <text class="dg-title" x="486" y="204">Fusion trunk</text>
+            <text class="dg-sub"   x="486" y="222">8 transformer layers</text>
+            <text class="dg-sub"   x="486" y="240">cross-attends to lyrics</text>
+            <text class="dg-sub"   x="486" y="272">The single point where</text>
+            <text class="dg-sub"   x="486" y="288">pitch, timbre and texture</text>
+            <text class="dg-sub"   x="486" y="304">are allowed to interact.</text>
+
+            <!-- ============ HEADS (column 4) ============ -->
+            <rect class="dg-box" x="688" y="40" width="176" height="80" rx="10"/>
+            <text class="dg-tag"   x="706" y="62">Anti-memorisation</text>
+            <text class="dg-title" x="706" y="82">Adversarial singer head</text>
+            <text class="dg-sub"   x="706" y="99">classifier + gradient</text>
+            <text class="dg-sub"   x="706" y="114">reversal layer</text>
+
+            <rect class="dg-box" x="688" y="158" width="176" height="58" rx="10"/>
+            <text class="dg-title" x="706" y="182">Duration predictor</text>
+            <text class="dg-sub"   x="706" y="199">frames per phoneme, log-space</text>
+
+            <rect class="dg-box" x="688" y="232" width="176" height="104" rx="10"/>
+            <text class="dg-title" x="706" y="256">Pitch predictor</text>
+            <text class="dg-sub"   x="706" y="274">base pitch</text>
+            <text class="dg-sub"   x="706" y="290">+ scoop</text>
+            <text class="dg-sub"   x="706" y="306">+ vibrato depth &amp; rate</text>
+            <text class="dg-tag"   x="706" y="326">Independently tunable</text>
+
+            <!-- ============ DECODER + OUTPUT (column 5) ============ -->
+            <rect class="dg-box-a" x="908" y="170" width="216" height="116" rx="10"/>
+            <rect class="dg-accent" x="908" y="170" width="3" height="116" rx="1.5"/>
+            <text class="dg-tag"   x="926" y="196">Generation</text>
+            <text class="dg-title" x="926" y="218">Flow-matching decoder</text>
+            <text class="dg-sub"   x="926" y="236">5 layers · rectified flow</text>
+            <text class="dg-sub"   x="926" y="252">predicts a velocity field</text>
+            <text class="dg-sub"   x="926" y="272">~32 sampling steps</text>
+
+            <rect class="dg-box" x="908" y="312" width="216" height="62" rx="10"/>
+            <text class="dg-title" x="926" y="336">Mel spectrogram</text>
+            <text class="dg-sub"   x="926" y="353">100 bands @ 24 kHz</text>
+
+            <!-- ============ LYRIC ENCODER (bottom band) ============ -->
+            <rect class="dg-box" x="228" y="452" width="416" height="86" rx="10"/>
+            <rect class="dg-accent" x="228" y="452" width="3" height="86" rx="1.5"/>
+            <text class="dg-tag"   x="246" y="476">Conditioning</text>
+            <text class="dg-title" x="246" y="498">Lyric / phoneme encoder</text>
+            <text class="dg-sub"   x="246" y="516">4 transformer layers · processed independently, so</text>
+            <text class="dg-sub"   x="246" y="532">“what is sung” stays separate from “how it sounds”</text>
+
+            <!-- ============ EDGES ============ -->
+            <!-- inputs → streams -->
+            <path class="dg-edge" d="M188,120 L221,120" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M188,213 C204,213 206,220 221,223" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M188,277 C204,277 206,270 221,267" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M188,372 L221,372" marker-end="url(#ah)"/>
+
+            <!-- streams → trunk -->
+            <path class="dg-edge" d="M424,120 C448,120 448,190 461,198" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M424,249 C448,249 448,252 461,253" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M424,372 C448,372 448,316 461,308" marker-end="url(#ah)"/>
+
+            <!-- trunk → heads -->
+            <path class="dg-edge" d="M644,176 C666,176 666,80 681,80" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M644,200 C666,200 666,187 681,187" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M644,272 C666,272 666,283 681,284" marker-end="url(#ah)"/>
+
+            <!-- gradient reversal, back into the trunk -->
+            <path class="dg-edge-dash" d="M776,40 L776,22 L570,22 L570,143" marker-end="url(#ahs)"/>
+            <text class="dg-tag" x="588" y="17">Gradient reversal</text>
+
+            <!-- heads → decoder -->
+            <path class="dg-edge" d="M864,187 C886,187 886,199 901,201" marker-end="url(#ah)"/>
+            <path class="dg-edge" d="M864,284 C886,284 886,240 901,237" marker-end="url(#ah)"/>
+
+            <!-- trunk → decoder (fused representation) -->
+            <path class="dg-edge" d="M644,344 L664,344 L664,412 L890,412 L890,268 L901,268" marker-end="url(#ah)"/>
+            <text class="dg-tag" x="700" y="406">Fused representation</text>
+
+            <!-- decoder → output -->
+            <path class="dg-edge" d="M1016,286 L1016,305" marker-end="url(#ah)"/>
+
+            <!-- lyric encoder → filter stream and trunk (cross-attention) -->
+            <path class="dg-edge-dash" d="M270,452 L270,432 L204,432 L204,292 L220,292" marker-end="url(#ahs)"/>
+            <path class="dg-edge-dash" d="M556,452 L556,367" marker-end="url(#ahs)"/>
+            <text class="dg-tag" x="566" y="410">Cross-attn</text>
+            <text class="dg-tag" x="196" y="437" text-anchor="end">Cross-attn</text>
+          </svg>
+        </div>
+
+        <div class="diagram-key">
+          <span><i aria-hidden="true"></i> Forward representation</span>
+          <span><i class="is-dashed" aria-hidden="true"></i> Cross-attention &amp; reversed gradient</span>
+          <span>Streams stay separate until the fusion trunk</span>
+        </div>
+
+        <figcaption>The TriStream-SVS building blocks. Inputs on the left, three parallel
+          encoder streams, a late fusion trunk, prediction heads, and a rectified flow-matching
+          decoder producing a mel spectrogram. The lyric encoder conditions the filter stream and
+          the trunk by cross-attention; the adversarial singer head sends a reversed gradient
+          back into the trunk.</figcaption>
+      </figure>
+
+      <div class="prose mt-m">
+        <p>In list form, the blocks are: <strong>three parallel encoder streams</strong> (source,
+          filter, residual), a <strong>lyric / phoneme encoder</strong>, a <strong>speaker
+          encoder</strong> for zero-shot cloning, a <strong>late fusion trunk</strong>, an
+          <strong>adversarial singer head</strong>, <strong>duration and pitch predictors</strong>,
+          a <strong>beat-alignment step</strong>, and a <strong>flow-matching decoder</strong>.
+          Each is described below.</p>
+      </div>
+</div>
+  </section>
+
+  <div class="shell section-tight" style="padding-top:0">
+    <div class="doc-layout">
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <ol>
+          <li><a href="#architecture">1. Architecture graph</a></li>
+          <li><a href="#streams">2. The three streams</a></li>
+          <li><a href="#conditioning">3. Lyric &amp; speaker encoders</a></li>
+          <li><a href="#fusion">4. Fusion &amp; adversarial head</a></li>
+          <li><a href="#prosody">5. Duration, pitch &amp; beat</a></li>
+          <li><a href="#decoder">6. Flow-matching decoder</a></li>
+          <li><a href="#modes">7. Two modes</a></li>
+          <li><a href="#training">8. Training methodology</a></li>
+          <li><a href="#specs">9. Specifications</a></li>
+          <li><a href="#limits">10. Limits &amp; status</a></li>
+          <li><a href="#responsible">11. Responsible use</a></li>
+          <li><a href="#faq">12. FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+
+        <!-- 2. STREAMS -->
+        <section class="doc-section" id="streams">
+          <h2>2. The three parallel encoder streams</h2>
+          <div class="prose">
+            <p>The heart of TriStream is a set of three encoders that process the same underlying
+              audio event from entirely separate vantage points, with no ability to exchange
+              information until much later in the network.</p>
+          </div>
+
+          <div class="table-wrap mt-m">
+            <table>
+              <caption class="visually-hidden">The three encoder streams</caption>
+              <thead>
+                <tr><th scope="col">Stream</th><th scope="col">Depth</th><th scope="col">Receives</th><th scope="col">Models</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Source</td><td>3 layers</td><td>Log-scaled F0 contour, voiced/unvoiced flag</td><td>The glottal pulse train — perceived pitch</td></tr>
+                <tr><td>Filter</td><td>5 layers</td><td>Mel spectrogram, singer embedding, emotion/technique embedding, lyric cross-attention</td><td>Vocal-tract resonance — formants, timbre, identity</td></tr>
+                <tr><td>Residual</td><td>2 layers</td><td>Mel spectrogram</td><td>Breath noise, fricatives, articulation texture</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="prose mt-m">
+            <p><strong>Stream 1 — Source.</strong> This stream receives only two numeric inputs: a
+              log-scaled F0 pitch contour and a binary voiced/unvoiced flag. Critically, it never
+              receives the mel spectrogram, the singer embedding, or any timbre-carrying signal
+              whatsoever. It is architecturally incapable of representing anything about <em>who</em>
+              is singing — it can only ever describe <em>what pitch is being produced</em>.</p>
+          </div>
+
+          <div class="callout">
+            <p><strong>This is what makes the disentanglement structural rather than merely
+              encouraged.</strong> There is no pathway through which timbre information could reach
+              the source stream, even if training somehow pushed the model in that direction. Most
+              systems separate pitch from identity by adding a loss term and hoping; here the
+              separation is a property of the wiring.</p>
+          </div>
+
+          <div class="prose">
+            <p><strong>Stream 2 — Filter.</strong> The deepest of the three, reflecting that formant
+              structure and timbre are the hardest components of a voice to model well. It receives
+              the mel spectrogram along with a singer identity embedding and an emotion/technique
+              embedding, and cross-attends against the lyric representation so it always knows what
+              phoneme is currently being produced. <strong>This is the only stream that carries
+              identity information.</strong></p>
+            <p><strong>Stream 3 — Residual.</strong> Handles breath noise, fricative consonants and
+              general articulation texture — the parts of a vocal performance that aren't well
+              described by either clean pitch or clean timbre.</p>
+          </div>
+        </section>
+
+        <!-- 3. CONDITIONING -->
+        <section class="doc-section" id="conditioning">
+          <h2>3. The lyric and speaker encoders</h2>
+          <div class="prose">
+            <p><strong>The lyric / phoneme encoder</strong> is a 4-layer transformer that processes
+              input lyrics independently, converting them into a representation that conditions the
+              Filter stream and, later, the Fusion Trunk, by cross-attention. This keeps "what should
+              be sung" cleanly separated from "how it should sound" throughout most of the network.</p>
+            <p><strong>The speaker encoder</strong> is a separate convolutional network that extracts
+              a portable "voice fingerprint" from an arbitrary reference clip — including from voices
+              the model has never encountered during training. It uses:</p>
+            <ul>
+              <li><strong>Dilated convolutions</strong>, to build a wide receptive field cheaply</li>
+              <li><strong>Squeeze-excitation blocks</strong>, letting the network weight which
+                channels matter most</li>
+              <li><strong>Attentive statistics pooling</strong> — a weighted mean and standard
+                deviation rather than a simple average — to collapse a variable-length clip into a
+                single fixed-size embedding</li>
+            </ul>
+            <p>It is trained with a <strong>contrastive objective</strong>: two different clips from
+              the same speaker are pulled together in embedding space, while clips from different
+              speakers are pushed apart. That is what gives the embedding space genuine, learned
+              structure — rather than an arbitrary set of numbers, it becomes a space where
+              "closeness" reliably corresponds to "sounds like the same person," which is the
+              property that makes zero-shot cloning of unseen voices possible at all.</p>
+          </div>
+        </section>
+
+        <!-- 4. FUSION -->
+        <section class="doc-section" id="fusion">
+          <h2>4. Late fusion and the adversarial singer head</h2>
+          <div class="prose">
+            <p><strong>The late fusion trunk</strong> is an 8-layer transformer — again using
+              cross-attention against the lyric encoder — where the three separately-processed
+              streams are finally allowed to combine into one unified representation. This fusion
+              point is deliberately placed as late as possible in the network. Everything before it
+              has been kept artificially separated; this is the single location where pitch, timbre
+              and texture information are permitted to interact.</p>
+            <p><strong>The adversarial singer head</strong> is a small classifier attached to the
+              trunk's output, trained to guess which singer produced a given piece of audio using
+              only the shared representation. Its gradient passes through a <strong>gradient reversal
+              layer</strong> before propagating back into the trunk — so as the classifier gets
+              better at identifying singers, the trunk is pushed in the <em>opposite</em> direction,
+              actively degrading its own identifiability.</p>
+          </div>
+
+          <div class="callout">
+            <p>The practical effect is a shared representation explicitly trained to be as
+              uninformative about singer identity as possible. It is pushed toward encoding general
+              vocal mechanics — how a formant transition behaves, how a phoneme boundary sounds —
+              rather than person-specific fingerprints that could be exploited to memorise particular
+              singers.</p>
+            <p>This is domain-adversarial training, applied here specifically as an
+              <strong>anti-memorisation mechanism</strong> rather than for its more typical use in
+              domain adaptation.</p>
+          </div>
+        </section>
+
+        <!-- 5. PROSODY -->
+        <section class="doc-section" id="prosody">
+          <h2>5. Duration, pitch and beat alignment</h2>
+          <div class="prose">
+            <p>When generating an entirely new performance — as opposed to editing existing audio —
+              the model has no ground-truth timing or melody to read from. It has to invent both.</p>
+            <p><strong>The duration predictor</strong> estimates how many audio frames each phoneme
+              should occupy, predicted in logarithmic space specifically because real note durations
+              are heavily skewed: a sustained vowel might last dozens of times longer than a short
+              consonant, and predicting in log-space prevents the long notes from dominating the
+              training signal.</p>
+            <p><strong>The pitch predictor</strong> deliberately avoids outputting one blended pitch
+              curve. It separately predicts:</p>
+            <ul>
+              <li><strong>Base pitch</strong> — the target note itself</li>
+              <li><strong>Scoop</strong> — the natural human tendency to slide into a pitch rather
+                than hit it instantaneously, which is one of the clearest tells separating human
+                singing from robotic-sounding synthesis</li>
+              <li><strong>Vibrato depth and rate</strong> — ramped in gradually over roughly a
+                quarter-second rather than snapping on instantly, mirroring how real vibrato builds
+                over a sustained note</li>
+            </ul>
+            <p>Because these components are generated separately, they remain independently
+              adjustable after the fact — vibrato intensity can be dialled up or down without
+              disturbing underlying pitch accuracy.</p>
+            <p><strong>Beat alignment.</strong> When a backing track accompanies a generation
+              request, a beat-tracking step extracts tempo and downbeat positions from that track,
+              and predicted note durations are pulled toward that rhythmic grid using <strong>soft
+              quantisation</strong> rather than a hard mechanical snap. Perfectly quantised timing is
+              one of the most reliable tells of synthetic vocals; TriStream's alignment allows a
+              controlled degree of natural deviation from the grid, including an adjustable
+              <em>swing</em> parameter, specifically to avoid that mechanical quality.</p>
+          </div>
+        </section>
+
+        <!-- 6. DECODER -->
+        <section class="doc-section" id="decoder">
+          <h2>6. The flow-matching decoder</h2>
+          <div class="prose">
+            <p>The final generative stage is a 5-layer decoder built around <strong>rectified flow
+              matching</strong>, a more modern and computationally efficient alternative to the
+              diffusion-based approaches used by earlier singing synthesis systems.</p>
+            <p>Rather than learning to slowly reverse a noise-adding process across 100 or more
+              denoising steps, the model learns to predict a direct velocity field pointing from
+              random noise toward the target mel spectrogram. This allows full-quality audio
+              generation in roughly <strong>32 sampling steps</strong> — a substantial efficiency
+              improvement over the diffusion approach used in systems like the original DiffSinger,
+              while maintaining comparable output fidelity.</p>
+          </div>
+        </section>
+
+        <!-- 7. MODES -->
+        <section class="doc-section" id="modes">
+          <h2>7. Two modes, one underlying model</h2>
+          <div class="prose">
+            <p><strong>Editing is the model's native training objective</strong> — not a feature
+              added on top of a generation-only system. During training, random contiguous spans of
+              real audio are masked out, and the model is trained to reconstruct exactly that masked
+              span using the surrounding, unmasked audio as context, along with the lyrics for that
+              section.</p>
+            <p>This means "regenerate this one phrase with different lyrics" or "make this section
+              sound more breathy" is not a special-cased inference trick bolted on afterward — it is
+              the literal task the network was designed and trained around from its first training
+              step.</p>
+            <p><strong>Generation mode reuses every one of the same trained components</strong>, but
+              begins from a fully masked target rather than a partially masked one: the speaker
+              encoder clones the requested voice from reference audio, the duration and pitch
+              predictors invent complete timing and melody from the lyrics (and any supplied melody
+              guide), and the decoder generates the entire performance from scratch rather than
+              filling a gap in existing material.</p>
+          </div>
+        </section>
+
+        <!-- 8. TRAINING -->
+        <section class="doc-section" id="training">
+          <h2>8. Training methodology</h2>
+
+          <div class="prose">
+            <p><strong>Singer-disjoint validation.</strong> A held-out set of singers is determined by
+              a stable hash function applied to singer identity, and that set is completely excluded
+              from training data at the point of data loading — not merely reserved after the fact.
+              Every reported validation score is measured exclusively against voices the model has
+              never once encountered.</p>
+          </div>
+
+          <div class="callout">
+            <p>This is meaningfully stricter than a random validation split, which can silently allow
+              the same singer's recordings to appear in both training and validation — producing
+              validation scores that look strong but don't measure generalisation at all. The
+              singer-disjoint approach is the only way to be confident the model is learning
+              transferable vocal mechanics rather than quietly memorising the individuals in its
+              training data.</p>
+          </div>
+
+          <div class="prose">
+            <p><strong>Crash-resilient, autonomous checkpointing.</strong> The training pipeline
+              automatically pushes checkpoints to a remote Hugging Face repository whenever the
+              singer-disjoint validation score improves on its previous best, and additionally on a
+              rolling time-based interval regardless of improvement. If a session is interrupted for
+              any reason — a platform session limit, an infrastructure failure, a manual restart —
+              the next invocation of the training script automatically detects the most recent
+              checkpoint, including full optimiser state, and resumes from precisely that point
+              rather than restarting from initialisation. This infrastructure was built and hardened
+              specifically in response to real interruptions encountered during development,
+              including data-loader failures under multiprocessing and transient Hub connectivity
+              issues, both now handled automatically with retry logic and graceful fallback.</p>
+
+            <p><strong>Careful data curation.</strong> Training data is deliberately restricted to
+              dry, isolated vocal recordings, with instrumental bleed, heavy reverb and mixed-track
+              audio explicitly excluded — because mixed audio actively corrupts the mel-spectrogram
+              reconstruction target the model trains against, regardless of how much of it is fed in.
+              The corpus combines large-scale speech data, used to teach general vocal-tract
+              mechanics and broad phonetic coverage, with smaller, carefully verified singing corpora
+              used specifically for pitch behaviour, vocal technique and musical phrasing. Datasets
+              are individually probed and verified before inclusion — the pipeline tests that each
+              configured source actually loads and decodes correctly before committing to it in a
+              training run.</p>
+
+            <p><strong>Anti-overfitting measures</strong>, beyond the adversarial disentanglement
+              described above:</p>
+          </div>
+
+          <ul class="check-list mt-s">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Waveform-level augmentation — pitch shifting, time stretching and gain variation, so the model never sees the exact same acoustic realisation of a clip twice</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> SpecAugment-style frequency and time masking applied directly to the mel spectrogram</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Mixup between training samples within a batch, discouraging the model from latching onto exact spectral fingerprints of individual recordings</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Early stopping keyed directly to the singer-disjoint validation score, with patience-based tolerance for normal step-to-step noise</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> The best-performing checkpoint by validation score — not simply the most recent — is what gets preserved and deployed, tracked and saved as an entirely separate file throughout training</li>
+          </ul>
+        </section>
+
+        <!-- 9. SPECS -->
+        <section class="doc-section" id="specs">
+          <h2>9. Technical specifications</h2>
+          <div class="table-wrap mt-m">
+            <table>
+              <caption class="visually-hidden">TriStream-SVS technical specifications</caption>
+              <thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead>
+              <tbody>
+                <tr><td>Total parameters</td><td>321.8M</td></tr>
+                <tr><td>Architecture family</td><td>Custom transformer, source-filter factored</td></tr>
+                <tr><td>Positional encoding</td><td>Rotary Position Embeddings (RoPE)</td></tr>
+                <tr><td>Normalisation</td><td>RMSNorm</td></tr>
+                <tr><td>Feed-forward network</td><td>SwiGLU</td></tr>
+                <tr><td>Attention</td><td>Scaled dot-product with cross-attention conditioning</td></tr>
+                <tr><td>Generative paradigm</td><td>Rectified flow matching</td></tr>
+                <tr><td>Typical inference sampling steps</td><td>~32</td></tr>
+                <tr><td>Sample rate</td><td>24 kHz (architecture supports scaling to 44.1 kHz)</td></tr>
+                <tr><td>Mel spectrogram resolution</td><td>100 mel bands (scales to 128 at higher sample rates)</td></tr>
+                <tr><td>Speaker conditioning</td><td>Zero-shot, via dedicated contrastive speaker encoder</td></tr>
+                <tr><td>Validation methodology</td><td>Singer-disjoint held-out evaluation set</td></tr>
+                <tr><td>Checkpointing</td><td>Automatic, crash-resilient, Hub-synchronised</td></tr>
+                <tr><td>Training precision</td><td>bf16 mixed precision on supported hardware</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 10. LIMITS -->
+        <section class="doc-section" id="limits">
+          <h2>10. Limits and development status</h2>
+
+          <div class="answer-box">
+            <p><strong>TriStream-SVS is actively in training and is not a finished product.</strong>
+              The complete architecture and pipeline are functioning end to end — data ingestion and
+              verification, the three-stream encoder system, adversarial disentanglement, the speaker
+              encoder, duration and pitch prediction, flow-matching generation, and fully automated
+              crash-safe checkpointing are all live and operating together. Validation loss measured
+              against held-out, previously unseen singers has continued to improve across training,
+              which is the primary signal being tracked.</p>
+          </div>
+
+          <div class="grid grid-2 mt-m">
+            <div class="card">
+              <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">What is working</h3>
+              <ul class="check-list mt-s">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> The full pipeline runs end to end, from data ingestion to generated mel spectrogram</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Singer-disjoint validation loss improving across training</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Automated crash-safe checkpointing and resume, hardened against real failures</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Editing and generation sharing one set of trained components</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">What it is not, yet</h3>
+              <ul class="check-list is-limits mt-s">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not a stable release.</strong> There is no frozen release checkpoint; behaviour changes between checkpoints as training continues</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not benchmarked.</strong> No published objective scores and no formal listening tests. Validation loss is the only tracked signal, and loss is not the same thing as sounding good</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not full-band.</strong> Output is 24 kHz with 100 mel bands. The architecture supports 44.1 kHz and 128 bands, but that is a future configuration, not what runs today</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Sensitive to reference quality.</strong> Training is restricted to dry, isolated vocals, so reference clips with instrumental bleed, heavy reverb or mixed-track audio are out of distribution and should be expected to degrade cloning quality</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Bounded by its corpus.</strong> Phonetic and stylistic coverage extends only as far as the training data; languages, vocal techniques and genres outside it are not supported claims</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not for production or safety-critical use.</strong> This is an independent research project</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="prose mt-m">
+            <p>The model's own output is a <strong>mel spectrogram</strong>, so producing a listenable
+              waveform requires a vocoder stage on top of it — worth knowing before planning an
+              integration. As with <a href="/models/corx1-5/">CorX1.5</a>, the limits here are
+              documented as carefully as the capabilities, and this page will be updated as training
+              progresses rather than rewritten to look better than the results are.</p>
+          </div>
+        </section>
+
+        <!-- 11. RESPONSIBLE USE -->
+        <section class="doc-section" id="responsible">
+          <h2>11. Responsible use</h2>
+          <div class="prose">
+            <p>TriStream-SVS can reproduce the vocal characteristics of a person from a short
+              reference clip, including people who were never part of its training data. That is a
+              capability worth stating plainly rather than burying.</p>
+            <p>Clone a voice only with the consent of the person it belongs to. Do not use this model
+              to impersonate anyone, to produce material attributed to a real artist without their
+              agreement, or to generate anything intended to deceive a listener about who is singing.
+              The adversarial singer head reduces the model's tendency to memorise specific
+              individuals from training data — it does not, and cannot, address misuse of the
+              zero-shot cloning path at inference time. That part is on whoever runs it.</p>
+          </div>
+        </section>
+
+        <!-- 12. FAQ -->
+        <section class="doc-section" id="faq">
+          <h2>12. FAQ</h2>
+          <div class="faq mt-m">
+            <details open>
+              <summary>What is TriStream-SVS?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>A 321.8M-parameter singing voice synthesis model built from
+                scratch by CorX Labs in Jamaica. It builds the source-filter model of human voice
+                production directly into its architecture: a source stream handles pitch, a filter
+                stream handles timbre and formants, and a residual stream handles breath and
+                fricative texture. The three are processed separately and combined only in a late
+                fusion trunk.</p></div>
+            </details>
+            <details>
+              <summary>How does it separate pitch from voice identity?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Structurally rather than statistically. The source stream
+                receives only a log-scaled F0 contour and a voiced/unvoiced flag — never the mel
+                spectrogram or the singer embedding. There is no pathway through which identity
+                information could reach it, so the separation holds regardless of training
+                pressure.</p></div>
+            </details>
+            <details>
+              <summary>Can it clone a voice it has never heard?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Yes — that is what the speaker encoder is for. It turns an
+                arbitrary reference clip into a fixed-size voice embedding using dilated convolutions,
+                squeeze-excitation blocks and attentive statistics pooling, trained contrastively so
+                that closeness in the embedding space corresponds to sounding like the same person.
+                Quality depends heavily on the reference clip being dry and clean — see
+                <a href="#limits">limits</a>.</p></div>
+            </details>
+            <details>
+              <summary>Why flow matching instead of diffusion?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Rectified flow matching predicts a direct velocity field from
+                noise toward the target mel spectrogram, instead of reversing a noise-adding process
+                over 100+ steps. That gets full-quality generation in roughly 32 sampling steps — a
+                substantial efficiency gain over the diffusion approach used in systems like the
+                original DiffSinger.</p></div>
+            </details>
+            <details>
+              <summary>Is it finished? Can I use it now?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>It is actively in training. The architecture and pipeline run
+                end to end, but there is no stable release checkpoint, no published benchmark scores
+                and no listening tests. Treat it as a research project in progress. The
+                <a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">Hugging
+                Face repository</a> and its commit history are the source of truth for what currently
+                exists.</p></div>
+            </details>
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">Follow the work</p>
+        <h2 class="mt-s">Training is still going.</h2>
+        <p>Checkpoints are pushed automatically as singer-disjoint validation improves. The Hugging
+          Face commit history is the fastest way to see what has changed.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">
+            View on Hugging Face
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="/models/">Back to all models</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">Hugging Face</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>
