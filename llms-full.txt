@@ -225,6 +225,65 @@ agreement, or to deceive listeners about who is singing. The adversarial singer 
 memorisation of training singers; it does not address misuse of zero-shot cloning at inference time.
 
 ===============================================================================
+CORX CHAT — AI WORKSPACE
+===============================================================================
+
+URL: https://corx-labs.com/chat/  ·  Docs: https://corx-labs.com/chat/documentation/
+
+CorX Chat is an ORCHESTRATOR, not a model. It does not run its own weights. It sits between the
+user and the top available OpenAI models, chooses which model answers, plans long jobs, and gives
+the model tools an ordinary chat window lacks.
+
+## Sign-in
+
+Each person signs in with THEIR OWN ChatGPT account via the free "Sign in with ChatGPT" browser
+extension (Chrome Web Store and Firefox Add-ons). The extension performs the OAuth handoff and
+stores credentials encrypted in the browser; they are attached to individual requests as headers.
+CorX Labs never sees, stores or pools credentials. There is no CorX account to create. Model
+availability and rate limits are governed by the user's own ChatGPT plan.
+
+The page auto-detects the extension: it checks for an injected marker, then does a postMessage
+handshake that times out to "not installed". If missing, it offers the correct install link for the
+user's browser. If present, the user presses Continue and goes straight to authorisation.
+
+## Capabilities
+
+- Switch between top available OpenAI models mid-conversation; the list is fetched live from
+  /v1/models so it reflects the user's own plan.
+- Send images and have them read; generate images from a prompt.
+- Web search with visible sources — each site consulted is shown, and discarded sources are counted.
+- Expandable reasoning: the model's thinking is available in a dropdown on every answer.
+- A REAL sandboxed terminal the agent drives itself: installs packages, runs and tests code, makes
+  outbound API requests, creates/reads/edits/deletes files. Every command is visible to the user.
+- Files and archives: opens, edits and rebuilds files including zips; returns them as downloads.
+- Canvas mode: generated artefacts grouped by category, rendered in the code's own style, and
+  downloadable individually or as an archive.
+- Agent mode with autonomous task planning across long multi-step jobs, with a visible checklist.
+- Deep research: source validation, logic checking, cross-referencing, and reliability weighting.
+  Sources that fail the checks are dropped rather than averaged in.
+- Country/region detection so locally-dependent answers and research are relevant.
+- Language detection — replies in the language the user writes in. Both defaults can be turned off
+  by asking.
+- Persistent conversation history and memory across sessions.
+
+## Request path
+
+Browser (extension + encrypted credentials) → CorX Chat UI → Orchestrator → OpenAI-compatible proxy
+(/v1/chat/completions, /v1/responses, /v1/models, /v1/images/generations) → model. The tool layer
+(terminal, search, files, images) runs on the orchestrator, never in the browser. Credentials
+travel with each request and are not persisted server-side.
+
+## Limits
+
+- Depends entirely on the user's own ChatGPT plan for model availability, quality and rate limits.
+- The browser extension is required; no extension, no access.
+- The models still make mistakes — the terminal and visible sources exist so work can be checked.
+- The sandbox is isolated and non-permanent; long or resource-heavy jobs can be cut short, and it
+  has no access to the user's machine.
+- Deep research weights sources by reliability; that is a judgement, not a guarantee of accuracy.
+- Not for safety-critical use.
+
+===============================================================================
 ABOUT CORX LABS
 ===============================================================================
 

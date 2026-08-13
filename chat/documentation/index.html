@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>CorX Chat Documentation — How the Orchestrator Works</title>
+<meta name="description" content="How CorX Chat works: the sign-in flow and browser extension, models, the tool layer, the sandboxed terminal, canvas, deep research, memory and limits.">
+<link rel="canonical" href="https://corx-labs.com/chat/documentation/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Nathan">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/chat/documentation/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/chat/documentation/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/chat/documentation/">
+<meta property="og:title" content="CorX Chat Documentation — How the Orchestrator Works">
+<meta property="og:description" content="The sign-in flow, model switching, the tool layer, the sandboxed terminal, canvas, deep research, memory, privacy and limits.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-chat-docs.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CorX Chat documentation">
+<meta property="article:modified_time" content="2026-08-13T00:00:00Z">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CorX Chat Documentation — How the Orchestrator Works">
+<meta name="twitter:description" content="The sign-in flow, model switching, the tool layer, the sandboxed terminal, canvas, deep research, memory, privacy and limits.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-chat-docs.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/chat.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://corx-labs.com/chat/documentation/#article",
+      "headline": "CorX Chat documentation — how the orchestrator works",
+      "name": "CorX Chat Documentation",
+      "description": "Full documentation for CorX Chat: the sign-in flow and browser extension, model switching, the tool layer, the sandboxed terminal, canvas mode, agent planning, deep research, locale handling, memory, privacy and limits.",
+      "url": "https://corx-labs.com/chat/documentation/",
+      "mainEntityOfPage": { "@id": "https://corx-labs.com/chat/documentation/#webpage" },
+      "inLanguage": "en",
+      "dateModified": "2026-08-13",
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "about": { "@id": "https://corx-labs.com/chat/#app" },
+      "proficiencyLevel": "Beginner",
+      "articleSection": ["Overview", "Connecting", "Models", "Tools", "Terminal", "Canvas", "Research", "Memory", "Privacy", "Limits"],
+      "keywords": "CorX Chat, AI orchestrator, sign in with ChatGPT, browser extension OAuth, AI terminal, agentic AI, code canvas, deep research, AI memory",
+      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/chat/documentation/#webpage",
+      "url": "https://corx-labs.com/chat/documentation/",
+      "name": "CorX Chat Documentation — How the Orchestrator Works",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "inLanguage": "en",
+      "dateModified": "2026-08-13",
+      "breadcrumb": { "@id": "https://corx-labs.com/chat/documentation/#breadcrumb" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/chat/documentation/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Chat", "item": "https://corx-labs.com/chat/" },
+        { "@type": "ListItem", "position": 3, "name": "Documentation", "item": "https://corx-labs.com/chat/documentation/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://corx-labs.com/chat/documentation/#connect-howto",
+      "name": "How to connect CorX Chat to your ChatGPT account",
+      "totalTime": "PT2M",
+      "tool": [{ "@type": "HowToTool", "name": "The “Sign in with ChatGPT” browser extension" }],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Install the extension",
+          "text": "Install the free “Sign in with ChatGPT” extension from the Chrome Web Store or Firefox Add-ons. CorX Chat detects it automatically and will offer the correct install link for your browser if it is missing.",
+          "url": "https://corx-labs.com/chat/documentation/#connecting"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Press Continue",
+          "text": "Return to corx-labs.com/chat and press Continue. If the extension is already installed, the install step is skipped and you go straight to authorisation.",
+          "url": "https://corx-labs.com/chat/#connect"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Authorise with your ChatGPT account",
+          "text": "The extension performs the OAuth handoff and stores the resulting credentials encrypted in your browser. Once authorisation completes, the workspace unlocks with models, terminal, search and canvas available.",
+          "url": "https://corx-labs.com/chat/documentation/#connecting"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/chat/documentation/#faq",
+      "isPartOf": { "@id": "https://corx-labs.com/chat/documentation/#webpage" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does CorX Labs see my ChatGPT credentials?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The browser extension performs the OAuth handoff and stores the credentials encrypted in your browser's own IndexedDB. They are attached to individual requests from your side as headers. CorX Labs does not store them, and there is no shared or pooled access token."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which models can I use in CorX Chat?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whichever models your own ChatGPT plan can reach through the Codex-compatible endpoints — the model list is fetched live from /v1/models rather than hardcoded, so it reflects your account rather than a fixed list. Image generation is available through the same route."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What can the terminal actually do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a sandboxed shell the agent drives itself: installing packages, running and testing code, making outbound API requests, and creating, reading, editing and deleting files, including unpacking and rebuilding zip archives. Every command it runs is visible in the terminal panel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is my chat history stored?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Conversations and memory persist so you can return to a thread later. Clearing them is done from the conversation menu, and clearing browser storage removes the local half along with the stored credentials, which ends the session."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/chat/" aria-current="page">Chat</a>
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/">Our Products</a>
+      <a href="/blog/">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/chat/#connect">Open chat</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/chat/">Chat</a></li>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="/chat/#connect">Open chat</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/chat/">Chat</a></li>
+        <li><span aria-current="page">Documentation</span></li>
+      </ol>
+    </nav>
+    <h1>CorX Chat documentation.</h1>
+    <p class="lede">What the orchestrator is, how signing in works, what each tool can do, where your
+      data lives, and where the whole thing stops.</p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <!-- Request path diagram, full width -->
+  <section class="section-tight" id="architecture" style="padding-top:clamp(28px,3vw,44px)">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Request path</p>
+        <h2>Where a message actually goes.</h2>
+      </div>
+
+      <figure class="diagram" data-reveal>
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 1020 300" width="1020" height="300" role="img" aria-labelledby="rp-t rp-d">
+            <title id="rp-t">CorX Chat request path</title>
+            <desc id="rp-d">Your browser holds the Sign in with ChatGPT extension and the encrypted
+              credentials. The CorX Chat interface sends your message to the orchestrator, which
+              calls the OpenAI-compatible proxy using request-bound credentials supplied from your
+              browser, and separately drives the tool layer — terminal, web search, files and
+              images.</desc>
+            <defs>
+              <marker id="rp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow"/>
+              </marker>
+              <marker id="rp-ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow-soft"/>
+              </marker>
+            </defs>
+
+            <rect class="dg-box-a" x="14" y="70" width="196" height="96" rx="10"/>
+            <rect class="dg-accent" x="14" y="70" width="3" height="96" rx="1.5"/>
+            <text class="dg-tag"   x="32" y="94">Your device</text>
+            <text class="dg-title" x="32" y="116">Browser + extension</text>
+            <text class="dg-sub"   x="32" y="134">“Sign in with ChatGPT”</text>
+            <text class="dg-sub"   x="32" y="150">encrypted credentials</text>
+
+            <rect class="dg-box" x="250" y="70" width="170" height="96" rx="10"/>
+            <text class="dg-tag"   x="268" y="94">Interface</text>
+            <text class="dg-title" x="268" y="116">CorX Chat UI</text>
+            <text class="dg-sub"   x="268" y="134">thread, composer,</text>
+            <text class="dg-sub"   x="268" y="150">terminal &amp; canvas panels</text>
+
+            <rect class="dg-box-a" x="460" y="56" width="190" height="124" rx="10"/>
+            <rect class="dg-accent" x="460" y="56" width="3" height="124" rx="1.5"/>
+            <text class="dg-tag"   x="478" y="80">Routing</text>
+            <text class="dg-title" x="478" y="102">Orchestrator</text>
+            <text class="dg-sub"   x="478" y="120">picks the model,</text>
+            <text class="dg-sub"   x="478" y="136">plans the task,</text>
+            <text class="dg-sub"   x="478" y="152">calls tools,</text>
+            <text class="dg-sub"   x="478" y="168">streams the answer back</text>
+
+            <rect class="dg-box" x="690" y="70" width="316" height="96" rx="10"/>
+            <text class="dg-tag"   x="708" y="94">Your ChatGPT plan</text>
+            <text class="dg-title" x="708" y="116">OpenAI-compatible proxy</text>
+            <text class="dg-sub"   x="708" y="134">/v1/chat/completions · /v1/responses</text>
+            <text class="dg-sub"   x="708" y="150">/v1/models · /v1/images/generations</text>
+
+            <rect class="dg-box" x="460" y="214" width="546" height="70" rx="10"/>
+            <text class="dg-tag"   x="478" y="238">Tool layer</text>
+            <text class="dg-title" x="478" y="260">Sandboxed terminal · web search · files &amp; archives · image generation</text>
+            <text class="dg-sub"   x="478" y="276">runs on the orchestrator, never in your browser</text>
+
+            <path class="dg-edge" d="M210,118 L243,118" marker-end="url(#rp-ah)"/>
+            <path class="dg-edge" d="M420,118 L453,118" marker-end="url(#rp-ah)"/>
+            <path class="dg-edge" d="M650,118 L683,118" marker-end="url(#rp-ah)"/>
+            <path class="dg-edge" d="M555,180 L555,207" marker-end="url(#rp-ah)"/>
+            <path class="dg-edge" d="M600,207 L600,187" marker-end="url(#rp-ah)"/>
+
+            <path class="dg-edge-dash" d="M112,70 L112,30 L520,30 L520,49" marker-end="url(#rp-ahs)"/>
+            <text class="dg-tag" x="240" y="24">Request-bound credentials — never stored by CorX Labs</text>
+          </svg>
+        </div>
+        <div class="diagram-key">
+          <span><i aria-hidden="true"></i> Message and response</span>
+          <span><i class="is-dashed" aria-hidden="true"></i> Credentials, attached per request</span>
+        </div>
+        <figcaption>Your credentials travel from your browser with each request and are used to call
+          the proxy. They are not held on the server between requests, and they are never pooled
+          across users.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="shell section-tight" style="padding-top:0">
+    <div class="doc-layout">
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <ol>
+          <li><a href="#overview">1. What this is</a></li>
+          <li><a href="#connecting">2. Connecting</a></li>
+          <li><a href="#models">3. Models</a></li>
+          <li><a href="#tools">4. The tool layer</a></li>
+          <li><a href="#terminal">5. The terminal</a></li>
+          <li><a href="#files">6. Files &amp; archives</a></li>
+          <li><a href="#canvas">7. Canvas mode</a></li>
+          <li><a href="#agent">8. Agent &amp; planning</a></li>
+          <li><a href="#research">9. Deep research</a></li>
+          <li><a href="#locale">10. Language &amp; region</a></li>
+          <li><a href="#memory">11. Memory</a></li>
+          <li><a href="#privacy">12. Privacy</a></li>
+          <li><a href="#limits">13. Limits</a></li>
+          <li><a href="#faq">14. FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+
+        <section class="doc-section" id="overview">
+          <h2>1. What this is</h2>
+          <div class="answer-box">
+            <p><strong>CorX Chat is an orchestrator, not a model.</strong> It does not run its own
+              weights. It sits between you and the top available OpenAI models, decides which one
+              should answer, breaks long jobs into steps, and gives the model a set of tools it does
+              not normally have: a real sandboxed terminal, web search, file and archive editing,
+              image generation, and memory that survives between sessions.</p>
+            <p>Model access comes from <strong>your own ChatGPT account</strong>, connected through
+              the free <em>Sign in with ChatGPT</em> browser extension. There is no CorX account and
+              no shared key.</p>
+          </div>
+          <div class="prose">
+            <p>The interface follows the conventions people already know from chat apps — a
+              conversation list on the left, the thread in the middle, a composer at the bottom, a
+              work panel on the right — because familiarity is worth more than novelty here. The
+              visual language, type and colour are CorX Labs' own.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="connecting">
+          <h2>2. Connecting</h2>
+          <div class="prose">
+            <p>CorX Chat is a hosted web app, and a hosted web app must never hold your ChatGPT
+              credentials. That is the whole reason for the extension: it performs the OAuth handoff
+              in a context the website cannot read, and stores the resulting credentials encrypted
+              in your browser's own storage.</p>
+          </div>
+
+          <ol class="steps mt-m">
+            <li>
+              <div>
+                <h3>The page checks for the extension</h3>
+                <p>On load, <a href="/chat/">/chat/</a> looks for the <em>Sign in with ChatGPT</em>
+                  extension — first for an injected marker, then with a <code>postMessage</code>
+                  handshake that resolves as "not installed" after a short timeout. Nothing is sent
+                  anywhere during this check.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>If it is missing, you are offered the right link</h3>
+                <p>The install button points at the Chrome Web Store or Firefox Add-ons depending on
+                  your browser. Install it, reload, and the first step turns green.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>If it is already installed, you skip straight to Continue</h3>
+                <p>Detection is automatic — you never have to tell the page whether you have it.
+                  Pressing <strong>Continue</strong> asks the extension to authorise.</p>
+              </div>
+            </li>
+            <li>
+              <div>
+                <h3>You authorise with your ChatGPT account</h3>
+                <p>The extension runs the OAuth flow and keeps the credentials encrypted locally.
+                  When it completes, the workspace unlocks: models, terminal, search and canvas all
+                  become available.</p>
+              </div>
+            </li>
+          </ol>
+
+          <div class="callout">
+            <p><strong>Each person uses their own account.</strong> Credentials are never pooled,
+              shared or redistributed. Which models you can reach, and what rate limits apply, are
+              set by your own ChatGPT plan — not by CorX Labs.</p>
+          </div>
+
+          <div class="prose">
+            <p>The detection contract lives in one place, so it can be adjusted if the extension
+              changes what it exposes:</p>
+          </div>
+
+          <pre class="mt-m"><code>// assets/js/chat.js
+CorxChat.config.extension = {
+  globalKey:   '__signInWithChatGPT',  // window marker, if injected
+  datasetFlag: 'siwcInstalled',        // &lt;html data-siwc-installed="true"&gt;
+  pingType:    'siwc:ping',            // postMessage handshake out
+  pongType:    'siwc:pong',            // …and the reply we wait for
+  timeoutMs:   900                     // no reply by then → treat as missing
+};</code></pre>
+        </section>
+
+        <section class="doc-section" id="models">
+          <h2>3. Models</h2>
+          <div class="prose">
+            <p>The model list is <strong>fetched live</strong> from the proxy's
+              <code>/v1/models</code> endpoint rather than hardcoded, so the picker shows what your
+              account can actually reach today instead of a list that goes stale. Switching models
+              mid-conversation keeps the thread — you can start on a fast model and move to a
+              reasoning model when a question turns out to be harder than it looked.</p>
+            <p>Only models exposed through the Codex-compatible endpoints are available, and that set
+              changes over time and by plan. Image generation is reached through the same route via
+              <code>/v1/images/generations</code>.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="tools">
+          <h2>4. The tool layer</h2>
+          <div class="prose">
+            <p>The tools are what separate this from a plain chat box. They run on the orchestrator,
+              not in your browser, and the model calls them itself as it works.</p>
+          </div>
+          <div class="table-wrap mt-m">
+            <table>
+              <caption class="visually-hidden">CorX Chat tools</caption>
+              <thead><tr><th scope="col">Tool</th><th scope="col">What it does</th><th scope="col">What you see</th></tr></thead>
+              <tbody>
+                <tr><td>Terminal</td><td>Installs packages, runs and tests code, makes API requests, manages files</td><td>Every command and its output, live in the terminal panel</td></tr>
+                <tr><td>Web search</td><td>Finds and reads pages, then keeps the useful ones</td><td>A source card naming each site consulted, with counts of what was discarded</td></tr>
+                <tr><td>Image generation</td><td>Creates images from a prompt</td><td>The image inline, downloadable</td></tr>
+                <tr><td>Image understanding</td><td>Reads screenshots, photos, diagrams and drafts you send</td><td>The attachment on your message, and what it took from it</td></tr>
+                <tr><td>Files &amp; archives</td><td>Opens, edits, creates and deletes files, including inside zips</td><td>The file list in canvas, with downloads</td></tr>
+                <tr><td>Page fetch</td><td>Opens a specific URL and reads its content and metadata</td><td>The source, attached to the answer</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="doc-section" id="terminal">
+          <h2>5. The terminal</h2>
+          <div class="prose">
+            <p>The agent has a sandboxed shell it drives itself. It can install packages, run and
+              test code, make outbound API requests, and create, read, edit or delete files. When a
+              test fails it reads the error and tries again rather than handing you a broken snippet
+              and calling it done.</p>
+            <p><strong>You can watch it.</strong> The terminal panel shows every command and its real
+              output, which is the difference between an assistant claiming code works and one
+              showing you the passing test. It is also how you catch it doing something you did not
+              intend.</p>
+          </div>
+
+          <div class="callout">
+            <p>The sandbox is isolated per session and does not have access to your machine, your
+              filesystem, or anything you have not uploaded. Files enter it only when you attach
+              them, and leave it only when you download them.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="files">
+          <h2>6. Files and archives</h2>
+          <div class="prose">
+            <p>Attach a file and the agent can open it, work on it, and hand it back changed. That
+              includes archives: it will unpack a zip, edit what is inside, and rebuild it — so
+              "here is a folder of CSVs, fix the headers and send it back" is one message, not a
+              morning.</p>
+            <p>It reads a range of formats beyond plain text, and it can produce new archives from
+              whatever it has built in the sandbox, offered to you as a download from the canvas
+              panel.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="canvas">
+          <h2>7. Canvas mode</h2>
+          <div class="prose">
+            <p>Long answers bury code. Canvas mode collects everything the agent generates into the
+              side panel instead: grouped by category — scripts, data, output, documents — and
+              rendered in the code's own style rather than as flat text.</p>
+            <p>Each file can be opened, read properly and downloaded individually, or taken together
+              as an archive. The conversation stays a conversation; the artefacts stay artefacts.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="agent">
+          <h2>8. Agent mode and task planning</h2>
+          <div class="prose">
+            <p>Given a long job, the agent writes its own plan before it starts, then works through
+              the steps and shows the checklist updating as each one completes. This matters for
+              tasks that would otherwise stall halfway through with "would you like me to
+              continue?" — the plan is what lets it keep going.</p>
+            <p>Plans are visible and revisable. If the third step is wrong you can say so while the
+              first two are still running, rather than waiting for a finished answer built on a bad
+              assumption.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="research">
+          <h2>9. Deep research</h2>
+          <div class="prose">
+            <p>Search finds pages. Deep research reads several, compares their claims, and weighs
+              them against each other:</p>
+            <ul>
+              <li><strong>Source validation</strong> — is this primary reporting, or a site repeating
+                someone else?</li>
+              <li><strong>Logic checking</strong> — does the argument hold on its own terms, or does
+                the conclusion outrun the evidence?</li>
+              <li><strong>Cross-referencing</strong> — do independent sources agree on the numbers?
+                Where they disagree, that disagreement is reported rather than averaged away.</li>
+              <li><strong>Reliability weighting</strong> — sources that fail the checks are dropped,
+                and the ones that survive stay attached to the answer.</li>
+            </ul>
+            <p>When a question depends on where you are — prices, regulation, availability, local
+              services — research is scoped to your region rather than defaulting to somewhere
+              else.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="locale">
+          <h2>10. Language and region</h2>
+          <div class="prose">
+            <p>CorX Chat detects the language you write in and answers in that language, including
+              mid-conversation switches. It also detects your country or region so that
+              locally-dependent answers and research are relevant where you actually are.</p>
+            <p>Both are defaults, not rules. Ask it to answer in English regardless, or to stop using
+              your region, and it will for the rest of the conversation.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="memory">
+          <h2>11. Memory</h2>
+          <div class="prose">
+            <p>Conversations persist. Close the tab in the middle of a task and the thread is still
+              there when you come back, along with what the agent had established — so you are not
+              re-explaining your project every session.</p>
+            <p>Memory is per conversation and per account, and it can be cleared from the
+              conversation menu. Clearing your browser's site storage removes the local half along
+              with the stored credentials, which also ends the session.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="privacy">
+          <h2>12. Privacy and credentials</h2>
+          <div class="prose">
+            <p>The design rule is simple: <strong>CorX Labs never holds your ChatGPT
+              credentials.</strong></p>
+            <ul>
+              <li>The extension performs the OAuth handoff; the website never sees the exchange.</li>
+              <li>Credentials are stored encrypted in your browser's own storage.</li>
+              <li>They are attached to individual requests from your side and used to call the proxy
+                for that request only. They are not persisted server-side between requests.</li>
+              <li>There is no pooled or shared token. Every user's access is their own.</li>
+            </ul>
+            <p>Anything you send — messages, attachments, files created in the sandbox — is processed
+              to answer you, and your prompts go to your own ChatGPT account, so OpenAI's terms and
+              data handling apply to that leg exactly as they would if you were using ChatGPT
+              directly. Don't paste secrets you wouldn't paste into ChatGPT.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="limits">
+          <h2>13. Limits</h2>
+          <div class="answer-box">
+            <p>CorX Chat is an interface and an orchestrator built by a one-person lab. It is
+              genuinely useful and it is not a hardened commercial product. Here is where it
+              stops.</p>
+          </div>
+
+          <ul class="check-list is-limits mt-m">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>It depends on your ChatGPT plan.</strong> Model availability, quality and rate limits are your account's, not ours. If your plan can't reach a model, neither can this.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>The extension is required.</strong> There is no way to use it without installing the sign-in extension, and it works only in browsers that extension supports.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>The models still make mistakes.</strong> The terminal and the visible sources exist so you can check the work, not so you can skip checking it.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>The sandbox is bounded.</strong> Sessions are isolated and not permanent; long-running or resource-heavy jobs can be cut short, and the sandbox has no access to your machine.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Deep research is a judgement, not a guarantee.</strong> Weighting sources by reliability is better than ignoring the question — it is not the same as being right.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not for safety-critical use.</strong> Same rule as everything else CorX Labs publishes.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="faq">
+          <h2>14. FAQ</h2>
+          <div class="faq mt-m">
+            <details open>
+              <summary>Does CorX Labs see my credentials?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>No. The extension performs the OAuth handoff and stores
+                credentials encrypted in your browser. They are attached to individual requests from
+                your side and are not persisted server-side. There is no pooled token.</p></div>
+            </details>
+            <details>
+              <summary>Which models can I use?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Whichever your own ChatGPT plan can reach through the
+                Codex-compatible endpoints. The picker is populated from <code>/v1/models</code> at
+                runtime, so it reflects your account rather than a fixed list.</p></div>
+            </details>
+            <details>
+              <summary>What can the terminal do?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Install packages, run and test code, make outbound API
+                requests, and create, read, edit or delete files — including unpacking and rebuilding
+                zip archives. Every command is visible in the terminal panel.</p></div>
+            </details>
+            <details>
+              <summary>Where does my chat history live?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Conversations and memory persist so you can return to a thread
+                later. Clear them from the conversation menu; clearing browser site storage removes
+                the local half and the stored credentials, ending the session.</p></div>
+            </details>
+            <details>
+              <summary>Can I plug in my own backend?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Yes. The interface never talks to a model directly — every
+                turn goes through <code>CorxChat.transport.send</code>, which posts to
+                <code>CorxChat.config.endpoint</code>. Replace that one function and the whole UI
+                runs against your own orchestrator.</p></div>
+            </details>
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">Ready</p>
+        <h2 class="mt-s">Connect and start working.</h2>
+        <p>Install the extension, press Continue, and the workspace unlocks.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/chat/#connect">Open chat</a>
+          <a class="btn btn-ghost" href="/models/">See our models</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/chat/">CorX Chat</a></li>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/chat/documentation/">Chat documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/chat.js" defer></script>
+</body>
+</html>

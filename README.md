@@ -12,6 +12,8 @@ any static host and it works.
 ## Structure
 
 ```
+/chat/                  CorX Chat — the AI workspace (landing + live interface)
+/chat/documentation/    How the orchestrator works
 /                       Home — hero, what this is, products, principles, pipeline, FAQ
 /documentation/         The main reference: lab, website, architecture, training, safety, usage
 /models/                Our Products — every model released
@@ -25,6 +27,8 @@ any static host and it works.
 /404.html               Not-found page
 
 assets/css/main.css     The entire design system
+assets/css/chat.css     CorX Chat workspace UI (loaded only on /chat/)
+assets/js/chat.js       Connect gate, extension detection, composer, transport
 assets/js/main.js       Progressive enhancement only — the site works without it
 assets/img/             Favicons, app icons, per-page social cards
 tools/                  Script that regenerates every brand image
@@ -56,7 +60,7 @@ Everything below is already implemented and live in the files.
 engines and AI systems resolve CorX Labs, Nathan and CorX1.5 as *entities*, not just strings:
 `Organization` + `ResearchOrganization`, `Person`, `WebSite`, `WebPage`, `CollectionPage`,
 `AboutPage`, `ContactPage`, `ProfilePage`, `TechArticle`, `Blog`, `BlogPosting`, `NewsArticle`,
-`SoftwareApplication` + `SoftwareSourceCode`, `Dataset`, `ItemList`, `BreadcrumbList`, `FAQPage`, `ImageObject`,
+`SoftwareApplication` + `SoftwareSourceCode`, `Dataset`, `ItemList`, `BreadcrumbList`, `FAQPage`, `ImageObject`, `WebApplication`, `HowTo`,
 and `SpeakableSpecification`.
 
 **Answer-engine optimisation** — every page opens with an `.answer-box`: a self-contained
@@ -98,6 +102,26 @@ which is what search engines read for author identity and E-E-A-T.
 same CSS tokens as the rest of the site, so it themes with light/dark, stays crisp at any zoom,
 costs no extra request, and its labels are real text that crawlers and screen readers can read. It
 scales to the container and scrolls horizontally below ~900px rather than shrinking to illegible.
+
+## CorX Chat
+
+`/chat/` is both a landing page and the application. The page carries the text that makes it
+findable — what the tool does, how to connect, an FAQ — and below it the actual workspace:
+sidebar, thread, composer, model picker, thinking dropdowns, source cards, terminal and canvas.
+
+**The interface never talks to a model.** Every turn goes through `CorxChat.transport.send`, which
+posts to `CorxChat.config.endpoint` (`/api/chat` by default). Point that at your orchestrator — the
+service that holds the OpenAI-compatible proxy from the *Sign in with ChatGPT* flow — and the UI
+works unchanged. Until then the composer reports honestly that no backend is reachable rather than
+faking a reply.
+
+**Extension detection** lives in `CorxChat.config.extension`: an injected-global check, a
+`data-*` flag check, then a `postMessage` handshake that resolves "not installed" on timeout. If
+the extension changes what it exposes, that one object is the only thing to update.
+
+The layout follows conventions people already know from chat apps, because familiarity beats
+novelty here. Every colour, typeface and surface is CorX Labs' own — no third-party branding,
+assets or marks are used.
 
 **Internal linking** — a hub-and-spoke cluster: `/models/` is the hub, `/models/corx1-5/` is the
 spoke, and `/documentation/` deep-links into both with descriptive anchor text. `_redirects` catches
