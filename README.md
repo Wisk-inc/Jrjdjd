@@ -1,7 +1,8 @@
 # corx-labs.com
 
 The website for **CorX Labs** — an independent AI research lab in Jamaica, and the home of
-**CorX1.5**, a 158M-parameter open-source language model built from scratch.
+**CorX1.5** (a 158M-parameter language model) and **TriStream-SVS** (a 321.8M-parameter singing
+voice synthesis model), both built from scratch.
 
 Hand-written static HTML and CSS. No build step, no framework, no dependencies. Drop the folder on
 any static host and it works.
@@ -15,6 +16,7 @@ any static host and it works.
 /documentation/         The main reference: lab, website, architecture, training, safety, usage
 /models/                Our Products — every model released
 /models/corx1-5/        CorX1.5 model page (Try it out → Hugging Face)
+/models/tristream-svs/  TriStream-SVS model page, with an inline architecture graph
 /blog/                  Blog index
 /blog/3-billion-tokens-one-gpu/   Technical breakdown of the training run
 /developers/            Who built CorX1.5 — profile and journey
@@ -54,7 +56,7 @@ Everything below is already implemented and live in the files.
 engines and AI systems resolve CorX Labs, Nathan and CorX1.5 as *entities*, not just strings:
 `Organization` + `ResearchOrganization`, `Person`, `WebSite`, `WebPage`, `CollectionPage`,
 `AboutPage`, `ContactPage`, `ProfilePage`, `TechArticle`, `Blog`, `BlogPosting`, `NewsArticle`,
-`SoftwareApplication` + `SoftwareSourceCode`, `Dataset`, `ItemList`, `BreadcrumbList`, `FAQPage`,
+`SoftwareApplication` + `SoftwareSourceCode`, `Dataset`, `ItemList`, `BreadcrumbList`, `FAQPage`, `ImageObject`,
 and `SpeakableSpecification`.
 
 **Answer-engine optimisation** — every page opens with an `.answer-box`: a self-contained
@@ -91,6 +93,11 @@ a language model on one GPU"*, *"how much VRAM to train a 158M model"* and *"how
 tokens on disk"*, with the answer stated plainly in the first paragraph of each section and
 mirrored in `FAQPage` markup. The `/developers/` page carries `ProfilePage` + `Person` markup,
 which is what search engines read for author identity and E-E-A-T.
+
+**Diagrams are inline SVG, not images** — the TriStream-SVS architecture graph is drawn with the
+same CSS tokens as the rest of the site, so it themes with light/dark, stays crisp at any zoom,
+costs no extra request, and its labels are real text that crawlers and screen readers can read. It
+scales to the container and scrolls horizontally below ~900px rather than shrinking to illegible.
 
 **Internal linking** — a hub-and-spoke cluster: `/models/` is the hub, `/models/corx1-5/` is the
 spoke, and `/documentation/` deep-links into both with descriptive anchor text. `_redirects` catches

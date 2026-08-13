@@ -6,13 +6,32 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sat, 01 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 13 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>TriStream-SVS — singing voice synthesis, factored by design</title>
+      <link>https://corx-labs.com/models/tristream-svs/</link>
+      <guid isPermaLink="true">https://corx-labs.com/models/tristream-svs/</guid>
+      <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Singing voice synthesis</category>
+      <description><![CDATA[
+        <p>TriStream-SVS is a 321.8M parameter singing voice synthesis model that builds the
+        source-filter theory of human voice production into its architecture as a hard constraint:
+        three parallel encoder streams for pitch, timbre and breath texture, combined only in a late
+        fusion trunk. Zero-shot voice cloning via a contrastive speaker encoder, an adversarial
+        singer head with gradient reversal as an anti-memorisation mechanism, and a rectified
+        flow-matching decoder that generates in roughly 32 sampling steps.</p>
+        <p>Actively in training — no stable release checkpoint yet. Repository:
+        <a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M">Sigmandndnns/TriStream-SVS-300M</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>3 Billion Tokens on One GPU: How CorX1.5 Was Trained</title>

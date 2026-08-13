@@ -157,12 +157,18 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
     {
       "@type": "ItemList",
       "@id": "https://corx-labs.com/#products",
-      "name": "Models released by CorX Labs",
-      "numberOfItems": 1,
+      "name": "Models built by CorX Labs",
+      "numberOfItems": 2,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "url": "https://corx-labs.com/models/tristream-svs/",
+          "name": "TriStream-SVS"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "url": "https://corx-labs.com/models/corx1-5/",
           "name": "CorX1.5"
         }
@@ -395,6 +401,40 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <div class="model-head">
           <div>
             <div class="tag-row" style="margin-bottom:14px">
+              <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> In training</span>
+              <span class="tag">Singing voice synthesis</span>
+              <span class="tag">Zero-shot cloning</span>
+            </div>
+            <h3>TriStream-SVS</h3>
+            <p class="lede" style="margin-top:12px">A 321.8M parameter singing voice synthesis model
+              that builds the source-filter theory of the human voice into its architecture — three
+              parallel encoder streams for pitch, timbre and breath, fused only at the end.</p>
+          </div>
+        </div>
+
+        <dl class="spec-list">
+          <div><dt>Parameters</dt><dd>321.8M</dd></div>
+          <div><dt>Encoder streams</dt><dd>3 parallel</dd></div>
+          <div><dt>Generation</dt><dd>Flow matching</dd></div>
+          <div><dt>Sampling steps</dt><dd>~32</dd></div>
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/tristream-svs/">
+            View model details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">
+            View on Hugging Face
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card model-card mt-m" data-reveal>
+        <div class="model-head">
+          <div>
+            <div class="tag-row" style="margin-bottom:14px">
               <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
               <span class="tag">Text generation</span>
               <span class="tag">Apache 2.0</span>
@@ -604,6 +644,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <ul>
           <li><a href="/models/">All models</a></li>
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
         </ul>
       </nav>

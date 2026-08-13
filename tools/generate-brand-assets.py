@@ -208,6 +208,9 @@ CARDS = [
     ("og-developers.jpg", "Developers",
      "The people who built CorX1.5.",
      "corx-labs.com/developers"),
+    ("og-tristream.jpg", "Model card",
+     "TriStream-SVS \u2014 singing voice synthesis, factored by design.",
+     "corx-labs.com/models/tristream-svs"),
 ]
 for name, eyebrow, title, foot in CARDS:
     og_card(f"{OUT}/{name}", eyebrow, title, foot)
