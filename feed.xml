@@ -15,6 +15,22 @@
     </image>
 
     <item>
+      <title>CorX Chat — an agentic AI workspace with a real terminal</title>
+      <link>https://corx-labs.com/chat/</link>
+      <guid isPermaLink="true">https://corx-labs.com/chat/</guid>
+      <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Product</category>
+      <description><![CDATA[
+        <p>CorX Chat is an orchestrator: it puts the top available OpenAI models behind one interface
+        and adds a real sandboxed terminal, web search with visible sources, image generation and
+        understanding, file and archive editing, a code canvas, deep research and persistent memory.</p>
+        <p>Each person signs in with their own ChatGPT account through the free “Sign in with ChatGPT”
+        browser extension — credentials stay encrypted in the browser and are never held by CorX Labs.</p>
+      ]]></description>
+    </item>
+
+    <item>
       <title>TriStream-SVS — singing voice synthesis, factored by design</title>
       <link>https://corx-labs.com/models/tristream-svs/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/tristream-svs/</guid>

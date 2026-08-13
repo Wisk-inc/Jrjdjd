@@ -118,6 +118,10 @@ button, input, textarea, select { font: inherit; color: inherit; }
 
 a { color: inherit; text-decoration: none; }
 
+/* An explicit `display` on a class beats the UA rule for [hidden], which
+   silently breaks any element toggled with the attribute. Make it win. */
+[hidden] { display: none !important; }
+
 :focus-visible {
   outline: 2px solid var(--espresso);
   outline-offset: 3px;
@@ -220,7 +224,9 @@ pre {
 pre code { background: none; border: 0; padding: 0; font-size: inherit; }
 /* Inline code can't scroll the way <pre> does, so let long identifiers break
    rather than push the page sideways on a phone. */
-:not(pre) > code { overflow-wrap: anywhere; margin-inline: .06em; }
+/* break-word, not anywhere: `anywhere` also shrinks a grid/flex item's
+   min-content size, which lets a column collapse to one character wide. */
+:not(pre) > code { overflow-wrap: break-word; word-break: break-word; margin-inline: .06em; }
 
 /* --------------------------------------------------------------------------
    4. Layout
@@ -234,6 +240,7 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
   z-index: 1;
 }
 .shell-narrow { max-width: 840px; }
+.shell-wide { max-width: 1320px; }
 /* Narrow measure that keeps the page's left edge — used where a block sits
    beside full-width sections and must not look indented. */
 .column-narrow { max-width: 860px; }
@@ -630,15 +637,22 @@ a.card:hover,
    11. Feature list / checks
    -------------------------------------------------------------------------- */
 .check-list { list-style: none; padding: 0; display: grid; gap: 14px; }
+/* Block + absolute marker rather than a grid: inline children such as <strong>
+   or <code> would otherwise each become their own grid item and get pushed
+   into an implicit column one character wide. */
 .check-list li {
-  display: grid;
-  grid-template-columns: 20px 1fr;
-  gap: 13px;
-  align-items: start;
+  position: relative;
+  padding-left: 31px;
   color: var(--muted);
   font-size: .95rem;
 }
-.check-list svg { width: 18px; height: 18px; margin-top: 3px; color: var(--espresso); flex: none; }
+.check-list svg {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 18px; height: 18px;
+  color: var(--espresso);
+}
 .check-list.is-limits svg { color: var(--faint); }
 
 /* --------------------------------------------------------------------------
