@@ -5,13 +5,26 @@
    Depends on the tokens defined in main.css.
    ========================================================================== */
 
+.chat-page { --header-h: 74px; }
+
+/* The app fills the screen on load — this is the page, not a preview of one. */
+.chat-stage {
+  width: 100%;
+  max-width: 1500px;
+  margin-inline: auto;
+  padding: 10px clamp(0px, 2vw, 20px) 16px;
+  position: relative;
+  z-index: 1;
+}
+
 .chat-app {
   --sidebar: 252px;
-  --dock: 344px;
+  --dock: 360px;
+  position: relative;
   display: grid;
   grid-template-columns: var(--sidebar) minmax(0, 1fr) var(--dock);
-  height: min(760px, 82vh);
-  min-height: 560px;
+  height: calc(100dvh - var(--header-h) - 26px);
+  min-height: 460px;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-lg);
   background: var(--paper);
@@ -425,21 +438,63 @@ label.chip { user-select: none; }
 .gate-fine { margin-top: 18px; font-size: .78rem; color: var(--faint); }
 
 /* --------------------------------------------------------- responsive */
-@media (max-width: 1080px) {
-  .chat-app { grid-template-columns: var(--sidebar) minmax(0, 1fr); }
-  .chat-dock { display: none; }
-  .chat-app[data-dock="open"] { grid-template-columns: minmax(0, 1fr) var(--dock); }
-  .chat-app[data-dock="open"] .chat-sidebar { display: none; }
-  .chat-app[data-dock="open"] .chat-dock { display: flex; }
+
+/* Below this width the sidebar and dock become overlays, not columns. */
+@media (max-width: 1100px) {
+  .chat-app,
+  .chat-app[data-dock="closed"] { grid-template-columns: minmax(0, 1fr); }
+
+  .chat-sidebar,
+  .chat-dock {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    width: min(320px, 86vw);
+    transform: translateX(-101%);
+    transition: transform var(--fast) var(--ease);
+    box-shadow: 0 0 40px -8px rgba(33,26,19,.35);
+  }
+  .chat-dock {
+    inset: 0 0 0 auto;
+    width: min(420px, 92vw);
+    transform: translateX(101%);
+    display: flex;
+  }
+  .chat-app[data-sidebar="open"] .chat-sidebar { transform: none; }
+  .chat-app[data-dock="open"] .chat-dock { transform: none; }
+  .chat-app[data-dock="closed"] .chat-dock { display: flex; }
+
+  .chat-scrim {
+    position: absolute; inset: 0; z-index: 20;
+    background: rgba(20, 16, 12, .38);
+    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+    border: 0;
+  }
 }
+
+@media (min-width: 1101px) {
+  .chat-scrim { display: none !important; }
+  .nav-only { display: none; }
+}
+
 @media (max-width: 760px) {
-  .chat-app { grid-template-columns: minmax(0, 1fr); height: min(640px, 78vh); }
-  .chat-sidebar { display: none; }
-  .chat-app[data-dock="open"] { grid-template-columns: minmax(0, 1fr); }
-  .chat-app[data-dock="open"] .chat-main { display: none; }
-  .chat-app[data-dock="open"] .chat-dock { display: flex; }
-  .composer-bar .chip span { display: none; }
-  .chip { padding: 7px 9px; }
+  .chat-page { --header-h: 66px; }
+  .chat-stage { padding: 0 0 env(safe-area-inset-bottom); }
+  .chat-app {
+    height: calc(100dvh - var(--header-h));
+    border-radius: 0;
+    border-left: 0; border-right: 0; border-bottom: 0;
+    box-shadow: none;
+  }
+  .chat-thread { padding: 18px 16px 4px; }
+  .composer-wrap { padding: 8px 12px 12px; }
+  .chat-topbar { padding: 9px 12px; }
+  .msg-body { font-size: .92rem; }
+  .starter-row { flex-direction: column; }
+  .starter { width: 100%; }
+  .chat-empty { padding: 18px 0 8px; }
+  .chat-empty h1 { font-size: 1.9rem; }
+  .composer textarea { font-size: 16px; }  /* stops iOS zooming on focus */
 }
 
 /* ==========================================================================
@@ -577,3 +632,52 @@ body:not([data-chat-phase="ready"]) .chat-topbar .model-picker { visibility: hid
 /* Reasoning dropdown sits above the answer */
 .msg-reasoning:not(:empty) { margin-bottom: 10px; }
 .think-label { flex: 1; }
+
+/* ------------------------------------------------- app-page chrome */
+.chat-page .chat-status { max-width: none; margin: 0 auto 10px; }
+.chat-empty h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); }
+.side-list {
+  list-style: none; padding: 0 6px 12px; margin: 0;
+  display: grid; gap: 7px;
+  font-size: .8rem; line-height: 1.5; color: var(--muted);
+}
+.side-list li { position: relative; padding-left: 14px; }
+.side-list li::before {
+  content: ""; position: absolute; left: 0; top: 8px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--espresso);
+}
+.side-note a { color: var(--ink-strong); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Search results the agent actually fetched */
+.sources { margin: 10px 0 2px; }
+.sources-head {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem; color: var(--muted); margin-bottom: 9px;
+}
+.sources-head svg { width: 14px; height: 14px; color: var(--espresso); }
+.source-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.source {
+  display: inline-flex; align-items: center; gap: 7px;
+  max-width: 100%;
+  padding: 5px 11px 5px 6px;
+  border: 1px solid var(--line); border-radius: var(--r-pill);
+  background: var(--paper-raised); font-size: .76rem; color: var(--muted);
+  text-decoration: none;
+}
+.source:hover { border-color: var(--line-strong); color: var(--ink-strong); }
+.source span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.source img.favicon {
+  width: 16px; height: 16px; flex: none; border-radius: 4px;
+  background: var(--paper-sunk); object-fit: contain;
+}
+
+/* Generated images */
+.gen-image { margin-top: 12px; }
+.gen-image img {
+  width: 100%; max-width: 460px; height: auto;
+  border-radius: var(--r-md); border: 1px solid var(--line);
+}
+.gen-image figcaption { margin-top: 8px; font-size: .76rem; color: var(--faint); }
+
+/* A wrapped placeholder must never be clipped by the autosized height. */
+.composer textarea { min-height: 1.7em; }

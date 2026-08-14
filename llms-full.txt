@@ -264,7 +264,12 @@ user's browser. If present, the user presses Continue and goes straight to autho
 - Visible reasoning: the model is asked to think inside a <thinking> block, which the interface
   renders as a collapsible thought-process dropdown.
 - Uploads of any file type: images go to the model as multimodal content; other files are staged
-  into /work so the agent can open, edit and return them.
+  into /work byte-intact so the agent can open, edit and return them. Zips work because Python's
+  zipfile is in the stdlib — unpack, edit, rebuild, then deliver_file pushes it back as a download.
+- REAL web search (/api/search, DuckDuckGo HTML, no API key) returning titles, URLs and snippets.
+  Each source is shown in the answer as a chip with that site's own logo, linked for checking.
+- REAL image generation (/api/image -> /v1/images/generations on the user's own account); the image
+  renders inline and is saved to the canvas for download.
 - Conversation memory: the last 60 turns are saved in the browser (localStorage, key corx.chat.v1)
   and restored on return. Never stored on a CorX server.
 - Language and region: the user's locale and time zone are sent as context; replies follow the
@@ -272,9 +277,8 @@ user's browser. If present, the user presses Continue and goes straight to autho
 
 ## What is NOT built yet (and is not simulated anywhere)
 
-- Image generation — the upstream endpoint exists but is not wired into the interface.
-- A ranked search index — the agent can fetch any URL, but there is no search engine behind it.
-- A general Linux shell — the sandbox is a Python VM, so no git, node or apt.
+- A general Linux shell — the sandbox is a Python VM, so no git, node or apt, and packages are
+  limited to what micropip can install.
 
 ## Request path
 

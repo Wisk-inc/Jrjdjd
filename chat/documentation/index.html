@@ -142,7 +142,7 @@
           "name": "Does CorX Chat have a real terminal?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. A full CPython build runs in WebAssembly inside your browser tab. The agent writes code, runs it, reads real tracebacks and fixes them, installs packages with micropip, reads and writes files under /work, and reaches the internet through a same-origin proxy so it is not CORS-limited. Every command is visible in the terminal panel, and you can type into it yourself. It has no access to your computer."
+            "text": "Yes. A full CPython build runs in WebAssembly inside your browser tab. The agent writes code, runs it, reads real tracebacks and fixes them, installs packages with micropip, reads and writes files under /work including unpacking and rebuilding zips, and reaches the internet through a same-origin proxy so it is not CORS-limited. It can also search the web and generate images. Every command is visible in the terminal panel, and you can type into it yourself. It has no access to your computer."
           }
         },
         {
@@ -308,7 +308,7 @@
           <li><a href="#models">3. Models</a></li>
           <li><a href="#tools">4. What runs</a></li>
           <li><a href="#terminal">5. The sandbox</a></li>
-          <li><a href="#files">6. Uploads</a></li>
+          <li><a href="#files">6. Uploads &amp; zips</a></li>
           <li><a href="#canvas">7. Canvas mode</a></li>
           <li><a href="#agent">8. Agent &amp; planning</a></li>
           <li><a href="#research">9. Reasoning</a></li>
@@ -446,7 +446,10 @@ CorxChat.config.extension = {
                 <tr><td>Code canvas</td><td>Live</td><td>Code blocks and files the sandbox produced, downloadable</td></tr>
                 <tr><td>Conversation memory</td><td>Live</td><td>Restored from this browser on return</td></tr>
                 <tr><td>Language &amp; region</td><td>Live</td><td>Your locale and time zone are sent as context</td></tr>
-                <tr><td>Image generation</td><td>Not built</td><td>Endpoint exists upstream; not wired in yet</td></tr>
+                <tr><td>Web search</td><td>Live</td><td>Real results with titles, URLs and snippets; sources shown with their site logo</td></tr>
+                <tr><td>Image generation</td><td>Live</td><td><code>/v1/images/generations</code> on your account; shown inline and saved to the canvas</td></tr>
+                <tr><td>Zip handling</td><td>Live</td><td>Python's <code>zipfile</code> in the sandbox — unpack, edit, rebuild, hand back</td></tr>
+                <tr><td>File delivery</td><td>Live</td><td>The agent can push any sandbox file to you as a download</td></tr>
                 <tr><td>Shell beyond Python</td><td>Not built</td><td>It is a Python VM, not a Linux box — no <code>git</code>, no <code>node</code></td></tr>
               </tbody>
             </table>
@@ -486,15 +489,18 @@ CorxChat.config.extension = {
         </section>
 
         <section class="doc-section" id="files">
-          <h2>6. Uploads</h2>
+          <h2>6. Uploads, zips and downloads</h2>
           <div class="prose">
-            <p>Attach anything. <strong>Images</strong> are sent to the model as multimodal content,
-              so it reads what is actually in the screenshot or photo. <strong>Any other file</strong>
-              is written into the sandbox at <code>/work/&lt;name&gt;</code> and the agent is told it
-              is there, so it can open it, parse it, edit it and write a new version back out — which
-              then appears in the canvas as a download.</p>
-            <p>That covers data files, code, archives and anything else Python can open. Files stay
-              in your browser; they are never uploaded to a CorX server.</p>
+            <p>Attach anything. <strong>Images</strong> go to the model as multimodal content, so it
+              reads what is actually in the screenshot or photo. <strong>Every other file</strong> is
+              written into the sandbox at <code>/work/&lt;name&gt;</code> — bytes intact — and the
+              agent is told it is there.</p>
+            <p><strong>Zips work</strong>, because Python's <code>zipfile</code> is in the standard
+              library and the sandbox is real Python. Upload an archive and it can unpack it, edit
+              what is inside, rebuild it, and hand the new file back: <code>deliver_file</code>
+              pushes any sandbox file to you as a download, and everything the sandbox produces also
+              appears in the canvas.</p>
+            <p>Files stay in your browser throughout. They are never uploaded to a CorX server.</p>
           </div>
         </section>
 
@@ -529,10 +535,15 @@ CorxChat.config.extension = {
               <em>thought process</em> dropdown. It is asked to actually think in there — weigh an
               alternative, name the case that breaks its plan, say when it is unsure — rather than
               narrate. Open it when you want to know why; ignore it when you do not.</p>
-            <p>For anything that depends on current information, it can <strong>read the live
-              page</strong> with <code>fetch_url</code> and tell you which source it used, instead of
-              answering from memory. There is no ranked search index behind it yet, so give it a URL
-              or expect it to reason about where to look.</p>
+            <p><strong>Search is real.</strong> <code>web_search</code> returns live results with
+              titles, URLs and snippets, and each source appears in the answer as a chip carrying
+              that site's own logo, linked so you can go and check it. <code>fetch_url</code> then
+              opens any of them and reads the page itself, so a claim can be traced back rather than
+              taken on trust.</p>
+            <p>That is the machinery deep research needs: search to find candidates, fetch to read
+              them, and the sandbox to compare or compute across them. How thoroughly it is used on
+              any given question is the model's judgement, and the sources stay attached so you can
+              audit that judgement.</p>
           </div>
         </section>
 
@@ -615,9 +626,9 @@ CorxChat.config.extension = {
               <summary>Is the terminal real?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>Yes — a full CPython build running in WebAssembly in your
                 tab. The agent writes code, runs it, reads the real traceback when it fails and fixes
-                it; it installs packages, reads and writes files, and reaches the internet. Every
-                command is visible, and you can type into it yourself. It has no access to your
-                computer.</p></div>
+                it; it installs packages, reads and writes files (zips included), searches the web,
+                generates images and reaches the internet. Every command is visible, and you can
+                type into it yourself. It has no access to your computer.</p></div>
             </details>
             <details>
               <summary>Where does my chat history live?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>

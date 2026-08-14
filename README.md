@@ -32,6 +32,8 @@ assets/js/chat.js       The chat client: auth, streaming, markdown, canvas, memo
 assets/js/sandbox.js    The Python VM: exec, packages, files, network
 assets/vendor/          @openai-oauth/web (built from source) + self-hosted Pyodide
 api/fetch.js            Edge function — the sandbox's proxied internet access
+api/search.js           Edge function — web search (DuckDuckGo HTML, keyless)
+api/image.js            Edge function — image generation
 api/chat.js             Edge function — streams chat completions
 api/models.js           Edge function — the caller's available models
 assets/js/main.js       Progressive enhancement only — the site works without it
@@ -136,14 +138,25 @@ the user can also type into and close. State persists between calls, packages in
 CORS-limited (in Python: `import web` then `await web.get(url)`). It has no access to the visitor's
 machine: only its own in-memory filesystem and whatever they upload.
 
+**Search, images and files are real too.** `/api/search` hits DuckDuckGo's HTML endpoint (no API
+key, no quota), parses out titles, URLs and snippets, and the answer shows each source as a chip
+carrying that site's own logo. `/api/image` calls `/v1/images/generations` on the caller's account
+and the image renders inline and lands in the canvas. Zips need no special code — Python's
+`zipfile` is in the stdlib, so the sandbox unpacks, edits and rebuilds them, and `deliver_file`
+pushes any sandbox file back as a download.
+
+**`/chat/` is the app, not a page about the app.** It fills the viewport on load. Below 1100px the
+sidebar and work panel become overlays with a scrim; below 760px the app goes edge to edge at
+`100dvh`. Reference text sits below the fold so the page still has something for crawlers.
+
 **Also live** — streaming chat; visible reasoning (the model writes a `<thinking>` block, the client
 renders it as a collapsible dropdown); model switching from `/v1/models`; uploads of any type
 (images as multimodal content, everything else staged into `/work`); a canvas of code blocks and
 sandbox-produced files, downloadable; conversation memory in `localStorage`; locale and time zone
 sent as context.
 
-**Not built** — image generation, a ranked search index behind the URL fetching, and a general Linux
-shell (it is a Python VM: no git, node or apt). Stated as absent in the docs rather than faked.
+**Not built** — a general Linux shell. It is a Python VM: no git, node or apt, and packages are
+limited to what `micropip` can install. Stated as absent in the docs rather than faked.
 
 **Deploying the API** — `package.json` declares `@openai-oauth/web` and `@openai-oauth/core` so
 Vercel installs them for the two edge functions in `/api`. The static pages still have no build
