@@ -490,6 +490,14 @@ body:not([data-chat-phase="ready"]) .model-picker { display: none; }
   border-bottom: 1px solid rgba(242,238,230,.1);
   font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: #8d8172;
 }
+.terminal .t-head .spacer { flex: 1; }
+.t-copy {
+  flex: none; padding: 3px 9px; border-radius: 6px; cursor: pointer;
+  border: 1px solid rgba(242,238,230,.22); background: none;
+  font: inherit; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  color: #b9ac9b;
+}
+.t-copy:hover { border-color: rgba(242,238,230,.45); color: #f2eee6; }
 .terminal .dot3 { display: flex; gap: 5px; }
 .terminal .dot3 i { width: 8px; height: 8px; border-radius: 50%; background: rgba(242,238,230,.18); }
 .terminal .cmd { color: #f2eee6; white-space: pre-wrap; }
