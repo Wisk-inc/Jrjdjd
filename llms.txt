@@ -10,8 +10,10 @@
 Founder: Nathan (Jamaica). Contact: lkk89002@gmail.com. Website: https://corx-labs.com/
 
 CorX Labs also runs CorX Chat (https://corx-labs.com/chat/), an agentic AI workspace that
-orchestrates top OpenAI models behind one interface and adds a sandboxed terminal, web search,
-image generation, file and archive editing, a code canvas, deep research and persistent memory.
+orchestrates the top OpenAI models the user's own plan can reach behind one interface, with
+streaming chat, live model switching, image input, a downloadable code canvas, browser-local
+conversation memory and locale-aware answers. A sandboxed terminal, web search and image
+generation are NOT built yet and are not simulated anywhere in the product.
 Users sign in with their OWN ChatGPT account via the free "Sign in with ChatGPT" browser
 extension; CorX Labs never holds credentials and never pools access.
 

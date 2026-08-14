@@ -246,41 +246,40 @@ The page auto-detects the extension: it checks for an injected marker, then does
 handshake that times out to "not installed". If missing, it offers the correct install link for the
 user's browser. If present, the user presses Continue and goes straight to authorisation.
 
-## Capabilities
+## What is live today
 
-- Switch between top available OpenAI models mid-conversation; the list is fetched live from
-  /v1/models so it reflects the user's own plan.
-- Send images and have them read; generate images from a prompt.
-- Web search with visible sources — each site consulted is shown, and discarded sources are counted.
-- Expandable reasoning: the model's thinking is available in a dropdown on every answer.
-- A REAL sandboxed terminal the agent drives itself: installs packages, runs and tests code, makes
-  outbound API requests, creates/reads/edits/deletes files. Every command is visible to the user.
-- Files and archives: opens, edits and rebuilds files including zips; returns them as downloads.
-- Canvas mode: generated artefacts grouped by category, rendered in the code's own style, and
-  downloadable individually or as an archive.
-- Agent mode with autonomous task planning across long multi-step jobs, with a visible checklist.
-- Deep research: source validation, logic checking, cross-referencing, and reliability weighting.
-  Sources that fail the checks are dropped rather than averaged in.
-- Country/region detection so locally-dependent answers and research are relevant.
-- Language detection — replies in the language the user writes in. Both defaults can be turned off
-  by asking.
-- Persistent conversation history and memory across sessions.
+- Streaming chat over the user's own ChatGPT session.
+- Model switching; the picker is populated live from /v1/models for that account.
+- Agent behaviour BY DEFAULT — no mode to enable. Asked to build or fix something, it writes
+  complete code and works multi-step jobs to the end.
+- Image input: attached images are sent as multimodal content.
+- Code canvas: real fenced code blocks from responses, named from a filename comment where present,
+  downloadable individually.
+- Conversation memory: the last 40 turns are saved in the browser (localStorage, key corx.chat.v1)
+  and restored on return. Never stored on a CorX server.
+- Language and region: the user's locale and time zone are sent as context; replies follow the
+  language written in.
+
+## What is NOT built yet (and is not simulated anywhere)
+
+- A sandboxed terminal that installs packages and runs code — needs an isolated compute backend.
+- Web search / deep research — needs a search backend and a tool-calling loop.
+- Image generation — the upstream endpoint exists but is not wired into the interface.
+- File and zip editing — depends on the sandbox.
 
 ## Request path
 
-Browser (extension + encrypted credentials) → CorX Chat UI → Orchestrator → OpenAI-compatible proxy
-(/v1/chat/completions, /v1/responses, /v1/models, /v1/images/generations) → model. The tool layer
-(terminal, search, files, images) runs on the orchestrator, never in the browser. Credentials
-travel with each request and are not persisted server-side.
+Browser (extension + encrypted credentials, via @openai-oauth/web) → CorX Chat UI →
+/api/chat and /api/models (Vercel edge functions using @openai-oauth/web/server) →
+chatgpt.com/backend-api/codex → model. Credentials are read off the request headers
+(Authorization + chatgpt-account-id) for that one call and are never persisted server-side.
 
 ## Limits
 
 - Depends entirely on the user's own ChatGPT plan for model availability, quality and rate limits.
 - The browser extension is required; no extension, no access.
-- The models still make mistakes — the terminal and visible sources exist so work can be checked.
-- The sandbox is isolated and non-permanent; long or resource-heavy jobs can be cut short, and it
-  has no access to the user's machine.
-- Deep research weights sources by reliability; that is a judgement, not a guarantee of accuracy.
+- The models still make mistakes, and there is no browsing, so nothing is checked against a live
+  source.
 - Not for safety-critical use.
 
 ===============================================================================
