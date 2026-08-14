@@ -150,7 +150,7 @@
           "name": "Where is my CorX Chat history stored?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "In this browser. The conversation is saved to localStorage under corx.chat.v1 and restored when you return; the last 40 turns are kept. It is not stored on a CorX server. New chat clears it, signing out clears it, and clearing browser site data removes it along with the stored credentials."
+            "text": "In this browser. Conversations are saved to localStorage under corx.chat.v2 and restored when you return — up to 20 chats, each keeping its last 60 messages. Nothing is stored on a CorX server. Turning Memory off in the profile menu stops new messages being saved and sends only the last exchange; deleting a chat from the sidebar removes it, and clearing browser site data removes everything along with the stored credentials."
           }
         }
       ]
@@ -309,11 +309,11 @@
           <li><a href="#tools">4. What runs</a></li>
           <li><a href="#terminal">5. The sandbox</a></li>
           <li><a href="#files">6. Uploads &amp; zips</a></li>
-          <li><a href="#canvas">7. Canvas mode</a></li>
+          <li><a href="#canvas">7. Canvas</a></li>
           <li><a href="#agent">8. Agent &amp; planning</a></li>
           <li><a href="#research">9. Reasoning</a></li>
           <li><a href="#locale">10. Language &amp; region</a></li>
-          <li><a href="#memory">11. Memory</a></li>
+          <li><a href="#memory">11. Conversations &amp; memory</a></li>
           <li><a href="#privacy">12. Privacy</a></li>
           <li><a href="#limits">13. Limits</a></li>
           <li><a href="#faq">14. FAQ</a></li>
@@ -354,25 +354,27 @@
           <ol class="steps mt-m">
             <li>
               <div>
-                <h3>The page checks for the extension</h3>
-                <p>On load, <a href="/chat/">/chat/</a> looks for the <em>Sign in with ChatGPT</em>
-                  extension — first for an injected marker, then with a <code>postMessage</code>
-                  handshake that resolves as "not installed" after a short timeout. Nothing is sent
-                  anywhere during this check.</p>
+                <h3>The page looks for a session you already have</h3>
+                <p>On load, <a href="/chat/">/chat/</a> calls <code>completeLogin()</code> — which
+                  picks up a sign-in you are returning from — and then <code>getSession()</code>. If
+                  a session is there, the workspace opens straight away and you are not asked
+                  anything. Nothing leaves your browser during this check.</p>
               </div>
             </li>
             <li>
               <div>
-                <h3>If it is missing, you are offered the right link</h3>
-                <p>The install button points at the Chrome Web Store or Firefox Add-ons depending on
-                  your browser. Install it, reload, and the first step turns green.</p>
+                <h3>Otherwise you press Connect</h3>
+                <p><strong>Connect with ChatGPT</strong> calls <code>startLogin()</code>. The
+                  library talks to the <em>Sign in with ChatGPT</em> extension itself — there is no
+                  detection heuristic on our side to get wrong.</p>
               </div>
             </li>
             <li>
               <div>
-                <h3>If it is already installed, you skip straight to Continue</h3>
-                <p>Detection is automatic — you never have to tell the page whether you have it.
-                  Pressing <strong>Continue</strong> asks the extension to authorise.</p>
+                <h3>If the extension is missing, you get the right link</h3>
+                <p><code>startLogin()</code> returns <code>needs-extension</code> together with the
+                  install URL for your browser, and the page points <strong>Get the
+                  extension</strong> at it. Install, press Connect again, and it continues.</p>
               </div>
             </li>
             <li>
@@ -380,7 +382,8 @@
                 <h3>You authorise with your ChatGPT account</h3>
                 <p>The extension runs the OAuth flow and keeps the credentials encrypted locally.
                   When it completes, the workspace unlocks: models, terminal, search and canvas all
-                  become available.</p>
+                  become available, and your account name appears at the bottom of the sidebar —
+                  read from your own session token in this browser.</p>
               </div>
             </li>
           </ol>
@@ -392,18 +395,30 @@
           </div>
 
           <div class="prose">
-            <p>The detection contract lives in one place, so it can be adjusted if the extension
-              changes what it exposes:</p>
+            <p>That is the whole of it, in the client's own words. The auth module is
+              <code>@openai-oauth/web</code>, bundled unmodified from the published package and
+              served from this origin:</p>
           </div>
 
           <pre class="mt-m"><code>// assets/js/chat.js
-CorxChat.config.extension = {
-  globalKey:   '__signInWithChatGPT',  // window marker, if injected
-  datasetFlag: 'siwcInstalled',        // &lt;html data-siwc-installed="true"&gt;
-  pingType:    'siwc:ping',            // postMessage handshake out
-  pongType:    'siwc:pong',            // …and the reply we wait for
-  timeoutMs:   900                     // no reply by then → treat as missing
-};</code></pre>
+import {
+  completeLogin, getSession, logout, openaiAuthHeaders, startLogin
+} from '/assets/vendor/openai-oauth-web.js';
+
+await completeLogin();                 // finish a redirect we came back from
+const session = await getSession();    // null → show Connect
+// …and on every request to our own edge functions:
+headers: { ...(await openaiAuthHeaders()), 'content-type': 'application/json' }</code></pre>
+
+          <div class="prose">
+            <p><strong>If something goes wrong, do not guess.</strong>
+              <strong>Connection test</strong> in the profile menu prints the state of every link in
+              the chain to the terminal: whether a session exists in this browser, whether the auth
+              headers could be built, what <code>/api/models</code> answered, and — if the server
+              says it received no credentials — whether it saw the <code>Authorization</code> and
+              <code>chatgpt-account-id</code> headers at all. A failure that is a transport or
+              deployment problem is reported as one, and does not sign you out.</p>
+          </div>
         </section>
 
         <section class="doc-section" id="models">
@@ -443,8 +458,13 @@ CorxChat.config.extension = {
                 <tr><td>Internet access</td><td>Live</td><td>Via <code>/api/fetch</code>, so the sandbox is not CORS-limited</td></tr>
                 <tr><td>File upload</td><td>Live</td><td>Any type; staged into <code>/work</code> for the agent to open</td></tr>
                 <tr><td>Image input</td><td>Live</td><td>Sent as multimodal content</td></tr>
-                <tr><td>Code canvas</td><td>Live</td><td>Code blocks and files the sandbox produced, downloadable</td></tr>
-                <tr><td>Conversation memory</td><td>Live</td><td>Restored from this browser on return</td></tr>
+                <tr><td>Code canvas</td><td>Live</td><td>File tree of everything the sandbox holds — open, edit, save, delete, download</td></tr>
+                <tr><td>Plan checklist</td><td>Live</td><td><code>set_plan</code> and <code>complete_step</code>; ticks through in the Plan panel</td></tr>
+                <tr><td>Saved conversations</td><td>Live</td><td>Up to 20, listed in the sidebar, switchable and deletable</td></tr>
+                <tr><td>Memory switch</td><td>Live</td><td>Turn recall off from the profile menu; only the last exchange is then sent</td></tr>
+                <tr><td>Resume after a refresh</td><td>Live</td><td>An interrupted run is offered back when you return</td></tr>
+                <tr><td>Light / dark / system</td><td>Live</td><td>Chosen in the profile menu, remembered per browser</td></tr>
+                <tr><td>Connection test</td><td>Live</td><td>Reports exactly which part of the auth chain failed</td></tr>
                 <tr><td>Language &amp; region</td><td>Live</td><td>Your locale and time zone are sent as context</td></tr>
                 <tr><td>Web search</td><td>Live</td><td>Real results with titles, URLs and snippets; sources shown with their site logo</td></tr>
                 <tr><td>Image generation</td><td>Live</td><td><code>/v1/images/generations</code> on your account; shown inline and saved to the canvas</td></tr>
@@ -478,7 +498,10 @@ CorxChat.config.extension = {
               because that is what this is. There is no <code>git</code>, no <code>node</code>, no
               apt.</p>
             <p>The panel closes with the <strong>&times;</strong> in its header, or the toggle in the
-              chat toolbar. It reopens by itself when the agent next runs something.</p>
+              chat toolbar. On a wide screen it reopens by itself when the agent next runs
+              something. On a phone it does not — the panel is full-height there, and opening it
+              over the answer you are reading would be rude — so the toolbar button gets a dot
+              instead and you open it when you want it.</p>
           </div>
 
           <div class="callout">
@@ -505,26 +528,48 @@ CorxChat.config.extension = {
         </section>
 
         <section class="doc-section" id="canvas">
-          <h2>7. Canvas mode</h2>
+          <h2>7. Canvas</h2>
+          <div class="answer-box">
+            <p>Canvas is a live file tree of the sandbox, not a rendering of the chat. Anything the
+              agent writes appears there within a step of being written, with its extension and
+              size. Click a file and it opens in an editor you can type in.</p>
+          </div>
           <div class="prose">
-            <p>Long answers bury code. Canvas mode collects everything the agent generates into the
-              side panel instead: grouped by category — scripts, data, output, documents — and
-              rendered in the code's own style rather than as flat text.</p>
-            <p>Each file can be opened, read properly and downloaded individually, or taken together
-              as an archive. The conversation stays a conversation; the artefacts stay artefacts.</p>
+            <p>The editor is wired straight through to the sandbox filesystem. <strong>Save</strong>
+              writes your edit back to <code>/work</code>, so the next thing the agent runs uses
+              your version — you can correct a variable it got wrong and tell it to run the script
+              again, without describing the fix in prose. <strong>Delete</strong> removes the file
+              from the sandbox as well as from the tree. <strong>Download</strong> hands you the
+              file as it currently stands.</p>
+            <p>Generated images land here too, as read-only entries you can download. The counter on
+              the Canvas tab is how many files the sandbox is holding.</p>
+            <p>The conversation stays a conversation; the artefacts stay artefacts, and stay
+              editable.</p>
           </div>
         </section>
 
         <section class="doc-section" id="agent">
           <h2>8. Agent mode and task planning</h2>
+          <div class="answer-box">
+            <p>There is no agent mode to switch on. Give it a goal and it plans, then executes —
+              writing files, running them, reading the traceback, searching, fixing, and handing
+              you the result.</p>
+          </div>
           <div class="prose">
-            <p>Given a long job, the agent writes its own plan before it starts, then works through
-              the steps and shows the checklist updating as each one completes. This matters for
-              tasks that would otherwise stall halfway through with "would you like me to
-              continue?" — the plan is what lets it keep going.</p>
-            <p>Plans are visible and revisable. If the third step is wrong you can say so while the
-              first two are still running, rather than waiting for a finished answer built on a bad
-              assumption.</p>
+            <p>Planning is a tool, not a narration. For anything past two steps the model calls
+              <code>set_plan</code> with the list of steps; the Plan panel fills in and the first
+              step goes active. As it finishes each one it calls <code>complete_step</code> and the
+              checklist ticks over. You are watching real state, not a paragraph that claims
+              progress.</p>
+            <p>Every tool call also appears inline in the conversation as a card — what was called,
+              the argument, and the output it actually returned, including failures. Nothing runs
+              out of sight.</p>
+            <p>Plans are revisable. If the third step is wrong you can say so while the first two
+              are still running, rather than waiting for a finished answer built on a bad
+              assumption. <strong>Stop</strong> in the composer aborts the run mid-stream.</p>
+            <p><strong>An interrupted run is not lost.</strong> If you close the tab or refresh
+              while the agent is working, the next visit offers to pick it up where it stopped —
+              and it is told to check what already exists in the sandbox before repeating work.</p>
           </div>
         </section>
 
@@ -559,14 +604,24 @@ CorxChat.config.extension = {
         </section>
 
         <section class="doc-section" id="memory">
-          <h2>11. Memory</h2>
+          <h2>11. Conversations, memory and your profile</h2>
           <div class="prose">
-            <p>Your conversation is saved in this browser and restored when you come back, so
-              closing the tab mid-task does not lose the thread. The last 40 turns are kept.</p>
-            <p>It is stored locally — in <code>localStorage</code> under <code>corx.chat.v1</code> —
-              not on a CorX server. <strong>New chat</strong> clears it, and so does signing out.
-              Clearing your browser's site data removes both the conversation and the stored
-              credentials.</p>
+            <p>Chats are saved in the sidebar and restored when you come back, so closing the tab
+              mid-task does not lose the thread. Up to 20 conversations are kept, each holding its
+              last 60 messages; click one to switch to it, or the bin icon to delete it.
+              <strong>New chat</strong> starts a fresh one without touching the others.</p>
+            <p><strong>Memory</strong> is the switch in your profile menu, and it controls what gets
+              sent. On — the default — the whole conversation goes with each message, so it can
+              refer back to what you said earlier. Off, only the last exchange is sent and nothing
+              new is written to storage.</p>
+            <p>Everything is stored locally, in <code>localStorage</code> under
+              <code>corx.chat.v2</code>, not on a CorX server. Clearing your browser's site data
+              removes both the conversations and the stored credentials.</p>
+            <p>The profile menu is also where your ChatGPT account name and email are shown — read
+              from your own session token in this browser, never from a CorX record — along with
+              the <strong>light / dark / system</strong> switch and <strong>Connection test</strong>,
+              which prints to the terminal exactly which link in the auth chain is failing if
+              something goes wrong. <strong>Sign out</strong> discards the credentials.</p>
           </div>
         </section>
 
@@ -632,10 +687,12 @@ CorxChat.config.extension = {
             </details>
             <details>
               <summary>Where does my chat history live?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>In this browser, under <code>corx.chat.v1</code> in
-                <code>localStorage</code> — never on a CorX server. The last 40 turns are restored
-                when you return. <strong>New chat</strong> clears it, signing out clears it, and
-                clearing site data removes it along with your stored credentials.</p></div>
+              <div class="faq-body"><p>In this browser, under <code>corx.chat.v2</code> in
+                <code>localStorage</code> — never on a CorX server. Up to 20 chats are kept, each
+                holding its last 60 messages, and they come back in the sidebar when you return.
+                Turning <strong>Memory</strong> off in your profile menu stops new messages being
+                saved; deleting a chat removes it; clearing site data removes everything along with
+                your stored credentials.</p></div>
             </details>
             <details>
               <summary>Can I plug in my own backend?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -714,6 +771,5 @@ CorxChat.config.extension = {
 </footer>
 
 <script src="/assets/js/main.js" defer></script>
-<script src="/assets/js/chat.js" defer></script>
 </body>
 </html>

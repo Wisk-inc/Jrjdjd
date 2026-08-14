@@ -19,7 +19,15 @@ let booting = null;
 const listeners = new Set();
 
 export const onOutput = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
-const emit = (kind, text) => listeners.forEach((fn) => fn({ kind, text }));
+
+/* While a tap is set, everything the program prints is collected as well as
+   shown. Without this the agent sees nothing from its own `print()` calls —
+   the terminal would have the output and the model would not. */
+let tap = null;
+const emit = (kind, text) => {
+  if (tap && (kind === 'out' || kind === 'err')) tap.push(String(text));
+  listeners.forEach((fn) => fn({ kind, text }));
+};
 
 /* The shim that gives Python real network access. Requests leave through our
    own origin, so the sandbox can reach sites that would otherwise refuse a
@@ -116,17 +124,25 @@ export const isReady = () => Boolean(pyodide);
 export async function runPython(code) {
   const py = await boot();
   emit('cmd', code);
-  let result;
+
+  const printed = [];
+  const outer = tap;
+  tap = printed;
   try {
-    result = await py.runPythonAsync(code);
-  } catch (err) {
-    const msg = String(err.message || err);
-    emit('err', msg);
-    return { ok: false, output: msg };
+    let result, error = null;
+    try { result = await py.runPythonAsync(code); }
+    catch (err) { error = String(err.message || err); }
+
+    if (error) {
+      emit('err', error);
+      return { ok: false, output: printed.join('\n') };
+    }
+    const value = result === undefined || result === null ? '' : String(result);
+    if (value) emit('out', value);
+    return { ok: true, output: printed.join('\n') };
+  } finally {
+    tap = outer;
   }
-  const text = result === undefined || result === null ? '' : String(result);
-  if (text) emit('out', text);
-  return { ok: true, output: text };
 }
 
 /* --------------------------------------------------------------- packages */

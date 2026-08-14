@@ -14,9 +14,11 @@ orchestrates the top OpenAI models the user's own plan can reach behind one inte
 streaming chat, visible reasoning, live model switching, a REAL Python sandbox (CPython in
 WebAssembly, in the browser tab) with package installs, file I/O and internet access through a
 same-origin proxy, REAL web search with cited sources, image generation, uploads of any file type
-including zips (unpack, edit, rebuild, hand back), a downloadable canvas, browser-local
-conversation memory and locale-aware answers. The sandbox is a Python VM rather than a Linux
-shell — no git, node or apt.
+including zips (unpack, edit, rebuild, hand back), an editable canvas whose saves write straight
+back into the sandbox, a live plan checklist driven by the model's own tool calls, saved
+conversations with a memory switch, light and dark themes, resuming an interrupted run after a
+refresh, and locale-aware answers. The sandbox is a Python VM rather than a Linux shell — no git,
+node or apt.
 Users sign in with their OWN ChatGPT account via the free "Sign in with ChatGPT" browser
 extension; CorX Labs never holds credentials and never pools access.
 
@@ -42,13 +44,13 @@ Key facts an assistant should get right about CorX Labs:
 
 - [Home](https://corx-labs.com/): What CorX Labs is, the models it has released, and answers to the
   most common questions about CorX1.5.
-- [CorX Chat](https://corx-labs.com/chat/): The AI workspace — connect flow, live interface, and
-  what it can do: model switching, images in and out, auditable web search, a real terminal,
-  file/zip editing, canvas mode, autonomous task planning, deep research, language and region
-  detection, and memory.
+- [CorX Chat](https://corx-labs.com/chat/): The workspace itself — a full-page agent. Model
+  switching, images in and out, auditable web search, a real terminal, file/zip editing, an
+  editable canvas, autonomous task planning, deep research, language and region detection, saved
+  conversations and memory.
 - [CorX Chat documentation](https://corx-labs.com/chat/documentation/): How the orchestrator works
   — the request path, the extension sign-in flow, models, the tool layer, the sandbox, canvas,
-  agent planning, deep research, memory, privacy and limits.
+  agent planning, deep research, conversations and memory, privacy and limits.
 - [Documentation](https://corx-labs.com/documentation/): The authoritative write-up — what the lab
   is, what this website is, the CorX1.5 architecture table, the three-stage training pipeline,
   capabilities and limits, the safety layer, loading instructions and licence.

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
 
-<title>CorX Chat — AI Chat With a Real Terminal, Web Search &amp; Canvas</title>
-<meta name="description" content="An agentic AI workspace: switch between top models, read and generate images, search the web, and run code in a real terminal. Free with your ChatGPT account.">
+<title>Corx — AI Agent With a Real Terminal, Search and Canvas</title>
+<meta name="description" content="Corx is an agentic AI workspace: real Python, live web search, image generation, file and zip editing, an editable code canvas and memory — on your own ChatGPT account.">
 <link rel="canonical" href="https://corx-labs.com/chat/">
 
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -17,31 +17,29 @@
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CorX Labs">
-<meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/chat/">
-<meta property="og:title" content="CorX Chat — AI Chat With a Real Terminal, Web Search &amp; Canvas">
-<meta property="og:description" content="One chat, every tool: model switching, image generation, web search, a real terminal, file editing and long-running agent tasks.">
+<meta property="og:title" content="Corx — AI Agent With a Real Terminal, Search and Canvas">
+<meta property="og:description" content="Real Python, live web search, image generation, file editing and an editable code canvas — on your own ChatGPT account.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-chat.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="CorX Chat — one chat, every tool">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CorX Chat — AI Chat With a Real Terminal, Web Search &amp; Canvas">
-<meta name="twitter:description" content="One chat, every tool: model switching, image generation, web search, a real terminal, file editing and long-running agent tasks.">
+<meta name="twitter:title" content="Corx — AI Agent With a Real Terminal, Search and Canvas">
+<meta name="twitter:description" content="Real Python, live web search, image generation, file editing and an editable code canvas.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-chat.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/main.css">
 <link rel="stylesheet" href="/assets/css/chat.css">
-<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}
+html[data-theme="dark"]{background:#14100c}html[data-theme="light"]{background:#f4f2ec}</style>
 
 <script type="application/ld+json">
 {
@@ -50,398 +48,284 @@
     {
       "@type": "WebApplication",
       "@id": "https://corx-labs.com/chat/#app",
-      "name": "CorX Chat",
+      "name": "Corx",
+      "alternateName": "CorX Chat",
       "url": "https://corx-labs.com/chat/",
-      "description": "CorX Chat is an agentic AI workspace from CorX Labs. It orchestrates top OpenAI models behind one interface, adding a real sandboxed terminal, web search, image generation and understanding, file editing, a code canvas, deep research and persistent memory. Each person signs in with their own ChatGPT account through the Sign in with ChatGPT browser extension.",
+      "description": "Corx is an agentic AI workspace from CorX Labs. It runs real Python in a sandbox, searches the web with cited sources, generates images, creates and edits files, documents and zips, keeps an editable code canvas, and remembers conversations. It runs on the visitor's own ChatGPT account through the Sign in with ChatGPT browser extension.",
       "applicationCategory": "ProductivityApplication",
-      "applicationSubCategory": "AI assistant",
+      "applicationSubCategory": "AI agent",
       "operatingSystem": "Web browser",
-      "browserRequirements": "Requires a Chromium-based browser or Firefox with the “Sign in with ChatGPT” extension installed.",
+      "browserRequirements": "A Chromium-based browser or Firefox with the “Sign in with ChatGPT” extension.",
       "isAccessibleForFree": true,
       "inLanguage": "en",
-      "dateModified": "2026-08-13",
+      "dateModified": "2026-08-14",
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "author": { "@id": "https://corx-labs.com/#nathan" },
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
-        "Switch between top available OpenAI models mid-conversation",
-        "Send images and have them read and described",
-        "Generate images from a prompt",
-        "Web search with visible sources and per-result site marks",
-        "Expandable reasoning — read the model's thinking in a dropdown",
-        "A real sandboxed terminal: install packages, run and test code, make API requests",
-        "Read, edit, create and delete files, including inside uploaded zip archives",
-        "Build and return zip archives as downloads",
-        "Canvas mode — generated code grouped by category, syntax-styled and downloadable",
-        "Autonomous task planning across long multi-step jobs",
-        "Deep research with source validation and reliability weighting",
-        "Country and region detection for locally relevant answers",
-        "Automatic language detection — replies in the language you write in",
-        "Persistent conversation history and memory"
+        "Agentic planning — give it a goal and it plans the steps and executes them",
+        "Real Python sandbox: run code, install packages, create, edit, delete and run files",
+        "Live web search with cited sources shown as site logos",
+        "Image generation",
+        "Document and zip creation, editing and download",
+        "Editable code canvas with a file tree, save and delete",
+        "Visible reasoning in a dropdown",
+        "Saved conversations and memory, with a switch to turn memory off",
+        "Resumes an interrupted plan after a refresh",
+        "Light and dark themes"
       ],
-      "screenshot": "https://corx-labs.com/assets/img/og-chat.jpg",
       "softwareHelp": { "@id": "https://corx-labs.com/chat/documentation/#article" }
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://corx-labs.com/chat/#webpage",
-      "url": "https://corx-labs.com/chat/",
-      "name": "CorX Chat — AI Chat With a Real Terminal, Web Search & Canvas",
-      "isPartOf": { "@id": "https://corx-labs.com/#website" },
-      "mainEntity": { "@id": "https://corx-labs.com/chat/#app" },
-      "inLanguage": "en",
-      "dateModified": "2026-08-13",
-      "breadcrumb": { "@id": "https://corx-labs.com/chat/#breadcrumb" },
-      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
     {
       "@type": "BreadcrumbList",
       "@id": "https://corx-labs.com/chat/#breadcrumb",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Chat", "item": "https://corx-labs.com/chat/" }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "@id": "https://corx-labs.com/chat/#faq",
-      "isPartOf": { "@id": "https://corx-labs.com/chat/#webpage" },
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is CorX Chat?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "CorX Chat is an agentic AI workspace from CorX Labs. It puts the top available OpenAI models behind one interface and adds the tools a chat window normally lacks: a real sandboxed terminal, web search with visible sources, image generation and understanding, file and archive editing, a code canvas, deep research and persistent memory."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do I need an account to use CorX Chat?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "You sign in with your own ChatGPT account through the free “Sign in with ChatGPT” browser extension. CorX Labs never sees or stores your credentials — they stay encrypted in your browser and are attached to each request from your side. There is no separate CorX account to create."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Why does CorX Chat need a browser extension?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The extension performs the OAuth handoff and keeps your credentials encrypted in your browser's own storage, so a hosted web app never has to hold them. Without it there is no safe way for a website to use your ChatGPT session. If the extension is already installed, the page detects it and takes you straight to authorisation."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can CorX Chat run code?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. It has a real terminal it can drive itself — installing packages, running and testing code, making API requests, and reading, writing, editing or deleting files. You can open the terminal panel and watch every command it runs rather than taking its word for the result."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does CorX Chat work in my language?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. It detects the language you write in and replies in that language, and it detects your country or region so that research and locally-dependent answers are relevant to where you are. Both behaviours can be turned off by asking it to."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is CorX Chat free?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The interface is free. Model access comes from your own ChatGPT account, so which models you can reach and what limits apply are governed by your existing ChatGPT plan rather than by CorX Labs."
-          }
-        }
+        { "@type": "ListItem", "position": 2, "name": "Corx", "item": "https://corx-labs.com/chat/" }
       ]
     }
   ]
 }
 </script>
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
+<body class="app-body">
 
-<header class="masthead">
-  <div class="shell masthead-inner">
-    <a class="brand" href="/" aria-label="CorX Labs — home">
-      <span class="mark" aria-hidden="true">C</span>
-      <span class="brand-name">CorX Labs</span>
-    </a>
-    <nav class="nav" aria-label="Primary">
-      <a href="/chat/" aria-current="page">Chat</a>
-      <a href="/documentation/">Documentation</a>
-      <a href="/models/">Our Products</a>
-      <a href="/blog/">Blog</a>
-      <a href="/developers/">Developers</a>
-      <a href="/about/">About Us</a>
-      <a href="/contact/">Contact</a>
-    </nav>
-    <div class="masthead-actions">
-      <a class="btn btn-primary btn-sm" href="#workspace">Open chat</a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+<div class="app" id="chat-app" data-dock="closed" data-sidebar="closed">
+
+  <!-- ── Sidebar ──────────────────────────────────────────────────────── -->
+  <aside class="chat-sidebar" id="chat-sidebar" aria-label="Conversations">
+    <div class="chat-sidebar-head">
+      <a class="side-brand" href="/" title="CorX Labs">
+        <span class="mark" aria-hidden="true">C</span>
+        <span>Corx</span>
+      </a>
+      <button class="icon-btn nav-only" type="button" id="sidebar-close" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
     </div>
-  </div>
-  <div class="mobile-nav" id="mobile-nav" data-open="false">
-    <div class="shell">
-      <ul>
-        <li><a href="/chat/">Chat</a></li>
-        <li><a href="/documentation/">Documentation</a></li>
-        <li><a href="/models/">Our Products</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/developers/">Developers</a></li>
-        <li><a href="/about/">About Us</a></li>
-        <li><a href="/contact/">Contact</a></li>
-      </ul>
-      <a class="btn btn-primary" href="#workspace">Open chat</a>
+
+    <div class="chat-sidebar-actions">
+      <button class="chat-new" type="button" id="new-chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </button>
     </div>
-  </div>
-</header>
 
-<main id="main" class="chat-page">
+    <nav class="chat-hist" id="conversation-list" aria-label="Saved conversations"></nav>
 
-  <!-- The app is the page. Everything below it is reference text; the app
-       fills the viewport on load, on desktop and on a phone. -->
-  <div class="chat-stage">
-    <p id="chat-status" class="chat-status" role="status" hidden></p>
+    <div class="chat-sidebar-foot">
+      <button class="profile-chip" type="button" id="profile-btn" aria-expanded="false" aria-haspopup="menu">
+        <span class="chat-avatar" id="profile-initial" aria-hidden="true">C</span>
+        <span class="profile-name" id="profile-name">Signed out</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+      </button>
 
-    <div class="chat-app" id="chat-app" data-dock="closed" data-sidebar="closed">
-
-      <aside class="chat-sidebar" id="chat-sidebar" aria-label="Session">
-        <div class="chat-sidebar-head">
-          <button class="chat-new" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-            New chat
-          </button>
-        </div>
-        <div class="chat-hist">
-          <h4>What it can do</h4>
-          <ul class="side-list">
-            <li>Run real Python — install packages, read and write files</li>
-            <li>Search the web and read live pages</li>
-            <li>Generate images from a prompt</li>
-            <li>Open, edit and rebuild zips you upload</li>
-            <li>Show its reasoning on every answer</li>
-          </ul>
-          <h4>Agent</h4>
-          <p class="side-note">Just ask. There is no mode to switch on.</p>
-          <p class="side-note"><a href="/chat/documentation/">Documentation &rarr;</a></p>
-        </div>
-        <div class="chat-sidebar-foot">
-          <span class="chat-avatar" aria-hidden="true">C</span>
-          <span class="foot-label">Signed in with ChatGPT</span>
-          <button class="link-btn" type="button" id="chat-signout">Sign out</button>
-        </div>
-      </aside>
-
-      <div class="chat-main">
-        <div class="chat-topbar">
-          <button class="icon-btn nav-only" type="button" id="sidebar-toggle" aria-label="Show session panel">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-          </button>
-
-          <div class="model-picker">
-            <button class="model-btn" type="button" aria-expanded="false" aria-haspopup="listbox">
-              <span class="model-name">Model</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            </button>
-            <div class="model-menu" role="listbox" aria-label="Choose a model" hidden></div>
+      <div class="profile-menu" id="profile-menu" role="menu" hidden>
+        <div class="profile-head">
+          <span class="chat-avatar" id="menu-initial" aria-hidden="true">C</span>
+          <div>
+            <strong id="menu-name">Not signed in</strong>
+            <span id="menu-sub">Connect your ChatGPT account</span>
           </div>
+        </div>
 
-          <div class="chat-topbar-actions">
-            <button class="icon-btn" type="button" id="dock-toggle" aria-pressed="false" aria-label="Show the work panel">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M14 4v16"/></svg>
+        <div class="menu-row">
+          <span>Memory<small>Recall past conversations</small></span>
+          <button class="toggle" type="button" id="memory-toggle" role="switch" aria-checked="true"><i></i></button>
+        </div>
+
+        <div class="menu-row">
+          <span>Appearance</span>
+          <div class="seg" role="group" aria-label="Theme">
+            <button type="button" data-theme-set="light" title="Light" aria-label="Light">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+            </button>
+            <button type="button" data-theme-set="dark" title="Dark" aria-label="Dark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
+            </button>
+            <button type="button" data-theme-set="auto" title="System" aria-label="System">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>
             </button>
           </div>
         </div>
 
-        <div class="chat-thread">
-          <div class="chat-thread-inner">
-            <div class="chat-empty" id="chat-empty">
-              <span class="mark-lg" aria-hidden="true">C</span>
-              <h1>CorX Chat</h1>
-              <p>Real Python, real web search, real image generation — running on your own ChatGPT
-                account.</p>
-              <div class="starter-row">
-                <button class="starter" type="button" data-prompt="Use the sandbox to compute the first 30 Fibonacci numbers and show how the ratio between consecutive terms converges. Show the code and the numbers.">Run some code</button>
-                <button class="starter" type="button" data-prompt="Search the web for what happened in AI research this week and summarise the three most significant items, with the source for each.">Search the web</button>
-                <button class="starter" type="button" data-prompt="Generate an image: a lone lighthouse on a Caribbean cliff at dusk, warm paper tones, editorial illustration style.">Make an image</button>
-                <button class="starter" type="button" data-prompt="Write a Python script that reads a CSV, removes duplicate rows and writes a cleaned copy. Then run it on some test data you generate, and give me the file.">Build and run</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <button class="menu-item" type="button" id="run-diagnostics" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2 6 4-14 2 8h6"/></svg>
+          Connection test
+        </button>
+        <a class="menu-item" href="/chat/documentation/" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6.5A1.5 1.5 0 0 1 5 19.5z"/><path d="M8.5 8h7M8.5 12h7"/></svg>
+          Documentation
+        </a>
+        <button class="menu-item danger" type="button" id="chat-signout" role="menuitem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-1"/><path d="M19 12H9m10 0-3-3m3 3-3 3"/></svg>
+          Sign out
+        </button>
+      </div>
+    </div>
+  </aside>
 
-        <div class="chat-auth" id="chat-auth">
-          <div class="chat-auth-inner">
-            <p class="auth-checking">Checking your session…</p>
-            <div class="auth-signedout">
-              <h2>Connect your ChatGPT account</h2>
-              <p>CorX Chat runs on your own ChatGPT session. Credentials are handled by the official
-                sign-in extension and stay encrypted in this browser — CorX Labs never receives
-                them.</p>
-              <div class="btn-row">
-                <button class="btn btn-primary" id="chat-connect" type="button">
-                  Connect with ChatGPT
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </button>
-                <a class="btn btn-ghost" id="chat-install" href="/chat/documentation/#connecting">Get the extension</a>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- ── Main ─────────────────────────────────────────────────────────── -->
+  <div class="chat-main">
+    <header class="chat-topbar">
+      <button class="icon-btn nav-only" type="button" id="sidebar-toggle" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
 
-        <div class="composer-wrap">
-          <form class="composer" id="composer-form">
-            <div class="attach-row" id="composer-attachments" hidden></div>
-            <label class="visually-hidden" for="composer-input">Message CorX Chat</label>
-            <textarea id="composer-input" rows="1" placeholder="Ask anything…"></textarea>
-            <div class="composer-bar">
-              <label class="chip" for="composer-file">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5 12.5 19a4.6 4.6 0 0 1-6.5-6.5l7.8-7.8a3.1 3.1 0 0 1 4.4 4.4l-7.8 7.8a1.6 1.6 0 0 1-2.2-2.2l7-7"/></svg>
-                <span>Attach</span>
-              </label>
-              <input type="file" id="composer-file" multiple hidden>
-              <span class="spacer"></span>
-              <button class="send-btn" id="composer-send" type="submit" aria-label="Send message">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
-              </button>
-            </div>
-          </form>
-          <p class="composer-note">Runs on your own ChatGPT account. Check anything that matters.</p>
-        </div>
+      <div class="model-picker">
+        <button class="model-btn" type="button" aria-expanded="false" aria-haspopup="listbox">
+          <span class="model-name">Model</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="model-menu" role="listbox" aria-label="Choose a model" hidden></div>
       </div>
 
-      <aside class="chat-dock" aria-label="Work panel">
-        <div class="dock-tabs" role="tablist">
-          <button class="dock-tab" type="button" role="tab" data-panel="terminal" aria-selected="true">Terminal</button>
-          <button class="dock-tab" type="button" role="tab" data-panel="canvas" aria-selected="false">
-            Canvas <span class="dock-count" id="dock-count">0</span>
-          </button>
+      <div class="chat-topbar-actions">
+        <button class="chip think-toggle" type="button" id="think-toggle" aria-pressed="true" title="Show reasoning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0-3.5 10.9V17h7v-3.1A6 6 0 0 0 12 3z"/><path d="M9.5 20h5"/></svg>
+          <span>Think</span>
+        </button>
+        <button class="icon-btn" type="button" id="dock-toggle" aria-pressed="false" aria-label="Open the work panel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M14 4v16"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="chat-thread">
+      <div class="chat-thread-inner">
+        <div class="chat-empty" id="chat-empty">
+          <span class="mark-lg" aria-hidden="true">C</span>
+          <h1>Corx</h1>
+          <p>An agent with a real terminal, live search and a canvas you can edit.</p>
+          <div class="starter-row">
+            <button class="starter" type="button" data-prompt="Plan and build a small command-line tool in Python that takes a folder of CSV files, merges them, removes duplicates and writes a summary report. Create the files, run it on test data you generate, then zip it and give it to me.">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M13.5 6l-3 12"/></svg>
+              Plan &amp; build a tool
+            </button>
+            <button class="starter" type="button" data-prompt="Research what has happened in open-source AI this week. Search, read the best sources, and give me the three most significant items with a link for each.">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+              Research something
+            </button>
+            <button class="starter" type="button" data-prompt="Generate an image: a lone lighthouse on a Caribbean cliff at dusk, warm paper tones, editorial illustration style.">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="m4 17 5-5 4.5 4.5L17 13l3 3"/></svg>
+              Make an image
+            </button>
+            <button class="starter" type="button" data-prompt="Write me a project brief as a Markdown document covering goals, scope, milestones and risks for launching a small open-source AI model. Save it as a file I can download.">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6.5A1.5 1.5 0 0 1 5 19.5z"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg>
+              Write a document
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-bar" id="resume-bar" hidden>
+      <span>A run was interrupted. Pick it up where it stopped?</span>
+      <button class="btn btn-primary btn-sm" type="button" id="resume-yes">Resume</button>
+      <button class="link-btn" type="button" id="resume-no">Dismiss</button>
+    </div>
+
+    <div class="chat-auth" id="chat-auth">
+      <div class="chat-auth-inner">
+        <p class="auth-checking">Checking your session…</p>
+        <div class="auth-signedout">
+          <h2>Connect your ChatGPT account</h2>
+          <p>Corx runs on your own ChatGPT session. Credentials are handled by the official sign-in
+            extension and stay encrypted in this browser — CorX Labs never receives them.</p>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="chat-connect" type="button">
+              Connect with ChatGPT
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+            <a class="btn btn-ghost" id="chat-install" href="/chat/documentation/#connecting">Get the extension</a>
+          </div>
+          <p class="auth-note" id="chat-status" role="status"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer-wrap">
+      <form class="composer" id="composer-form">
+        <div class="attach-row" id="composer-attachments" hidden></div>
+        <label class="visually-hidden" for="composer-input">Message Corx</label>
+        <textarea id="composer-input" rows="1" placeholder="Ask anything…"></textarea>
+        <div class="composer-bar">
+          <label class="chip" for="composer-file" title="Attach files">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5 12.5 19a4.6 4.6 0 0 1-6.5-6.5l7.8-7.8a3.1 3.1 0 0 1 4.4 4.4l-7.8 7.8a1.6 1.6 0 0 1-2.2-2.2l7-7"/></svg>
+            <span>Attach</span>
+          </label>
+          <input type="file" id="composer-file" multiple hidden>
           <span class="spacer"></span>
-          <button class="icon-btn" type="button" id="dock-close" aria-label="Close the panel">
+          <button class="stop-btn" type="button" id="composer-stop" hidden aria-label="Stop">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+          </button>
+          <button class="send-btn" id="composer-send" type="submit" aria-label="Send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+          </button>
+        </div>
+      </form>
+      <p class="composer-note">Corx runs on your ChatGPT account and can make mistakes.</p>
+    </div>
+  </div>
+
+  <!-- ── Work panel ───────────────────────────────────────────────────── -->
+  <aside class="chat-dock" aria-label="Work panel">
+    <div class="dock-tabs" role="tablist">
+      <button class="dock-tab" type="button" role="tab" data-panel="plan" aria-selected="true">Plan</button>
+      <button class="dock-tab" type="button" role="tab" data-panel="terminal" aria-selected="false">Terminal</button>
+      <button class="dock-tab" type="button" role="tab" data-panel="canvas" aria-selected="false">
+        Canvas <span class="dock-count" id="dock-count">0</span>
+      </button>
+      <span class="spacer"></span>
+      <button class="icon-btn" type="button" id="dock-close" aria-label="Close the panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="dock-panel" data-panel="plan" role="tabpanel">
+      <p class="panel-empty" id="plan-empty">Ask for something with several steps and the plan
+        appears here, ticking off as Corx works.</p>
+      <ol class="plan-list" id="plan-list"></ol>
+    </div>
+
+    <div class="dock-panel dock-panel-term" data-panel="terminal" role="tabpanel" hidden>
+      <div class="terminal">
+        <div class="t-head"><span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox &mdash; python</div>
+        <p class="terminal-empty" id="terminal-empty">Idle. Corx runs commands here, or type one
+          yourself — <code>help</code> lists the shell; anything else runs as Python.</p>
+        <div id="terminal-out"></div>
+      </div>
+      <form class="terminal-form" id="terminal-form">
+        <label class="visually-hidden" for="terminal-input">Run a command</label>
+        <span class="prompt" aria-hidden="true">&gt;</span>
+        <input id="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="print(2 ** 10)">
+      </form>
+    </div>
+
+    <div class="dock-panel dock-panel-canvas" data-panel="canvas" role="tabpanel" hidden>
+      <div class="canvas-tree" id="canvas-list">
+        <p class="panel-empty" id="canvas-empty">Files Corx writes appear here. Click one to read,
+          edit and save it.</p>
+      </div>
+      <div class="canvas-editor" id="canvas-editor" hidden>
+        <div class="editor-head">
+          <span class="editor-name" id="editor-name">file</span>
+          <span class="spacer"></span>
+          <button class="link-btn" type="button" id="editor-save">Save</button>
+          <button class="link-btn" type="button" id="editor-download">Download</button>
+          <button class="link-btn danger" type="button" id="editor-delete">Delete</button>
+          <button class="icon-btn" type="button" id="editor-close" aria-label="Close file">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
           </button>
         </div>
-
-        <div class="dock-panel dock-panel-term" data-panel="terminal" role="tabpanel">
-          <div class="terminal">
-            <div class="t-head"><span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox &mdash; python</div>
-            <p class="terminal-empty" id="terminal-empty">Idle. The agent runs commands here, or type
-              one yourself — <code>help</code> lists what the shell takes; anything else runs as
-              Python.</p>
-            <div id="terminal-out"></div>
-          </div>
-          <form class="terminal-form" id="terminal-form">
-            <label class="visually-hidden" for="terminal-input">Run a command in the sandbox</label>
-            <span class="prompt" aria-hidden="true">&gt;</span>
-            <input id="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="print(2 ** 10)">
-          </form>
-        </div>
-
-        <div class="dock-panel" data-panel="canvas" role="tabpanel" hidden>
-          <p class="canvas-empty" id="canvas-empty">Code the model writes, images it generates and
-            files the sandbox produces land here, ready to download.</p>
-          <div id="canvas-list"></div>
-        </div>
-      </aside>
-
-      <div class="chat-scrim" id="chat-scrim" hidden></div>
-    </div>
-  </div>
-
-  <!-- Reference text, below the fold. -->
-  <section class="section-tight" id="about">
-    <div class="shell">
-      <div class="answer-box" style="margin-top:0">
-        <p><strong>CorX Chat is an AI workspace that runs on your own ChatGPT account.</strong>
-          Connect once with the official <em>Sign in with ChatGPT</em> extension and you get the top
-          models your plan can reach, plus a real Python sandbox, live web search, image generation,
-          file and zip handling, and a canvas of everything it builds.</p>
-        <p>It behaves as an agent by default — tell it to write code, fix a bug, research something
-          or work through a long job and it does the whole thing. Its reasoning is available in a
-          dropdown on every answer.</p>
+        <textarea class="editor-area" id="editor-area" spellcheck="false"></textarea>
       </div>
-
-      <div class="grid grid-3 mt-l">
-        <div class="card">
-          <h3>Real terminal</h3>
-          <p>Full CPython in your tab. Installs packages, reads and writes files, and you see every
-            command. It has no access to your computer.</p>
-        </div>
-        <div class="card">
-          <h3>Real search</h3>
-          <p>It searches the web and reads live pages, showing each source it used so you can check
-            the claim yourself.</p>
-        </div>
-        <div class="card">
-          <h3>Real files</h3>
-          <p>Upload anything, including zips. It opens them, edits what is inside, and gives you a
-            rebuilt file back.</p>
-        </div>
-      </div>
-
-      <p class="mt-m" style="font-size:.85rem;color:var(--faint)">
-        Not built yet: a general Linux shell — the sandbox is a Python VM, so no git, node or apt.
-        <a href="/chat/documentation/" style="text-decoration:underline;text-underline-offset:3px">Full documentation</a>.
-      </p>
     </div>
-  </section>
-</main>
+  </aside>
 
-<footer class="site-footer">
-  <div class="shell">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="brand" href="/" aria-label="CorX Labs — home">
-          <span class="mark" aria-hidden="true">C</span>
-          <span class="brand-name">CorX Labs</span>
-        </a>
-        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
-          Architecting the future, from the ground up.</p>
-      </div>
-      <nav class="footer-col" aria-label="Products">
-        <h4>Products</h4>
-        <ul>
-          <li><a href="/chat/">CorX Chat</a></li>
-          <li><a href="/models/">All models</a></li>
-          <li><a href="/models/corx1-5/">CorX1.5</a></li>
-          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
-        </ul>
-      </nav>
-      <nav class="footer-col" aria-label="Lab">
-        <h4>Lab</h4>
-        <ul>
-          <li><a href="/documentation/">Documentation</a></li>
-          <li><a href="/chat/documentation/">Chat documentation</a></li>
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/developers/">Developers</a></li>
-          <li><a href="/about/">About us</a></li>
-          <li><a href="/contact/">Contact</a></li>
-        </ul>
-      </nav>
-      <nav class="footer-col" aria-label="Resources">
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
-          <li><a href="/documentation/#safety">Safety</a></li>
-          <li><a href="/feed.xml">Release feed (RSS)</a></li>
-          <li><a href="/sitemap.xml">Sitemap</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div class="footer-base">
-      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
-      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
-    </div>
-  </div>
-</footer>
+  <div class="chat-scrim" id="chat-scrim" hidden></div>
+</div>
 
-<script src="/assets/js/main.js" defer></script>
 <script type="module" src="/assets/js/chat.js"></script>
 </body>
 </html>

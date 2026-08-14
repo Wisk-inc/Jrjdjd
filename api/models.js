@@ -17,7 +17,11 @@ export default async function handler(request) {
   try {
     credentials = openaiCredentials(request);
   } catch {
-    return json({ error: 'not_authenticated' }, 401);
+    return json({
+      error: 'missing_credentials',
+      sawAuthorization: Boolean(request.headers.get('authorization')),
+      sawAccountId: Boolean(request.headers.get('chatgpt-account-id'))
+    }, 401);
   }
 
   const transport = createOpenAIOAuthTransport({
