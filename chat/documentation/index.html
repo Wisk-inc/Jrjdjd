@@ -139,10 +139,10 @@
         },
         {
           "@type": "Question",
-          "name": "Does CorX Chat have a sandboxed terminal?",
+          "name": "Does CorX Chat have a real terminal?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not in this release. A terminal that installs packages and runs code needs an isolated compute backend, which does not exist yet. Streaming chat, model switching, agent behaviour, image input, the code canvas, conversation memory and locale awareness are all live today against your own ChatGPT account."
+            "text": "Yes. A full CPython build runs in WebAssembly inside your browser tab. The agent writes code, runs it, reads real tracebacks and fixes them, installs packages with micropip, reads and writes files under /work, and reaches the internet through a same-origin proxy so it is not CORS-limited. Every command is visible in the terminal panel, and you can type into it yourself. It has no access to your computer."
           }
         },
         {
@@ -307,11 +307,11 @@
           <li><a href="#connecting">2. Connecting</a></li>
           <li><a href="#models">3. Models</a></li>
           <li><a href="#tools">4. What runs</a></li>
-          <li><a href="#terminal">5. Agent behaviour</a></li>
-          <li><a href="#files">6. Attachments</a></li>
+          <li><a href="#terminal">5. The sandbox</a></li>
+          <li><a href="#files">6. Uploads</a></li>
           <li><a href="#canvas">7. Canvas mode</a></li>
           <li><a href="#agent">8. Agent &amp; planning</a></li>
-          <li><a href="#research">9. Research</a></li>
+          <li><a href="#research">9. Reasoning</a></li>
           <li><a href="#locale">10. Language &amp; region</a></li>
           <li><a href="#memory">11. Memory</a></li>
           <li><a href="#privacy">12. Privacy</a></li>
@@ -435,41 +435,66 @@ CorxChat.config.extension = {
               <thead><tr><th scope="col">Capability</th><th scope="col">Status</th><th scope="col">Notes</th></tr></thead>
               <tbody>
                 <tr><td>Streaming chat</td><td>Live</td><td>Tokens render as they arrive, over your own session</td></tr>
+                <tr><td>Visible reasoning</td><td>Live</td><td>The model's own thinking, in a dropdown on each answer</td></tr>
                 <tr><td>Model switching</td><td>Live</td><td>List fetched from <code>/v1/models</code> for your account</td></tr>
                 <tr><td>Agent behaviour</td><td>Live</td><td>On by default — no mode to enable</td></tr>
-                <tr><td>Image input</td><td>Live</td><td>Attached images are sent as multimodal content</td></tr>
-                <tr><td>Code canvas</td><td>Live</td><td>Real code blocks, named and downloadable</td></tr>
+                <tr><td>Python sandbox</td><td>Live</td><td>Real CPython in WebAssembly, in your tab</td></tr>
+                <tr><td>Package installs</td><td>Live</td><td><code>micropip</code>; Pyodide's prebuilt wheels and pure-Python packages</td></tr>
+                <tr><td>Internet access</td><td>Live</td><td>Via <code>/api/fetch</code>, so the sandbox is not CORS-limited</td></tr>
+                <tr><td>File upload</td><td>Live</td><td>Any type; staged into <code>/work</code> for the agent to open</td></tr>
+                <tr><td>Image input</td><td>Live</td><td>Sent as multimodal content</td></tr>
+                <tr><td>Code canvas</td><td>Live</td><td>Code blocks and files the sandbox produced, downloadable</td></tr>
                 <tr><td>Conversation memory</td><td>Live</td><td>Restored from this browser on return</td></tr>
                 <tr><td>Language &amp; region</td><td>Live</td><td>Your locale and time zone are sent as context</td></tr>
-                <tr><td>Sandboxed terminal</td><td>Not built</td><td>Needs an isolated compute backend</td></tr>
-                <tr><td>Web search</td><td>Not built</td><td>Needs a search backend and a tool loop</td></tr>
-                <tr><td>Image generation</td><td>Not built</td><td>Endpoint exists upstream; not wired here yet</td></tr>
-                <tr><td>File &amp; zip editing</td><td>Not built</td><td>Depends on the sandbox above</td></tr>
+                <tr><td>Image generation</td><td>Not built</td><td>Endpoint exists upstream; not wired in yet</td></tr>
+                <tr><td>Shell beyond Python</td><td>Not built</td><td>It is a Python VM, not a Linux box — no <code>git</code>, no <code>node</code></td></tr>
               </tbody>
             </table>
           </div>
         </section>
 
         <section class="doc-section" id="terminal">
-          <h2>5. Agent behaviour</h2>
+          <h2>5. The sandbox</h2>
+          <div class="answer-box">
+            <p><strong>The terminal is real.</strong> A full CPython build runs in WebAssembly
+              inside your browser tab. The agent drives it: it writes code, runs it, reads the actual
+              traceback when it fails, and fixes it. Every command and its output appear in the
+              terminal panel as they happen — and you can type into it yourself.</p>
+          </div>
           <div class="prose">
-            <p>There is no agent toggle. The system instruction tells the model to behave as one by
-              default: when you ask it to build, code, fix, plan or research something, it does the
-              whole job — complete files rather than fragments, worked through to the end, without
-              asking you to enable anything first or stopping halfway to ask whether to continue.</p>
-            <p>It is also told to fence code with a language tag and, where useful, a filename
-              comment on the first line. That is what the canvas reads to name each artefact.</p>
+            <p>It can install packages with <code>micropip</code>, create and edit files under
+              <code>/work</code>, and reach the internet: inside Python, <code>import web</code> then
+              <code>await web.get(url)</code>. Those requests go out through
+              <code>/api/fetch</code> on this origin, which is what stops CORS from boxing the
+              sandbox in.</p>
+            <p>Because it runs in your tab, <strong>it has no access to your computer</strong> — only
+              to its own in-memory filesystem and whatever you upload. Closing the tab discards it.</p>
+            <p>The shell understands <code>pip install</code>, <code>ls</code>, <code>cat</code>,
+              <code>rm</code>, <code>python &lt;file&gt;</code>, <code>pwd</code> and
+              <code>help</code>. Anything else is executed as Python — which is the honest framing,
+              because that is what this is. There is no <code>git</code>, no <code>node</code>, no
+              apt.</p>
+            <p>The panel closes with the <strong>&times;</strong> in its header, or the toggle in the
+              chat toolbar. It reopens by itself when the agent next runs something.</p>
+          </div>
+
+          <div class="callout">
+            <p><strong>The point of showing it.</strong> An assistant that claims code works and one
+              that shows you the passing output are different products. The terminal is there so you
+              can check the second thing — and catch it doing something you did not intend.</p>
           </div>
         </section>
 
         <section class="doc-section" id="files">
-          <h2>6. Attachments</h2>
+          <h2>6. Uploads</h2>
           <div class="prose">
-            <p>Images can be attached to a message and are sent to the model as multimodal content,
-              so it reads what is actually in the screenshot, photo or diagram. Attachments are
-              encoded in your browser and travel with that single request.</p>
-            <p>Other file types, archives, and editing files in place all depend on the sandbox
-              described above, and are not part of this release.</p>
+            <p>Attach anything. <strong>Images</strong> are sent to the model as multimodal content,
+              so it reads what is actually in the screenshot or photo. <strong>Any other file</strong>
+              is written into the sandbox at <code>/work/&lt;name&gt;</code> and the agent is told it
+              is there, so it can open it, parse it, edit it and write a new version back out — which
+              then appears in the canvas as a download.</p>
+            <p>That covers data files, code, archives and anything else Python can open. Files stay
+              in your browser; they are never uploaded to a CorX server.</p>
           </div>
         </section>
 
@@ -498,14 +523,16 @@ CorxChat.config.extension = {
         </section>
 
         <section class="doc-section" id="research">
-          <h2>9. Research</h2>
+          <h2>9. Reasoning and research</h2>
           <div class="prose">
-            <p>The model answers from what it knows, plus whatever you give it. <strong>CorX Chat
-              does not currently browse the web</strong>, so it cannot fetch a page, check a claim
-              against a live source, or tell you today's price of anything.</p>
-            <p>Independent search with source validation and reliability weighting is the next thing
-              planned after the sandbox, because both need the same tool-calling loop. Until it
-              exists, this page will keep saying it does not.</p>
+            <p>Answers that need more than a line open with the model's reasoning, collapsed into a
+              <em>thought process</em> dropdown. It is asked to actually think in there — weigh an
+              alternative, name the case that breaks its plan, say when it is unsure — rather than
+              narrate. Open it when you want to know why; ignore it when you do not.</p>
+            <p>For anything that depends on current information, it can <strong>read the live
+              page</strong> with <code>fetch_url</code> and tell you which source it used, instead of
+              answering from memory. There is no ranked search index behind it yet, so give it a URL
+              or expect it to reason about where to look.</p>
           </div>
         </section>
 
@@ -585,11 +612,12 @@ CorxChat.config.extension = {
                 runtime, so it reflects your account rather than a fixed list.</p></div>
             </details>
             <details>
-              <summary>Is there a sandboxed terminal?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Not in this release. A terminal that installs packages and
-                runs code needs an isolated compute backend, which does not exist yet — and nothing
-                in the interface pretends otherwise. See <a href="#tools">what runs</a> for the full
-                live-versus-not-built list.</p></div>
+              <summary>Is the terminal real?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Yes — a full CPython build running in WebAssembly in your
+                tab. The agent writes code, runs it, reads the real traceback when it fails and fixes
+                it; it installs packages, reads and writes files, and reaches the internet. Every
+                command is visible, and you can type into it yourself. It has no access to your
+                computer.</p></div>
             </details>
             <details>
               <summary>Where does my chat history live?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>

@@ -547,3 +547,33 @@ body:not([data-chat-phase="ready"]) .chat-topbar .model-picker { visibility: hid
   font-size: .68rem; color: var(--muted);
 }
 .canvas-empty { font-size: .82rem; color: var(--faint); line-height: 1.6; }
+
+/* --------------------------------------------------- terminal, live */
+.dock-panel-term { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+.dock-panel-term .terminal { flex: 1; min-height: 0; overflow-y: auto; }
+.terminal-empty { color: #8d8172; font-family: var(--sans); font-size: .78rem; line-height: 1.6; }
+.terminal-empty code {
+  background: rgba(242,238,230,.08); border-color: rgba(242,238,230,.14); color: #d9cfc1;
+}
+.terminal .sys { color: #8d8172; font-style: italic; }
+.terminal-form {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line-strong); border-radius: 10px;
+  background: var(--paper-raised); padding: 7px 11px;
+}
+.terminal-form .prompt { font-family: var(--mono); font-size: .8rem; color: var(--espresso); }
+.terminal-form input {
+  flex: 1; border: 0; outline: none; background: none;
+  font-family: var(--mono); font-size: .78rem; color: var(--ink);
+}
+.terminal-form input::placeholder { color: var(--faint); }
+
+.dock-tab[data-active="true"]::after {
+  content: ""; display: inline-block; width: 5px; height: 5px; margin-left: 6px;
+  border-radius: 50%; background: var(--espresso); vertical-align: middle;
+}
+.dock-tab[aria-selected="true"][data-active="true"]::after { display: none; }
+
+/* Reasoning dropdown sits above the answer */
+.msg-reasoning:not(:empty) { margin-bottom: 10px; }
+.think-label { flex: 1; }

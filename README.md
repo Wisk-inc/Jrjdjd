@@ -29,7 +29,9 @@ any static host and it works.
 assets/css/main.css     The entire design system
 assets/css/chat.css     CorX Chat workspace UI (loaded only on /chat/)
 assets/js/chat.js       The chat client: auth, streaming, markdown, canvas, memory
-assets/vendor/          @openai-oauth/web, built from source (auth only)
+assets/js/sandbox.js    The Python VM: exec, packages, files, network
+assets/vendor/          @openai-oauth/web (built from source) + self-hosted Pyodide
+api/fetch.js            Edge function — the sandbox's proxied internet access
 api/chat.js             Edge function — streams chat completions
 api/models.js           Edge function — the caller's available models
 assets/js/main.js       Progressive enhancement only — the site works without it
@@ -126,15 +128,22 @@ The client attaches `Authorization` and `chatgpt-account-id` with `openaiAuthHea
 function reads them straight back off the request with `openaiCredentials()` and uses them for that
 single call. **Nothing is persisted server-side and no token is ever pooled between users.**
 
-**Live today** — streaming chat over the visitor's own ChatGPT session; model switching populated
-from `/v1/models` for that account; agent behaviour on by default (no toggle); image attachments
-sent as multimodal content; a code canvas built from real fenced blocks, named from a filename
-comment where present and downloadable; conversation memory restored from `localStorage`; locale
-and time zone sent as context so answers suit where the visitor is.
+**The sandbox is real.** `assets/vendor/pyodide/` is a self-hosted CPython build that runs in
+WebAssembly in the visitor's tab. The agent calls tools — `run_python`, `install_packages`,
+`write_file`, `read_file`, `list_files`, `fetch_url` — and every command appears in a terminal panel
+the user can also type into and close. State persists between calls, packages install with
+`micropip`, and internet access goes through `/api/fetch` on this origin so the VM is not
+CORS-limited (in Python: `import web` then `await web.get(url)`). It has no access to the visitor's
+machine: only its own in-memory filesystem and whatever they upload.
 
-**Not built** — a sandboxed terminal, web search, image generation and file/zip editing all need a
-compute backend that does not exist yet. They are absent from the UI and stated as absent in the
-docs rather than faked.
+**Also live** — streaming chat; visible reasoning (the model writes a `<thinking>` block, the client
+renders it as a collapsible dropdown); model switching from `/v1/models`; uploads of any type
+(images as multimodal content, everything else staged into `/work`); a canvas of code blocks and
+sandbox-produced files, downloadable; conversation memory in `localStorage`; locale and time zone
+sent as context.
+
+**Not built** — image generation, a ranked search index behind the URL fetching, and a general Linux
+shell (it is a Python VM: no git, node or apt). Stated as absent in the docs rather than faked.
 
 **Deploying the API** — `package.json` declares `@openai-oauth/web` and `@openai-oauth/core` so
 Vercel installs them for the two edge functions in `/api`. The static pages still have no build

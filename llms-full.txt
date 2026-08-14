@@ -255,17 +255,26 @@ user's browser. If present, the user presses Continue and goes straight to autho
 - Image input: attached images are sent as multimodal content.
 - Code canvas: real fenced code blocks from responses, named from a filename comment where present,
   downloadable individually.
-- Conversation memory: the last 40 turns are saved in the browser (localStorage, key corx.chat.v1)
+- A REAL Python sandbox: CPython compiled to WebAssembly, running in the browser tab. The agent
+  calls tools (run_python, install_packages, write_file, read_file, list_files, fetch_url) and
+  every command is shown in a terminal panel the user can also type into and close. State persists
+  between calls; packages install with micropip; internet access goes through /api/fetch on the
+  same origin so it is not CORS-limited (in Python: `import web` then `await web.get(url)`). The
+  sandbox has no access to the user's machine.
+- Visible reasoning: the model is asked to think inside a <thinking> block, which the interface
+  renders as a collapsible thought-process dropdown.
+- Uploads of any file type: images go to the model as multimodal content; other files are staged
+  into /work so the agent can open, edit and return them.
+- Conversation memory: the last 60 turns are saved in the browser (localStorage, key corx.chat.v1)
   and restored on return. Never stored on a CorX server.
 - Language and region: the user's locale and time zone are sent as context; replies follow the
   language written in.
 
 ## What is NOT built yet (and is not simulated anywhere)
 
-- A sandboxed terminal that installs packages and runs code — needs an isolated compute backend.
-- Web search / deep research — needs a search backend and a tool-calling loop.
 - Image generation — the upstream endpoint exists but is not wired into the interface.
-- File and zip editing — depends on the sandbox.
+- A ranked search index — the agent can fetch any URL, but there is no search engine behind it.
+- A general Linux shell — the sandbox is a Python VM, so no git, node or apt.
 
 ## Request path
 
