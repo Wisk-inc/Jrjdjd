@@ -185,7 +185,9 @@ html[data-theme="light"] {
   padding: 9px 11px; border: 0; border-radius: 9px; background: none; cursor: pointer;
 }
 .model-opt:hover { background: rgba(125,114,100,.11); }
-.model-opt strong { flex: 1; font-size: .845rem; font-weight: 550; color: var(--ink-strong); word-break: break-all; }
+.model-opt-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.model-opt strong { font-size: .845rem; font-weight: 550; color: var(--ink-strong); word-break: break-all; }
+.model-opt small { font-size: .72rem; color: var(--muted); }
 .model-opt .check { color: var(--espresso); }
 .model-opt .check svg { width: 15px; height: 15px; display: block; }
 .model-opt[aria-selected="false"] .check { visibility: hidden; }

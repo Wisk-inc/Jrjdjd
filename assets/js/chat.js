@@ -19,7 +19,10 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const STORE = 'corx.chat.v2';
-const FALLBACK_MODELS = ['gpt-5.1-codex', 'gpt-5.1-codex-mini'];
+const FALLBACK_MODELS = [
+  'gpt-5.2', 'gpt-5.2-codex', 'gpt-5.1', 'gpt-5.1-codex', 'gpt-5.1-codex-mini',
+  'gpt-5', 'gpt-5-codex'
+];
 const MAX_ROUNDS = 16;
 const MAX_CONVS = 20;
 
@@ -58,7 +61,7 @@ function newConversation() {
 
 /* ------------------------------------------------------------------ state */
 const state = {
-  models: [], profile: null, running: false, abort: null,
+  models: [], catalog: new Map(), profile: null, running: false, abort: null,
   attachments: [], plan: [], files: new Map(), openFile: null
 };
 
@@ -536,14 +539,30 @@ async function refreshModels() {
   try {
     const res = await fetch('/api/models', { headers: await authHeaders() });
     if (res.ok) {
-      const { models } = await res.json();
+      const { models, catalog } = await res.json();
       if (Array.isArray(models) && models.length) state.models = models;
+      if (Array.isArray(catalog)) {
+        state.catalog = new Map(catalog.map((m) => [m.id, m]));
+      }
     }
   } catch { /* fall through */ }
   if (!state.models.length) state.models = FALLBACK_MODELS;
   if (!state.models.includes(db.model)) db.model = state.models[0];
   saveDb();
   paintModels();
+}
+
+/* A slug is not a description. These are the families the Codex catalog
+   returns; anything unrecognised falls back to its reasoning level. */
+function modelNote(id) {
+  const meta = state.catalog?.get(id);
+  const bits = [];
+  if (/codex/.test(id)) bits.push('built for code');
+  else bits.push('general purpose');
+  if (/mini/.test(id)) bits.push('fastest');
+  else if (meta?.reasoning) bits.push(`${meta.reasoning} reasoning`);
+  if (meta && meta.listed === false) bits.push('preview');
+  return bits.join(' · ');
 }
 
 function paintModels() {
@@ -553,7 +572,9 @@ function paintModels() {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'model-opt'; b.setAttribute('role', 'option');
     b.setAttribute('aria-selected', String(id === db.model));
-    b.innerHTML = `<strong>${esc(id)}</strong><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg></span>`;
+    b.innerHTML = `<span class="model-opt-text"><strong>${esc(id)}</strong>` +
+      `<small>${esc(modelNote(id))}</small></span>` +
+      `<span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg></span>`;
     b.addEventListener('click', () => {
       db.model = id; saveDb(); paintModels();
       els.modelMenu.hidden = true;
@@ -641,7 +662,12 @@ async function streamOnce(node, startedAt) {
       throw new Error('The server did not receive your credentials. Run the connection test from your profile menu.');
     }
     if (res.status === 403 && d.error === 'upstream_rejected') {
-      throw new Error(`ChatGPT rejected the request (${d.status}). Your plan may not allow this model. ${String(d.message || '').slice(0, 200)}`);
+      const note = String(d.message || '').slice(0, 240);
+      throw new Error(
+        `ChatGPT refused the request (${d.status})${d.model ? ` for ${d.model}` : ''}. ` +
+        `Try another model from the picker — your plan may not include this one.` +
+        (note ? ` Upstream said: ${note}` : '')
+      );
     }
     throw new Error(d.message || `Request failed (${res.status}).`);
   }

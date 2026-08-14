@@ -249,7 +249,9 @@ user's browser. If present, the user presses Continue and goes straight to autho
 ## What is live today
 
 - Streaming chat over the user's own ChatGPT session.
-- Model switching; the picker is populated live from /v1/models for that account.
+- Model switching; the picker is filled from the Codex model catalog for that account (the gpt-5.x
+  family and their -codex and -mini variants), each entry labelled with its family and default
+  reasoning level. Which of them run is set by the user's own ChatGPT plan.
 - Agent behaviour BY DEFAULT — no mode to enable. Asked to build or fix something, it writes
   complete code and works multi-step jobs to the end.
 - Image input: attached images are sent as multimodal content.
@@ -297,7 +299,9 @@ user's browser. If present, the user presses Continue and goes straight to autho
 
 Browser (extension + encrypted credentials, via @openai-oauth/web) → CorX Chat UI →
 /api/chat, /api/models and /api/image (Vercel edge functions using @openai-oauth/web/server) →
-chatgpt.com/backend-api/codex → model. Credentials are read off the request headers
+chatgpt.com/backend-api/codex (POST /responses, GET /models, POST /images/generations) → model.
+There is no /chat/completions on that host; /api/chat translates between the chat-completions
+shape the browser speaks and the Codex Responses API in both directions. Credentials are read off the request headers
 (Authorization + chatgpt-account-id) for that one call and are never persisted server-side.
 /api/search (DuckDuckGo HTML) and /api/fetch (SSRF-guarded proxy) carry no credentials at all.
 

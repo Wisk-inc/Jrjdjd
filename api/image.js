@@ -40,7 +40,8 @@ export default async function handler(request) {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         prompt,
-        model: payload.model || 'gpt-image-1',
+        // The Codex catalog's image model. gpt-image-1 is not on this host.
+        model: payload.model || 'gpt-image-2',
         size: payload.size || '1024x1024',
         n: 1
       })
