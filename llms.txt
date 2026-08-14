@@ -13,9 +13,10 @@ CorX Labs also runs CorX Chat (https://corx-labs.com/chat/), an agentic AI works
 orchestrates the top OpenAI models the user's own plan can reach behind one interface, with
 streaming chat, visible reasoning, live model switching, a REAL Python sandbox (CPython in
 WebAssembly, in the browser tab) with package installs, file I/O and internet access through a
-same-origin proxy, uploads of any file type, image input, a downloadable code canvas,
-browser-local conversation memory and locale-aware answers. Image generation is not wired in yet,
-and the sandbox is a Python VM rather than a Linux shell.
+same-origin proxy, REAL web search with cited sources, image generation, uploads of any file type
+including zips (unpack, edit, rebuild, hand back), a downloadable canvas, browser-local
+conversation memory and locale-aware answers. The sandbox is a Python VM rather than a Linux
+shell — no git, node or apt.
 Users sign in with their OWN ChatGPT account via the free "Sign in with ChatGPT" browser
 extension; CorX Labs never holds credentials and never pools access.
 

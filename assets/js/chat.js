@@ -102,6 +102,45 @@ const TOOLS = [
   {
     type: 'function',
     function: {
+      name: 'web_search',
+      description: 'Search the web and get back real results with titles, URLs and snippets. Use this whenever the answer depends on current information, or when you need to find a source rather than being given one.',
+      parameters: {
+        type: 'object',
+        properties: { query: { type: 'string' } },
+        required: ['query']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'generate_image',
+      description: 'Generate an image from a text prompt. The image is shown to the user and saved into the canvas for download.',
+      parameters: {
+        type: 'object',
+        properties: {
+          prompt: { type: 'string' },
+          size: { type: 'string', enum: ['1024x1024', '1536x1024', '1024x1536'] }
+        },
+        required: ['prompt']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'deliver_file',
+      description: 'Give a file from the sandbox to the user as a download. Use after building a file or a zip so they can actually take it away.',
+      parameters: {
+        type: 'object',
+        properties: { path: { type: 'string' } },
+        required: ['path']
+      }
+    }
+  },
+  {
+    type: 'function',
+    function: {
       name: 'fetch_url',
       description: 'Fetch a URL from the internet and return its text. Use this to read a page, check a fact against a live source, or call an API.',
       parameters: {
@@ -133,6 +172,57 @@ async function execTool(name, args) {
       refreshCanvasFromSandbox();
       return files.length ? files.map((f) => `${f.path} (${f.size}B)`).join('\n') : '(empty)';
     }
+    case 'web_search': {
+      const q = String(args.query || '').trim();
+      termLine('cmd', `search "${q}"`);
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+      const data = await res.json().catch(() => ({}));
+      const results = data.results || [];
+      if (!results.length) {
+        termLine('err', data.error || 'no results');
+        return `No results${data.error ? ` (${data.error})` : ''}.`;
+      }
+      termLine('ok', `${results.length} results`);
+      renderSources(results);
+      return results
+        .map((r, i) => `[${i + 1}] ${r.title}\n${r.url}\n${r.snippet}`)
+        .join('\n\n');
+    }
+
+    case 'generate_image': {
+      termLine('cmd', `image "${String(args.prompt || '').slice(0, 60)}"`);
+      const res = await fetch('/api/image', {
+        method: 'POST',
+        headers: { ...(await openaiAuthHeaders()), 'content-type': 'application/json' },
+        body: JSON.stringify({ prompt: args.prompt, size: args.size })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.image) {
+        const msg = data.message || data.error || `image request failed (${res.status})`;
+        termLine('err', msg);
+        return `Image generation failed: ${msg}`;
+      }
+      termLine('ok', 'image generated');
+      renderImage(data.image, args.prompt);
+      const name = `image-${Date.now()}.png`;
+      addCanvasEntry(name, async () => dataUrlToBytes(data.image), { lang: 'png', size: '—' });
+      return `Image generated and shown to the user (saved to the canvas as ${name}).`;
+    }
+
+    case 'deliver_file': {
+      const p = String(args.path || '');
+      try {
+        const bytes = await sandbox.readFile(p, true);
+        const name = p.split('/').pop();
+        download(name, bytes);
+        termLine('ok', `delivered ${name}`);
+        return `Delivered ${name} to the user as a download.`;
+      } catch (err) {
+        termLine('err', err.message);
+        return err.message;
+      }
+    }
+
     case 'fetch_url': {
       termLine('cmd', `fetch ${args.url}`);
       const res = await fetch('/api/fetch', {
@@ -148,6 +238,57 @@ async function execTool(name, args) {
     default:
       return `Unknown tool: ${name}`;
   }
+}
+
+/* Attach real search results to the message being written. */
+function renderSources(results) {
+  const node = currentNode;
+  if (!node) return;
+  const slot = $('.msg-tools', node);
+  if (!slot) return;
+  const box = document.createElement('div');
+  box.className = 'sources';
+  box.innerHTML =
+    `<div class="sources-head">` +
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>` +
+    `Searched the web · ${results.length} source${results.length === 1 ? '' : 's'}</div>` +
+    `<div class="source-row"></div>`;
+  const row = $('.source-row', box);
+  for (const r of results) {
+    const a = document.createElement('a');
+    a.className = 'source';
+    a.href = r.url;
+    a.target = '_blank';
+    a.rel = 'noopener nofollow';
+    a.innerHTML =
+      `<img class="favicon" alt="" width="16" height="16" loading="lazy" ` +
+      `src="https://icons.duckduckgo.com/ip3/${encodeURIComponent(r.domain)}.ico">` +
+      `<span>${esc(r.domain || r.title)}</span>`;
+    row.appendChild(a);
+  }
+  slot.appendChild(box);
+  scrollDown();
+}
+
+function renderImage(src, prompt) {
+  const node = currentNode;
+  if (!node) return;
+  const slot = $('.msg-tools', node);
+  if (!slot) return;
+  const fig = document.createElement('figure');
+  fig.className = 'gen-image';
+  fig.innerHTML = `<img alt="${esc(prompt || 'Generated image')}" src="${esc(src)}">` +
+    (prompt ? `<figcaption>${esc(prompt)}</figcaption>` : '');
+  slot.appendChild(fig);
+  scrollDown();
+}
+
+function dataUrlToBytes(dataUrl) {
+  const b64 = String(dataUrl).split(',')[1] || '';
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i += 1) out[i] = bin.charCodeAt(i);
+  return out;
 }
 
 /* --------------------------------------------------------------- markdown */
@@ -209,6 +350,7 @@ function splitReasoning(text) {
 
 /* ------------------------------------------------------------------- view */
 const els = {};
+let currentNode = null;   // the assistant message tools render into
 const setPhase = (p) => document.body.setAttribute('data-chat-phase', p);
 
 function setStatus(msg, kind) {
@@ -226,7 +368,7 @@ function addMessage(role, html) {
     `<p class="msg-role">${role === 'user'
       ? '<span class="chat-avatar" aria-hidden="true">Y</span> You'
       : 'CorX Chat'}</p>` +
-    `<div class="msg-reasoning"></div><div class="msg-body"></div>`;
+    `<div class="msg-reasoning"></div><div class="msg-tools"></div><div class="msg-body"></div>`;
   $('.msg-body', wrap).innerHTML = html;
   els.threadInner.appendChild(wrap);
   if (els.empty) els.empty.hidden = true;
@@ -499,6 +641,7 @@ async function streamOnce(node, startedAt) {
 async function runTurn() {
   const startedAt = Date.now();
   const node = addMessage('assistant', '<p class="typing"><span></span><span></span><span></span></p>');
+  currentNode = node;
   const body = $('.msg-body', node);
 
   try {
@@ -605,7 +748,11 @@ function openDock(panel) {
   const app = $('#chat-app');
   if (!app) return;
   app.setAttribute('data-dock', 'open');
+  app.setAttribute('data-sidebar', 'closed');
   if (els.dockToggle) els.dockToggle.setAttribute('aria-pressed', 'true');
+  if (els.scrim) {
+    els.scrim.hidden = !window.matchMedia('(max-width: 1100px)').matches;
+  }
   if (panel) {
     $$('.dock-tab', app).forEach((t) => t.setAttribute('aria-selected', String(t.getAttribute('data-panel') === panel)));
     $$('.dock-panel', app).forEach((p) => { p.hidden = p.getAttribute('data-panel') !== panel; });
@@ -642,7 +789,8 @@ document.addEventListener('DOMContentLoaded', () => {
     termInput: $('#terminal-input', app),
     attachRow: $('#composer-attachments', app),
     fileInput: $('#composer-file', app),
-    newChat: $('.chat-new', app)
+    newChat: $('.chat-new', app),
+    scrim: $('#chat-scrim', app)
   });
 
   sandbox.onOutput(({ kind, text }) => termLine(kind, text));
@@ -677,14 +825,39 @@ document.addEventListener('DOMContentLoaded', () => {
     tab.addEventListener('click', () => openDock(tab.getAttribute('data-panel')));
   });
 
+  const closeOverlays = () => {
+    app.setAttribute('data-sidebar', 'closed');
+    app.setAttribute('data-dock', 'closed');
+    els.dockToggle?.setAttribute('aria-pressed', 'false');
+    if (els.scrim) els.scrim.hidden = true;
+  };
+  const syncScrim = () => {
+    if (!els.scrim) return;
+    const overlaid = app.getAttribute('data-sidebar') === 'open' || app.getAttribute('data-dock') === 'open';
+    els.scrim.hidden = !(overlaid && window.matchMedia('(max-width: 1100px)').matches);
+  };
+
+  $('#sidebar-toggle', app)?.addEventListener('click', () => {
+    const open = app.getAttribute('data-sidebar') === 'open';
+    app.setAttribute('data-sidebar', open ? 'closed' : 'open');
+    if (!open) app.setAttribute('data-dock', 'closed');
+    syncScrim();
+  });
+  els.scrim?.addEventListener('click', closeOverlays);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlays(); });
+  window.addEventListener('resize', syncScrim);
+
   els.dockToggle?.addEventListener('click', () => {
     const open = app.getAttribute('data-dock') !== 'closed';
     app.setAttribute('data-dock', open ? 'closed' : 'open');
     els.dockToggle.setAttribute('aria-pressed', String(!open));
+    if (!open) app.setAttribute('data-sidebar', 'closed');
+    syncScrim();
   });
   $('#dock-close', app)?.addEventListener('click', () => {
     app.setAttribute('data-dock', 'closed');
     els.dockToggle?.setAttribute('aria-pressed', 'false');
+    syncScrim();
   });
 
   // Manual terminal — you can drive the sandbox yourself.
@@ -730,6 +903,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   els.newChat?.addEventListener('click', () => {
+    app.setAttribute('data-sidebar', 'closed');
+    if (els.scrim) els.scrim.hidden = true;
     state.messages = [];
     save({ history: [] });
     els.threadInner.innerHTML = '';
