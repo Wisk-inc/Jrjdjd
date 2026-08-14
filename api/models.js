@@ -8,7 +8,8 @@
 */
 
 import { openaiCredentials } from '@openai-oauth/web/server';
-import { createOpenAIOAuthTransport } from '@openai-oauth/core';
+import { CODEX_CLIENT_VERSION, codexTransport } from './_upstream.js';
+import { looksBlocked } from './_errors.js';
 
 export const config = { runtime: 'edge' };
 
@@ -18,8 +19,6 @@ const FALLBACK = [
   'gpt-5.2', 'gpt-5.2-codex', 'gpt-5.1', 'gpt-5.1-codex', 'gpt-5.1-codex-mini',
   'gpt-5', 'gpt-5-codex'
 ];
-
-const CODEX_CLIENT_VERSION = '0.144.1';
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -53,15 +52,15 @@ export default async function handler(request) {
     }, 401);
   }
 
-  const transport = createOpenAIOAuthTransport({
-    auth: () => credentials.getSession(),
-    openAIBaseURL: credentials.openAIBaseURL
-  });
+  const transport = codexTransport(credentials);
+  let blocked = false;
 
   // 1. The raw catalog — the longest honest list.
   try {
     const res = await transport.request(`/models?client_version=${CODEX_CLIENT_VERSION}`);
-    if (res.ok) {
+    if (!res.ok) {
+      blocked = looksBlocked(await res.text().catch(() => ''));
+    } else {
       const body = await res.json();
       const entries = Array.isArray(body?.models) ? body.models : [];
       const catalog = entries
@@ -91,6 +90,8 @@ export default async function handler(request) {
     }
   } catch { /* fall through to the fallback */ }
 
-  // 3. Never hand back an empty picker.
-  return json({ models: FALLBACK, source: 'fallback' });
+  // 3. Never hand back an empty picker. `blocked` tells the connection test
+  //    whether the catalog was refused at the network edge rather than by the
+  //    account, which is the difference between "wrong plan" and "wrong IP".
+  return json({ models: FALLBACK, source: 'fallback', blocked });
 }

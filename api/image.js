@@ -2,7 +2,8 @@
    Returns a data URL the interface can render inline and offer as a download. */
 
 import { openaiCredentials } from '@openai-oauth/web/server';
-import { createOpenAIOAuthTransport } from '@openai-oauth/core';
+import { codexTransport } from './_upstream.js';
+import { classify } from './_errors.js';
 
 export const config = { runtime: 'edge' };
 
@@ -29,10 +30,7 @@ export default async function handler(request) {
   const prompt = String(payload.prompt || '').trim();
   if (!prompt) return json({ error: 'Missing prompt.' }, 400);
 
-  const transport = createOpenAIOAuthTransport({
-    auth: () => credentials.getSession(),
-    openAIBaseURL: credentials.openAIBaseURL
-  });
+  const transport = codexTransport(credentials);
 
   try {
     const res = await transport.request('/v1/images/generations', {
@@ -49,10 +47,8 @@ export default async function handler(request) {
 
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
-      return json(
-        { error: 'upstream_error', status: res.status, message: detail.slice(0, 800) },
-        res.status === 401 ? 401 : 502
-      );
+      const { body: payload, status } = classify(res.status, detail);
+      return json(payload, status);
     }
 
     const body = await res.json();

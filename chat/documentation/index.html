@@ -147,6 +147,14 @@
         },
         {
           "@type": "Question",
+          "name": "Why does CorX Chat say the request was blocked before reaching ChatGPT?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because ChatGPT's network edge refused the address the request came from. ChatGPT does not allow a browser to call the Codex backend directly, so CorX Chat sends messages through its own server, and that server address is a datacentre one which the edge sometimes turns away before the API sees it. It is not about your ChatGPT account, your plan or the model you picked, and switching models will not help. The Connection test in the profile menu reports it explicitly when it happens."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "Where is my CorX Chat history stored?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -664,6 +672,7 @@ headers: { ...(await openaiAuthHeaders()), 'content-type': 'application/json' }<
 
           <ul class="check-list is-limits mt-m">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>It depends on your ChatGPT plan.</strong> Model availability, quality and rate limits are your account's, not ours. If your plan can't reach a model, neither can this.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>The request has to travel through this site's server.</strong> ChatGPT does not allow a browser to call the Codex backend directly, so messages go out from CorX Labs' server. That address is a datacentre, and ChatGPT's network edge sometimes turns datacentre traffic away before it reaches the API. When that happens you get a clear message saying so — it is not your account, your plan or your model, and there is nothing you can do about it from your side.</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>The extension is required.</strong> There is no way to use it without installing the sign-in extension, and it works only in browsers that extension supports.</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>The models still make mistakes.</strong> The terminal and the visible sources exist so you can check the work, not so you can skip checking it.</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>The sandbox is bounded.</strong> Sessions are isolated and not permanent; long-running or resource-heavy jobs can be cut short, and the sandbox has no access to your machine.</li>
@@ -705,6 +714,15 @@ headers: { ...(await openaiAuthHeaders()), 'content-type': 'application/json' }<
                 Turning <strong>Memory</strong> off in your profile menu stops new messages being
                 saved; deleting a chat removes it; clearing site data removes everything along with
                 your stored credentials.</p></div>
+            </details>
+            <details>
+              <summary>It says the request was blocked before reaching ChatGPT. What now?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>That is ChatGPT&rsquo;s network edge refusing the address the
+                request came from — this site&rsquo;s server — before the API ever saw it. It is not
+                about your account, your plan or the model you picked, and switching models will not
+                help. Run <strong>Connection test</strong> from your profile menu: if it reports the
+                block, the fix is ours to make, not yours. Trying again later sometimes works, since
+                the block is not always permanent.</p></div>
             </details>
             <details>
               <summary>Can I plug in my own backend?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
