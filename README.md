@@ -12,8 +12,6 @@ any static host and it works.
 ## Structure
 
 ```
-/chat/                  Corx — the full-page agent workspace
-/chat/documentation/    How the orchestrator works
 /                       Home — hero, what this is, products, principles, pipeline, FAQ
 /documentation/         The main reference: lab, website, architecture, training, safety, usage
 /models/                Our Products — every model released
@@ -27,18 +25,6 @@ any static host and it works.
 /404.html               Not-found page
 
 assets/css/main.css     The entire design system
-assets/css/chat.css     CorX Chat workspace UI (loaded only on /chat/)
-assets/js/chat.js       The chat client: auth, streaming, tools, plan, canvas, conversations
-assets/js/sandbox.js    The Python VM: exec, packages, files, network
-assets/vendor/          @openai-oauth/web (built from source) + self-hosted Pyodide
-api/fetch.js            Edge function — the sandbox's proxied internet access
-api/search.js           Edge function — web search (DuckDuckGo HTML, keyless)
-api/image.js            Edge function — image generation
-api/chat.js             Edge function — streams a reply from the Codex Responses API
-api/_responses.js       Chat-completions <-> Responses translation (both directions)
-api/_upstream.js        The Codex transport, built with a real header set
-api/_errors.js          Tells an API refusal apart from a network-edge block
-api/models.js           Edge function — the caller's available models
 assets/js/main.js       Progressive enhancement only — the site works without it
 assets/img/             Favicons, app icons, per-page social cards
 tools/                  Script that regenerates every brand image
@@ -70,7 +56,7 @@ Everything below is already implemented and live in the files.
 engines and AI systems resolve CorX Labs, Nathan and CorX1.5 as *entities*, not just strings:
 `Organization` + `ResearchOrganization`, `Person`, `WebSite`, `WebPage`, `CollectionPage`,
 `AboutPage`, `ContactPage`, `ProfilePage`, `TechArticle`, `Blog`, `BlogPosting`, `NewsArticle`,
-`SoftwareApplication` + `SoftwareSourceCode`, `Dataset`, `ItemList`, `BreadcrumbList`, `FAQPage`, `ImageObject`, `WebApplication`, `HowTo`,
+`SoftwareApplication` + `SoftwareSourceCode`, `Dataset`, `ItemList`, `BreadcrumbList`, `FAQPage`, `ImageObject`, `HowTo`,
 and `SpeakableSpecification`.
 
 **Answer-engine optimisation** — every page opens with an `.answer-box`: a self-contained
@@ -112,92 +98,6 @@ which is what search engines read for author identity and E-E-A-T.
 same CSS tokens as the rest of the site, so it themes with light/dark, stays crisp at any zoom,
 costs no extra request, and its labels are real text that crawlers and screen readers can read. It
 scales to the container and scrolls horizontally below ~900px rather than shrinking to illegible.
-
-## CorX Chat
-
-`/chat/` is a working application, not a mockup. Nothing on the page is simulated: if it is on the
-screen, it came from the model.
-
-**How it is wired**
-
-```
-browser  ──►  /assets/vendor/openai-oauth-web.js   (auth: startLogin, completeLogin, getSession,
-   │                                                 openaiAuthHeaders — built unmodified from
-   │                                                 the published @openai-oauth/web package)
-   ▼
-/chat/   ──►  /api/chat    (edge fn: openaiCredentials(request) → createOpenAIOAuthTransport
-              /api/models   → chatgpt.com/backend-api/codex → the model)
-```
-
-The client attaches `Authorization` and `chatgpt-account-id` with `openaiAuthHeaders()`; the edge
-function reads them straight back off the request with `openaiCredentials()` and uses them for that
-single call. **Nothing is persisted server-side and no token is ever pooled between users.**
-
-**The sandbox is real.** `assets/vendor/pyodide/` is a self-hosted CPython build that runs in
-WebAssembly in the visitor's tab. The agent calls tools — `run_python`, `install_packages`,
-`write_file`, `read_file`, `delete_file`, `list_files`, `fetch_url`, `web_search`, `generate_image`,
-`deliver_file` — and every command appears in a terminal panel the user can also type into and
-close. State persists between calls, packages install with
-`micropip`, and internet access goes through `/api/fetch` on this origin so the VM is not
-CORS-limited (in Python: `import web` then `await web.get(url)`). It has no access to the visitor's
-machine: only its own in-memory filesystem and whatever they upload.
-
-**Search, images and files are real too.** `/api/search` hits DuckDuckGo's HTML endpoint (no API
-key, no quota), parses out titles, URLs and snippets, and the answer shows each source as a chip
-carrying that site's own logo. `/api/image` calls `/v1/images/generations` on the caller's account
-and the image renders inline and lands in the canvas. Zips need no special code — Python's
-`zipfile` is in the stdlib, so the sandbox unpacks, edits and rebuilds them, and `deliver_file`
-pushes any sandbox file back as a download.
-
-**`/chat/` is the app, not a page about the app.** There is no masthead and no prose below the
-fold — the page *is* the workspace, at `100dvh`. Below 1100px the sidebar and work panel become
-overlays with a scrim, and a closed drawer is `visibility: hidden` so it is genuinely inert rather
-than parked off-screen. Below 760px it goes edge to edge. Crawlers are served by the JSON-LD
-`WebApplication` graph and by `/chat/documentation/`, which is a real page of prose.
-
-**Planning is a tool, not narration.** `set_plan` publishes the steps and `complete_step` ticks
-them off, so the Plan panel shows state the model actually committed to. Every tool call also
-renders inline in the conversation as a card — the call, its argument, and the output it really
-returned, failures included. `runPython` taps stdout as well as the expression value, so the
-model reads back exactly what the terminal shows; without that it sees `(no output)` for its own
-`print()` calls.
-
-**The canvas is editable.** It is a live tree of the sandbox filesystem, not a scrape of the chat.
-Open a file, edit it, and **Save** writes back to `/work` so the next run uses your version.
-**Delete** removes it from the VM. Generated images sit alongside as read-only entries.
-
-**Also live** — streaming chat; visible reasoning (the model writes a `<thinking>` block, the client
-renders it as a collapsible dropdown, toggled by **Think**); model switching, filled from the
-Codex model catalog with each entry labelled by family and reasoning level;
-uploads of any type (images as multimodal content, everything else staged into `/work`); up to 20
-saved conversations in `localStorage` under `corx.chat.v2` with a **Memory** switch that drops the
-history down to the last exchange; the account's real name and email read from the session token
-for the profile chip; light / dark / system; resuming a run that was interrupted by a refresh; and
-locale and time zone sent as context.
-
-On a phone the work panel does **not** open itself when a tool runs — it would cover the answer.
-The toolbar button gets an activity dot instead.
-
-**Not built** — a general Linux shell. It is a Python VM: no git, node or apt, and packages are
-limited to what `micropip` can install. Stated as absent in the docs rather than faked.
-
-**Deploying the API** — `package.json` declares `@openai-oauth/web` and `@openai-oauth/core` so
-Vercel installs them for the two edge functions in `/api`. The static pages still have no build
-step. `openaiAuthHeaders()` requires a real session, so the routes return `401 not_authenticated`
-until a visitor signs in.
-
-**Rebuilding the vendored auth bundle**
-
-```bash
-git clone --depth 1 https://github.com/EvanZhouDev/openai-oauth.git
-npx esbuild openai-oauth/packages/web/src/index.ts \
-  --bundle --format=esm --target=es2022 --platform=browser --minify \
-  --alias:@openai-oauth/core=./openai-oauth/packages/core/src/index.ts \
-  --outfile=assets/vendor/openai-oauth-web.js
-```
-
-Vendored rather than loaded from a CDN so the CSP stays `script-src 'self'` and the page has no
-third-party runtime dependency.
 
 **Internal linking** — a hub-and-spoke cluster: `/models/` is the hub, `/models/corx1-5/` is the
 spoke, and `/documentation/` deep-links into both with descriptive anchor text. `_redirects` catches
