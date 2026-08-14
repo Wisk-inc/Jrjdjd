@@ -23,9 +23,12 @@ export function codexTransport(credentials) {
     auth: () => credentials.getSession(),
     openAIBaseURL: credentials.openAIBaseURL,
     headers: {
+      // Matched to the configuration the library's own hosted demo uses: an
+      // identifying User-Agent and an Accept, and nothing else. Codex CLI
+      // protocol headers (originator, version) are deliberately NOT sent —
+      // the library never sends them either, and claiming to be the CLI while
+      // plainly not being it is as likely to trip a rule as satisfy one.
       'user-agent': UA,
-      originator: 'codex_cli_rs',
-      version: CODEX_CLIENT_VERSION,
       accept: 'application/json',
       'accept-language': 'en-US,en;q=0.9'
     }

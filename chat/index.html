@@ -290,7 +290,11 @@ html[data-theme="dark"]{background:#14100c}html[data-theme="light"]{background:#
 
     <div class="dock-panel dock-panel-term" data-panel="terminal" role="tabpanel" hidden>
       <div class="terminal">
-        <div class="t-head"><span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox &mdash; python</div>
+        <div class="t-head">
+          <span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox &mdash; python
+          <span class="spacer"></span>
+          <button class="t-copy" type="button" id="terminal-copy">Copy</button>
+        </div>
         <p class="terminal-empty" id="terminal-empty">Idle. Corx runs commands here, or type one
           yourself — <code>help</code> lists the shell; anything else runs as Python.</p>
         <div id="terminal-out"></div>

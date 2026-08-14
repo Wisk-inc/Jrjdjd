@@ -1080,6 +1080,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* terminal input */
+  /* The connection test prints here, and its output is the thing worth
+     sending to someone who can act on it. */
+  $('#terminal-copy')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    try {
+      await navigator.clipboard.writeText(els.term?.innerText || '');
+      btn.textContent = 'Copied';
+    } catch {
+      btn.textContent = 'Select it';
+    }
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  });
+
   $('#terminal-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const line = $('#terminal-input').value.trim();
