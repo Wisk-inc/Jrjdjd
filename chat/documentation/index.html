@@ -139,18 +139,18 @@
         },
         {
           "@type": "Question",
-          "name": "What can the terminal actually do?",
+          "name": "Does CorX Chat have a real terminal?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It is a sandboxed shell the agent drives itself: installing packages, running and testing code, making outbound API requests, and creating, reading, editing and deleting files, including unpacking and rebuilding zip archives. Every command it runs is visible in the terminal panel."
+            "text": "Yes. A full CPython build runs in WebAssembly inside your browser tab. The agent writes code, runs it, reads real tracebacks and fixes them, installs packages with micropip, reads and writes files under /work, and reaches the internet through a same-origin proxy so it is not CORS-limited. Every command is visible in the terminal panel, and you can type into it yourself. It has no access to your computer."
           }
         },
         {
           "@type": "Question",
-          "name": "Where is my chat history stored?",
+          "name": "Where is my CorX Chat history stored?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Conversations and memory persist so you can return to a thread later. Clearing them is done from the conversation menu, and clearing browser storage removes the local half along with the stored credentials, which ends the session."
+            "text": "In this browser. The conversation is saved to localStorage under corx.chat.v1 and restored when you return; the last 40 turns are kept. It is not stored on a CorX server. New chat clears it, signing out clears it, and clearing browser site data removes it along with the stored credentials."
           }
         }
       ]
@@ -306,12 +306,12 @@
           <li><a href="#overview">1. What this is</a></li>
           <li><a href="#connecting">2. Connecting</a></li>
           <li><a href="#models">3. Models</a></li>
-          <li><a href="#tools">4. The tool layer</a></li>
-          <li><a href="#terminal">5. The terminal</a></li>
-          <li><a href="#files">6. Files &amp; archives</a></li>
+          <li><a href="#tools">4. What runs</a></li>
+          <li><a href="#terminal">5. The sandbox</a></li>
+          <li><a href="#files">6. Uploads</a></li>
           <li><a href="#canvas">7. Canvas mode</a></li>
           <li><a href="#agent">8. Agent &amp; planning</a></li>
-          <li><a href="#research">9. Deep research</a></li>
+          <li><a href="#research">9. Reasoning</a></li>
           <li><a href="#locale">10. Language &amp; region</a></li>
           <li><a href="#memory">11. Memory</a></li>
           <li><a href="#privacy">12. Privacy</a></li>
@@ -421,57 +421,80 @@ CorxChat.config.extension = {
         </section>
 
         <section class="doc-section" id="tools">
-          <h2>4. The tool layer</h2>
-          <div class="prose">
-            <p>The tools are what separate this from a plain chat box. They run on the orchestrator,
-              not in your browser, and the model calls them itself as it works.</p>
+          <h2>4. What runs, and what does not</h2>
+          <div class="answer-box">
+            <p>This section is deliberately blunt. Everything marked <strong>live</strong> is wired
+              to your real ChatGPT account today. Everything marked <strong>not built</strong> needs
+              a compute backend that does not exist yet, and is not simulated anywhere in the
+              interface.</p>
           </div>
+
           <div class="table-wrap mt-m">
             <table>
-              <caption class="visually-hidden">CorX Chat tools</caption>
-              <thead><tr><th scope="col">Tool</th><th scope="col">What it does</th><th scope="col">What you see</th></tr></thead>
+              <caption class="visually-hidden">CorX Chat capabilities and status</caption>
+              <thead><tr><th scope="col">Capability</th><th scope="col">Status</th><th scope="col">Notes</th></tr></thead>
               <tbody>
-                <tr><td>Terminal</td><td>Installs packages, runs and tests code, makes API requests, manages files</td><td>Every command and its output, live in the terminal panel</td></tr>
-                <tr><td>Web search</td><td>Finds and reads pages, then keeps the useful ones</td><td>A source card naming each site consulted, with counts of what was discarded</td></tr>
-                <tr><td>Image generation</td><td>Creates images from a prompt</td><td>The image inline, downloadable</td></tr>
-                <tr><td>Image understanding</td><td>Reads screenshots, photos, diagrams and drafts you send</td><td>The attachment on your message, and what it took from it</td></tr>
-                <tr><td>Files &amp; archives</td><td>Opens, edits, creates and deletes files, including inside zips</td><td>The file list in canvas, with downloads</td></tr>
-                <tr><td>Page fetch</td><td>Opens a specific URL and reads its content and metadata</td><td>The source, attached to the answer</td></tr>
+                <tr><td>Streaming chat</td><td>Live</td><td>Tokens render as they arrive, over your own session</td></tr>
+                <tr><td>Visible reasoning</td><td>Live</td><td>The model's own thinking, in a dropdown on each answer</td></tr>
+                <tr><td>Model switching</td><td>Live</td><td>List fetched from <code>/v1/models</code> for your account</td></tr>
+                <tr><td>Agent behaviour</td><td>Live</td><td>On by default — no mode to enable</td></tr>
+                <tr><td>Python sandbox</td><td>Live</td><td>Real CPython in WebAssembly, in your tab</td></tr>
+                <tr><td>Package installs</td><td>Live</td><td><code>micropip</code>; Pyodide's prebuilt wheels and pure-Python packages</td></tr>
+                <tr><td>Internet access</td><td>Live</td><td>Via <code>/api/fetch</code>, so the sandbox is not CORS-limited</td></tr>
+                <tr><td>File upload</td><td>Live</td><td>Any type; staged into <code>/work</code> for the agent to open</td></tr>
+                <tr><td>Image input</td><td>Live</td><td>Sent as multimodal content</td></tr>
+                <tr><td>Code canvas</td><td>Live</td><td>Code blocks and files the sandbox produced, downloadable</td></tr>
+                <tr><td>Conversation memory</td><td>Live</td><td>Restored from this browser on return</td></tr>
+                <tr><td>Language &amp; region</td><td>Live</td><td>Your locale and time zone are sent as context</td></tr>
+                <tr><td>Image generation</td><td>Not built</td><td>Endpoint exists upstream; not wired in yet</td></tr>
+                <tr><td>Shell beyond Python</td><td>Not built</td><td>It is a Python VM, not a Linux box — no <code>git</code>, no <code>node</code></td></tr>
               </tbody>
             </table>
           </div>
         </section>
 
         <section class="doc-section" id="terminal">
-          <h2>5. The terminal</h2>
+          <h2>5. The sandbox</h2>
+          <div class="answer-box">
+            <p><strong>The terminal is real.</strong> A full CPython build runs in WebAssembly
+              inside your browser tab. The agent drives it: it writes code, runs it, reads the actual
+              traceback when it fails, and fixes it. Every command and its output appear in the
+              terminal panel as they happen — and you can type into it yourself.</p>
+          </div>
           <div class="prose">
-            <p>The agent has a sandboxed shell it drives itself. It can install packages, run and
-              test code, make outbound API requests, and create, read, edit or delete files. When a
-              test fails it reads the error and tries again rather than handing you a broken snippet
-              and calling it done.</p>
-            <p><strong>You can watch it.</strong> The terminal panel shows every command and its real
-              output, which is the difference between an assistant claiming code works and one
-              showing you the passing test. It is also how you catch it doing something you did not
-              intend.</p>
+            <p>It can install packages with <code>micropip</code>, create and edit files under
+              <code>/work</code>, and reach the internet: inside Python, <code>import web</code> then
+              <code>await web.get(url)</code>. Those requests go out through
+              <code>/api/fetch</code> on this origin, which is what stops CORS from boxing the
+              sandbox in.</p>
+            <p>Because it runs in your tab, <strong>it has no access to your computer</strong> — only
+              to its own in-memory filesystem and whatever you upload. Closing the tab discards it.</p>
+            <p>The shell understands <code>pip install</code>, <code>ls</code>, <code>cat</code>,
+              <code>rm</code>, <code>python &lt;file&gt;</code>, <code>pwd</code> and
+              <code>help</code>. Anything else is executed as Python — which is the honest framing,
+              because that is what this is. There is no <code>git</code>, no <code>node</code>, no
+              apt.</p>
+            <p>The panel closes with the <strong>&times;</strong> in its header, or the toggle in the
+              chat toolbar. It reopens by itself when the agent next runs something.</p>
           </div>
 
           <div class="callout">
-            <p>The sandbox is isolated per session and does not have access to your machine, your
-              filesystem, or anything you have not uploaded. Files enter it only when you attach
-              them, and leave it only when you download them.</p>
+            <p><strong>The point of showing it.</strong> An assistant that claims code works and one
+              that shows you the passing output are different products. The terminal is there so you
+              can check the second thing — and catch it doing something you did not intend.</p>
           </div>
         </section>
 
         <section class="doc-section" id="files">
-          <h2>6. Files and archives</h2>
+          <h2>6. Uploads</h2>
           <div class="prose">
-            <p>Attach a file and the agent can open it, work on it, and hand it back changed. That
-              includes archives: it will unpack a zip, edit what is inside, and rebuild it — so
-              "here is a folder of CSVs, fix the headers and send it back" is one message, not a
-              morning.</p>
-            <p>It reads a range of formats beyond plain text, and it can produce new archives from
-              whatever it has built in the sandbox, offered to you as a download from the canvas
-              panel.</p>
+            <p>Attach anything. <strong>Images</strong> are sent to the model as multimodal content,
+              so it reads what is actually in the screenshot or photo. <strong>Any other file</strong>
+              is written into the sandbox at <code>/work/&lt;name&gt;</code> and the agent is told it
+              is there, so it can open it, parse it, edit it and write a new version back out — which
+              then appears in the canvas as a download.</p>
+            <p>That covers data files, code, archives and anything else Python can open. Files stay
+              in your browser; they are never uploaded to a CorX server.</p>
           </div>
         </section>
 
@@ -500,23 +523,16 @@ CorxChat.config.extension = {
         </section>
 
         <section class="doc-section" id="research">
-          <h2>9. Deep research</h2>
+          <h2>9. Reasoning and research</h2>
           <div class="prose">
-            <p>Search finds pages. Deep research reads several, compares their claims, and weighs
-              them against each other:</p>
-            <ul>
-              <li><strong>Source validation</strong> — is this primary reporting, or a site repeating
-                someone else?</li>
-              <li><strong>Logic checking</strong> — does the argument hold on its own terms, or does
-                the conclusion outrun the evidence?</li>
-              <li><strong>Cross-referencing</strong> — do independent sources agree on the numbers?
-                Where they disagree, that disagreement is reported rather than averaged away.</li>
-              <li><strong>Reliability weighting</strong> — sources that fail the checks are dropped,
-                and the ones that survive stay attached to the answer.</li>
-            </ul>
-            <p>When a question depends on where you are — prices, regulation, availability, local
-              services — research is scoped to your region rather than defaulting to somewhere
-              else.</p>
+            <p>Answers that need more than a line open with the model's reasoning, collapsed into a
+              <em>thought process</em> dropdown. It is asked to actually think in there — weigh an
+              alternative, name the case that breaks its plan, say when it is unsure — rather than
+              narrate. Open it when you want to know why; ignore it when you do not.</p>
+            <p>For anything that depends on current information, it can <strong>read the live
+              page</strong> with <code>fetch_url</code> and tell you which source it used, instead of
+              answering from memory. There is no ranked search index behind it yet, so give it a URL
+              or expect it to reason about where to look.</p>
           </div>
         </section>
 
@@ -534,12 +550,12 @@ CorxChat.config.extension = {
         <section class="doc-section" id="memory">
           <h2>11. Memory</h2>
           <div class="prose">
-            <p>Conversations persist. Close the tab in the middle of a task and the thread is still
-              there when you come back, along with what the agent had established — so you are not
-              re-explaining your project every session.</p>
-            <p>Memory is per conversation and per account, and it can be cleared from the
-              conversation menu. Clearing your browser's site storage removes the local half along
-              with the stored credentials, which also ends the session.</p>
+            <p>Your conversation is saved in this browser and restored when you come back, so
+              closing the tab mid-task does not lose the thread. The last 40 turns are kept.</p>
+            <p>It is stored locally — in <code>localStorage</code> under <code>corx.chat.v1</code> —
+              not on a CorX server. <strong>New chat</strong> clears it, and so does signing out.
+              Clearing your browser's site data removes both the conversation and the stored
+              credentials.</p>
           </div>
         </section>
 
@@ -596,16 +612,19 @@ CorxChat.config.extension = {
                 runtime, so it reflects your account rather than a fixed list.</p></div>
             </details>
             <details>
-              <summary>What can the terminal do?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Install packages, run and test code, make outbound API
-                requests, and create, read, edit or delete files — including unpacking and rebuilding
-                zip archives. Every command is visible in the terminal panel.</p></div>
+              <summary>Is the terminal real?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Yes — a full CPython build running in WebAssembly in your
+                tab. The agent writes code, runs it, reads the real traceback when it fails and fixes
+                it; it installs packages, reads and writes files, and reaches the internet. Every
+                command is visible, and you can type into it yourself. It has no access to your
+                computer.</p></div>
             </details>
             <details>
               <summary>Where does my chat history live?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Conversations and memory persist so you can return to a thread
-                later. Clear them from the conversation menu; clearing browser site storage removes
-                the local half and the stored credentials, ending the session.</p></div>
+              <div class="faq-body"><p>In this browser, under <code>corx.chat.v1</code> in
+                <code>localStorage</code> — never on a CorX server. The last 40 turns are restored
+                when you return. <strong>New chat</strong> clears it, signing out clears it, and
+                clearing site data removes it along with your stored credentials.</p></div>
             </details>
             <details>
               <summary>Can I plug in my own backend?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>

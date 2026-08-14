@@ -28,7 +28,12 @@ any static host and it works.
 
 assets/css/main.css     The entire design system
 assets/css/chat.css     CorX Chat workspace UI (loaded only on /chat/)
-assets/js/chat.js       Connect gate, extension detection, composer, transport
+assets/js/chat.js       The chat client: auth, streaming, markdown, canvas, memory
+assets/js/sandbox.js    The Python VM: exec, packages, files, network
+assets/vendor/          @openai-oauth/web (built from source) + self-hosted Pyodide
+api/fetch.js            Edge function — the sandbox's proxied internet access
+api/chat.js             Edge function — streams chat completions
+api/models.js           Edge function — the caller's available models
 assets/js/main.js       Progressive enhancement only — the site works without it
 assets/img/             Favicons, app icons, per-page social cards
 tools/                  Script that regenerates every brand image
@@ -105,23 +110,58 @@ scales to the container and scrolls horizontally below ~900px rather than shrink
 
 ## CorX Chat
 
-`/chat/` is both a landing page and the application. The page carries the text that makes it
-findable — what the tool does, how to connect, an FAQ — and below it the actual workspace:
-sidebar, thread, composer, model picker, thinking dropdowns, source cards, terminal and canvas.
+`/chat/` is a working application, not a mockup. Nothing on the page is simulated: if it is on the
+screen, it came from the model.
 
-**The interface never talks to a model.** Every turn goes through `CorxChat.transport.send`, which
-posts to `CorxChat.config.endpoint` (`/api/chat` by default). Point that at your orchestrator — the
-service that holds the OpenAI-compatible proxy from the *Sign in with ChatGPT* flow — and the UI
-works unchanged. Until then the composer reports honestly that no backend is reachable rather than
-faking a reply.
+**How it is wired**
 
-**Extension detection** lives in `CorxChat.config.extension`: an injected-global check, a
-`data-*` flag check, then a `postMessage` handshake that resolves "not installed" on timeout. If
-the extension changes what it exposes, that one object is the only thing to update.
+```
+browser  ──►  /assets/vendor/openai-oauth-web.js   (auth: startLogin, completeLogin, getSession,
+   │                                                 openaiAuthHeaders — built unmodified from
+   │                                                 the published @openai-oauth/web package)
+   ▼
+/chat/   ──►  /api/chat    (edge fn: openaiCredentials(request) → createOpenAIOAuthTransport
+              /api/models   → chatgpt.com/backend-api/codex → the model)
+```
 
-The layout follows conventions people already know from chat apps, because familiarity beats
-novelty here. Every colour, typeface and surface is CorX Labs' own — no third-party branding,
-assets or marks are used.
+The client attaches `Authorization` and `chatgpt-account-id` with `openaiAuthHeaders()`; the edge
+function reads them straight back off the request with `openaiCredentials()` and uses them for that
+single call. **Nothing is persisted server-side and no token is ever pooled between users.**
+
+**The sandbox is real.** `assets/vendor/pyodide/` is a self-hosted CPython build that runs in
+WebAssembly in the visitor's tab. The agent calls tools — `run_python`, `install_packages`,
+`write_file`, `read_file`, `list_files`, `fetch_url` — and every command appears in a terminal panel
+the user can also type into and close. State persists between calls, packages install with
+`micropip`, and internet access goes through `/api/fetch` on this origin so the VM is not
+CORS-limited (in Python: `import web` then `await web.get(url)`). It has no access to the visitor's
+machine: only its own in-memory filesystem and whatever they upload.
+
+**Also live** — streaming chat; visible reasoning (the model writes a `<thinking>` block, the client
+renders it as a collapsible dropdown); model switching from `/v1/models`; uploads of any type
+(images as multimodal content, everything else staged into `/work`); a canvas of code blocks and
+sandbox-produced files, downloadable; conversation memory in `localStorage`; locale and time zone
+sent as context.
+
+**Not built** — image generation, a ranked search index behind the URL fetching, and a general Linux
+shell (it is a Python VM: no git, node or apt). Stated as absent in the docs rather than faked.
+
+**Deploying the API** — `package.json` declares `@openai-oauth/web` and `@openai-oauth/core` so
+Vercel installs them for the two edge functions in `/api`. The static pages still have no build
+step. `openaiAuthHeaders()` requires a real session, so the routes return `401 not_authenticated`
+until a visitor signs in.
+
+**Rebuilding the vendored auth bundle**
+
+```bash
+git clone --depth 1 https://github.com/EvanZhouDev/openai-oauth.git
+npx esbuild openai-oauth/packages/web/src/index.ts \
+  --bundle --format=esm --target=es2022 --platform=browser --minify \
+  --alias:@openai-oauth/core=./openai-oauth/packages/core/src/index.ts \
+  --outfile=assets/vendor/openai-oauth-web.js
+```
+
+Vendored rather than loaded from a CDN so the CSP stays `script-src 'self'` and the page has no
+third-party runtime dependency.
 
 **Internal linking** — a hub-and-spoke cluster: `/models/` is the hub, `/models/corx1-5/` is the
 spoke, and `/documentation/` deep-links into both with descriptive anchor text. `_redirects` catches

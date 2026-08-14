@@ -283,6 +283,7 @@
 .composer textarea::placeholder { color: var(--faint); }
 .composer-bar { display: flex; align-items: center; gap: 5px; }
 .composer-bar .spacer { flex: 1; }
+label.chip { user-select: none; }
 .chip {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 6px 11px; border-radius: var(--r-pill);
@@ -440,3 +441,139 @@
   .composer-bar .chip span { display: none; }
   .chip { padding: 7px 9px; }
 }
+
+/* ==========================================================================
+   Live app states — driven by data-chat-phase on <body>
+   ========================================================================== */
+.chat-status {
+  max-width: 720px;
+  margin: 0 auto 14px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-raised);
+  font-size: .85rem;
+  color: var(--muted);
+}
+.chat-status[data-kind="error"] { border-color: #b4453a; color: #b4453a; }
+.chat-status[data-kind="warn"]  { border-color: var(--espresso); color: var(--espresso); }
+
+/* Auth overlay sits where the composer would be, until there's a session. */
+.chat-auth { border-top: 1px solid var(--line); padding: clamp(18px, 3vw, 30px); }
+.chat-auth-inner { max-width: 620px; margin-inline: auto; }
+.chat-auth h3 {
+  font-family: var(--sans); font-size: 1.02rem; font-weight: 600; letter-spacing: -.01em;
+}
+.chat-auth p { margin-top: 9px; font-size: .9rem; color: var(--muted); }
+.chat-auth .btn-row { margin-top: 18px; }
+.auth-checking { font-size: .9rem; color: var(--muted); }
+
+body[data-chat-phase="checking"]     .auth-signedout,
+body[data-chat-phase="ready"]        .chat-auth,
+body[data-chat-phase="ready"]        .auth-checking,
+body[data-chat-phase="signed-out"]   .auth-checking,
+body[data-chat-phase="needs-extension"] .auth-checking { display: none; }
+
+body:not([data-chat-phase="ready"]) .composer-wrap { display: none; }
+body:not([data-chat-phase="ready"]) .chat-sidebar-foot,
+body:not([data-chat-phase="ready"]) .chat-topbar .model-picker { visibility: hidden; }
+
+.link-btn {
+  margin-left: auto; border: 0; background: none; cursor: pointer;
+  white-space: nowrap; flex: none;
+  font-size: .78rem; color: var(--muted); text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.link-btn:hover { color: var(--ink-strong); }
+.foot-label { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: .78rem; }
+.side-note { padding: 0 6px 14px; font-size: .8rem; line-height: 1.6; color: var(--muted); }
+
+/* Empty state */
+.chat-empty { text-align: center; padding: clamp(24px, 5vw, 56px) 0; }
+.chat-empty .mark-lg {
+  font-family: var(--serif); font-size: 3rem; line-height: 1;
+  color: var(--espresso); display: block; margin-bottom: 14px;
+}
+.chat-empty h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+.chat-empty p { margin-top: 10px; font-size: .9rem; color: var(--muted); }
+.starter-row { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; margin-top: 22px; }
+.starter {
+  padding: 9px 15px; border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong); background: var(--paper-raised);
+  font-size: .82rem; color: var(--ink-strong); cursor: pointer;
+  transition: border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.starter:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+/* Streaming + errors */
+.typing { display: flex; gap: 5px; align-items: center; height: 20px; }
+.typing span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--faint);
+  animation: corx-blink 1.3s infinite ease-in-out;
+}
+.typing span:nth-child(2) { animation-delay: .18s; }
+.typing span:nth-child(3) { animation-delay: .36s; }
+@keyframes corx-blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .typing span { animation: none; opacity: .5; } }
+
+.msg-error { color: #b4453a; }
+
+/* Model output */
+.msg-body pre {
+  position: relative;
+  margin-top: 12px;
+  font-size: .78rem;
+  background: var(--paper-sunk);
+}
+.msg-body pre::before {
+  content: attr(data-lang);
+  position: absolute; top: 8px; right: 12px;
+  font-family: var(--sans); font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--faint);
+}
+.msg-body h4 { margin-top: 16px; }
+
+/* Attachment chips get a remove control */
+.attach button {
+  border: 0; background: none; cursor: pointer; color: var(--faint);
+  font-size: 1rem; line-height: 1; padding: 0 0 0 2px;
+}
+.attach button:hover { color: var(--ink-strong); }
+
+.dock-count {
+  display: inline-block; min-width: 18px; padding: 1px 5px; margin-left: 5px;
+  border-radius: var(--r-pill); background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  font-size: .68rem; color: var(--muted);
+}
+.canvas-empty { font-size: .82rem; color: var(--faint); line-height: 1.6; }
+
+/* --------------------------------------------------- terminal, live */
+.dock-panel-term { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+.dock-panel-term .terminal { flex: 1; min-height: 0; overflow-y: auto; }
+.terminal-empty { color: #8d8172; font-family: var(--sans); font-size: .78rem; line-height: 1.6; }
+.terminal-empty code {
+  background: rgba(242,238,230,.08); border-color: rgba(242,238,230,.14); color: #d9cfc1;
+}
+.terminal .sys { color: #8d8172; font-style: italic; }
+.terminal-form {
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line-strong); border-radius: 10px;
+  background: var(--paper-raised); padding: 7px 11px;
+}
+.terminal-form .prompt { font-family: var(--mono); font-size: .8rem; color: var(--espresso); }
+.terminal-form input {
+  flex: 1; border: 0; outline: none; background: none;
+  font-family: var(--mono); font-size: .78rem; color: var(--ink);
+}
+.terminal-form input::placeholder { color: var(--faint); }
+
+.dock-tab[data-active="true"]::after {
+  content: ""; display: inline-block; width: 5px; height: 5px; margin-left: 6px;
+  border-radius: 50%; background: var(--espresso); vertical-align: middle;
+}
+.dock-tab[aria-selected="true"][data-active="true"]::after { display: none; }
+
+/* Reasoning dropdown sits above the answer */
+.msg-reasoning:not(:empty) { margin-bottom: 10px; }
+.think-label { flex: 1; }
