@@ -313,6 +313,10 @@ shape the browser speaks and the Codex Responses API in both directions. Credent
   work can be checked, not so checking can be skipped.
 - The sandbox is bounded: it lives in the tab, has no access to the user's machine, and is
   discarded when the tab closes.
+- Requests must travel through the CorX Labs server, because ChatGPT does not allow a browser to
+  call the Codex backend directly (CORS). That server address is a datacentre one, and ChatGPT's
+  network edge sometimes refuses datacentre traffic before the API sees it. When that happens the
+  interface says so explicitly and does NOT blame the user's plan or account.
 - Not for safety-critical use.
 
 ===============================================================================

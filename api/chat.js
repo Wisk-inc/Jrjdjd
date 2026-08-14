@@ -14,8 +14,9 @@
 */
 
 import { openaiCredentials } from '@openai-oauth/web/server';
-import { createOpenAIOAuthTransport } from '@openai-oauth/core';
-import { summarise, toResponsesInput, toResponsesTools, translate } from './_responses.js';
+import { codexTransport } from './_upstream.js';
+import { classify } from './_errors.js';
+import { toResponsesInput, toResponsesTools, translate } from './_responses.js';
 
 export const config = { runtime: 'edge' };
 
@@ -98,10 +99,7 @@ export default async function handler(request) {
     .filter(Boolean)
     .join('\n');
 
-  const transport = createOpenAIOAuthTransport({
-    auth: () => credentials.getSession(),
-    openAIBaseURL: credentials.openAIBaseURL
-  });
+  const transport = codexTransport(credentials);
 
   const tools = toResponsesTools(payload.tools);
   const body = {
@@ -116,7 +114,7 @@ export default async function handler(request) {
   try {
     upstream = await transport.request('/responses', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: { 'content-type': 'application/json', accept: 'text/event-stream' },
       body: JSON.stringify(body),
       signal: request.signal
     });
@@ -129,18 +127,11 @@ export default async function handler(request) {
 
   if (!upstream.ok || !upstream.body) {
     const detail = await upstream.text().catch(() => '');
-    const rejected = upstream.status === 401 || upstream.status === 403;
-    return json(
-      {
-        // Upstream said no — that is a different problem from no credentials
-        // arriving, and the client must not sign the user out over it.
-        error: rejected ? 'upstream_rejected' : 'upstream_error',
-        status: upstream.status,
-        model: body.model,
-        message: summarise(detail) || upstream.statusText
-      },
-      rejected ? 403 : 502
-    );
+    // Three different failures that must never share a sentence: no credentials
+    // arrived, the account was refused, or the edge never let us through.
+    const { body: payload, status } = classify(upstream.status, detail, { model: body.model });
+    if (!payload.message) payload.message = upstream.statusText;
+    return json(payload, status);
   }
 
   return new Response(translate(upstream.body), {

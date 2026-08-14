@@ -661,6 +661,17 @@ async function streamOnce(node, startedAt) {
       if (!(await sessionAlive())) { setPhase('signed-out'); throw new Error('Signed out. Connect again.'); }
       throw new Error('The server did not receive your credentials. Run the connection test from your profile menu.');
     }
+    if (d.error === 'upstream_blocked') {
+      // Refused by the network edge, not by the API. Saying "check your plan"
+      // here would send the user chasing something that is not wrong.
+      throw new Error(
+        'Blocked before reaching ChatGPT. ChatGPT’s network edge turned the request away ' +
+        'because it came from this site’s server rather than from your own computer — ' +
+        'nothing is wrong with your account, your plan or the model you picked. ' +
+        'This one is on CorX Labs to fix, not on you.' +
+        (d.ray ? ` (Ray ID ${d.ray})` : '')
+      );
+    }
     if (res.status === 403 && d.error === 'upstream_rejected') {
       const note = String(d.message || '').slice(0, 240);
       throw new Error(
@@ -830,10 +841,44 @@ async function diagnostics() {
       lines.push('  → headers are being dropped in transit, or /api is not deployed.');
     }
     if (Array.isArray(j.models)) lines.push(`  models available: ${j.models.length}`);
+    if (j.source) {
+      lines.push(`  model list came from: ${j.source}`);
+      if (j.source === 'catalog') lines.push('  → reads of the Codex backend are getting through.');
+      if (j.source === 'fallback') {
+        lines.push(j.blocked
+          ? '  → the catalog was refused at ChatGPT’s network edge, not by your account.'
+          : '  → the catalog could not be read; this list is the built-in default.');
+      }
+    }
   } catch (e) { lines.push(`/api/models → unreachable (${e.message})`); }
+
+  // A write is the thing that actually failed for people, so probe one.
+  try {
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { ...h, 'content-type': 'application/json' },
+      body: JSON.stringify({ model: db.model, messages: [{ role: 'user', content: 'ping' }] })
+    });
+    if (r.ok) {
+      lines.push(`/api/chat → ${r.status} — streaming works.`);
+      r.body?.cancel?.();
+    } else {
+      const j = await r.json().catch(() => ({}));
+      lines.push(`/api/chat → ${r.status} (${j.error || 'error'})`);
+      if (j.error === 'upstream_blocked') {
+        lines.push(`  BLOCKED at ChatGPT’s edge${j.ray ? ` — Ray ID ${j.ray}` : ''}.`);
+        if (j.blockedIp) lines.push(`  the address it refused was ${j.blockedIp} — this site’s server, not you.`);
+        lines.push('  → nothing is wrong with your account, plan or model.');
+      } else if (j.message) {
+        lines.push(`  ${String(j.message).slice(0, 200)}`);
+      }
+    }
+  } catch (e) { lines.push(`/api/chat → unreachable (${e.message})`); }
+
   openDock('terminal');
   termLine('sys', 'Connection test');
-  lines.forEach((l) => termLine(l.includes('MISSING') || l.includes('NO ') ? 'err' : 'out', l));
+  lines.forEach((l) => termLine(
+    /MISSING|NO |BLOCKED/.test(l) ? 'err' : 'out', l));
 }
 
 /* ------------------------------------------------------------------ theme */

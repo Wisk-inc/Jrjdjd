@@ -36,6 +36,8 @@ api/search.js           Edge function — web search (DuckDuckGo HTML, keyless)
 api/image.js            Edge function — image generation
 api/chat.js             Edge function — streams a reply from the Codex Responses API
 api/_responses.js       Chat-completions <-> Responses translation (both directions)
+api/_upstream.js        The Codex transport, built with a real header set
+api/_errors.js          Tells an API refusal apart from a network-edge block
 api/models.js           Edge function — the caller's available models
 assets/js/main.js       Progressive enhancement only — the site works without it
 assets/img/             Favicons, app icons, per-page social cards
