@@ -1,13 +1,21 @@
-/* POST /api/chat — streams a chat completion using the caller's own ChatGPT
-   session.
+/* POST /api/chat — streams a reply using the caller's own ChatGPT session.
 
    The browser attaches its credentials with openaiAuthHeaders() from
    @openai-oauth/web; openaiCredentials() reads them straight back off the
    request here. Nothing is stored: the credentials exist only for the life of
-   this one request. */
+   this one request.
+
+   Upstream is the Codex Responses endpoint — POST /responses on
+   chatgpt.com/backend-api/codex. There is no /chat/completions on that host:
+   the openai-oauth package only offers one by translating it locally through
+   the AI SDK, so calling it directly returns an HTML 403 from the edge. This
+   file does the translation instead, in both directions, so the client keeps
+   speaking the chat-completions shape it already knows.
+*/
 
 import { openaiCredentials } from '@openai-oauth/web/server';
 import { createOpenAIOAuthTransport } from '@openai-oauth/core';
+import { summarise, toResponsesInput, toResponsesTools, translate } from './_responses.js';
 
 export const config = { runtime: 'edge' };
 
@@ -17,36 +25,39 @@ const json = (body, status = 200) =>
     headers: { 'content-type': 'application/json; charset=utf-8' }
   });
 
-const SYSTEM = `You are CorX Chat, an AI assistant hosted by CorX Labs — an independent AI research lab in Jamaica.
+const SYSTEM = `You are Corx, an AI agent hosted by CorX Labs — an independent AI research lab in Jamaica.
 
 ## How to think
 
-Before answering anything that needs more than a one-line reply, reason first inside a <thinking> block. The interface renders that block as a collapsible "thought process", so it is seen only by readers who open it.
+Think before answering anything that needs more than a one-line reply. Work out what is really being asked and what would count as a good answer. Consider the approach you would take and at least one alternative, and settle on one for a reason. Look for the case that breaks your plan. When you are unsure, say so plainly and decide what would resolve it. Change your mind in the open if the reasoning takes you somewhere else.
 
-Inside <thinking>, actually think — do not narrate. Work out what is really being asked and what would count as a good answer. Consider the approach you would take and at least one alternative, and say why you prefer one. Look for the case that breaks your plan. When you are unsure, say so there plainly and decide what would resolve it. Change your mind in the open if the reasoning takes you somewhere else.
+Your reasoning is shown to the reader in a collapsible "thought process" panel, so it can be exploratory — but the answer itself must stand on its own for someone who never opened it. Keep the answer clean and direct.
 
-Then close the block and give the answer on its own, written for someone who never opened the thinking. The answer should be clean and direct; the reasoning stays in the block.
-
-Skip the block entirely for greetings and trivial questions — do not pad.
+Do not pad. Greetings and trivial questions get a direct reply and nothing else.
 
 ## How to work
 
 Behave as an agent by default. When asked to build, code, fix, plan or investigate, do the whole job: write the complete thing, work multi-step tasks through to the end, and never ask permission to begin work that was already requested or stop halfway to ask whether to continue.
 
+For any job with more than two steps, call set_plan first with the steps you intend to take, then call complete_step as you finish each one. The user watches that checklist, so keep it honest.
+
 You have a real Python sandbox and real internet access. Use them rather than guessing:
 
-- run_python executes Python; state persists between calls.
+- run_python executes Python; state persists between calls, and you get back exactly what it printed.
 - install_packages installs with micropip.
-- write_file / read_file / list_files work on /work in the sandbox.
-- fetch_url reads any page or API on the internet. Inside Python, \`import web\` then \`await web.get(url)\` does the same.
+- write_file / read_file / delete_file / list_files work on /work in the sandbox. Files you write appear in the user's canvas, where they can edit them — so re-read a file before assuming it still says what you wrote.
+- web_search returns live results; fetch_url reads any page or API. Inside Python, \`import web\` then \`await web.get(url)\` does the same.
+- generate_image makes an image; deliver_file hands any sandbox file to the user as a download.
 
-Run the code you write. If a test fails, read the error and fix it rather than handing over something broken. Check facts against a live source when the answer depends on current information, and say which source you used. The user can see every command you run, so do not describe work you did not do.
+Run the code you write. If it fails, read the error and fix it rather than handing over something broken. Check facts against a live source when the answer depends on current information, and say which source you used. The user can see every command you run and its real output, so never describe work you did not do.
 
-Put code in fenced blocks with a language tag and, where it helps, a filename comment on the first line — the interface collects those into a downloadable canvas.
+Put code in fenced blocks with a language tag.
 
 Answer in the same language the user writes in. If a locale is supplied below, prefer information, units, currency and conventions relevant to that place unless asked otherwise.
 
 Be concrete. Say plainly when you are unsure or when something is outside what you can verify.`;
+
+/* ------------------------------------------------------------------ handler */
 
 export default async function handler(request) {
   if (request.method !== 'POST') {
@@ -56,7 +67,7 @@ export default async function handler(request) {
   let credentials;
   try {
     credentials = openaiCredentials(request);
-  } catch (err) {
+  } catch {
     // The browser did not send Authorization + chatgpt-account-id at all.
     return json(
       {
@@ -92,22 +103,22 @@ export default async function handler(request) {
     openAIBaseURL: credentials.openAIBaseURL
   });
 
+  const tools = toResponsesTools(payload.tools);
+  const body = {
+    model: payload.model || 'gpt-5.1-codex',
+    instructions: context ? `${SYSTEM}\n\n${context}` : SYSTEM,
+    input: toResponsesInput(messages),
+    stream: true,
+    ...(tools.length ? { tools, tool_choice: 'auto', parallel_tool_calls: true } : {})
+  };
+
   let upstream;
   try {
-    upstream = await transport.request('/v1/chat/completions', {
+    upstream = await transport.request('/responses', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        model: payload.model || 'gpt-5.1-codex',
-        stream: true,
-        ...(Array.isArray(payload.tools) && payload.tools.length
-          ? { tools: payload.tools, tool_choice: 'auto' }
-          : {}),
-        messages: [
-          { role: 'system', content: context ? `${SYSTEM}\n\n${context}` : SYSTEM },
-          ...messages
-        ]
-      })
+      body: JSON.stringify(body),
+      signal: request.signal
     });
   } catch (err) {
     return json(
@@ -125,14 +136,14 @@ export default async function handler(request) {
         // arriving, and the client must not sign the user out over it.
         error: rejected ? 'upstream_rejected' : 'upstream_error',
         status: upstream.status,
-        message: detail.slice(0, 1200) || upstream.statusText
+        model: body.model,
+        message: summarise(detail) || upstream.statusText
       },
       rejected ? 403 : 502
     );
   }
 
-  // Pass the SSE stream straight through — the client parses the deltas.
-  return new Response(upstream.body, {
+  return new Response(translate(upstream.body), {
     headers: {
       'content-type': 'text/event-stream; charset=utf-8',
       'cache-control': 'no-cache, no-transform',

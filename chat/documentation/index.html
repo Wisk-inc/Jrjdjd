@@ -26,7 +26,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="CorX Chat documentation">
-<meta property="article:modified_time" content="2026-08-13T00:00:00Z">
+<meta property="article:modified_time" content="2026-08-14T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="CorX Chat Documentation — How the Orchestrator Works">
 <meta name="twitter:description" content="The sign-in flow, model switching, the tool layer, the sandboxed terminal, canvas, deep research, memory, privacy and limits.">
@@ -58,12 +58,12 @@
       "url": "https://corx-labs.com/chat/documentation/",
       "mainEntityOfPage": { "@id": "https://corx-labs.com/chat/documentation/#webpage" },
       "inLanguage": "en",
-      "dateModified": "2026-08-13",
+      "dateModified": "2026-08-14",
       "author": { "@id": "https://corx-labs.com/#nathan" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "about": { "@id": "https://corx-labs.com/chat/#app" },
       "proficiencyLevel": "Beginner",
-      "articleSection": ["Overview", "Connecting", "Models", "Tools", "Terminal", "Canvas", "Research", "Memory", "Privacy", "Limits"],
+      "articleSection": ["Overview", "Connecting", "Models", "Tools", "Terminal", "Canvas", "Agent", "Research", "Conversations and memory", "Privacy", "Limits"],
       "keywords": "CorX Chat, AI orchestrator, sign in with ChatGPT, browser extension OAuth, AI terminal, agentic AI, code canvas, deep research, AI memory",
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
@@ -74,7 +74,7 @@
       "name": "CorX Chat Documentation — How the Orchestrator Works",
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "inLanguage": "en",
-      "dateModified": "2026-08-13",
+      "dateModified": "2026-08-14",
       "breadcrumb": { "@id": "https://corx-labs.com/chat/documentation/#breadcrumb" }
     },
     {
@@ -97,14 +97,14 @@
           "@type": "HowToStep",
           "position": 1,
           "name": "Install the extension",
-          "text": "Install the free “Sign in with ChatGPT” extension from the Chrome Web Store or Firefox Add-ons. CorX Chat detects it automatically and will offer the correct install link for your browser if it is missing.",
+          "text": "Install the free “Sign in with ChatGPT” extension from the Chrome Web Store or Firefox Add-ons. If it is missing, CorX Chat offers the correct install link for your browser.",
           "url": "https://corx-labs.com/chat/documentation/#connecting"
         },
         {
           "@type": "HowToStep",
           "position": 2,
-          "name": "Press Continue",
-          "text": "Return to corx-labs.com/chat and press Continue. If the extension is already installed, the install step is skipped and you go straight to authorisation.",
+          "name": "Press Connect with ChatGPT",
+          "text": "Return to corx-labs.com/chat and press Connect with ChatGPT. If a session already exists in your browser the workspace opens straight away and this step is skipped.",
           "url": "https://corx-labs.com/chat/#connect"
         },
         {
@@ -134,7 +134,7 @@
           "name": "Which models can I use in CorX Chat?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Whichever models your own ChatGPT plan can reach through the Codex-compatible endpoints — the model list is fetched live from /v1/models rather than hardcoded, so it reflects your account rather than a fixed list. Image generation is available through the same route."
+            "text": "Whichever models your own ChatGPT plan can reach — typically the gpt-5.x family and their -codex and -mini variants. The picker is filled at runtime from the Codex model catalog for your account rather than a hardcoded list, and each entry shows its family and default reasoning level. Image generation runs on the same host."
           }
         },
         {
@@ -231,9 +231,9 @@
             <title id="rp-t">CorX Chat request path</title>
             <desc id="rp-d">Your browser holds the Sign in with ChatGPT extension and the encrypted
               credentials. The CorX Chat interface sends your message to the orchestrator, which
-              calls the OpenAI-compatible proxy using request-bound credentials supplied from your
-              browser, and separately drives the tool layer — terminal, web search, files and
-              images.</desc>
+              calls the Codex backend using request-bound credentials supplied from your browser,
+              and separately drives the tool layer — the Python sandbox, which runs in your own tab,
+              plus web search, files and image generation.</desc>
             <defs>
               <marker id="rp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
                 <path d="M0,1 L9,5 L0,9 z" class="dg-arrow"/>
@@ -267,14 +267,14 @@
 
             <rect class="dg-box" x="690" y="70" width="316" height="96" rx="10"/>
             <text class="dg-tag"   x="708" y="94">Your ChatGPT plan</text>
-            <text class="dg-title" x="708" y="116">OpenAI-compatible proxy</text>
-            <text class="dg-sub"   x="708" y="134">/v1/chat/completions · /v1/responses</text>
-            <text class="dg-sub"   x="708" y="150">/v1/models · /v1/images/generations</text>
+            <text class="dg-title" x="708" y="116">Codex backend</text>
+            <text class="dg-sub"   x="708" y="134">/responses · /models</text>
+            <text class="dg-sub"   x="708" y="150">/images/generations</text>
 
             <rect class="dg-box" x="460" y="214" width="546" height="70" rx="10"/>
             <text class="dg-tag"   x="478" y="238">Tool layer</text>
             <text class="dg-title" x="478" y="260">Sandboxed terminal · web search · files &amp; archives · image generation</text>
-            <text class="dg-sub"   x="478" y="276">runs on the orchestrator, never in your browser</text>
+            <text class="dg-sub"   x="478" y="276">the sandbox runs in your tab; search and images go through CorX</text>
 
             <path class="dg-edge" d="M210,118 L243,118" marker-end="url(#rp-ah)"/>
             <path class="dg-edge" d="M420,118 L453,118" marker-end="url(#rp-ah)"/>
@@ -423,15 +423,25 @@ headers: { ...(await openaiAuthHeaders()), 'content-type': 'application/json' }<
 
         <section class="doc-section" id="models">
           <h2>3. Models</h2>
+          <div class="answer-box">
+            <p>The picker is filled from the Codex <strong>model catalog</strong> for your own
+              account — the same list the Codex CLI reads — so it shows what you can actually reach
+              today rather than a list that goes stale.</p>
+          </div>
           <div class="prose">
-            <p>The model list is <strong>fetched live</strong> from the proxy's
-              <code>/v1/models</code> endpoint rather than hardcoded, so the picker shows what your
-              account can actually reach today instead of a list that goes stale. Switching models
-              mid-conversation keeps the thread — you can start on a fast model and move to a
-              reasoning model when a question turns out to be harder than it looked.</p>
-            <p>Only models exposed through the Codex-compatible endpoints are available, and that set
-              changes over time and by plan. Image generation is reached through the same route via
-              <code>/v1/images/generations</code>.</p>
+            <p>The catalog is requested with a client version, which returns the raw list rather
+              than the filtered one, so preview models appear alongside the listed ones and are
+              labelled as such. Each entry carries its family and default reasoning level, which is
+              what the second line under each name in the picker is showing.</p>
+            <p>Expect to see the <code>gpt-5.x</code> family and their <code>-codex</code> variants,
+              plus the <code>-mini</code> models when your plan includes them. Switching models
+              mid-conversation keeps the thread — start on a fast one and move to a heavier
+              reasoning model when a question turns out harder than it looked.</p>
+            <p>Which of them actually run is set by your ChatGPT plan, not by CorX Labs. If one is
+              refused, the error says which model was refused and what the upstream said; pick
+              another from the same menu.</p>
+            <p>Image generation uses the catalog's image model through
+              <code>/images/generations</code> on the same host.</p>
           </div>
         </section>
 
@@ -451,7 +461,7 @@ headers: { ...(await openaiAuthHeaders()), 'content-type': 'application/json' }<
               <tbody>
                 <tr><td>Streaming chat</td><td>Live</td><td>Tokens render as they arrive, over your own session</td></tr>
                 <tr><td>Visible reasoning</td><td>Live</td><td>The model's own thinking, in a dropdown on each answer</td></tr>
-                <tr><td>Model switching</td><td>Live</td><td>List fetched from <code>/v1/models</code> for your account</td></tr>
+                <tr><td>Model switching</td><td>Live</td><td>Filled from the Codex model catalog for your account, with family and reasoning level</td></tr>
                 <tr><td>Agent behaviour</td><td>Live</td><td>On by default — no mode to enable</td></tr>
                 <tr><td>Python sandbox</td><td>Live</td><td>Real CPython in WebAssembly, in your tab</td></tr>
                 <tr><td>Package installs</td><td>Live</td><td><code>micropip</code>; Pyodide's prebuilt wheels and pure-Python packages</td></tr>
@@ -673,9 +683,11 @@ headers: { ...(await openaiAuthHeaders()), 'content-type': 'application/json' }<
             </details>
             <details>
               <summary>Which models can I use?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Whichever your own ChatGPT plan can reach through the
-                Codex-compatible endpoints. The picker is populated from <code>/v1/models</code> at
-                runtime, so it reflects your account rather than a fixed list.</p></div>
+              <div class="faq-body"><p>Whichever your own ChatGPT plan can reach — typically the
+                <code>gpt-5.x</code> family and their <code>-codex</code> and <code>-mini</code>
+                variants. The picker is filled from the Codex model catalog for your account at
+                runtime, so it reflects your plan rather than a fixed list, and each entry shows its
+                family and default reasoning level.</p></div>
             </details>
             <details>
               <summary>Is the terminal real?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>

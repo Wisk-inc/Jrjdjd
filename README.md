@@ -34,7 +34,8 @@ assets/vendor/          @openai-oauth/web (built from source) + self-hosted Pyod
 api/fetch.js            Edge function — the sandbox's proxied internet access
 api/search.js           Edge function — web search (DuckDuckGo HTML, keyless)
 api/image.js            Edge function — image generation
-api/chat.js             Edge function — streams chat completions
+api/chat.js             Edge function — streams a reply from the Codex Responses API
+api/_responses.js       Chat-completions <-> Responses translation (both directions)
 api/models.js           Edge function — the caller's available models
 assets/js/main.js       Progressive enhancement only — the site works without it
 assets/img/             Favicons, app icons, per-page social cards
@@ -164,7 +165,8 @@ Open a file, edit it, and **Save** writes back to `/work` so the next run uses y
 **Delete** removes it from the VM. Generated images sit alongside as read-only entries.
 
 **Also live** — streaming chat; visible reasoning (the model writes a `<thinking>` block, the client
-renders it as a collapsible dropdown, toggled by **Think**); model switching from `/v1/models`;
+renders it as a collapsible dropdown, toggled by **Think**); model switching, filled from the
+Codex model catalog with each entry labelled by family and reasoning level;
 uploads of any type (images as multimodal content, everything else staged into `/work`); up to 20
 saved conversations in `localStorage` under `corx.chat.v2` with a **Memory** switch that drops the
 history down to the last exchange; the account's real name and email read from the session token
