@@ -57,8 +57,14 @@ export default async function handler(request) {
   try {
     credentials = openaiCredentials(request);
   } catch (err) {
+    // The browser did not send Authorization + chatgpt-account-id at all.
     return json(
-      { error: 'not_authenticated', message: 'Sign in with ChatGPT first.' },
+      {
+        error: 'missing_credentials',
+        message: 'No ChatGPT credentials reached the server. Sign in, or check that /api is deployed.',
+        sawAuthorization: Boolean(request.headers.get('authorization')),
+        sawAccountId: Boolean(request.headers.get('chatgpt-account-id'))
+      },
       401
     );
   }
@@ -112,13 +118,16 @@ export default async function handler(request) {
 
   if (!upstream.ok || !upstream.body) {
     const detail = await upstream.text().catch(() => '');
+    const rejected = upstream.status === 401 || upstream.status === 403;
     return json(
       {
-        error: 'upstream_error',
+        // Upstream said no — that is a different problem from no credentials
+        // arriving, and the client must not sign the user out over it.
+        error: rejected ? 'upstream_rejected' : 'upstream_error',
         status: upstream.status,
         message: detail.slice(0, 1200) || upstream.statusText
       },
-      upstream.status === 401 || upstream.status === 403 ? 401 : 502
+      rejected ? 403 : 502
     );
   }
 

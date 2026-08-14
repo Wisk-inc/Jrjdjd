@@ -253,10 +253,18 @@ user's browser. If present, the user presses Continue and goes straight to autho
 - Agent behaviour BY DEFAULT — no mode to enable. Asked to build or fix something, it writes
   complete code and works multi-step jobs to the end.
 - Image input: attached images are sent as multimodal content.
-- Code canvas: real fenced code blocks from responses, named from a filename comment where present,
-  downloadable individually.
+- Task planning as a tool: for anything past two steps the model calls set_plan with its steps and
+  complete_step as it finishes each; the Plan panel is live state, not narration. Every tool call
+  also appears inline in the conversation as a card showing the call, its argument and the real
+  output, failures included.
+- Code canvas: a live file tree of the sandbox. Open a file into an editor, edit it, Save writes
+  back to /work so the next run uses the edited version, Delete removes it from the sandbox,
+  Download hands it over. Generated images appear as read-only entries.
+- Resuming interrupted work: if the tab is closed or refreshed mid-run, the next visit offers to
+  pick the run up where it stopped, checking the sandbox first to avoid repeating work.
 - A REAL Python sandbox: CPython compiled to WebAssembly, running in the browser tab. The agent
-  calls tools (run_python, install_packages, write_file, read_file, list_files, fetch_url) and
+  calls tools (run_python, install_packages, write_file, read_file, delete_file, list_files,
+  fetch_url, web_search, generate_image, deliver_file, set_plan, complete_step) and
   every command is shown in a terminal panel the user can also type into and close. State persists
   between calls; packages install with micropip; internet access goes through /api/fetch on the
   same origin so it is not CORS-limited (in Python: `import web` then `await web.get(url)`). The
@@ -270,8 +278,13 @@ user's browser. If present, the user presses Continue and goes straight to autho
   Each source is shown in the answer as a chip with that site's own logo, linked for checking.
 - REAL image generation (/api/image -> /v1/images/generations on the user's own account); the image
   renders inline and is saved to the canvas for download.
-- Conversation memory: the last 60 turns are saved in the browser (localStorage, key corx.chat.v1)
-  and restored on return. Never stored on a CorX server.
+- Saved conversations and memory: up to 20 chats, each keeping its last 60 messages, are stored in
+  the browser (localStorage, key corx.chat.v2) and listed in the sidebar — switchable and
+  deletable. A Memory switch in the profile menu turns recall off, after which only the last
+  exchange is sent and nothing new is written. Never stored on a CorX server.
+- Profile menu: the ChatGPT account name and email, read from the session token in the browser;
+  a light / dark / system theme switch; a Connection test that reports which link in the auth
+  chain failed; sign out.
 - Language and region: the user's locale and time zone are sent as context; replies follow the
   language written in.
 
@@ -283,16 +296,19 @@ user's browser. If present, the user presses Continue and goes straight to autho
 ## Request path
 
 Browser (extension + encrypted credentials, via @openai-oauth/web) → CorX Chat UI →
-/api/chat and /api/models (Vercel edge functions using @openai-oauth/web/server) →
+/api/chat, /api/models and /api/image (Vercel edge functions using @openai-oauth/web/server) →
 chatgpt.com/backend-api/codex → model. Credentials are read off the request headers
 (Authorization + chatgpt-account-id) for that one call and are never persisted server-side.
+/api/search (DuckDuckGo HTML) and /api/fetch (SSRF-guarded proxy) carry no credentials at all.
 
 ## Limits
 
 - Depends entirely on the user's own ChatGPT plan for model availability, quality and rate limits.
 - The browser extension is required; no extension, no access.
-- The models still make mistakes, and there is no browsing, so nothing is checked against a live
-  source.
+- The models still make mistakes. The terminal, the tool cards and the cited sources exist so the
+  work can be checked, not so checking can be skipped.
+- The sandbox is bounded: it lives in the tab, has no access to the user's machine, and is
+  discarded when the tab closes.
 - Not for safety-critical use.
 
 ===============================================================================

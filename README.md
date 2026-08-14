@@ -12,7 +12,7 @@ any static host and it works.
 ## Structure
 
 ```
-/chat/                  CorX Chat — the AI workspace (landing + live interface)
+/chat/                  Corx — the full-page agent workspace
 /chat/documentation/    How the orchestrator works
 /                       Home — hero, what this is, products, principles, pipeline, FAQ
 /documentation/         The main reference: lab, website, architecture, training, safety, usage
@@ -28,7 +28,7 @@ any static host and it works.
 
 assets/css/main.css     The entire design system
 assets/css/chat.css     CorX Chat workspace UI (loaded only on /chat/)
-assets/js/chat.js       The chat client: auth, streaming, markdown, canvas, memory
+assets/js/chat.js       The chat client: auth, streaming, tools, plan, canvas, conversations
 assets/js/sandbox.js    The Python VM: exec, packages, files, network
 assets/vendor/          @openai-oauth/web (built from source) + self-hosted Pyodide
 api/fetch.js            Edge function — the sandbox's proxied internet access
@@ -132,8 +132,9 @@ single call. **Nothing is persisted server-side and no token is ever pooled betw
 
 **The sandbox is real.** `assets/vendor/pyodide/` is a self-hosted CPython build that runs in
 WebAssembly in the visitor's tab. The agent calls tools — `run_python`, `install_packages`,
-`write_file`, `read_file`, `list_files`, `fetch_url` — and every command appears in a terminal panel
-the user can also type into and close. State persists between calls, packages install with
+`write_file`, `read_file`, `delete_file`, `list_files`, `fetch_url`, `web_search`, `generate_image`,
+`deliver_file` — and every command appears in a terminal panel the user can also type into and
+close. State persists between calls, packages install with
 `micropip`, and internet access goes through `/api/fetch` on this origin so the VM is not
 CORS-limited (in Python: `import web` then `await web.get(url)`). It has no access to the visitor's
 machine: only its own in-memory filesystem and whatever they upload.
@@ -145,15 +146,33 @@ and the image renders inline and lands in the canvas. Zips need no special code 
 `zipfile` is in the stdlib, so the sandbox unpacks, edits and rebuilds them, and `deliver_file`
 pushes any sandbox file back as a download.
 
-**`/chat/` is the app, not a page about the app.** It fills the viewport on load. Below 1100px the
-sidebar and work panel become overlays with a scrim; below 760px the app goes edge to edge at
-`100dvh`. Reference text sits below the fold so the page still has something for crawlers.
+**`/chat/` is the app, not a page about the app.** There is no masthead and no prose below the
+fold — the page *is* the workspace, at `100dvh`. Below 1100px the sidebar and work panel become
+overlays with a scrim, and a closed drawer is `visibility: hidden` so it is genuinely inert rather
+than parked off-screen. Below 760px it goes edge to edge. Crawlers are served by the JSON-LD
+`WebApplication` graph and by `/chat/documentation/`, which is a real page of prose.
+
+**Planning is a tool, not narration.** `set_plan` publishes the steps and `complete_step` ticks
+them off, so the Plan panel shows state the model actually committed to. Every tool call also
+renders inline in the conversation as a card — the call, its argument, and the output it really
+returned, failures included. `runPython` taps stdout as well as the expression value, so the
+model reads back exactly what the terminal shows; without that it sees `(no output)` for its own
+`print()` calls.
+
+**The canvas is editable.** It is a live tree of the sandbox filesystem, not a scrape of the chat.
+Open a file, edit it, and **Save** writes back to `/work` so the next run uses your version.
+**Delete** removes it from the VM. Generated images sit alongside as read-only entries.
 
 **Also live** — streaming chat; visible reasoning (the model writes a `<thinking>` block, the client
-renders it as a collapsible dropdown); model switching from `/v1/models`; uploads of any type
-(images as multimodal content, everything else staged into `/work`); a canvas of code blocks and
-sandbox-produced files, downloadable; conversation memory in `localStorage`; locale and time zone
-sent as context.
+renders it as a collapsible dropdown, toggled by **Think**); model switching from `/v1/models`;
+uploads of any type (images as multimodal content, everything else staged into `/work`); up to 20
+saved conversations in `localStorage` under `corx.chat.v2` with a **Memory** switch that drops the
+history down to the last exchange; the account's real name and email read from the session token
+for the profile chip; light / dark / system; resuming a run that was interrupted by a refresh; and
+locale and time zone sent as context.
+
+On a phone the work panel does **not** open itself when a tool runs — it would cover the answer.
+The toolbar button gets an activity dot instead.
 
 **Not built** — a general Linux shell. It is a Python VM: no git, node or apt, and packages are
 limited to what `micropip` can install. Stated as absent in the docs rather than faked.
