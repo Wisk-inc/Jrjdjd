@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>CorX3.8-27B — Jamaica's First Large Open-Weight LLM | CorX Labs</title>
+<meta name="description" content="CorX3.8-27B is a 27-billion-parameter Jamaican Patois-speaking assistant from CorX Labs, fine-tuned from Qwen3.8-27B. Open weights, Apache 2.0, on Hugging Face.">
+<link rel="canonical" href="https://corx-labs.com/models/corx3-8/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Nathan">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/models/corx3-8/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/models/corx3-8/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/models/corx3-8/">
+<meta property="og:title" content="CorX3.8-27B — Jamaica's First Large Open-Weight LLM">
+<meta property="og:description" content="A 27B-parameter Jamaican Patois-speaking assistant, fine-tuned from Qwen3.8-27B. Direct, honest, culturally grounded. Open weights under Apache 2.0.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
+<meta property="article:modified_time" content="2026-08-19T00:00:00Z">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CorX3.8-27B — Jamaica's First Large Open-Weight LLM">
+<meta name="twitter:description" content="A 27B-parameter Jamaican Patois-speaking assistant, fine-tuned from Qwen3.8-27B. Open weights under Apache 2.0.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+      "@id": "https://corx-labs.com/models/corx3-8/#model",
+      "name": "CorX3.8-27B",
+      "alternateName": ["CorX3.8", "CorX 3.8"],
+      "url": "https://corx-labs.com/models/corx3-8/",
+      "description": "CorX3.8-27B is a 27-billion-parameter conversational language model from CorX Labs in Jamaica, fine-tuned from the open-weight Qwen3.8-27B base under Apache 2.0. It speaks Jamaican Patois by default, switches to standard English on request, answers directly, holds boundaries and carries everyday Jamaican cultural reference, while keeping the general reasoning, coding and mathematics ability of its base model. It is fully merged and standalone — no adapter step and no separate base-model download.",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Language model",
+      "operatingSystem": "Cross-platform",
+      "softwareVersion": "3.8",
+      "programmingLanguage": "Python",
+      "codeRepository": "https://huggingface.co/Sigmandndnns/CorX3.8-27B",
+      "downloadUrl": "https://huggingface.co/Sigmandndnns/CorX3.8-27B",
+      "installUrl": "https://huggingface.co/Sigmandndnns/CorX3.8-27B",
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "isBasedOn": {
+        "@type": "SoftwareSourceCode",
+        "name": "Qwen3.8-27B",
+        "url": "https://huggingface.co/Qwen",
+        "license": "https://www.apache.org/licenses/LICENSE-2.0"
+      },
+      "isAccessibleForFree": true,
+      "datePublished": "2026-08-19",
+      "dateModified": "2026-08-19",
+      "inLanguage": ["en", "jam"],
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "creator": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "provider": { "@id": "https://corx-labs.com/#organization" },
+      "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
+      "keywords": "Jamaican Patois, Patwa, Caribbean LLM, Jamaica AI, open weight model, conversational AI, Qwen fine-tune, 27B parameters, Westmoreland",
+      "featureList": [
+        "Speaks Jamaican Patois by default and switches to standard English on request",
+        "Direct, honest register — no filler and no false agreement",
+        "Holds boundaries and declines plainly rather than complying under pressure",
+        "Everyday Jamaican cultural reference in a natural voice",
+        "Inherited general reasoning, code and mathematics ability from the base model",
+        "Fully merged and standalone — no adapter step, no separate base download",
+        "Recommended retrieval (RAG) layer that grounds factual answers on real Jamaican sources",
+        "Runs in 4-bit on a single ~24GB GPU; full bf16 needs ~56GB"
+      ],
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+      "sameAs": ["https://huggingface.co/Sigmandndnns/CorX3.8-27B"],
+      "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/models/corx3-8/#webpage",
+      "url": "https://corx-labs.com/models/corx3-8/",
+      "name": "CorX3.8-27B — Jamaica's First Large Open-Weight LLM",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "mainEntity": { "@id": "https://corx-labs.com/models/corx3-8/#model" },
+      "inLanguage": "en",
+      "dateModified": "2026-08-19",
+      "breadcrumb": { "@id": "https://corx-labs.com/models/corx3-8/#breadcrumb" },
+      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/models/corx3-8/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/" },
+        { "@type": "ListItem", "position": 3, "name": "CorX3.8-27B", "item": "https://corx-labs.com/models/corx3-8/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/models/corx3-8/#faq",
+      "isPartOf": { "@id": "https://corx-labs.com/models/corx3-8/#webpage" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is CorX3.8-27B?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CorX3.8-27B is a 27-billion-parameter conversational language model from CorX Labs in Jamaica. It is a Jamaican Patois-speaking assistant that answers directly, holds boundaries and carries everyday Jamaican cultural reference, while keeping the general reasoning, coding and mathematics ability of its base model. It is fine-tuned from the open-weight Qwen3.8-27B base under Apache 2.0, fully merged and standalone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is CorX3.8 trained from scratch?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Unlike CorX1.5, which was trained from random weights, CorX3.8 is a fine-tune of an existing open-weight base model, Qwen3.8-27B, released under Apache 2.0. The underlying reasoning comes from that base; CorX Labs added the Jamaican voice, the direct register and the cultural grounding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does CorX3.8 know specific Jamaican facts like addresses or laws?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not reliably. CorX3.8 has a Patois voice and common cultural reference, but it does not dependably know specific facts such as street addresses, current laws, exam schedules, prices or business regulations. For those, pair it with the recommended retrieval layer, which grounds answers on real Jamaican sources and says plainly when something is not in its references — do not trust its unaided recall."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What hardware does CorX3.8-27B need?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It runs in 4-bit quantisation on a single GPU with roughly 24GB of memory. Full bf16 precision needs about 56GB. The weights are fully merged, so there is no adapter step and no separate base-model download."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What licence is CorX3.8 released under?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Apache 2.0, inherited from the Qwen3.8-27B base model, with attribution to Qwen retained as the licence requires. The weights are open, so anyone can run, study and build on it."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/" aria-current="page">Our Products</a>
+      <a href="/blog/">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">View on Hugging Face</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">View on Hugging Face</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><span aria-current="page">CorX3.8-27B</span></li>
+      </ol>
+    </nav>
+
+    <div class="tag-row" style="margin-top:22px">
+      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
+      <span class="tag">Jamaican Patois</span>
+      <span class="tag">27B params</span>
+      <span class="tag">Apache 2.0</span>
+      <span class="tag">Open weights</span>
+    </div>
+
+    <h1>CorX3.8-27B</h1>
+    <p class="lede">Jamaica's first large open-weight LLM — a Jamaican Patois-speaking assistant that
+      answers straight, holds its ground, and carries a natural Jamaican voice. Third in the CorX
+      line, after CorX1.5 and TriStream.</p>
+
+    <div class="btn-row mt-m">
+      <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">
+        View on Hugging Face
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="#character">See how it behaves</a>
+    </div>
+    <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
+      Repository: <code>Sigmandndnns/CorX3.8-27B</code> &middot; Developer: Nathan &middot; Origin: Westmoreland, Jamaica
+    </p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <!-- Answer-first summary -->
+  <section class="section-tight" id="what-it-is">
+    <div class="shell">
+      <div class="answer-box" style="margin-top:0" data-reveal>
+        <p><strong>CorX3.8-27B</strong> is a 27-billion-parameter conversational model from
+          <a href="/about/">CorX Labs</a> in Westmoreland, Jamaica. It speaks Jamaican Patois by
+          default and switches to standard English when you write in English or ask it to. It is a
+          fine-tune of the open-weight <strong>Qwen3.8-27B</strong> base (Apache 2.0) — fully merged
+          and standalone, with no adapter step and no separate base download — so it keeps its base
+          model's general reasoning, code and maths while carrying a Jamaican voice, a direct
+          register and everyday cultural grounding.</p>
+      </div>
+
+      <dl class="spec-list mt-m" data-reveal>
+        <div><dt>Parameters</dt><dd>27B</dd></div>
+        <div><dt>Base model</dt><dd>Qwen3.8-27B</dd></div>
+        <div><dt>Languages</dt><dd>Patois &amp; English</dd></div>
+        <div><dt>Format</dt><dd>Fully merged</dd></div>
+        <div><dt>Runs on</dt><dd>~24GB GPU (4-bit)</dd></div>
+        <div><dt>Full precision</dt><dd>~56GB (bf16)</dd></div>
+        <div><dt>Licence</dt><dd>Apache 2.0</dd></div>
+        <div><dt>Status</dt><dd>Released</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Character / behaviour -->
+  <section class="section-tight" id="character" aria-labelledby="char-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">The character</p>
+        <h2 id="char-title">How it behaves.</h2>
+        <p class="lede">The fine-tune adds a voice and a temperament on top of the base model's
+          reasoning — this is what CorX Labs shaped.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card" data-reveal>
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-11.9 7.8L3 21l1.7-6.1A8.5 8.5 0 1 1 21 11.5z"/></svg>
+          </span>
+          <h3>Patois by default</h3>
+          <p>It speaks Jamaican Patois out of the box, and switches to standard English the moment
+            you write in English or ask it to. The voice is the point, not a costume you have to
+            request.</p>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="80">
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h13"/><path d="M17 10.5 19 12.5l3.5-3.5"/></svg>
+          </span>
+          <h3>Answers direct</h3>
+          <p>No filler, no throat-clearing, no false agreement. It gives its honest read of a
+            question and owns its mistakes rather than papering over them.</p>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="120">
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.5-3 7.8-7.5 9-4.5-1.2-7.5-4.5-7.5-9V6z"/></svg>
+          </span>
+          <h3>Holds boundaries</h3>
+          <p>It declines requests that cross a line and says so plainly, instead of complying under
+            pressure. Refusal is stated, not negotiated away.</p>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="160">
+          <span class="icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
+          </span>
+          <h3>Culturally grounded</h3>
+          <p>Everyday knowledge a Jamaican would take for granted, expressed in a natural voice —
+            the reference points and idiom that make a reply feel local rather than translated.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Built on -->
+  <section class="section-tight" id="base" aria-labelledby="base-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Honest about the build</p>
+        <h2 id="base-title">A fine-tune, and we say so.</h2>
+      </div>
+
+      <div class="answer-box" data-reveal>
+        <p>Being upfront about limits is part of the CorX character, so the model page follows the
+          same rule. <strong>CorX3.8 is not trained from scratch.</strong> It is a fine-tune of
+          <strong>Qwen3.8-27B</strong>, an existing open-weight base released under Apache 2.0. The
+          underlying reasoning, code and mathematics come from that base — CorX Labs added the
+          Jamaican voice, the direct register and the cultural grounding on top. That makes it a
+          different kind of project from <a href="/models/corx1-5/">CorX1.5</a>, which was trained
+          from random weights.</p>
+      </div>
+
+      <div class="grid grid-2 mt-m">
+        <div class="card" data-reveal>
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Capabilities at a glance</h3>
+          <div class="table-wrap mt-s">
+            <table>
+              <caption class="visually-hidden">CorX3.8-27B capability levels</caption>
+              <thead><tr><th scope="col">Area</th><th scope="col">Level</th></tr></thead>
+              <tbody>
+                <tr><td>Jamaican Patois conversation</td><td>Strong</td></tr>
+                <tr><td>Direct, honest register</td><td>Strong</td></tr>
+                <tr><td>Common Jamaican cultural reference</td><td>Good</td></tr>
+                <tr><td>General reasoning &amp; explanation</td><td>Good (inherited)</td></tr>
+                <tr><td>Code &amp; mathematics</td><td>Good (inherited)</td></tr>
+                <tr><td>Specific facts (roads, laws, prices)</td><td>Weak — use retrieval</td></tr>
+                <tr><td>Real-time / current information</td><td>None — no live data</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" data-reveal data-reveal-delay="80">
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">What it is not</h3>
+          <ul class="check-list is-limits mt-s">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not trained from scratch.</strong> The reasoning is inherited from Qwen3.8-27B; the Jamaican voice and register are what CorX Labs added.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not a Jamaican knowledge base.</strong> It has the voice and common reference, but does not reliably know addresses, current laws, exam schedules or prices — pair it with retrieval.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not fluent in every register.</strong> Its Patois is strong for conversation and common idiom; deep dialect range across all fourteen parishes is a goal for a future release.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not a substitute for professional advice</strong> — legal, medical or financial. It can explain and discuss; it is not an authority.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grounding / RAG -->
+  <section class="section-tight" id="grounding" aria-labelledby="grounding-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Grounding</p>
+        <h2 id="grounding-title">For facts, ground it on real sources.</h2>
+      </div>
+
+      <div class="callout" data-reveal>
+        <p>Because the model should not be trusted for specific facts on its own, CorX Labs ships a
+          <strong>retrieval layer</strong> that grounds answers on real Jamaican sources —
+          OpenStreetMap geography and public government documents. With retrieval attached, CorX3.8
+          answers factual questions from cited material and says plainly when something is not in its
+          references, instead of guessing. This is the recommended setup for anything factual.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Usage -->
+  <section class="section-tight" id="usage" aria-labelledby="usage-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Usage</p>
+        <h2 id="usage-title">Running CorX3.8-27B.</h2>
+        <p class="lede">The weights are fully merged, so it loads with the standard
+          <code>transformers</code> API — no adapter step, no separate base download.</p>
+      </div>
+
+      <pre data-reveal><code>from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+tok = AutoTokenizer.from_pretrained("Sigmandndnns/CorX3.8-27B")
+model = AutoModelForCausalLM.from_pretrained(
+    "Sigmandndnns/CorX3.8-27B",
+    torch_dtype=torch.bfloat16,
+    device_map="auto")
+
+msgs = [{"role": "user", "content": "Who are you?"}]
+prompt = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+inputs = tok(prompt, return_tensors="pt").to(model.device)
+out = model.generate(**inputs, max_new_tokens=256, temperature=0.7)
+print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True))</code></pre>
+
+      <p class="mt-m" data-reveal style="font-size:.9rem;color:var(--muted)">Runs in 4-bit on a
+        single ~24GB GPU; full bf16 needs ~56GB. Apache 2.0, inherited from the base model, with
+        attribution to Qwen retained as the licence requires.</p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">Open weights</p>
+        <h2 class="mt-s">Download it, run it, build on it.</h2>
+        <p>The merged weights are published under Apache 2.0 on Hugging Face — open for anyone to
+          run, study, and build on.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">
+            View on Hugging Face
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="/models/">Back to all models</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">Hugging Face</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

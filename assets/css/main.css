@@ -500,6 +500,10 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
    -------------------------------------------------------------------------- */
 .card {
   position: relative;
+  /* Grid tracks give children min-width:auto, so wide content inside a card
+     (a table, a long code block) would push the card past the viewport instead
+     of scrolling. min-width:0 lets the inner overflow-x:auto do its job. */
+  min-width: 0;
   background: var(--glass-bg);
   -webkit-backdrop-filter: saturate(160%) blur(14px);
   backdrop-filter: saturate(160%) blur(14px);

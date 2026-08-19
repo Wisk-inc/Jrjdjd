@@ -16,6 +16,11 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /products/*          /models/               301
 /model               /models/               301
 /models              /models/               301
+/corx3.8             /models/corx3-8/        301
+/corx3-8             /models/corx3-8/        301
+/corx38              /models/corx3-8/        301
+/corx3.8-27b         /models/corx3-8/        301
+/models/corx3.8      /models/corx3-8/        301
 /corx1.5             /models/corx1-5/       301
 /corx1-5             /models/corx1-5/       301
 /corx15              /models/corx1-5/       301
