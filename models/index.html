@@ -72,11 +72,29 @@
       "@id": "https://corx-labs.com/models/#list",
       "name": "AI models released by CorX Labs",
       "itemListOrder": "https://schema.org/ItemListOrderDescending",
-      "numberOfItems": 2,
+      "numberOfItems": 3,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "@id": "https://corx-labs.com/models/corx3-8/#model",
+            "name": "CorX3.8-27B",
+            "url": "https://corx-labs.com/models/corx3-8/",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "Language model",
+            "operatingSystem": "Cross-platform",
+            "description": "A 27B parameter Jamaican Patois-speaking assistant, fine-tuned from Qwen3.8-27B. Direct, honest and culturally grounded. Open weights under Apache 2.0.",
+            "license": "https://www.apache.org/licenses/LICENSE-2.0",
+            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "publisher": { "@id": "https://corx-labs.com/#organization" },
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/tristream-svs/#model",
@@ -93,7 +111,7 @@
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/corx1-5/#model",
@@ -178,6 +196,43 @@
       </div>
 
       <article class="card model-card" data-reveal>
+        <div class="model-head">
+          <div>
+            <div class="tag-row" style="margin-bottom:14px">
+              <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
+              <span class="tag">Jamaican Patois</span>
+              <span class="tag">27B params</span>
+              <span class="tag">Apache 2.0</span>
+            </div>
+            <h3>CorX3.8-27B</h3>
+            <p class="lede" style="margin-top:12px">Jamaica's first large open-weight LLM — a
+              Jamaican Patois-speaking assistant that answers straight, holds its ground, and carries
+              a natural Jamaican voice. A fine-tune of Qwen3.8-27B, fully merged and standalone.</p>
+          </div>
+        </div>
+
+        <dl class="spec-list">
+          <div><dt>Parameters</dt><dd>27B</dd></div>
+          <div><dt>Base model</dt><dd>Qwen3.8-27B</dd></div>
+          <div><dt>Languages</dt><dd>Patois &amp; English</dd></div>
+          <div><dt>Runs on</dt><dd>~24GB GPU (4-bit)</dd></div>
+          <div><dt>Format</dt><dd>Fully merged</dd></div>
+          <div><dt>Licence</dt><dd>Apache 2.0</dd></div>
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/corx3-8/">
+            View model details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">
+            View on Hugging Face
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card model-card mt-m" data-reveal>
         <div class="model-head">
           <div>
             <div class="tag-row" style="margin-bottom:14px">
@@ -294,6 +349,7 @@
         <h4>Products</h4>
         <ul>
           <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>

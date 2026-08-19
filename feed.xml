@@ -6,13 +6,32 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Thu, 13 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 19 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>CorX3.8-27B — Jamaica's first large open-weight LLM</title>
+      <link>https://corx-labs.com/models/corx3-8/</link>
+      <guid isPermaLink="true">https://corx-labs.com/models/corx3-8/</guid>
+      <pubDate>Tue, 19 Aug 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Language model</category>
+      <description><![CDATA[
+        <p>CorX3.8-27B is a 27-billion-parameter Jamaican Patois-speaking assistant, third in the
+        CorX line after CorX1.5 and TriStream. It speaks Patois by default and switches to standard
+        English on request, answers directly, holds boundaries, and carries everyday Jamaican
+        cultural reference — while keeping the general reasoning, code and maths of its base model.</p>
+        <p>It is a fine-tune of the open-weight Qwen3.8-27B base (Apache 2.0), fully merged and
+        standalone. It runs in 4-bit on a single ~24GB GPU. For factual questions, CorX Labs ships a
+        retrieval layer that grounds answers on real Jamaican sources. Repository:
+        <a href="https://huggingface.co/Sigmandndnns/CorX3.8-27B">Sigmandndnns/CorX3.8-27B</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>TriStream-SVS — singing voice synthesis, factored by design</title>

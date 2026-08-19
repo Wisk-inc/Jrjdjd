@@ -9,16 +9,18 @@ SUMMARY
 ===============================================================================
 
 CorX Labs is an independent artificial intelligence research lab and research station based in
-Jamaica, in the Caribbean. It designs, trains and open-sources language models built from the
-ground up: the architecture, the tokenizer, the data pipeline and the training loop are all written
-in house. It does not fine-tune existing base models.
+Jamaica, in the Caribbean. Its foundational models are built from the ground up: the architecture,
+the tokenizer, the data pipeline and the training loop are all written in house, from random
+weights. Where a model builds on an existing open base instead — as CorX3.8-27B does — the lab
+states that plainly rather than presenting it as from scratch.
 
 Slogan: "Architecting the future." Positioning: "from the ground up."
 Founder: Nathan, a solo developer and independent AI researcher from Jamaica.
 Contact: lkk89002@gmail.com
 Website: https://corx-labs.com/
-Models: CorX1.5 (language model) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
+Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
         TriStream-SVS (singing voice synthesis, in training) — https://huggingface.co/Sigmandndnns/TriStream-SVS-300M
+        CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) — https://huggingface.co/Sigmandndnns/CorX3.8-27B
 
 ===============================================================================
 CORX1.5 — MODEL CARD
@@ -223,6 +225,77 @@ people never in its training data. Clone a voice only with the consent of the pe
 Do not use it to impersonate anyone, to produce material attributed to a real artist without their
 agreement, or to deceive listeners about who is singing. The adversarial singer head reduces
 memorisation of training singers; it does not address misuse of zero-shot cloning at inference time.
+
+===============================================================================
+CORX3.8-27B — MODEL CARD
+===============================================================================
+
+CorX3.8-27B is CorX Labs' third and largest model, described as Jamaica's first large open-weight
+LLM. It is a 27-billion-parameter conversational assistant that speaks Jamaican Patois. Hugging Face
+repository: Sigmandndnns/CorX3.8-27B. Origin: Westmoreland, Jamaica. Licence: Apache 2.0. Status:
+released.
+
+## What it is
+
+A Jamaican Patois-speaking assistant fine-tuned to:
+- Speak Jamaican Patois by default, and switch to standard English when written to in English or
+  asked to.
+- Answer directly — no filler, no false agreement; it gives its honest read and owns its mistakes.
+- Hold boundaries — it declines requests that cross a line and says so plainly rather than complying
+  under pressure.
+- Carry everyday Jamaican cultural reference expressed in a natural voice.
+It keeps the general reasoning, coding and mathematics ability of its base model, so it works as a
+normal assistant when needed.
+
+## Honest about the build (important)
+
+CorX3.8 is NOT trained from scratch. It is a fine-tune of an existing open-weight base model,
+Qwen3.8-27B, released under Apache 2.0. The underlying reasoning comes from that base; CorX Labs
+added the Jamaican voice, the direct register and the cultural grounding. It is fully merged and
+standalone — no adapter step and no separate base-model download. This makes it a different kind of
+project from CorX1.5, which was trained from random weights.
+
+## What it is NOT
+
+- Not trained from scratch (see above).
+- Not a reliable Jamaican knowledge base. It has a Patois voice and common cultural reference, but
+  does not reliably know specific facts such as street addresses, current laws, exam schedules,
+  prices or business regulations. Pair it with retrieval for those; do not trust its unaided recall.
+- Not a fluent native Patois speaker in every register. Its Patois is good for conversation and
+  common idiom; deep dialect range across all fourteen parishes is a goal for a future release.
+- Not a substitute for professional advice (legal, medical, financial). It can explain and discuss;
+  it is not an authority.
+
+## Capabilities at a glance
+
+- Jamaican Patois conversation: strong.
+- Direct, honest register: strong.
+- Common Jamaican cultural reference: good.
+- General reasoning / explanation: good (inherited from the base).
+- Code, mathematics: good (inherited from the base).
+- Specific Jamaican facts (roads, laws, prices): weak — use retrieval.
+- Real-time / current information: none — no live data.
+
+## Grounding on Jamaican facts (RAG)
+
+Because the model should not be trusted for specific facts on its own, CorX Labs ships a retrieval
+layer that grounds answers on real Jamaican sources (OpenStreetMap geography, public government
+documents). With retrieval attached, CorX3.8 answers factual questions from cited material and says
+plainly when something is not in its references instead of guessing. This is the recommended setup
+for anything factual.
+
+## Running it
+
+The weights are fully merged, so it loads with the standard transformers API — no adapter step, no
+separate base download. It runs in 4-bit on a single ~24GB GPU; full bf16 needs ~56GB. Apache 2.0,
+inherited from the base model, with attribution to Qwen retained as the licence requires.
+
+## Intended and out-of-scope use
+
+Intended: conversation, education, cultural preservation, and Caribbean-focused applications where a
+Jamaican voice matters. Open weights so anyone can run, study and build on it. Out of scope: do not
+rely on it for factual accuracy without retrieval, for professional advice, or as a sole
+decision-maker in any consequential setting.
 
 ===============================================================================
 ABOUT CORX LABS

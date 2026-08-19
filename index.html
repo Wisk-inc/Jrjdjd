@@ -158,17 +158,23 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "@type": "ItemList",
       "@id": "https://corx-labs.com/#products",
       "name": "Models built by CorX Labs",
-      "numberOfItems": 2,
+      "numberOfItems": 3,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "url": "https://corx-labs.com/models/corx3-8/",
+          "name": "CorX3.8-27B"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "url": "https://corx-labs.com/models/tristream-svs/",
           "name": "TriStream-SVS"
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "url": "https://corx-labs.com/models/corx1-5/",
           "name": "CorX1.5"
         }
@@ -401,6 +407,40 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <div class="model-head">
           <div>
             <div class="tag-row" style="margin-bottom:14px">
+              <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
+              <span class="tag">Jamaican Patois</span>
+              <span class="tag">27B params</span>
+            </div>
+            <h3>CorX3.8-27B</h3>
+            <p class="lede" style="margin-top:12px">Jamaica's first large open-weight LLM — a
+              Jamaican Patois-speaking assistant that answers straight and holds its ground. A
+              fine-tune of Qwen3.8-27B, fully merged, open under Apache 2.0.</p>
+          </div>
+        </div>
+
+        <dl class="spec-list">
+          <div><dt>Parameters</dt><dd>27B</dd></div>
+          <div><dt>Base model</dt><dd>Qwen3.8-27B</dd></div>
+          <div><dt>Languages</dt><dd>Patois &amp; English</dd></div>
+          <div><dt>Licence</dt><dd>Apache 2.0</dd></div>
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/corx3-8/">
+            View model details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">
+            View on Hugging Face
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card model-card mt-m" data-reveal>
+        <div class="model-head">
+          <div>
+            <div class="tag-row" style="margin-bottom:14px">
               <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> In training</span>
               <span class="tag">Singing voice synthesis</span>
               <span class="tag">Zero-shot cloning</span>
@@ -481,8 +521,9 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
           </span>
           <h3>Built, not borrowed</h3>
-          <p>Architecture, tokenizer, data pipeline and training loop are written here. Our models
-            start from random weights, not from someone else's checkpoint.</p>
+          <p>Our foundational models are written here — architecture, tokenizer, data pipeline and
+            training loop. CorX1.5 starts from random weights, not someone else's checkpoint; where
+            we do build on an open base, like CorX3.8, we say so plainly.</p>
         </div>
 
         <div class="card" data-reveal data-reveal-delay="80">
@@ -643,6 +684,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <h4>Products</h4>
         <ul>
           <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>

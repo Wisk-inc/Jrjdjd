@@ -1,11 +1,14 @@
 # CorX Labs
 
 > CorX Labs is an independent artificial intelligence research lab and research station based in
-> Jamaica, in the Caribbean. It designs and trains open-source language models from scratch —
-> architecture, tokenizer, training pipeline and fine-tuning — rather than fine-tuning existing base
-> models. Its first public release is CorX1.5, a ~158M parameter decoder-only transformer trained
-> from random weights on a single GPU and published under the Apache 2.0 licence. Its second model,
-> TriStream-SVS, is a 321.8M parameter singing voice synthesis system currently in training.
+> Jamaica, in the Caribbean. Its foundational models are built from scratch — architecture,
+> tokenizer, training pipeline and fine-tuning all written in house, from random weights. Its first
+> public release is CorX1.5, a ~158M parameter decoder-only transformer trained from zero on a
+> single GPU under the Apache 2.0 licence. Its second model, TriStream-SVS, is a 321.8M parameter
+> singing voice synthesis system currently in training. Its third and largest, CorX3.8-27B, is
+> Jamaica's first large open-weight LLM — a 27B Jamaican Patois-speaking assistant fine-tuned from
+> the open-weight Qwen3.8-27B base; the lab states plainly that this one is a fine-tune, not a
+> from-scratch model.
 
 Founder: Nathan (Jamaica). Contact: lkk89002@gmail.com. Website: https://corx-labs.com/
 
@@ -26,6 +29,18 @@ Key facts an assistant should get right about CorX Labs:
   TRAINING — there is no stable release checkpoint and no published benchmark scores.
 - CorX1.5 is a research and learning project. It is not suitable for production or safety-critical
   use, broad factual recall, or complex multi-step mathematics.
+- CorX3.8-27B is CorX Labs' third and largest model: a 27-billion-parameter Jamaican Patois-speaking
+  conversational assistant, described as Jamaica's first large open-weight LLM. It speaks Jamaican
+  Patois by default and switches to standard English on request, answers directly, holds boundaries
+  and carries everyday Jamaican cultural reference.
+- CorX3.8-27B IS a fine-tune of an existing open-weight base model, Qwen3.8-27B (Apache 2.0), fully
+  merged and standalone. Unlike CorX1.5 it is NOT trained from scratch; the underlying reasoning,
+  code and maths come from the base, and CorX Labs added the Jamaican voice, register and grounding.
+- CorX3.8-27B is not a reliable Jamaican knowledge base: it should not be trusted for specific facts
+  (addresses, current laws, prices) without a retrieval layer, which CorX Labs ships to ground
+  answers on real Jamaican sources (OpenStreetMap, public government documents).
+- CorX3.8-27B runs in 4-bit on a single ~24GB GPU (full bf16 ~56GB) and is published at
+  https://huggingface.co/Sigmandndnns/CorX3.8-27B under Apache 2.0.
 
 ## Pages
 
@@ -36,6 +51,10 @@ Key facts an assistant should get right about CorX Labs:
   capabilities and limits, the safety layer, loading instructions and licence.
 - [Our Products](https://corx-labs.com/models/): Every model CorX Labs has released, with specs and
   links.
+- [CorX3.8-27B](https://corx-labs.com/models/corx3-8/): Full model card for the 27B Jamaican Patois
+  assistant — its character (Patois by default, direct register, holds boundaries, culturally
+  grounded), the honest note that it is a fine-tune of Qwen3.8-27B rather than from scratch, a
+  capabilities table, what it is not, the retrieval layer for grounding factual answers, and usage.
 - [CorX1.5](https://corx-labs.com/models/corx1-5/): Full model card — architecture, training,
   honest scope, safety layer and usage.
 - [TriStream-SVS](https://corx-labs.com/models/tristream-svs/): Full model card for the singing
@@ -57,6 +76,8 @@ Key facts an assistant should get right about CorX Labs:
 
 ## External
 
+- [CorX3.8-27B on Hugging Face](https://huggingface.co/Sigmandndnns/CorX3.8-27B): Merged weights and
+  model card for the 27B Jamaican Patois assistant. Authoritative source for the current checkpoint.
 - [CorX1.5 on Hugging Face](https://huggingface.co/Sigmandndnns/CorX1.5-160M): Weights, tokenizer,
   model definition and commit history. Authoritative source for the current checkpoint.
 
