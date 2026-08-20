@@ -356,8 +356,13 @@ function setStatus(stateName, label) {
   $('.status-label', els.status).textContent = label;
 }
 
-/* ------------------------------------------------------------- tool runners */
-async function execTool(name, args, conv) {
+/* ------------------------------------------------------------- tool runners
+   `meta` is an out-param: tools that produce something richer than a text
+   blob (currently just web_search's result list) drop it there so the
+   caller can persist it on the message and reconstruct the same sources
+   dropdown after a reload, instead of only keeping the flattened text the
+   model sees. */
+async function execTool(name, args, conv, meta = {}) {
   switch (name) {
     case 'set_plan':
       conv.plan = (args.steps || []).map((t) => ({ text: String(t), state: 'todo' }));
@@ -421,6 +426,7 @@ async function execTool(name, args, conv) {
       } catch (e) { data = { error: e.message, results: [] }; }
       strip?.remove();
       const results = data.results || [];
+      meta.results = results;
       if (!results.length) { termLine('err', data.error || 'no results'); return `No results${data.error ? ` (${data.error})` : ''}.`; }
       termLine('ok', `${results.length} results`);
       renderSources(results);
@@ -559,18 +565,23 @@ async function send(text, opts = {}) {
         bubble.innerHTML = '<p>(empty response)</p>';
       }
 
-      conv.messages.push({ role: 'assistant', content: reply });
+      const assistantMsg = { role: 'assistant', content: reply };
+      conv.messages.push(assistantMsg);
       if (!calls.length) { setStatus('ok', 'Online'); break; }
 
       const results = [];
+      const toolLog = [];
       for (const call of calls) {
         const card = addToolCard(call.name, call.args);
         let out, failed = false;
-        try { out = await execTool(call.name, call.args, conv); }
+        const meta = {};
+        try { out = await execTool(call.name, call.args, conv, meta); }
         catch (e) { out = `Tool error: ${e.message}`; failed = true; }
         finishToolCard(card, out, failed);
         results.push(`[${call.name}] ->\n${String(out).slice(0, 6000)}`);
+        toolLog.push({ name: call.name, args: call.args, output: out, failed, results: meta.results });
       }
+      assistantMsg.tools = toolLog;
       conv.messages.push({
         role: 'user', synthetic: true,
         content: 'Tool results:\n\n' + results.join('\n\n') + '\n\nContinue, or give the final answer if the task is done.'
@@ -636,13 +647,29 @@ function renderConversation() {
   for (const m of conv.messages) {
     if (m.synthetic || m.role === 'system') continue;
     const text = typeof m.content === 'string' ? m.content : '';
-    if (!text) continue;
+    if (!text && !(m.tools && m.tools.length)) continue;
     if (m.role === 'user') { addRow('user', renderMarkdown(text)); continue; }
     const { reasoning, answer } = splitThinking(text);
-    const bubble = addRow('assistant', renderMarkdown(answer));
+    const bubble = addRow('assistant', answer ? renderMarkdown(answer) : '');
     if (reasoning) paintReasoning(bubble, reasoning);
+    if (m.tools && m.tools.length) replayTools(m.tools);
+    if (!answer && m.tools && m.tools.length) bubble.remove();
   }
   if (conv.run?.active) showResumeBar(conv);
+}
+
+/* Rebuild the tool cards (and any sources dropdown) a past round produced,
+   from the structured log saved alongside the message — so a page refresh
+   shows the same finished record the live run showed, not just the plain
+   text the model saw. */
+function replayTools(toolLog) {
+  for (const t of toolLog) {
+    const card = addToolCard(t.name, t.args || {});
+    finishToolCard(card, t.output, t.failed);
+    if (t.name === 'web_search' && Array.isArray(t.results) && t.results.length) {
+      renderSources(t.results);
+    }
+  }
 }
 
 /* ------------------------------------------------------------- resume bar */

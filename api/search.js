@@ -61,6 +61,39 @@ export function parseResults(html, limit = 8) {
   return out;
 }
 
+/* DuckDuckGo's html front end 403s plain server-side requests that look like
+   a bot: a non-browser user-agent, no referer, or a POST with no cookie jar.
+   A real desktop-browser header set (and a GET, which is what the page
+   itself issues when you search) gets past that far more reliably. Two
+   mirrors serve the identical result__a/result__snippet markup, so the same
+   parser covers both — if one is rate-limited or geo-blocked, the other
+   often is not. */
+const BROWSER_HEADERS = {
+  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+  accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'accept-language': 'en-US,en;q=0.9',
+  referer: 'https://duckduckgo.com/'
+};
+const MIRRORS = ['https://html.duckduckgo.com/html/', 'https://duckduckgo.com/html/'];
+
+async function fetchDdg(query) {
+  let lastError = 'Search upstream unreachable.';
+  for (const mirror of MIRRORS) {
+    try {
+      const res = await fetch(`${mirror}?q=${encodeURIComponent(query)}`, {
+        method: 'GET',
+        headers: BROWSER_HEADERS
+      });
+      if (res.ok) return await res.text();
+      lastError = `Search upstream returned ${res.status}`;
+      if (res.status !== 403 && res.status !== 429) break;
+    } catch (err) {
+      lastError = String(err?.message || err);
+    }
+  }
+  throw new Error(lastError);
+}
+
 export default async function handler(request) {
   const url = new URL(request.url);
   let query = url.searchParams.get('q') || '';
@@ -77,18 +110,10 @@ export default async function handler(request) {
   if (!query) return json({ error: 'Missing q.' }, 400);
 
   try {
-    const res = await fetch('https://html.duckduckgo.com/html/', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-        'user-agent': 'Mozilla/5.0 (compatible; CorX-Chat/1.0; +https://corx-labs.com/chat/)',
-        accept: 'text/html'
-      },
-      body: new URLSearchParams({ q: query }).toString()
-    });
-    if (!res.ok) return json({ error: `Search upstream returned ${res.status}`, results: [] }, 502);
-    const html = await res.text();
-    return json({ query, results: parseResults(html, limit) });
+    const html = await fetchDdg(query);
+    const results = parseResults(html, limit);
+    if (!results.length) return json({ query, error: 'No results parsed from the search page.', results: [] });
+    return json({ query, results });
   } catch (err) {
     return json({ error: String(err?.message || err), results: [] }, 502);
   }
