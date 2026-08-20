@@ -134,11 +134,12 @@ Tools:
 
 Rules:
 - Never say you cannot do something a tool covers (search, running code, reading a page, remembering another chat). Call the tool instead.
+- If the user asks you to write, make, build or create code (not just explain a snippet), that means call write_file and/or run_python for real — a fenced markdown code block on its own, with no tool call, is not an acceptable substitute and leaves the user with nothing they can actually run. Create the file, run it, show them it working, THEN show the code in markdown as a record of what you made.
 - Actually run the code before claiming a result — the user can see every command.
 - Before you run code you just wrote, look it over in your <think> block first: check the logic, edge cases and syntax, and fix anything you spot — don't wait for it to fail first.
 - If run_python errors anyway, read the traceback and try to fix it yourself on your next call before reporting the error to the user.
 - When you search, read more than one source if they might disagree, and say plainly if sources conflict rather than picking one silently.
-- Put final code or output in normal markdown for the user. Keep the Patois voice, but tool lines must be exact JSON.`;
+- Put final code or output in normal markdown for the user, after the tools that made it real. Keep the Patois voice, but tool lines must be exact JSON.`;
 }
 
 /* -------------------------------------------------------------- tiny markdown */
@@ -313,13 +314,15 @@ function finishToolCard(card, output, failed) {
 }
 
 /* search: one widget from "searching" to the URL list.
-   renderSearch() opens it immediately, sliding favicons included, and it
-   stays open while the request is in flight so the animation is visible for
-   the whole search rather than a blink. finishSearch() closes it and turns
-   it into a normal clickable summary — but never removes it, so the sliding
-   row keeps animating underneath as a standing record, and clicking it
-   (any time, including after a refresh) shows the real URLs it found, or
-   the reason it failed. */
+   renderSearch() opens it immediately with a placeholder slide of generic
+   favicons — the real sites aren't known yet, there's nothing else honest
+   to show while the request is still in flight. finishSearch() closes it
+   into a normal clickable summary once the results are back, and swaps
+   that placeholder row for the sliding favicons of the actual sites found
+   (still animating, just no longer generic) — or drops the row entirely on
+   a failure, since there's nothing real to show. The widget itself is
+   never removed, so it stays clickable (live or after a refresh) to reveal
+   the real URLs, or the failure reason. */
 const SEARCH_DOMAINS = ['wikipedia.org', 'github.com', 'nature.com', 'reuters.com', 'arxiv.org', 'bbc.com'];
 function sourceRowHtml(r) {
   return `<a class="source-row" href="${esc(r.url)}" target="_blank" rel="noopener nofollow">` +
@@ -347,12 +350,24 @@ function finishSearch(box, { query, results, error }) {
   box.open = false;
   const label = $('.label', box);
   const body = $('.search-body', box);
+  const trackWrap = $('.track-wrap', box);
   if (results && results.length) {
     label.textContent = `Searched the web · ${results.length} source${results.length === 1 ? '' : 's'}`;
     body.innerHTML = results.map(sourceRowHtml).join('');
+    // Swap the generic placeholder icons (shown while the query was still
+    // in flight, before any real site was known) for the actual sites just
+    // found — a fresh element, so the slide keeps animating with the
+    // genuine favicons instead of stock ones.
+    const domains = [...new Set(results.map((r) => r.domain).filter(Boolean))];
+    if (domains.length && trackWrap) {
+      const loop = domains.length > 1 ? domains.concat(domains) : Array(6).fill(domains[0]);
+      trackWrap.innerHTML = `<span class="track">${loop.map((d) =>
+        `<img class="favicon" alt="" src="https://icons.duckduckgo.com/ip3/${encodeURIComponent(d)}.ico">`).join('')}</span>`;
+    }
   } else {
     label.textContent = 'Search failed — click for details';
     body.innerHTML = `<p class="search-error">&ldquo;${esc(query || '')}&rdquo; &mdash; ${esc(error || 'no results')}</p>`;
+    if (trackWrap) trackWrap.remove();
   }
 }
 
