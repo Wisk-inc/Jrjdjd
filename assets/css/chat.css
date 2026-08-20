@@ -417,15 +417,26 @@
 .resume-bar[hidden] { display: none; }
 
 /* ==========================================================================
-   Search animation + sources dropdown.
+   Search: one clickable widget, from "searching" through to the source list.
+   It never gets torn down when the search finishes (or fails) — the sliding
+   favicon row keeps animating as a standing marker that a search happened
+   here, and clicking it opens the real URLs (or the error, if it failed).
    ========================================================================== */
 .search-strip { margin-top: 8px; border: 1px solid var(--line); border-radius: 12px;
-  background: var(--paper-raised); padding: 11px 13px; overflow: hidden; }
-.search-strip .label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 8px; }
-.search-strip .track { display: flex; gap: 14px; width: max-content;
+  background: var(--paper-raised); overflow: hidden; }
+.search-strip summary { cursor: pointer; list-style: none; padding: 9px 12px;
+  display: flex; align-items: center; gap: 10px; user-select: none; }
+.search-strip summary::-webkit-details-marker { display: none; }
+.search-strip .label { font-size: .8rem; color: var(--muted); flex: none; }
+.search-strip .track-wrap { flex: 1 1 auto; min-width: 0; overflow: hidden; mask-image:
+  linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent); }
+.search-strip .track { display: flex; gap: 10px; width: max-content;
   animation: corx-slide 5s linear infinite; }
-.search-strip .favicon { width: 20px; height: 20px; border-radius: 5px; opacity: .85;
-  background: var(--paper-sunk); }
+.search-strip .favicon { width: 18px; height: 18px; border-radius: 5px; opacity: .85;
+  background: var(--paper-sunk); flex: none; }
+.search-strip .chev { margin-left: auto; display: grid; place-items: center; flex: none; }
+.search-strip .chev svg { width: 13px; height: 13px; transition: transform var(--fast) var(--ease); }
+.search-strip[open] .chev svg { transform: rotate(180deg); }
 @keyframes corx-slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .search-strip .track { animation: none; } }
 
@@ -438,7 +449,7 @@
 .sources .chev { margin-left: auto; display: grid; place-items: center; }
 .sources .chev svg { width: 13px; height: 13px; transition: transform var(--fast) var(--ease); }
 .sources[open] .chev svg { transform: rotate(180deg); }
-.source-list { border-top: 1px solid var(--line); display: flex; flex-direction: column; }
+.source-list, .search-body { border-top: 1px solid var(--line); display: flex; flex-direction: column; }
 .source-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px;
   text-decoration: none; border-top: 1px solid var(--line); }
 .source-row:first-child { border-top: 0; }
@@ -449,6 +460,7 @@
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .src-text small { font-size: .74rem; color: var(--faint); }
 .src-text small.snippet { color: var(--muted); white-space: normal; }
+.search-error { padding: 9px 12px; font-size: .8rem; color: var(--muted); }
 
 /* ==========================================================================
    Responsive: sidebar becomes an overlay under the dock breakpoint.
