@@ -304,6 +304,21 @@
   font-size: .72rem; line-height: 1.6; color: var(--muted); white-space: pre-wrap; word-break: break-word;
   max-height: 200px; overflow: auto; background: var(--paper-sunk); }
 
+/* file card — a file the agent created, clickable to preview or download */
+.file-card { display: flex; align-items: stretch; margin-top: 8px; border: 1px solid var(--line);
+  border-radius: 12px; background: var(--paper-raised); overflow: hidden; }
+.file-card-open { flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px;
+  padding: 10px 12px; text-align: left; cursor: pointer; }
+.file-card-open svg { width: 17px; height: 17px; flex: none; color: var(--espresso); }
+.file-card-open .fname { font-family: var(--mono); font-size: .82rem; color: var(--ink-strong);
+  font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-card-open .fhint { font-size: .7rem; color: var(--faint); margin-left: auto; flex: none;
+  padding-left: 8px; }
+.file-card-dl { flex: none; display: grid; place-items: center; width: 40px;
+  border-left: 1px solid var(--line); cursor: pointer; color: var(--muted); }
+.file-card-dl:hover { color: var(--espresso); background: rgba(125,114,100,.08); }
+.file-card-dl svg { width: 16px; height: 16px; }
+
 /* thinking dropdown */
 /* Thinking dropdown — deliberately neutral grey, not the brand's warm tones,
    so it reads as "backstage" and stays out of the way until opened. Closed
