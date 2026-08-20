@@ -1,10 +1,17 @@
 /* GET|POST /api/search?q=… — real web search.
 
-   No API key, no per-user quota: this scrapes public search result pages.
-   That also means it is at the mercy of whichever engine's bot detection is
-   in a mood that day, so it tries four in order — two DuckDuckGo mirrors,
-   DuckDuckGo Lite, then Bing — and returns the first one that actually
-   parses results, rather than giving up after a single 403. */
+   No API key, no per-user quota: most of these are scraped public search
+   result pages, which puts this at the mercy of whichever engine's bot
+   detection is in a mood that day — a real browser header set and a GET
+   (see BROWSER_HEADERS) gets past the header-based checks, but a
+   server-to-server fetch from a datacenter IP can still get silently
+   served a CAPTCHA/consent page with a 200 status and no real results,
+   which no amount of header-tweaking fixes. So this tries five sources in
+   order and returns the first that actually parses results: Google News'
+   RSS feed first (a syndication endpoint, not a scraped results page, so
+   it isn't fighting the same anti-bot layer — and it is a good match for
+   "what's new" / "news today" style queries specifically), then two
+   DuckDuckGo mirrors, DuckDuckGo Lite, then Bing. */
 
 export const config = { runtime: 'edge' };
 
@@ -97,6 +104,32 @@ export function parseDdgLite(html, limit) {
   return out;
 }
 
+/* Google News' RSS feed — a real syndication endpoint meant for feed
+   readers, not the human search page, so it doesn't hit the same
+   CAPTCHA/consent wall. <link> is Google's own redirect through the item,
+   not the original article, so the <source url> — the actual outlet's own
+   domain — drives the favicon/domain instead of the redirect host. */
+export function parseGoogleNewsRss(xml, limit) {
+  const out = []; const seen = new Set();
+  const unwrapCdata = (s) => String(s).replace(/^<!\[CDATA\[/, '').replace(/\]\]>$/, '');
+  const items = xml.match(/<item>[\s\S]*?<\/item>/g) || [];
+  for (const item of items) {
+    if (out.length >= limit) break;
+    const titleM = item.match(/<title>([\s\S]*?)<\/title>/);
+    const linkM = item.match(/<link>([\s\S]*?)<\/link>/);
+    if (!titleM || !linkM) continue;
+    const title = decode(unwrapCdata(titleM[1]));
+    const url = unwrapCdata(linkM[1]).trim();
+    if (!title || !/^https?:/i.test(url) || seen.has(url)) continue;
+    const sourceM = item.match(/<source url="([^"]+)"[^>]*>([\s\S]*?)<\/source>/);
+    const domain = (sourceM && domainOf(sourceM[1])) || domainOf(url);
+    const descM = item.match(/<description>([\s\S]*?)<\/description>/);
+    seen.add(url);
+    out.push({ title, url, domain, snippet: descM ? decode(unwrapCdata(descM[1])) : '' });
+  }
+  return out;
+}
+
 /* Last resort: Bing's plain HTML results page. */
 export function parseBing(html, limit) {
   const out = []; const seen = new Set();
@@ -125,6 +158,7 @@ const BROWSER_HEADERS = {
 };
 
 const ENGINES = [
+  { url: (q) => `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`, parse: parseGoogleNewsRss },
   { url: (q) => `https://html.duckduckgo.com/html/?q=${encodeURIComponent(q)}`, parse: parseDdgHtml },
   { url: (q) => `https://duckduckgo.com/html/?q=${encodeURIComponent(q)}`, parse: parseDdgHtml },
   { url: (q) => `https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(q)}`, parse: parseDdgLite },
