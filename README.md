@@ -126,8 +126,9 @@ OpenAI-compatible endpoint, keyless, CORS enabled per `chat/documentation/`'s se
 browser calls that endpoint **directly**. Because that URL is an ephemeral Cloudflare quick tunnel
 that changes on every restart, it lives in a Settings dialog and `localStorage`, not in the code.
 
-**Agent mode is a text protocol, not native tool-calling.** The server is a plain completions
-endpoint, so `assets/js/chat.js` teaches the model a small format in the system prompt
+**Tools are always on, and it's a text protocol, not native tool-calling.** There is no toggle to
+switch tools on — every conversation gets them. The server is a plain completions endpoint, so
+`assets/js/chat.js` teaches the model a small format in the system prompt
 (`<tool>{"name": ..., "arguments": {...}}</tool>`) and parses it out of the streamed reply. Every
 tool call actually executes — nothing is simulated:
 
@@ -148,8 +149,8 @@ tool call actually executes — nothing is simulated:
 the agent gets before it must stop, how many search results it pulls, and how strongly the system
 prompt tells it to think, verify and re-search. See the `EFFORT` table at the top of `chat.js`.
 
-**State that survives a refresh, honestly.** Conversations, the plan, the agent toggle, effort,
-profile and the endpoint config all persist in `localStorage` (key `corx.chat.v3`). The Python
+**State that survives a refresh, honestly.** Conversations, the plan, effort, profile and the
+endpoint config all persist in `localStorage` (key `corx.chat.v3`). The Python
 sandbox does **not** — it's in-memory WebAssembly, gone when the tab reloads — so the auto-resume
 prompt that fires after an interrupted run tells the model exactly that, instructing it to
 `list_files` and recheck rather than assume anything survived.
@@ -159,7 +160,7 @@ prompt that fires after an interrupted run tells the model exactly that, instruc
 `https://*.trycloudflare.com` and `img-src` allowing `https://icons.duckduckgo.com` for source
 favicons). Netlify/Cloudflare Pages serve the static pages fine but won't run the two functions
 without their own equivalent — without them, plain chat still works (the browser talks to the
-model endpoint directly), only Agent mode's search tools go missing.
+model endpoint directly), only the search tools go missing.
 
 ---
 
