@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Chat with CorX3.8 — Jamaica's Open-Weight LLM | CorX Labs</title>
+<meta name="description" content="Chat with CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant, live in your browser. Open weights, built in Jamaica.">
+<link rel="canonical" href="https://corx-labs.com/chat/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/chat/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/chat/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:url" content="https://corx-labs.com/chat/">
+<meta property="og:title" content="Chat with CorX3.8 — Jamaica's Open-Weight LLM">
+<meta property="og:description" content="Talk to CorX3.8-27B, a 27B Jamaican Patois-speaking assistant, live in your browser.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chat with CorX3.8 — Jamaica's Open-Weight LLM">
+<meta name="twitter:description" content="Talk to CorX3.8-27B, a 27B Jamaican Patois-speaking assistant, live in your browser.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/chat.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://corx-labs.com/chat/#app",
+      "name": "CorX3.8 Chat",
+      "url": "https://corx-labs.com/chat/",
+      "description": "A browser chat client for CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant. It talks directly to the model's own open, self-hosted endpoint.",
+      "applicationCategory": "CommunicationApplication",
+      "operatingSystem": "Web browser",
+      "isAccessibleForFree": true,
+      "inLanguage": ["en", "jam"],
+      "about": { "@id": "https://corx-labs.com/models/corx3-8/#model" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/chat/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Chat", "item": "https://corx-labs.com/chat/" }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body class="chat-body">
+<a class="skip-link" href="#composer-input">Skip to the message box</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/chat/" aria-current="page">Chat</a>
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/">Our Products</a>
+      <a href="/blog/">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/models/corx3-8/">About CorX3.8</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/chat/">Chat</a></li>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+      </ul>
+      <a class="btn btn-primary" href="/models/corx3-8/">About CorX3.8</a>
+    </div>
+  </div>
+</header>
+
+<div class="chat-shell">
+  <div class="chat-bar">
+    <h1>CorX3.8</h1>
+    <span class="status" id="status" data-state="checking" role="status">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="status-label">Checking…</span>
+    </span>
+    <span class="spacer"></span>
+    <button class="icon-btn" type="button" id="new-chat" aria-label="New chat" title="New chat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <button class="icon-btn" type="button" id="open-settings" aria-label="Settings" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+
+  <div class="thread" id="thread">
+    <div class="chat-empty" id="chat-empty">
+      <span class="mark-lg" aria-hidden="true">C</span>
+      <h2>Chat with CorX3.8</h2>
+      <p>A 27-billion-parameter Jamaican Patois-speaking assistant, running on CorX Labs' own
+        hardware. Speaks Patois by default — write in English and it follows you.</p>
+      <div class="starter-row">
+        <button class="starter" type="button" data-prompt="Wah gwaan? Tell mi bout yuhself.">Wah gwaan? Tell mi bout yuhself.</button>
+        <button class="starter" type="button" data-prompt="Explain what a transformer model is, in simple terms.">Explain a transformer, simply</button>
+        <button class="starter" type="button" data-prompt="Write a short poem about the Blue Mountains in Jamaican Patois.">A short poem in Patois</button>
+        <button class="starter" type="button" data-prompt="Write a Python function that reverses the words in a sentence.">Write me a Python function</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="composer-wrap">
+    <form class="composer" id="composer-form">
+      <label class="visually-hidden" for="composer-input">Message CorX3.8</label>
+      <textarea id="composer-input" rows="1" placeholder="Send a message to CorX3.8…" autocomplete="off"></textarea>
+      <button class="stop-btn" type="button" id="stop-btn" hidden aria-label="Stop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+      </button>
+      <button class="send-btn" id="send-btn" type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+      </button>
+    </form>
+    <p class="composer-note">CorX3.8 is an open research model and can make mistakes. Don’t rely on it for facts without checking.</p>
+  </div>
+</div>
+
+<!-- Settings -->
+<div class="sheet" id="settings" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <h2 id="settings-title">Connection settings</h2>
+    <p>CorX3.8 runs on CorX Labs' own server. If the address has changed, or you are pointing at a
+      different host, set it here — it is saved in this browser only.</p>
+    <div class="field">
+      <label for="set-endpoint">Model endpoint</label>
+      <input id="set-endpoint" type="url" inputmode="url" spellcheck="false" placeholder="https://…trycloudflare.com">
+      <small>The base URL of the OpenAI-compatible server. The <code>/v1</code> is added for you.</small>
+    </div>
+    <div class="field">
+      <label for="set-key">API key <span style="color:var(--faint);font-weight:400">(optional)</span></label>
+      <input id="set-key" type="text" spellcheck="false" placeholder="Leave blank if the server is keyless">
+      <small>Only needed if the server was started with authentication turned on.</small>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost btn-sm" type="button" id="cancel-settings">Cancel</button>
+      <button class="btn btn-primary btn-sm" type="button" id="save-settings">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/chat.js" defer></script>
+</body>
+</html>

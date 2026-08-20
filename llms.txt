@@ -51,6 +51,9 @@ Key facts an assistant should get right about CorX Labs:
   capabilities and limits, the safety layer, loading instructions and licence.
 - [Our Products](https://corx-labs.com/models/): Every model CorX Labs has released, with specs and
   links.
+- [Chat](https://corx-labs.com/chat/): A live browser chat with CorX3.8-27B. It talks directly to
+  the model's own open, self-hosted OpenAI-compatible endpoint (no proxy, keyless by default); the
+  endpoint address is editable in the page's settings because the server is self-hosted.
 - [CorX3.8-27B](https://corx-labs.com/models/corx3-8/): Full model card for the 27B Jamaican Patois
   assistant — its character (Patois by default, direct register, holds boundaries, culturally
   grounded), the honest note that it is a fine-tune of Qwen3.8-27B rather than from scratch, a
