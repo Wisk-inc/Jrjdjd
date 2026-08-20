@@ -54,11 +54,11 @@ const EFFORT = {
   medium: { label: 'Medium', maxTokens: 1024, temperature: 0.7,  rounds: 5,  searchN: 4,
             hint: 'Think briefly in a <think> block first if the question needs it.' },
   high:   { label: 'High',   maxTokens: 2048, temperature: 0.65, rounds: 8,  searchN: 6,
-            hint: 'Think step by step in a <think> block before answering. Break the problem into parts.' },
-  extra:  { label: 'Extra',  maxTokens: 3072, temperature: 0.6,  rounds: 12, searchN: 8,
-            hint: 'Think carefully and step by step in a <think> block. Consider more than one approach, check your own reasoning for mistakes, and search when you are not sure of something.' },
-  max:    { label: 'Max',    maxTokens: 4096, temperature: 0.55, rounds: 18, searchN: 10,
-            hint: 'Think exhaustively in a <think> block: break the problem into parts, weigh alternative approaches, verify each step, search liberally for anything you are not fully sure of, and re-check any fix before you say you are done. Use as many tool calls as the task genuinely needs.' }
+            hint: 'Think step by step in a <think> block before answering. Break the problem into parts. If you write code, glance back over it once for obvious mistakes before you run it.' },
+  extra:  { label: 'Extra',  maxTokens: 4096, temperature: 0.6,  rounds: 14, searchN: 8,
+            hint: 'Think carefully and step by step in a <think> block. Consider more than one approach, check your own reasoning for mistakes, and search when you are not sure of something. After you write code or a solution, spend a second <think> pass reviewing what you just made specifically for bugs or missed cases before presenting it as done — do not treat the first draft as the final one.' },
+  max:    { label: 'Max',    maxTokens: 6144, temperature: 0.55, rounds: 24, searchN: 10,
+            hint: 'This is the highest effort level — spend real tokens on it, a shallow first pass is not acceptable here. Think exhaustively in a <think> block: break the problem into parts, weigh more than one approach, verify each step, search liberally for anything you are not fully sure of. Once you produce code or a solution, stop and deliberately review it in a fresh <think> block as if it were someone else\'s work you were asked to critique — look specifically for bugs, wrong assumptions, missed edge cases and unnecessary steps — then revise or redo whatever you find wrong before answering, and repeat that check again if you changed anything. If partway through you realise something you already told the user was wrong, stop and correct it plainly rather than quietly continuing. Use as many tool calls and rounds as the task genuinely needs.' }
 };
 
 /* ------------------------------------------------------------------ store */
@@ -317,6 +317,41 @@ function addToolCard(name, args) {
   scrollDown();
   return card;
 }
+/* A file the agent just created (write_file) or handed over (deliver_file),
+   shown as its own clickable card instead of buried in a plain-text tool
+   card — click the name to preview it in the Files panel (a .zip lists its
+   contents instead of showing raw bytes), or the download icon to save it
+   straight away without opening anything. */
+function addFileCard(path) {
+  if (!currentTools || !path) return;
+  const name = String(path).split('/').pop();
+  const card = document.createElement('div');
+  card.className = 'file-card';
+  card.innerHTML =
+    '<button type="button" class="file-card-open">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v5h5"/><path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/></svg>' +
+    `<span class="fname">${esc(name)}</span><span class="fhint">Click to view</span>` +
+    '</button>' +
+    `<button type="button" class="file-card-dl" title="Download ${esc(name)}" aria-label="Download ${esc(name)}">` +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 19h14"/></svg></button>';
+  $('.file-card-open', card).addEventListener('click', async () => {
+    await syncFiles();
+    openDock('files');
+    await openFile(name);
+  });
+  $('.file-card-dl', card).addEventListener('click', async (e) => {
+    e.stopPropagation();
+    try {
+      await syncFiles();
+      const meta = state.files.get(name);
+      const bytes = await sandbox.readFile(meta ? meta.path : `${sandbox.workdir()}/${name}`, true);
+      download(name, bytes);
+    } catch (err) { termLine('err', `download ${name}: ${err.message}`); }
+  });
+  currentTools.appendChild(card);
+  scrollDown();
+}
+
 function finishToolCard(card, output, failed) {
   if (!card) return;
   card.setAttribute('data-state', failed ? 'error' : 'done');
@@ -649,6 +684,9 @@ async function send(text, opts = {}) {
         try { out = await execTool(call.name, call.args, conv, meta); }
         catch (e) { out = `Tool error: ${e.message}`; failed = true; }
         if (card) finishToolCard(card, out, failed);
+        if (!failed && (call.name === 'write_file' || call.name === 'deliver_file') && call.args.path) {
+          addFileCard(call.args.path);
+        }
         results.push(`[${call.name}] ->\n${String(out).slice(0, 6000)}`);
         toolLog.push({ name: call.name, args: call.args, output: out, failed, results: meta.results });
       }
@@ -744,6 +782,9 @@ function replayTools(toolLog) {
     }
     const card = addToolCard(t.name, t.args || {});
     finishToolCard(card, t.output, t.failed);
+    if (!t.failed && (t.name === 'write_file' || t.name === 'deliver_file') && t.args?.path) {
+      addFileCard(t.args.path);
+    }
   }
 }
 
@@ -816,10 +857,27 @@ function paintFiles() {
 }
 async function openFile(name) {
   const meta = state.files.get(name);
-  if (!meta) return;
-  state.openFile = name; paintFiles();
+  state.openFile = meta ? name : null; paintFiles();
   els.editorName.textContent = name;
   els.editor.hidden = false;
+  if (!meta) {
+    els.editorArea.value = 'This file no longer exists in the sandbox. The Python sandbox is ' +
+      'in-memory and resets on a page refresh, so anything from before a reload is gone — ask ' +
+      'the agent to recreate it if you still need it.';
+    return;
+  }
+  if (/\.zip$/i.test(name)) {
+    try {
+      const r = await sandbox.runPython(
+        'import zipfile\n' +
+        `with zipfile.ZipFile(${JSON.stringify(meta.path)}) as _z:\n` +
+        '    for _i in _z.infolist():\n' +
+        '        print(f"{_i.file_size:>10}  {_i.filename}")'
+      );
+      els.editorArea.value = r.ok ? (r.output || '(empty zip)') : `(could not list zip contents: ${r.output})`;
+    } catch (e) { els.editorArea.value = `(could not list zip contents: ${e.message})`; }
+    return;
+  }
   try { els.editorArea.value = await sandbox.readFile(meta.path); }
   catch (e) { els.editorArea.value = `(binary or unreadable as text: ${e.message})`; }
 }

@@ -378,22 +378,26 @@ async def chat_completions(request: Request):
 
     async def event_stream():
         try:
-            # Add timeout! If generation thread crashes, this unblocks after 15s
             streamer = TextIteratorStreamer(
                 tok, skip_prompt=True, skip_special_tokens=True, timeout=15.0)
             _generate(messages, max_new, temperature, streamer=streamer)
 
+            _DONE = object() # Sentinel value to prevent StopIteration Exception
+
             while True:
                 try:
-                    # Async yield so client disconnects are caught immediately
-                    chunk = await asyncio.to_thread(next, streamer)
+                    # Pass _DONE as the default value to next() so it doesn&#x27;t throw an error to asyncio
+                    chunk = await asyncio.to_thread(next, streamer, _DONE)
+
+                    if chunk is _DONE:
+                        break # Stream finished successfully
+
                     data = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
                             &quot;model&quot;: &quot;corx3.8&quot;,
                             &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;: chunk},
                                          &quot;finish_reason&quot;: None}]}
                     yield f&quot;data: {json.dumps(data)}\n\n&quot;
-                except StopIteration:
-                    break
+
                 except queue.Empty:
                     print(&quot;[api] Streamer timed out, returning error to client.&quot;)
                     err = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
@@ -642,11 +646,16 @@ while True:
             <tr><td>Low</td><td>512</td><td>3</td><td>3</td></tr>
             <tr><td>Medium</td><td>1,024</td><td>5</td><td>4</td></tr>
             <tr><td>High</td><td>2,048</td><td>8</td><td>6</td></tr>
-            <tr><td>Extra</td><td>3,072</td><td>12</td><td>8</td></tr>
-            <tr><td>Max</td><td>4,096</td><td>18</td><td>10</td></tr>
+            <tr><td>Extra</td><td>4,096</td><td>14</td><td>8</td></tr>
+            <tr><td>Max</td><td>6,144</td><td>24</td><td>10</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="mt-m" style="font-size:.9rem;color:var(--muted)">Extra and Max also add a second pass:
+        after producing code or a solution, the model is told to stop and deliberately review its own
+        work for bugs or missed cases &mdash; as if critiquing someone else's pull request &mdash;
+        before presenting it as done, and to say so plainly and correct itself if it realises
+        mid-answer that something it already said was wrong.</p>
       <p class="mt-m" style="font-size:.9rem;color:var(--muted)">Effort is set per conversation and
         remembered when you come back to that chat.</p>
     </div>
