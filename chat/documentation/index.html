@@ -219,6 +219,8 @@ import threading
 import queue
 import uuid
 import urllib.request
+import gc
+import asyncio
 
 # ---------------- SETTINGS ----------------
 MODEL_REPO   = &quot;Sigmandndnns/CorX3.8-27B&quot;
@@ -233,7 +235,6 @@ API_KEY      = &quot;corx-key&quot;               # used only if NO_AUTH = False
 # concurrency
 QUEUE_TIMEOUT = 120                     # seconds a request waits for the GPU
 # ------------------------------------------
-# NOTE: no tunnel token needed. Cloudflare quick tunnels are zero-account.
 
 print(&quot;Installing deps (first run only)...&quot;)
 subprocess.run([sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;, &quot;-q&quot;, &quot;-U&quot;,
@@ -273,6 +274,14 @@ print(f&quot;Model ready. VRAM: {torch.cuda.memory_allocated()/1e9:.1f} GB&quot;
 # ---------------- GENERATION (single GPU, queued) ----------------
 _job_lock = threading.Lock()
 
+# Worker wrapper to ensure gradients are off in the background thread
+def _generate_thread_worker(kwargs):
+    with torch.inference_mode():
+        try:
+            model.generate(**kwargs)
+        except Exception as e:
+            print(f&quot;\n[Generation Error in thread] {e}&quot;)
+
 def _generate(messages, max_new_tokens, temperature, streamer=None):
     prompt = tok.apply_chat_template(messages, tokenize=False,
                                      add_generation_prompt=True)
@@ -283,12 +292,15 @@ def _generate(messages, max_new_tokens, temperature, streamer=None):
                   top_p=0.9, do_sample=float(temperature) &gt; 0,
                   repetition_penalty=1.05,
                   pad_token_id=tok.pad_token_id or tok.eos_token_id)
+
     if streamer is not None:
         kwargs[&quot;streamer&quot;] = streamer
-        threading.Thread(target=model.generate, kwargs=kwargs,
+        # Must target our safe wrapper instead of model.generate directly
+        threading.Thread(target=_generate_thread_worker, args=(kwargs,),
                          daemon=True).start()
         return None
-    with torch.no_grad():
+
+    with torch.inference_mode():
         out = model.generate(**kwargs)
     return tok.decode(out[0][inputs[&quot;input_ids&quot;].shape[1]:],
                       skip_special_tokens=True)
@@ -301,10 +313,9 @@ import uvicorn
 
 app = FastAPI(title=&quot;CorX3.8 API&quot;)
 
-# CORS — REQUIRED for your website&#x27;s browser to call this.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[&quot;*&quot;],          # tighten to your domain in prod
+    allow_origins=[&quot;*&quot;],
     allow_credentials=True,
     allow_methods=[&quot;*&quot;],
     allow_headers=[&quot;*&quot;],
@@ -348,31 +359,50 @@ async def chat_completions(request: Request):
     if not stream:
         try:
             text = _generate(messages, max_new, temperature)
+            return JSONResponse({
+                &quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion&quot;, &quot;model&quot;: &quot;corx3.8&quot;,
+                &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;finish_reason&quot;: &quot;stop&quot;,
+                             &quot;message&quot;: {&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: text}}],
+            })
         except Exception as e:
             import traceback; traceback.print_exc()
             return JSONResponse(status_code=500,
                 content={&quot;error&quot;: {&quot;message&quot;: f&quot;{type(e).__name__}: {e}&quot;,
                                     &quot;type&quot;: &quot;generation_error&quot;}})
         finally:
-            if _job_lock.locked():
-                _job_lock.release()
-        return JSONResponse({
-            &quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion&quot;, &quot;model&quot;: &quot;corx3.8&quot;,
-            &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;finish_reason&quot;: &quot;stop&quot;,
-                         &quot;message&quot;: {&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: text}}],
-        })
+            # Bulletproof release &amp; GC
+            try: _job_lock.release()
+            except RuntimeError: pass
+            torch.cuda.empty_cache()
+            gc.collect()
 
-    def event_stream():
+    async def event_stream():
         try:
+            # Add timeout! If generation thread crashes, this unblocks after 15s
             streamer = TextIteratorStreamer(
-                tok, skip_prompt=True, skip_special_tokens=True)
+                tok, skip_prompt=True, skip_special_tokens=True, timeout=15.0)
             _generate(messages, max_new, temperature, streamer=streamer)
-            for chunk in streamer:
-                data = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
-                        &quot;model&quot;: &quot;corx3.8&quot;,
-                        &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;: chunk},
-                                     &quot;finish_reason&quot;: None}]}
-                yield f&quot;data: {json.dumps(data)}\n\n&quot;
+
+            while True:
+                try:
+                    # Async yield so client disconnects are caught immediately
+                    chunk = await asyncio.to_thread(next, streamer)
+                    data = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
+                            &quot;model&quot;: &quot;corx3.8&quot;,
+                            &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;: chunk},
+                                         &quot;finish_reason&quot;: None}]}
+                    yield f&quot;data: {json.dumps(data)}\n\n&quot;
+                except StopIteration:
+                    break
+                except queue.Empty:
+                    print(&quot;[api] Streamer timed out, returning error to client.&quot;)
+                    err = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
+                           &quot;model&quot;: &quot;corx3.8&quot;,
+                           &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;: &quot;\n[Generation Error]&quot;},
+                                        &quot;finish_reason&quot;: &quot;error&quot;}]}
+                    yield f&quot;data: {json.dumps(err)}\n\n&quot;
+                    break
+
             done = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
                     &quot;model&quot;: &quot;corx3.8&quot;,
                     &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {},
@@ -380,8 +410,11 @@ async def chat_completions(request: Request):
             yield f&quot;data: {json.dumps(done)}\n\n&quot;
             yield &quot;data: [DONE]\n\n&quot;
         finally:
-            if _job_lock.locked():
-                _job_lock.release()
+            # Bulletproof release &amp; GC for streaming
+            try: _job_lock.release()
+            except RuntimeError: pass
+            torch.cuda.empty_cache()
+            gc.collect()
 
     return StreamingResponse(event_stream(), media_type=&quot;text/event-stream&quot;)
 
@@ -495,8 +528,7 @@ while True:
         break
     except Exception as _e:
         print(f&quot;[keepalive] {type(_e).__name__}: {_e}&quot;)
-        time.sleep(5)
-</code></pre>
+        time.sleep(5)</code></pre>
       </div>
 
       <div class="callout mt-m">
