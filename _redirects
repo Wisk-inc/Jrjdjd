@@ -2,13 +2,10 @@
 https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 
 # Legacy / alternate paths people and crawlers guess at.
-# The chat feature was removed; its pages were indexed, so send them home
-# rather than letting crawlers and old links hit a 404.
-/chat                /                      301
-/chat/               /                      301
-/chat/*              /                      301
-/ai                  /                      301
-/assistant           /                      301
+/chat                /chat/                 301
+/ai                  /chat/                 301
+/assistant           /chat/                 301
+/chatbot             /chat/                 301
 /docs                /documentation/        301
 /docs/*              /documentation/        301
 /documentation       /documentation/        301
