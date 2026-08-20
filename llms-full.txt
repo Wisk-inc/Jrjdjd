@@ -1,7 +1,7 @@
 # CorX Labs — complete site content
 
 Source: https://corx-labs.com/
-Last updated: 2026-08-01
+Last updated: 2026-08-20
 Licence of described models: Apache 2.0
 
 ===============================================================================
@@ -296,6 +296,66 @@ Intended: conversation, education, cultural preservation, and Caribbean-focused 
 Jamaican voice matters. Open weights so anyone can run, study and build on it. Out of scope: do not
 rely on it for factual accuracy without retrieval, for professional advice, or as a sole
 decision-maker in any consequential setting.
+
+===============================================================================
+CORX CHAT — LIVE BROWSER CHAT AND AGENT
+===============================================================================
+
+URL: https://corx-labs.com/chat/  ·  Set-up guide: https://corx-labs.com/chat/documentation/
+
+CorX Chat is a browser client for CorX3.8-27B. The model runs on CorX Labs' own server (a GPU
+notebook exposing an OpenAI-compatible endpoint, keyless, with CORS enabled), and the browser calls
+it DIRECTLY — no proxy, no OAuth. Because that endpoint's public URL is an ephemeral Cloudflare
+quick tunnel, it is editable in the chat's Settings dialog and persists in the browser.
+
+## What is live
+
+- Real streaming chat, in Jamaican Patois by default, switching to English on request.
+- Agent mode (toggle in the composer): the model is taught a small text tool-call protocol and this
+  page parses and executes the calls for real. Tools: set_plan, complete_step, run_python,
+  write_file, read_file, delete_file, list_files, install_packages, deliver_file, web_search,
+  fetch_url, search_memory.
+- A real Python sandbox — CPython compiled to WebAssembly, running in the tab, with its own Terminal
+  panel showing every command and its actual output (including real tracebacks). A Files panel lists
+  everything the sandbox holds; click a file to edit, save, download or delete it. Uploads (including
+  .zip archives) are staged into the sandbox; the agent uses Python's zipfile module to read or edit
+  them — there is no separate "zip tool", it is just real Python with real files.
+  Shared across every conversation in the tab: one sandbox, one filesystem.
+- Real web search via /api/search (DuckDuckGo HTML, no key) and real page fetches via /api/fetch (an
+  SSRF-guarded proxy), so the browser is not blocked by CORS. A search shows a sliding strip of site
+  favicons while it runs, then a collapsible sources list with links and snippets.
+- search_memory: the agent can grep the user's OTHER saved conversations in this browser for
+  relevant earlier context, when asked or when it judges it would help.
+- A Plan panel: the model publishes a checklist with set_plan and ticks it off with complete_step as
+  it works, so planning is visible state, not narrated prose.
+- A visible "thought process" dropdown (grey, collapsed by default) shows the model's own <think>
+  reasoning, separate from its answer.
+- An effort control (Low / Medium / High / Extra / Max) that changes REAL request parameters: token
+  budget, how many tool-call rounds the agent is allowed before it must stop, how many search
+  results it pulls, and how hard the system prompt tells it to think, verify and re-check its work.
+  Higher effort genuinely takes longer and uses more tokens.
+- Saved conversations in a sidebar (switch, delete, "New chat"), a profile (name + photo, saved
+  locally), and connection settings — all persisted in this browser's localStorage and unaffected by
+  a refresh.
+- If a run is interrupted by a page refresh, the chat detects it on reload and auto-resumes after a
+  few seconds (with a Dismiss option), telling the model the sandbox was reset so it re-checks
+  rather than assumes files still exist.
+- If a run_python call fails, the real traceback is fed back to the model on the next round so it
+  can fix its own code — this is the existing multi-round tool loop, not a special "auto-fix" path.
+
+## Honest limits
+
+- The endpoint is a single GPU behind an ephemeral Cloudflare quick tunnel by default: the URL
+  changes whenever the notebook restarts, and the notebook itself recycles periodically. Offline
+  means the URL needs updating in Settings, not that something is broken.
+- One GPU serialises requests; the server queues and returns a clear "busy" rather than faking
+  concurrency.
+- No native tool-calling on this backend — Agent mode's tool protocol depends on the model following
+  a text format reliably, which is not guaranteed the way it would be with a purpose-built
+  tool-calling model.
+- Keyless by default: anyone with the current URL can use the GPU while the notebook is up.
+- The sandbox has no access to the user's computer — only its own in-memory filesystem, discarded
+  when the tab closes.
 
 ===============================================================================
 ABOUT CORX LABS

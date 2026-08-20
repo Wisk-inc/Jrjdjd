@@ -6,6 +6,9 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /ai                  /chat/                 301
 /assistant           /chat/                 301
 /chatbot             /chat/                 301
+/chat/docs           /chat/documentation/   301
+/chat/setup          /chat/documentation/   301
+/chat/guide          /chat/documentation/   301
 /docs                /documentation/        301
 /docs/*              /documentation/        301
 /documentation       /documentation/        301
