@@ -42,6 +42,12 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => (
    stop, how many sources a search pulls back, and whether it is told to
    verify and re-check its own work. Higher effort takes longer and costs
    more tokens on purpose — that is the trade the user is making. */
+/* Catches the model claiming it has no internet/real-time access instead of
+   calling web_search, which it always has — a known failure mode with no
+   native tool-calling to fall back on. Used to auto-correct once per
+   message rather than silently accepting the wrong answer. */
+const TOOL_REFUSAL_RE = /\b(don'?t|do ?not|cannot|can'?t|cyaan|cyah|nuh) (have |gi |get )?access( to)? (real-?time|the internet|di internet|current|live|today'?s|up-?to-?date)|training data (has|only|is limited|goes up)|(as of|since) my (last|training) (update|cutoff|knowledge)|no real-?time (news|access|data|information)|(can'?t|cannot|cyaan) browse (the|di) internet|(don'?t|do not|nuh) have (real-?time|internet) (access|data)/i;
+
 const EFFORT = {
   low:    { label: 'Low',    maxTokens: 512,  temperature: 0.7,  rounds: 3,  searchN: 3,
             hint: 'Keep your reasoning short. Answer directly.' },
@@ -590,6 +596,7 @@ async function send(text, opts = {}) {
   setRunning(true);
   let bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>');
   const eff = EFFORT[conv.effort] || EFFORT.medium;
+  let nudgedTools = false;
 
   try {
     for (let round = 0; round < eff.rounds; round += 1) {
@@ -610,7 +617,25 @@ async function send(text, opts = {}) {
 
       const assistantMsg = { role: 'assistant', content: reply };
       conv.messages.push(assistantMsg);
-      if (!calls.length) { setStatus('ok', 'Online'); break; }
+      if (!calls.length) {
+        // The model has no native tool-calling, so nothing forces it to
+        // actually call web_search when it should — it can just say "I
+        // don't have internet access" in plain prose instead, even though
+        // the tool is right there. Catch that specific failure once per
+        // message and push it back with a direct correction instead of
+        // quietly accepting a wrong answer.
+        if (!nudgedTools && round < eff.rounds - 1 && TOOL_REFUSAL_RE.test(answer)) {
+          nudgedTools = true;
+          conv.messages.push({
+            role: 'user', synthetic: true,
+            content: 'You do have a real web_search tool right now, available in every message — you are not limited to your training data. Use it: reply with <tool>{"name": "web_search", "arguments": {"query": "..."}}</tool> for what I just asked, then answer from the results.'
+          });
+          bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>');
+          continue;
+        }
+        setStatus('ok', 'Online');
+        break;
+      }
 
       const results = [];
       const toolLog = [];
