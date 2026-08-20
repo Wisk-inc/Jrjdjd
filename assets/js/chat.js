@@ -176,12 +176,18 @@ function renderMarkdown(src) {
 }
 
 /* Split reasoning (<think>) and strip tool lines / synthetic scaffolding from
-   what the user sees. */
+   what the user sees. A reply can contain more than one <think> block (a
+   model that pauses to re-plan mid-answer, or a still-streaming block with
+   no closing tag yet) — all of them are pulled into one grey dropdown, not
+   just the first, so nothing leaks into the visible answer unseparated. */
 function splitThinking(text) {
-  const m = String(text).match(/<think>([\s\S]*?)(<\/think>|$)/i);
-  const reasoning = m ? m[1].trim() : '';
-  let answer = String(text).replace(/<think>[\s\S]*?(<\/think>|$)/i, '');
-  answer = answer.replace(/<tool>[\s\S]*?<\/tool>/gi, '').replace(/```tool\s*[\s\S]*?```/gi, '').trim();
+  const source = String(text);
+  const closed = [...source.matchAll(/<think>([\s\S]*?)<\/think>/gi)].map((m) => m[1].trim());
+  let rest = source.replace(/<think>[\s\S]*?<\/think>/gi, '');
+  const open = rest.match(/<think>([\s\S]*)$/i);
+  if (open) { closed.push(open[1].trim()); rest = rest.slice(0, open.index); }
+  const reasoning = closed.filter(Boolean).join('\n\n');
+  const answer = rest.replace(/<tool>[\s\S]*?<\/tool>/gi, '').replace(/```tool\s*[\s\S]*?```/gi, '').trim();
   return { reasoning, answer };
 }
 
@@ -306,37 +312,48 @@ function finishToolCard(card, output, failed) {
   scrollDown();
 }
 
-/* search animation + sources dropdown */
+/* search: one widget from "searching" to the URL list.
+   renderSearch() opens it immediately, sliding favicons included, and it
+   stays open while the request is in flight so the animation is visible for
+   the whole search rather than a blink. finishSearch() closes it and turns
+   it into a normal clickable summary — but never removes it, so the sliding
+   row keeps animating underneath as a standing record, and clicking it
+   (any time, including after a refresh) shows the real URLs it found, or
+   the reason it failed. */
 const SEARCH_DOMAINS = ['wikipedia.org', 'github.com', 'nature.com', 'reuters.com', 'arxiv.org', 'bbc.com'];
-function showSearchStrip(query) {
-  if (!currentTools) return null;
-  const strip = document.createElement('div');
-  strip.className = 'search-strip';
-  strip.innerHTML = `<span class="label">Searching &ldquo;${esc(String(query).slice(0, 44))}&rdquo;</span>` +
-    `<span class="track">${SEARCH_DOMAINS.concat(SEARCH_DOMAINS).map((d) =>
-      `<img class="favicon" alt="" src="https://icons.duckduckgo.com/ip3/${d}.ico">`).join('')}</span>`;
-  currentTools.appendChild(strip);
-  scrollDown();
-  return strip;
+function sourceRowHtml(r) {
+  return `<a class="source-row" href="${esc(r.url)}" target="_blank" rel="noopener nofollow">` +
+    `<img class="favicon" alt="" width="16" height="16" loading="lazy" src="https://icons.duckduckgo.com/ip3/${encodeURIComponent(r.domain)}.ico">` +
+    `<span class="src-text"><strong>${esc(r.title)}</strong><small>${esc(r.domain)}</small>` +
+    `${r.snippet ? `<small class="snippet">${esc(r.snippet)}</small>` : ''}</span></a>`;
 }
-function renderSources(results) {
-  if (!currentTools || !results.length) return;
+function renderSearch(query) {
+  if (!currentTools) return null;
   const box = document.createElement('details');
-  box.className = 'sources';
-  box.innerHTML = `<summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>` +
-    `Searched the web &middot; ${results.length} source${results.length === 1 ? '' : 's'}` +
-    `<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary>` +
-    '<div class="source-list"></div>';
-  const list = $('.source-list', box);
-  for (const r of results) {
-    const a = document.createElement('a');
-    a.className = 'source-row'; a.href = r.url; a.target = '_blank'; a.rel = 'noopener nofollow';
-    a.innerHTML = `<img class="favicon" alt="" width="16" height="16" loading="lazy" src="https://icons.duckduckgo.com/ip3/${encodeURIComponent(r.domain)}.ico">` +
-      `<span class="src-text"><strong>${esc(r.title)}</strong><small>${esc(r.domain)}</small>${r.snippet ? `<small class="snippet">${esc(r.snippet)}</small>` : ''}</span>`;
-    list.appendChild(a);
-  }
+  box.className = 'search-strip';
+  box.open = true;
+  box.innerHTML = '<summary>' +
+    `<span class="label">Searching &ldquo;${esc(String(query).slice(0, 44))}&rdquo;</span>` +
+    `<span class="track-wrap"><span class="track">${SEARCH_DOMAINS.concat(SEARCH_DOMAINS).map((d) =>
+      `<img class="favicon" alt="" src="https://icons.duckduckgo.com/ip3/${d}.ico">`).join('')}</span></span>` +
+    '<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>' +
+    '</summary><div class="search-body"></div>';
   currentTools.appendChild(box);
   scrollDown();
+  return box;
+}
+function finishSearch(box, { query, results, error }) {
+  if (!box) return;
+  box.open = false;
+  const label = $('.label', box);
+  const body = $('.search-body', box);
+  if (results && results.length) {
+    label.textContent = `Searched the web · ${results.length} source${results.length === 1 ? '' : 's'}`;
+    body.innerHTML = results.map(sourceRowHtml).join('');
+  } else {
+    label.textContent = 'Search failed — click for details';
+    body.innerHTML = `<p class="search-error">&ldquo;${esc(query || '')}&rdquo; &mdash; ${esc(error || 'no results')}</p>`;
+  }
 }
 
 /* ------------------------------------------------------------------ health */
@@ -417,19 +434,18 @@ async function execTool(name, args, conv, meta = {}) {
     case 'web_search': {
       const q = String(args.query || '').trim();
       const n = Math.min(Math.max(1, Number(args.n) || EFFORT[conv.effort]?.searchN || 5), 15);
-      const strip = showSearchStrip(q);
+      const box = renderSearch(q);
       termLine('cmd', `search "${q}" (${n})`);
       let data;
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&n=${n}`);
         data = await res.json();
       } catch (e) { data = { error: e.message, results: [] }; }
-      strip?.remove();
       const results = data.results || [];
       meta.results = results;
+      finishSearch(box, { query: q, results, error: data.error });
       if (!results.length) { termLine('err', data.error || 'no results'); return `No results${data.error ? ` (${data.error})` : ''}.`; }
       termLine('ok', `${results.length} results`);
-      renderSources(results);
       return results.map((r, i) => `[${i + 1}] ${r.title}\n${r.url}\n${r.snippet}`).join('\n\n');
     }
     case 'fetch_url': {
@@ -572,12 +588,15 @@ async function send(text, opts = {}) {
       const results = [];
       const toolLog = [];
       for (const call of calls) {
-        const card = addToolCard(call.name, call.args);
+        // web_search gets its own persistent widget (renderSearch/finishSearch,
+        // called inside execTool) instead of the generic tool card — showing
+        // both was redundant.
+        const card = call.name === 'web_search' ? null : addToolCard(call.name, call.args);
         let out, failed = false;
         const meta = {};
         try { out = await execTool(call.name, call.args, conv, meta); }
         catch (e) { out = `Tool error: ${e.message}`; failed = true; }
-        finishToolCard(card, out, failed);
+        if (card) finishToolCard(card, out, failed);
         results.push(`[${call.name}] ->\n${String(out).slice(0, 6000)}`);
         toolLog.push({ name: call.name, args: call.args, output: out, failed, results: meta.results });
       }
@@ -658,17 +677,21 @@ function renderConversation() {
   if (conv.run?.active) showResumeBar(conv);
 }
 
-/* Rebuild the tool cards (and any sources dropdown) a past round produced,
+/* Rebuild the tool cards (and the search widget) a past round produced,
    from the structured log saved alongside the message — so a page refresh
    shows the same finished record the live run showed, not just the plain
-   text the model saw. */
+   text the model saw. The search widget's sliding favicon row keeps
+   animating here too, same as it does live — it's the same element type,
+   just created already-closed instead of starting open. */
 function replayTools(toolLog) {
   for (const t of toolLog) {
+    if (t.name === 'web_search') {
+      const box = renderSearch(t.args?.query || '');
+      finishSearch(box, { query: t.args?.query || '', results: t.results, error: t.output });
+      continue;
+    }
     const card = addToolCard(t.name, t.args || {});
     finishToolCard(card, t.output, t.failed);
-    if (t.name === 'web_search' && Array.isArray(t.results) && t.results.length) {
-      renderSources(t.results);
-    }
   }
 }
 
