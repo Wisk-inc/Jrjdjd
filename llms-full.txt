@@ -311,8 +311,8 @@ quick tunnel, it is editable in the chat's Settings dialog and persists in the b
 ## What is live
 
 - Real streaming chat, in Jamaican Patois by default, switching to English on request.
-- Agent mode (toggle in the composer): the model is taught a small text tool-call protocol and this
-  page parses and executes the calls for real. Tools: set_plan, complete_step, run_python,
+- Agent tools, always on (no toggle): every conversation teaches the model a small text tool-call
+  protocol and this page parses and executes the calls for real. Tools: set_plan, complete_step, run_python,
   write_file, read_file, delete_file, list_files, install_packages, deliver_file, web_search,
   fetch_url, search_memory.
 - A real Python sandbox — CPython compiled to WebAssembly, running in the tab, with its own Terminal

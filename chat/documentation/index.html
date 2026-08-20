@@ -535,12 +535,13 @@ while True:
   <section class="section-tight" id="agent">
     <div class="shell">
       <div class="section-head">
-        <p class="eyebrow">Step 3 &middot; Agent mode</p>
-        <h2>Let it run code, files and a plan.</h2>
+        <p class="eyebrow">Step 3 &middot; Agent tools</p>
+        <h2>It runs code, files and a plan on its own.</h2>
       </div>
       <div class="answer-box">
-        <p>Turn on the <strong>Agent</strong> toggle in the composer and CorX3.8 can use tools: run
-          Python, make and edit files, install packages and plan a task. The tools run in a
+        <p>There is no toggle to switch on &mdash; every conversation can use tools: run
+          Python, make and edit files, install packages and plan a task. CorX3.8 decides for itself
+          when a tool would help and calls it without asking permission first. The tools run in a
           <strong>real Python sandbox inside your browser tab</strong> &mdash; not on the model
           server &mdash; so you can watch every command in the <strong>Terminal</strong> panel and
           nothing touches your computer outside the tab.</p>
@@ -578,10 +579,11 @@ while True:
       </div>
       <div class="callout mt-m">
         <p><strong>Honest note on tools.</strong> The model server is a plain chat endpoint with no
-          built-in tool-calling, so Agent mode teaches CorX3.8 a small text format for asking to run a
-          tool. Whether it uses tools well depends on the model following that format &mdash; it is a
-          Patois-focused fine-tune, not a dedicated tool-use model, so expect it to be better at
-          conversation than at long autonomous chains. Plain chat (Agent off) always works.</p>
+          built-in tool-calling, so every system prompt teaches CorX3.8 a small text format for asking
+          to run a tool. Whether it uses tools well depends on the model following that format &mdash;
+          it is a Patois-focused fine-tune, not a dedicated tool-use model, so expect it to be better
+          at conversation than at long autonomous chains. If it ever ignores a tool it should have
+          used, ask it directly and it will call it.</p>
       </div>
     </div>
   </section>
@@ -593,7 +595,7 @@ while True:
         <h2>Low to Max &mdash; a real dial, not a label.</h2>
       </div>
       <div class="answer-box">
-        <p>The <strong>Effort</strong> selector next to Agent changes actual request parameters:
+        <p>The <strong>Effort</strong> selector in the composer changes actual request parameters:
           how many tokens the model is allowed per reply, how many tool-call rounds the agent gets
           before it must stop, how many search results it pulls back, and how hard the system prompt
           tells it to think, weigh alternatives, verify its own steps and search when unsure. Higher

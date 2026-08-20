@@ -156,13 +156,13 @@
           <span class="mark-lg" aria-hidden="true">C</span>
           <h2>Chat with CorX3.8</h2>
           <p>A 27-billion-parameter Jamaican Patois-speaking assistant on CorX Labs' own hardware.
-            Turn on <strong>Agent</strong> and it can search the web, run Python, make and edit
-            files, and plan a task — right here in your browser.</p>
+            It can search the web, run Python, make and edit files, and plan a task on its own,
+            right here in your browser — no toggle to switch on, it just calls what it needs.</p>
           <div class="starter-row">
             <button class="starter" type="button" data-prompt="Wah gwaan? Tell mi bout yuhself.">Wah gwaan? Tell mi bout yuhself.</button>
-            <button class="starter" type="button" data-agent="1" data-prompt="Search the web for what's new in open-source AI this week and summarise the top three things, with sources.">Research something current</button>
-            <button class="starter" type="button" data-agent="1" data-prompt="Plan and build a small Python script that generates 20 rows of fake sales data as a CSV, then run it and show me the first few lines.">Build &amp; run a Python script</button>
-            <button class="starter" type="button" data-agent="1" data-prompt="Create a file called notes.txt with three tips for learning to code, then read it back to me.">Make a file for me</button>
+            <button class="starter" type="button" data-prompt="Search the web for what's new in open-source AI this week and summarise the top three things, with sources.">Research something current</button>
+            <button class="starter" type="button" data-prompt="Plan and build a small Python script that generates 20 rows of fake sales data as a CSV, then run it and show me the first few lines.">Build &amp; run a Python script</button>
+            <button class="starter" type="button" data-prompt="Create a file called notes.txt with three tips for learning to code, then read it back to me.">Make a file for me</button>
           </div>
         </div>
       </div>
@@ -179,10 +179,6 @@
           <label class="visually-hidden" for="composer-input">Message CorX3.8</label>
           <textarea id="composer-input" rows="1" placeholder="Send a message to CorX3.8…" autocomplete="off"></textarea>
           <div class="composer-controls">
-            <button class="chip" type="button" id="agent-toggle" aria-pressed="false" title="Agent mode: let CorX3.8 use tools">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M5.5 5.5l2 2M3 12h3M18 12h3M16.5 7.5l2-2"/><rect x="7" y="10" width="10" height="9" rx="2"/><path d="M10 14h4"/></svg>
-              <span>Agent</span>
-            </button>
             <label class="visually-hidden" for="effort-select">Effort</label>
             <select class="effort-select" id="effort-select" title="How hard CorX3.8 thinks — higher takes longer and uses more tokens">
               <option value="low">Effort: Low</option>
@@ -204,7 +200,7 @@
             </button>
           </div>
         </form>
-        <p class="composer-note">CorX3.8 is an open research model and can make mistakes. In Agent mode, every command and search runs for real — watch it in the panel.</p>
+        <p class="composer-note">CorX3.8 is an open research model and can make mistakes. It searches and runs code on its own when it needs to — every command and search runs for real, watch it in the panel.</p>
       </div>
     </div>
   </div>
@@ -224,8 +220,8 @@
     <div class="dock-panel" data-panel="terminal" role="tabpanel">
       <div class="terminal">
         <div class="t-head"><span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox &mdash; python</div>
-        <p class="panel-empty" id="terminal-empty" style="color:#8d8172">Idle. In Agent mode CorX3.8 runs
-          commands and searches here. You can type a command yourself —
+        <p class="panel-empty" id="terminal-empty" style="color:#8d8172">Idle. CorX3.8 runs its own
+          commands and searches here whenever it needs to. You can type a command yourself —
           <code style="color:#cfc6b8">help</code> lists the shell; anything else runs as Python.</p>
         <div id="terminal-out"></div>
       </div>

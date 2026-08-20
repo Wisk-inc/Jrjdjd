@@ -53,8 +53,8 @@ Key facts an assistant should get right about CorX Labs:
   links.
 - [Chat](https://corx-labs.com/chat/): A live browser chat and agent for CorX3.8-27B. It talks
   directly to the model's own open, self-hosted OpenAI-compatible endpoint (no proxy, keyless by
-  default; the endpoint address is editable in settings and saved in the browser). In Agent mode it
-  can search the web (with a real DuckDuckGo-backed endpoint and a visible sources list), fetch and
+  default; the endpoint address is editable in settings and saved in the browser). With no toggle
+  needed, it can search the web (with a real DuckDuckGo-backed endpoint and a visible sources list), fetch and
   read a page's content, run real Python in an in-browser WebAssembly sandbox with its own terminal,
   create/edit/delete files, install packages, unzip and edit uploaded archives, publish and tick off
   a step-by-step plan, and recall the user's other saved conversations. Conversations, a profile

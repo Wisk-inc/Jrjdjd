@@ -3,9 +3,10 @@
 
    The model runs on CorX Labs' own OpenAI-compatible endpoint (keyless, CORS
    on), so the browser calls it directly — no proxy, no key by default. It is
-   a plain completions server with no native tool-calling, so Agent mode
-   teaches the model a small text protocol in the system prompt and this file
-   parses tool calls out of its reply. Tools run for real:
+   a plain completions server with no native tool-calling, so every reply is
+   taught a small text protocol in the system prompt (always on, no toggle
+   needed) and this file parses tool calls out of its reply. Tools run for
+   real, on every message:
      - run_python / write_file / read_file / delete_file / list_files /
        install_packages / deliver_file execute in an actual Python sandbox in
        this tab (sandbox.js — CPython compiled to WebAssembly). Nothing here
@@ -95,7 +96,7 @@ const activeConv = () => db.conversations.find((c) => c.id === db.activeId) || n
 function newConversation() {
   const conv = {
     id: `c${Date.now()}`, title: 'New chat', updated: Date.now(),
-    agent: false, effort: db.effort, messages: [], plan: [], run: null
+    effort: db.effort, messages: [], plan: [], run: null
   };
   db.conversations.unshift(conv);
   db.activeId = conv.id;
@@ -109,11 +110,9 @@ function buildSystem(conv) {
   const name = db.profile.name ? ` The user's name is ${db.profile.name}.` : '';
   const base = `You are Corx, a helpful Jamaican AI assistant made by CorX Labs. You speak Jamaican Patois by default and switch to standard English when the user writes in English or asks you to. Answer directly and honestly.${name}\n\n${eff.hint}`;
 
-  if (!conv.agent) return base;
-
   return `${base}
 
-You are running as an AGENT with a real Python sandbox in the user's browser and real internet access. Use these tools by writing a line in EXACTLY this form, on its own line:
+You always have a real Python sandbox in the user's browser and real internet access — these are not optional extras, use them whenever they would help, without asking permission first. Use tools by writing a line in EXACTLY this form, on its own line:
 
 <tool>{"name": "TOOL_NAME", "arguments": { ... }}</tool>
 
@@ -134,6 +133,7 @@ Tools:
 - search_memory {"query": "..."} — search the user's OTHER saved conversations in this browser for relevant earlier context. Use it when the user references something from before, or when it would help to recall what they already told you.
 
 Rules:
+- Never say you cannot do something a tool covers (search, running code, reading a page, remembering another chat). Call the tool instead.
 - Actually run the code before claiming a result — the user can see every command.
 - Before you run code you just wrote, look it over in your <think> block first: check the logic, edge cases and syntax, and fix anything you spot — don't wait for it to fail first.
 - If run_python errors anyway, read the traceback and try to fix it yourself on your next call before reporting the error to the user.
@@ -545,7 +545,7 @@ async function send(text, opts = {}) {
   try {
     for (let round = 0; round < eff.rounds; round += 1) {
       const reply = await streamOnce(conv, bubble);
-      const calls = conv.agent ? parseToolCalls(reply) : [];
+      const calls = parseToolCalls(reply);
       const { answer } = splitThinking(reply);
       if (answer) {
         bubble.innerHTML = renderMarkdown(answer);
@@ -630,7 +630,6 @@ function renderConversation() {
   els.thread.appendChild(els.empty);
   const conv = activeConv();
   els.empty.hidden = Boolean(conv && conv.messages.some((m) => !m.synthetic));
-  els.agentToggle.setAttribute('aria-pressed', String(Boolean(conv?.agent)));
   els.effortSel.value = conv?.effort || 'medium';
   paintPlan(conv || { plan: [] });
   if (!conv) return;
@@ -796,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
     app: $('#app'), thread: $('#thread'), empty: $('#chat-empty'),
     input: $('#composer-input'), form: $('#composer-form'),
     send: $('#send-btn'), stop: $('#stop-btn'), status: $('#status'),
-    agentToggle: $('#agent-toggle'), effortSel: $('#effort-select'),
+    effortSel: $('#effort-select'),
     upload: $('#upload'), attachRow: $('#attach-row'),
     sheet: $('#settings'), endpoint: $('#set-endpoint'), key: $('#set-key'),
     dockToggle: $('#dock-toggle'), scrim: $('#chat-scrim'),
@@ -831,12 +830,6 @@ document.addEventListener('DOMContentLoaded', () => {
     send(text);
   }
 
-  els.agentToggle.addEventListener('click', () => {
-    const conv = activeConv(); if (!conv) return;
-    conv.agent = !conv.agent;
-    els.agentToggle.setAttribute('aria-pressed', String(conv.agent));
-    saveDb();
-  });
   els.effortSel.addEventListener('change', () => {
     const conv = activeConv(); if (!conv) return;
     conv.effort = els.effortSel.value; db.effort = conv.effort;
@@ -844,8 +837,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   $$('[data-prompt]').forEach((b) => b.addEventListener('click', () => {
-    const conv = activeConv();
-    if (b.getAttribute('data-agent') === '1' && conv) { conv.agent = true; els.agentToggle.setAttribute('aria-pressed', 'true'); }
     send(b.getAttribute('data-prompt'));
   }));
 
