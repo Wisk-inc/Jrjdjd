@@ -112,16 +112,20 @@ function buildSystem(conv) {
 
   return `${base}
 
-You always have a real Python sandbox in the user's browser and real internet access — these are not optional extras, use them whenever they would help, without asking permission first. Use tools by writing a line in EXACTLY this form, on its own line:
+You always have a real Python sandbox in the user's browser and real internet access — these are not optional extras, use them whenever they would help, without asking permission first. Use tools by writing a line in EXACTLY this form, on its own line, valid JSON, one call per line:
 
 <tool>{"name": "TOOL_NAME", "arguments": { ... }}</tool>
 
+Worked example — the user asks you to write and run a script:
+<tool>{"name": "write_file", "arguments": {"path": "hello.py", "content": "print('hello')"}}</tool>
+<tool>{"name": "run_python", "arguments": {"code": "exec(open('hello.py').read())"}}</tool>
+
 You may call several tools in one reply. After they run, you will be shown their results and can continue. When the task is done, reply normally with no tool line.
 
-Tools:
+Tools (call them by exactly these names):
 - set_plan {"steps": ["step one", ...]} — publish a checklist first for any job with more than two steps. The user watches this live.
 - complete_step {"index": 0} — mark a plan step done (zero-based).
-- run_python {"code": "..."} — run Python. State persists between calls. You get back exactly what it printed. To read or edit an uploaded .zip, use Python's zipfile module, e.g. zipfile.ZipFile('/work/name.zip').
+- run_python {"code": "..."} — run Python. State persists between calls. You get back exactly what it printed. import web gives real internet access from inside the sandbox (web.get(url) / web.post(url, body)) — plain requests/urllib calls do NOT work here, the sandbox has no raw sockets, so always use web for any HTTP call you write yourself. To read an uploaded .zip: zipfile.ZipFile('/work/name.zip'). To create or edit one: open it with mode "a" or "w" and use .write(path, arcname) or .writestr(arcname, data), e.g. "with zipfile.ZipFile('/work/out.zip', 'w') as z: z.writestr('notes.txt', 'hello')".
 - write_file {"path": "name.py", "content": "..."} — create or overwrite a text file in /work.
 - read_file {"path": "name.py"} — read a file back.
 - delete_file {"path": "name.py"} — delete a file.
@@ -135,6 +139,8 @@ Tools:
 Rules:
 - Never say you cannot do something a tool covers (search, running code, reading a page, remembering another chat). Call the tool instead.
 - If the user asks you to write, make, build or create code (not just explain a snippet), that means call write_file and/or run_python for real — a fenced markdown code block on its own, with no tool call, is not an acceptable substitute and leaves the user with nothing they can actually run. Create the file, run it, show them it working, THEN show the code in markdown as a record of what you made.
+- If the user asks what you can do, or what tools you have, answer directly from the tool list above by name — you already know them, there is no tool call needed just to describe yourself.
+- Read what the user actually meant, not just what they typed: if a word is misspelled or a message is garbled, work out the intended meaning (correct it silently in how you respond) instead of getting stuck on the typo or asking them to repeat it.
 - Actually run the code before claiming a result — the user can see every command.
 - Before you run code you just wrote, look it over in your <think> block first: check the logic, edge cases and syntax, and fix anything you spot — don't wait for it to fail first.
 - If run_python errors anyway, read the traceback and try to fix it yourself on your next call before reporting the error to the user.
@@ -198,7 +204,13 @@ function parseToolCalls(text) {
   const push = (raw) => {
     try {
       const obj = JSON.parse(raw.trim());
-      if (obj && typeof obj.name === 'string') calls.push({ name: obj.name, args: obj.arguments || obj.args || {} });
+      // Normalise the name (trim, lowercase, spaces/dashes to underscores) so a
+      // model that writes "Run_Python" or "run-python" still resolves to the
+      // real run_python tool instead of silently hitting "Unknown tool".
+      if (obj && typeof obj.name === 'string') {
+        const name = obj.name.trim().toLowerCase().replace(/[\s-]+/g, '_');
+        calls.push({ name, args: obj.arguments || obj.args || {} });
+      }
     } catch { /* ignore malformed */ }
   };
   const re1 = /<tool>([\s\S]*?)<\/tool>/gi; let m;
@@ -906,7 +918,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
 
   $('#new-chat').addEventListener('click', () => {
-    newConversation();
+    // Clicking New chat while already sitting on an untouched "New chat"
+    // used to stack another empty, identically-titled conversation on top
+    // of it — same name, same nothing-in-it, no way to tell them apart in
+    // the sidebar. Only actually create one if the current chat has
+    // something in it.
+    const cur = activeConv();
+    if (!cur || cur.messages.some((m) => !m.synthetic)) newConversation();
     renderConversation(); paintConversations();
     closeSidebar();
     els.input.focus();
