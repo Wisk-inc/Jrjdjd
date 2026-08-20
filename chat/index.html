@@ -2,10 +2,10 @@
 <html lang="en" data-theme="auto">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
 
 <title>Chat with CorX3.8 — Jamaica's Open-Weight LLM | CorX Labs</title>
-<meta name="description" content="Chat with CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant, live in your browser. Open weights, built in Jamaica.">
+<meta name="description" content="Chat with CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant. A live agent with a real terminal, file tools, uploads, web search and task planning.">
 <link rel="canonical" href="https://corx-labs.com/chat/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
@@ -19,13 +19,13 @@
 <meta property="og:site_name" content="CorX Labs">
 <meta property="og:url" content="https://corx-labs.com/chat/">
 <meta property="og:title" content="Chat with CorX3.8 — Jamaica's Open-Weight LLM">
-<meta property="og:description" content="Talk to CorX3.8-27B, a 27B Jamaican Patois-speaking assistant, live in your browser.">
+<meta property="og:description" content="Talk to CorX3.8-27B, a 27B Jamaican Patois-speaking agent with a real terminal, file tools, web search and task planning.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chat with CorX3.8 — Jamaica's Open-Weight LLM">
-<meta name="twitter:description" content="Talk to CorX3.8-27B, a 27B Jamaican Patois-speaking assistant, live in your browser.">
+<meta name="twitter:description" content="Talk to CorX3.8-27B, a 27B Jamaican Patois-speaking agent, live in your browser.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -49,13 +49,14 @@
       "@id": "https://corx-labs.com/chat/#app",
       "name": "CorX3.8 Chat",
       "url": "https://corx-labs.com/chat/",
-      "description": "A browser chat client for CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant. It talks directly to the model's own open, self-hosted endpoint.",
+      "description": "A browser chat and agent for CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant. It talks to the model's own open, self-hosted endpoint and runs a real Python sandbox in the tab — a terminal, file create/edit/delete/run, package installs, zip uploads, real web search and task planning. Conversations, a profile and the connection settings are saved in the browser.",
       "applicationCategory": "CommunicationApplication",
       "operatingSystem": "Web browser",
       "isAccessibleForFree": true,
       "inLanguage": ["en", "jam"],
       "about": { "@id": "https://corx-labs.com/models/corx3-8/#model" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "softwareHelp": { "@id": "https://corx-labs.com/chat/documentation/#article" },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
     },
     {
@@ -88,7 +89,7 @@
       <a href="/about/">About Us</a>
     </nav>
     <div class="masthead-actions">
-      <a class="btn btn-primary btn-sm" href="/models/corx3-8/">About CorX3.8</a>
+      <a class="btn btn-primary btn-sm" href="/chat/documentation/">Set-up guide</a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
@@ -98,73 +99,181 @@
     <div class="shell">
       <ul>
         <li><a href="/chat/">Chat</a></li>
+        <li><a href="/chat/documentation/">Chat set-up guide</a></li>
         <li><a href="/documentation/">Documentation</a></li>
         <li><a href="/models/">Our Products</a></li>
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/developers/">Developers</a></li>
         <li><a href="/about/">About Us</a></li>
       </ul>
-      <a class="btn btn-primary" href="/models/corx3-8/">About CorX3.8</a>
+      <a class="btn btn-primary" href="/chat/documentation/">Set-up guide</a>
     </div>
   </div>
 </header>
 
-<div class="chat-shell">
-  <div class="chat-bar">
-    <h1>CorX3.8</h1>
-    <span class="status" id="status" data-state="checking" role="status">
-      <span class="dot" aria-hidden="true"></span>
-      <span class="status-label">Checking…</span>
-    </span>
-    <span class="spacer"></span>
-    <button class="icon-btn" type="button" id="new-chat" aria-label="New chat" title="New chat">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-    </button>
-    <button class="icon-btn" type="button" id="open-settings" aria-label="Settings" title="Settings">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
-  </div>
+<div class="app" id="app" data-dock="closed" data-sidebar="closed">
 
-  <div class="thread" id="thread">
-    <div class="chat-empty" id="chat-empty">
-      <span class="mark-lg" aria-hidden="true">C</span>
-      <h2>Chat with CorX3.8</h2>
-      <p>A 27-billion-parameter Jamaican Patois-speaking assistant, running on CorX Labs' own
-        hardware. Speaks Patois by default — write in English and it follows you.</p>
-      <div class="starter-row">
-        <button class="starter" type="button" data-prompt="Wah gwaan? Tell mi bout yuhself.">Wah gwaan? Tell mi bout yuhself.</button>
-        <button class="starter" type="button" data-prompt="Explain what a transformer model is, in simple terms.">Explain a transformer, simply</button>
-        <button class="starter" type="button" data-prompt="Write a short poem about the Blue Mountains in Jamaican Patois.">A short poem in Patois</button>
-        <button class="starter" type="button" data-prompt="Write a Python function that reverses the words in a sentence.">Write me a Python function</button>
+  <!-- Sidebar: conversations + profile -->
+  <aside class="chat-sidebar" id="chat-sidebar" aria-label="Conversations">
+    <div class="sidebar-head">
+      <button class="chat-new" type="button" id="new-chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </button>
+      <button class="icon-btn nav-only" type="button" id="sidebar-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <nav class="conv-list" id="conversation-list" aria-label="Saved conversations"></nav>
+    <button class="profile-chip" type="button" id="profile-btn">
+      <span class="profile-avatar" id="profile-avatar">Y</span>
+      <span class="profile-name" id="profile-name">Set up profile</span>
+    </button>
+  </aside>
+
+  <div class="chat-main">
+    <div class="chat-shell">
+      <div class="chat-bar">
+        <button class="icon-btn nav-only" type="button" id="sidebar-toggle" aria-label="Chats">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <h1>CorX3.8</h1>
+        <span class="status" id="status" data-state="checking" role="status">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="status-label">Checking…</span>
+        </span>
+        <span class="spacer"></span>
+        <button class="icon-btn" type="button" id="dock-toggle" aria-label="Open the work panel" title="Terminal · Files · Plan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M14 4v16"/></svg>
+        </button>
+        <button class="icon-btn" type="button" id="open-settings" aria-label="Connection settings" title="Connection settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+
+      <div class="thread" id="thread">
+        <div class="chat-empty" id="chat-empty">
+          <span class="mark-lg" aria-hidden="true">C</span>
+          <h2>Chat with CorX3.8</h2>
+          <p>A 27-billion-parameter Jamaican Patois-speaking assistant on CorX Labs' own hardware.
+            Turn on <strong>Agent</strong> and it can search the web, run Python, make and edit
+            files, and plan a task — right here in your browser.</p>
+          <div class="starter-row">
+            <button class="starter" type="button" data-prompt="Wah gwaan? Tell mi bout yuhself.">Wah gwaan? Tell mi bout yuhself.</button>
+            <button class="starter" type="button" data-agent="1" data-prompt="Search the web for what's new in open-source AI this week and summarise the top three things, with sources.">Research something current</button>
+            <button class="starter" type="button" data-agent="1" data-prompt="Plan and build a small Python script that generates 20 rows of fake sales data as a CSV, then run it and show me the first few lines.">Build &amp; run a Python script</button>
+            <button class="starter" type="button" data-agent="1" data-prompt="Create a file called notes.txt with three tips for learning to code, then read it back to me.">Make a file for me</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-bar" id="resume-bar" hidden>
+        <span class="resume-text">A run was interrupted. Picking up automatically…</span>
+        <button class="btn btn-primary btn-sm" type="button" id="resume-now">Resume now</button>
+        <button class="link-btn" type="button" id="resume-cancel">Dismiss</button>
+      </div>
+
+      <div class="composer-wrap">
+        <form class="composer" id="composer-form">
+          <div class="attach-row" id="attach-row" hidden></div>
+          <label class="visually-hidden" for="composer-input">Message CorX3.8</label>
+          <textarea id="composer-input" rows="1" placeholder="Send a message to CorX3.8…" autocomplete="off"></textarea>
+          <div class="composer-controls">
+            <button class="chip" type="button" id="agent-toggle" aria-pressed="false" title="Agent mode: let CorX3.8 use tools">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M5.5 5.5l2 2M3 12h3M18 12h3M16.5 7.5l2-2"/><rect x="7" y="10" width="10" height="9" rx="2"/><path d="M10 14h4"/></svg>
+              <span>Agent</span>
+            </button>
+            <label class="visually-hidden" for="effort-select">Effort</label>
+            <select class="effort-select" id="effort-select" title="How hard CorX3.8 thinks — higher takes longer and uses more tokens">
+              <option value="low">Effort: Low</option>
+              <option value="medium" selected>Effort: Medium</option>
+              <option value="high">Effort: High</option>
+              <option value="extra">Effort: Extra</option>
+              <option value="max">Effort: Max</option>
+            </select>
+            <span class="spacer"></span>
+            <label class="chip icon-only" for="upload" title="Upload files or a zip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg>
+            </label>
+            <input type="file" id="upload" multiple hidden>
+            <button class="stop-btn" type="button" id="stop-btn" hidden aria-label="Stop">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+            </button>
+            <button class="send-btn" id="send-btn" type="submit" aria-label="Send">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+            </button>
+          </div>
+        </form>
+        <p class="composer-note">CorX3.8 is an open research model and can make mistakes. In Agent mode, every command and search runs for real — watch it in the panel.</p>
       </div>
     </div>
   </div>
 
-  <div class="composer-wrap">
-    <form class="composer" id="composer-form">
-      <label class="visually-hidden" for="composer-input">Message CorX3.8</label>
-      <textarea id="composer-input" rows="1" placeholder="Send a message to CorX3.8…" autocomplete="off"></textarea>
-      <button class="stop-btn" type="button" id="stop-btn" hidden aria-label="Stop">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+  <!-- Work dock -->
+  <aside class="chat-dock" aria-label="Work panel">
+    <div class="dock-tabs" role="tablist">
+      <button class="dock-tab" type="button" role="tab" data-panel="terminal" aria-selected="true">Terminal</button>
+      <button class="dock-tab" type="button" role="tab" data-panel="files" aria-selected="false">Files <span class="count" id="file-count">0</span></button>
+      <button class="dock-tab" type="button" role="tab" data-panel="plan" aria-selected="false">Plan</button>
+      <span class="spacer"></span>
+      <button class="icon-btn dock-close-m" type="button" id="dock-close" aria-label="Close the panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
-      <button class="send-btn" id="send-btn" type="submit" aria-label="Send">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
-      </button>
-    </form>
-    <p class="composer-note">CorX3.8 is an open research model and can make mistakes. Don’t rely on it for facts without checking.</p>
-  </div>
+    </div>
+
+    <div class="dock-panel" data-panel="terminal" role="tabpanel">
+      <div class="terminal">
+        <div class="t-head"><span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox &mdash; python</div>
+        <p class="panel-empty" id="terminal-empty" style="color:#8d8172">Idle. In Agent mode CorX3.8 runs
+          commands and searches here. You can type a command yourself —
+          <code style="color:#cfc6b8">help</code> lists the shell; anything else runs as Python.</p>
+        <div id="terminal-out"></div>
+      </div>
+      <form class="terminal-form" id="terminal-form">
+        <label class="visually-hidden" for="terminal-input">Run a command</label>
+        <span class="prompt" aria-hidden="true">&gt;</span>
+        <input id="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="print(2 ** 10)">
+      </form>
+    </div>
+
+    <div class="dock-panel" data-panel="files" role="tabpanel" hidden>
+      <p class="panel-empty" style="margin-bottom:10px">Shared with every chat in this tab — one
+        sandbox, so files persist as you switch conversations.</p>
+      <div class="file-list" id="file-list">
+        <p class="panel-empty" id="files-empty">Files CorX3.8 writes, and anything you upload, appear
+          here. Click one to read, edit, save or delete it.</p>
+      </div>
+      <div class="editor" id="editor" hidden>
+        <div class="editor-head">
+          <span class="name" id="editor-name">file</span>
+          <button class="link-btn" type="button" id="editor-save">Save</button>
+          <button class="link-btn" type="button" id="editor-download">Download</button>
+          <button class="link-btn danger" type="button" id="editor-delete">Delete</button>
+        </div>
+        <textarea id="editor-area" spellcheck="false"></textarea>
+      </div>
+    </div>
+
+    <div class="dock-panel" data-panel="plan" role="tabpanel" hidden>
+      <p class="panel-empty" id="plan-empty">Ask the agent for something with a few steps and its plan
+        shows here, ticking off as it works.</p>
+      <ol class="plan-list" id="plan-list"></ol>
+    </div>
+  </aside>
+
+  <div class="chat-scrim" id="chat-scrim" hidden></div>
 </div>
 
-<!-- Settings -->
+<!-- Connection settings -->
 <div class="sheet" id="settings" hidden>
   <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
     <h2 id="settings-title">Connection settings</h2>
-    <p>CorX3.8 runs on CorX Labs' own server. If the address has changed, or you are pointing at a
-      different host, set it here — it is saved in this browser only.</p>
+    <p>CorX3.8 runs on CorX Labs' own server. Paste the address the notebook printed here — it is
+      saved in this browser only. New to this? Read the <a href="/chat/documentation/">set-up guide</a>.</p>
     <div class="field">
       <label for="set-endpoint">Model endpoint</label>
       <input id="set-endpoint" type="url" inputmode="url" spellcheck="false" placeholder="https://…trycloudflare.com">
-      <small>The base URL of the OpenAI-compatible server. The <code>/v1</code> is added for you.</small>
+      <small>The base URL of the OpenAI-compatible server. The <code>/v1</code> is added for you, and it stays saved across a refresh.</small>
     </div>
     <div class="field">
       <label for="set-key">API key <span style="color:var(--faint);font-weight:400">(optional)</span></label>
@@ -178,7 +287,39 @@
   </div>
 </div>
 
+<!-- Profile -->
+<div class="sheet" id="profile-sheet" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+    <h2 id="profile-title">Your profile</h2>
+    <p>Saved in this browser only — never sent anywhere. Used to label your messages and, if you
+      turn memory off, kept out of what the agent can recall.</p>
+    <div class="field">
+      <label for="profile-name-input">Name</label>
+      <input id="profile-name-input" type="text" spellcheck="false" placeholder="Your name" maxlength="40">
+    </div>
+    <div class="field">
+      <label for="profile-avatar-input">Photo</label>
+      <div class="avatar-row">
+        <span class="avatar-preview" id="profile-avatar-preview">No photo</span>
+        <div class="avatar-actions">
+          <label class="btn btn-ghost btn-sm" for="profile-avatar-input">Choose image</label>
+          <input id="profile-avatar-input" type="file" accept="image/*" hidden>
+          <button class="link-btn danger" type="button" id="remove-avatar">Remove</button>
+        </div>
+      </div>
+    </div>
+    <div class="menu-row">
+      <span>Memory<small>Let CorX3.8 recall your other saved chats when it uses the search_memory tool</small></span>
+      <button class="toggle" type="button" id="memory-toggle" role="switch" aria-checked="true"><i></i></button>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost btn-sm" type="button" id="cancel-profile">Cancel</button>
+      <button class="btn btn-primary btn-sm" type="button" id="save-profile">Save</button>
+    </div>
+  </div>
+</div>
+
 <script src="/assets/js/main.js" defer></script>
-<script src="/assets/js/chat.js" defer></script>
+<script type="module" src="/assets/js/chat.js"></script>
 </body>
 </html>

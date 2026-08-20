@@ -46,7 +46,7 @@
 
   <url>
     <loc>https://corx-labs.com/chat/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/chat/"/>
@@ -55,6 +55,15 @@
       <image:loc>https://corx-labs.com/assets/img/og-corx3-8.jpg</image:loc>
       <image:title>Chat with CorX3.8 — Jamaica's open-weight LLM</image:title>
     </image:image>
+  </url>
+
+  <url>
+    <loc>https://corx-labs.com/chat/documentation/</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/chat/documentation/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/chat/documentation/"/>
   </url>
 
   <url>

@@ -1,11 +1,15 @@
 # corx-labs.com
 
 The website for **CorX Labs** — an independent AI research lab in Jamaica, and the home of
-**CorX1.5** (a 158M-parameter language model) and **TriStream-SVS** (a 321.8M-parameter singing
-voice synthesis model), both built from scratch.
+**CorX1.5** (a 158M-parameter language model, from scratch), **TriStream-SVS** (a
+321.8M-parameter singing voice synthesis model, from scratch) and **CorX3.8-27B** (a
+27B-parameter Jamaican Patois assistant, fine-tuned from Qwen3.8-27B — and CorX Labs says so
+plainly, rather than presenting it as from-scratch work like the other two).
 
-Hand-written static HTML and CSS. No build step, no framework, no dependencies. Drop the folder on
-any static host and it works.
+Hand-written static HTML and CSS. No build step, no framework, no npm dependencies. Drop the
+folder on any static host and it works — except `/chat/`, which needs two small serverless
+functions (`api/search.js`, `api/fetch.js`, both dependency-free) to reach the outside web; see
+[CorX Chat](#corx-chat) below.
 
 ---
 
@@ -17,6 +21,9 @@ any static host and it works.
 /models/                Our Products — every model released
 /models/corx1-5/        CorX1.5 model page (Try it out → Hugging Face)
 /models/tristream-svs/  TriStream-SVS model page, with an inline architecture graph
+/models/corx3-8/        CorX3.8-27B model page — character, honest fine-tune note, usage
+/chat/                  CorX Chat — live chat + browser agent for CorX3.8-27B
+/chat/documentation/    Set-up guide: the server code to run, connecting, Agent mode, effort
 /blog/                  Blog index
 /blog/3-billion-tokens-one-gpu/   Technical breakdown of the training run
 /developers/            Who built CorX1.5 — profile and journey
@@ -25,8 +32,14 @@ any static host and it works.
 /404.html               Not-found page
 
 assets/css/main.css     The entire design system
+assets/css/chat.css     CorX Chat's UI — sidebar, dock, tool cards, search animation
 assets/js/main.js       Progressive enhancement only — the site works without it
+assets/js/chat.js       CorX Chat client: streaming, the agent tool loop, conversations, profile
+assets/js/sandbox.js    The real Python VM CorX Chat's agent runs in (CPython via WebAssembly)
+assets/vendor/pyodide/  Self-hosted Pyodide build sandbox.js loads
 assets/img/             Favicons, app icons, per-page social cards
+api/search.js           Edge function — keyless DuckDuckGo search for the agent's web_search tool
+api/fetch.js            Edge function — SSRF-guarded URL fetch for the agent's fetch_url tool
 tools/                  Script that regenerates every brand image
 ```
 
@@ -102,6 +115,51 @@ scales to the container and scrolls horizontally below ~900px rather than shrink
 **Internal linking** — a hub-and-spoke cluster: `/models/` is the hub, `/models/corx1-5/` is the
 spoke, and `/documentation/` deep-links into both with descriptive anchor text. `_redirects` catches
 the URLs people guess (`/docs`, `/corx1.5`, `/products`) so no link equity leaks.
+
+---
+
+## CorX Chat
+
+`/chat/` is a real browser chat and agent for CorX3.8-27B — not a proxy through CorX Labs'
+infrastructure. The model runs on **the user's own server** (a GPU notebook printing an
+OpenAI-compatible endpoint, keyless, CORS enabled per `chat/documentation/`'s server code), and the
+browser calls that endpoint **directly**. Because that URL is an ephemeral Cloudflare quick tunnel
+that changes on every restart, it lives in a Settings dialog and `localStorage`, not in the code.
+
+**Agent mode is a text protocol, not native tool-calling.** The server is a plain completions
+endpoint, so `assets/js/chat.js` teaches the model a small format in the system prompt
+(`<tool>{"name": ..., "arguments": {...}}</tool>`) and parses it out of the streamed reply. Every
+tool call actually executes — nothing is simulated:
+
+- `run_python` / `write_file` / `read_file` / `delete_file` / `list_files` / `install_packages` /
+  `deliver_file` run in a real Python sandbox in the tab (`assets/js/sandbox.js`, CPython compiled
+  to WebAssembly via the vendored Pyodide build). Its own Terminal panel shows every command and
+  its real output, including real tracebacks — and if `run_python` fails, the actual traceback is
+  fed back to the model on the next round so it can fix its own code, which is the whole "auto-fix"
+  mechanism: the existing multi-round tool loop, not a special path.
+- `web_search` and `fetch_url` call `/api/search` and `/api/fetch` — two dependency-free Vercel
+  edge functions (DuckDuckGo HTML scraping and an SSRF-guarded proxy) that exist so the browser is
+  not CORS-blocked reaching arbitrary sites. No key, no quota.
+- `search_memory` greps the user's other saved conversations in `localStorage` — real keyword
+  search over what's in the browser, not a hidden server-side record.
+- `set_plan` / `complete_step` publish a checklist the Plan panel renders as live state.
+
+**Effort (Low → Max) changes real request parameters** — `max_tokens`, how many tool-call rounds
+the agent gets before it must stop, how many search results it pulls, and how strongly the system
+prompt tells it to think, verify and re-search. See the `EFFORT` table at the top of `chat.js`.
+
+**State that survives a refresh, honestly.** Conversations, the plan, the agent toggle, effort,
+profile and the endpoint config all persist in `localStorage` (key `corx.chat.v3`). The Python
+sandbox does **not** — it's in-memory WebAssembly, gone when the tab reloads — so the auto-resume
+prompt that fires after an interrupted run tells the model exactly that, instructing it to
+`list_files` and recheck rather than assume anything survived.
+
+**Deploying the API** — `api/search.js` and `api/fetch.js` need a serverless host; Vercel's is what
+`vercel.json` configures (clean URLs, `/api/(.*)` → `no-store`, the CSP's `connect-src` allowing
+`https://*.trycloudflare.com` and `img-src` allowing `https://icons.duckduckgo.com` for source
+favicons). Netlify/Cloudflare Pages serve the static pages fine but won't run the two functions
+without their own equivalent — without them, plain chat still works (the browser talks to the
+model endpoint directly), only Agent mode's search tools go missing.
 
 ---
 
