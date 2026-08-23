@@ -542,3 +542,21 @@
   .ms-name { max-width: 34vw; }
   .provider-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ==========================================================================
+   GitHub panel.
+   ========================================================================== */
+.icon-btn.is-on { color: #fff; background: var(--ink); border-color: var(--ink); }
+.gh-repos-head { display: flex; align-items: center; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+.gh-active { font-size: .78rem; color: var(--espresso); font-weight: 600;
+  border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; background: var(--paper-sunk); }
+.gh-repo-list { margin-top: 12px; max-height: 260px; overflow-y: auto; display: flex; flex-direction: column;
+  gap: 6px; border: 1px solid var(--line); border-radius: 12px; padding: 8px; background: var(--paper-sunk); }
+.gh-repo { display: flex; flex-direction: column; gap: 2px; text-align: left; cursor: pointer;
+  border: 1px solid transparent; border-radius: 9px; padding: 8px 11px; background: none; font: inherit; }
+.gh-repo:hover { background: var(--paper-raised); border-color: var(--line); }
+.gh-repo[aria-current="true"] { border-color: var(--espresso); background: var(--paper-raised); }
+.gh-repo-name { font-size: .86rem; font-weight: 600; color: var(--ink-strong);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gh-repo-meta { font-size: .72rem; color: var(--faint); font-family: var(--mono); }
+#gh-token { font-family: var(--mono); }

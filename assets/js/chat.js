@@ -131,6 +131,7 @@ function defaults() {
     provider: 'corx',
     keys: {},               // per-provider API keys, e.g. { openrouter: 'sk-...' }
     modelByProvider: {},    // remembers the last model chosen for each provider
+    github: { token: '', repo: '', branch: '' },  // PAT + active repo, browser-only
     profile: { name: '', avatar: '' },
     effort: 'medium',
     memory: true,
@@ -189,6 +190,17 @@ function buildSystem(conv) {
   const name = db.profile.name ? ` The user's name is ${db.profile.name}.` : '';
   const base = `You are Corx, a helpful Jamaican AI assistant made by CorX Labs. You speak Jamaican Patois by default and switch to standard English when the user writes in English or asks you to. Be direct: give your actual answer plainly, without softening it, hedging it into mush, or being flippant about it. If the user says or assumes something wrong, tell them plainly that they are wrong and why — do not just agree to be agreeable. Know what is actually achievable and say so: do not promise something is done, fixed, or possible when it is not, and do not pretend a failed attempt worked.${name}\n\n${eff.hint}`;
 
+  // GitHub tools are offered only when the user has connected a token.
+  const githubTools = db.github.token ? `
+GitHub (the user connected a token${db.github.repo ? `, and the active repository is ${db.github.repo}${db.github.branch ? ` on branch ${db.github.branch}` : ''}` : ''}). Work like a careful engineer: for any change, FIRST read the repo — call github_tree to see what's there, then github_read_file on the files you'll touch — and only then write. The repo/branch default to the active one, so you can omit them.
+- github_list_repos {} — list the user's repositories.
+- github_tree {"repo": "owner/name", "branch": "..."} — list every file in the repo.
+- github_read_file {"repo": "owner/name", "path": "src/x.js", "branch": "..."} — read a file (or a directory listing).
+- github_write_file {"repo": "owner/name", "path": "src/x.js", "content": "...", "message": "commit message", "branch": "..."} — create or update a file. Each call is a real commit (this is the push). Read the file first so you replace its whole content deliberately.
+- github_delete_file {"repo": "owner/name", "path": "old.js", "message": "..."} — delete a file (a commit).
+- github_create_repo {"name": "my-repo", "private": true, "description": "..."} — create a new repository (and it becomes the active one).
+- github_pull_request {"repo": "owner/name", "title": "...", "head": "feature-branch", "base": "main", "body": "...", "merge": false, "merge_method": "merge"} — open a PR; set "merge": true to merge it right away.` : '';
+
   return `${base}
 
 You always have a real Python sandbox in the user's browser and real internet access — these are not optional extras, use them whenever they would help, without asking permission first. Use tools by writing a line in EXACTLY this form, on its own line, valid JSON, one call per line:
@@ -214,7 +226,7 @@ Tools (call them by exactly these names):
 - web_search {"query": "...", "n": ${eff.searchN}} — real web search, up to n results with titles, URLs and snippets. Call this yourself, without asking permission, for ANY question that is actually asking for information — not just current events. A fact, a person, a place, a definition, "what is X", "tell me about X", how something works, statistics, recommendations, comparisons: search first and answer from what you find, rather than answering from memory alone. Your training data is not a reliable source and you cannot tell what in it is stale. The only things that do NOT need a search first: small talk and greetings, something the user already told you earlier in this conversation, pure code/math with no factual claim in it, and requests to explain something you were just shown (a file, a search result, code you just wrote).
 - fetch_url {"url": "https://..."} — read a page's actual content (including any code shown on it). Use this after web_search to read the most relevant result before answering, especially for anything technical.
 - search_memory {"query": "..."} — search the user's OTHER saved conversations in this browser for relevant earlier context. Use it when the user references something from before, or when it would help to recall what they already told you.
-
+${githubTools}
 Rules:
 - Never say you cannot do something a tool covers (search, running code, reading a page, remembering another chat). Call the tool instead.
 - Default to searching. If the user is asking you for information about anything — not just news — call web_search before you answer, even if you think you already know the answer. Treat "I already know this" as a reason to confirm with a search, not a reason to skip one.
@@ -315,6 +327,50 @@ function htmlToText(html) {
     .trim();
 }
 
+/* ------------------------------------------------------------------ github
+   The user's GitHub Personal Access Token lives only in this browser and is
+   sent only to api.github.com (which allows cross-origin browser calls). The
+   agent gets a small set of tools built on top of the REST API: list repos,
+   read a repo's tree and files, write/delete files (each write is a commit —
+   that IS the "push"), create a repo, and open/merge a pull request. */
+const b64encodeUtf8 = (s) => btoa(String.fromCharCode(...new TextEncoder().encode(s)));
+function b64decodeUtf8(b64) {
+  const bin = atob(String(b64).replace(/\n/g, ''));
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+async function gh(method, path, body) {
+  const token = db.github.token;
+  if (!token) throw new Error('No GitHub token set. Open the GitHub panel and paste a token.');
+  const res = await fetch(`https://api.github.com${path}`, {
+    method,
+    headers: {
+      authorization: `Bearer ${token}`,
+      accept: 'application/vnd.github+json',
+      'x-github-api-version': '2022-11-28',
+      ...(body ? { 'content-type': 'application/json' } : {})
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const text = await res.text();
+  let data; try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
+  if (!res.ok) {
+    throw new Error(`GitHub ${res.status}: ${data.message || text.slice(0, 200)}`);
+  }
+  return data;
+}
+/* Resolve owner/repo + branch, defaulting to the selected repo. */
+function ghRepo(arg) {
+  const full = (arg || db.github.repo || '').trim();
+  const [owner, repo] = full.split('/');
+  if (!owner || !repo) throw new Error('No repository chosen. Pick one in the GitHub panel, or pass "repo": "owner/name".');
+  return { owner, repo, full };
+}
+async function ghDefaultBranch(owner, repo) {
+  const info = await gh('GET', `/repos/${owner}/${repo}`);
+  return info.default_branch || 'main';
+}
+
 /* --------------------------------------------------------------------- view */
 const els = {};
 let running = false;
@@ -373,7 +429,10 @@ const TOOL_LABEL = {
   set_plan: 'Planning', complete_step: 'Step done', run_python: 'Running Python',
   write_file: 'Writing', read_file: 'Reading', delete_file: 'Deleting',
   list_files: 'Listing files', install_packages: 'Installing', deliver_file: 'Delivering',
-  web_search: 'Searching the web', fetch_url: 'Reading a page', search_memory: 'Recalling memory'
+  web_search: 'Searching the web', fetch_url: 'Reading a page', search_memory: 'Recalling memory',
+  github_list_repos: 'GitHub · repos', github_tree: 'GitHub · files', github_read_file: 'GitHub · read',
+  github_write_file: 'GitHub · commit', github_delete_file: 'GitHub · delete',
+  github_create_repo: 'GitHub · new repo', github_pull_request: 'GitHub · pull request'
 };
 function addToolCard(name, args) {
   if (!currentTools) return null;
@@ -538,6 +597,20 @@ function paintModelLabel() {
   els.modelSwitch.title = `${p.label} · ${model} — click to switch`;
 }
 
+/* GitHub button reflects whether a token is connected and which repo is active. */
+function paintGithub() {
+  if (!els.githubBtn) return;
+  const on = !!db.github.token;
+  els.githubBtn.classList.toggle('is-on', on);
+  els.githubBtn.title = on
+    ? `GitHub connected${db.github.repo ? ` · ${db.github.repo}` : ' · pick a repo'}`
+    : 'Connect GitHub — read repos, commit, push, PRs';
+  if (els.ghActive) {
+    els.ghActive.hidden = !db.github.repo;
+    els.ghActive.textContent = db.github.repo ? `Active: ${db.github.repo}` : '';
+  }
+}
+
 /* ------------------------------------------------------------- tool runners
    `meta` is an out-param: tools that produce something richer than a text
    blob (currently just web_search's result list) drop it there so the
@@ -642,6 +715,92 @@ async function execTool(name, args, conv, meta = {}) {
       }
       return hits.length ? hits.slice(0, 12).join('\n\n') : '(nothing found in other saved chats)';
     }
+
+    /* ---- GitHub tools ---- */
+    case 'github_list_repos': {
+      termLine('cmd', 'gh: list repos');
+      const repos = await gh('GET', '/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member');
+      termLine('ok', `${repos.length} repos`);
+      return repos.map((r) => `${r.full_name}${r.private ? ' (private)' : ''} — default: ${r.default_branch}${r.description ? ` — ${r.description}` : ''}`).join('\n') || '(no repos)';
+    }
+    case 'github_tree': {
+      const { owner, repo, full } = ghRepo(args.repo);
+      const branch = args.branch || (full === db.github.repo && db.github.branch) || await ghDefaultBranch(owner, repo);
+      termLine('cmd', `gh: tree ${owner}/${repo}@${branch}`);
+      const t = await gh('GET', `/repos/${owner}/${repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`);
+      const files = (t.tree || []).filter((n) => n.type === 'blob').map((n) => n.path);
+      termLine('ok', `${files.length} files`);
+      return files.length ? files.join('\n') : '(empty repo)';
+    }
+    case 'github_read_file': {
+      const { owner, repo, full } = ghRepo(args.repo);
+      const branch = args.branch || (full === db.github.repo && db.github.branch) || '';
+      const q = branch ? `?ref=${encodeURIComponent(branch)}` : '';
+      termLine('cmd', `gh: read ${owner}/${repo}/${args.path}`);
+      const f = await gh('GET', `/repos/${owner}/${repo}/contents/${encodeURI(args.path)}${q}`);
+      if (Array.isArray(f)) return f.map((e) => `${e.type}: ${e.path}`).join('\n');  // it's a directory
+      const content = f.content ? b64decodeUtf8(f.content) : '';
+      termLine('ok', `${content.length} chars`);
+      return content || '(empty file)';
+    }
+    case 'github_write_file': {
+      const { owner, repo, full } = ghRepo(args.repo);
+      const branch = args.branch || (full === db.github.repo && db.github.branch) || await ghDefaultBranch(owner, repo);
+      const path = String(args.path || '').replace(/^\/+/, '');
+      if (!path) throw new Error('github_write_file needs a path.');
+      // Look up the existing file's sha (required to update; omitted to create).
+      let sha;
+      try { const cur = await gh('GET', `/repos/${owner}/${repo}/contents/${encodeURI(path)}?ref=${encodeURIComponent(branch)}`); sha = cur.sha; } catch { /* new file */ }
+      termLine('cmd', `gh: ${sha ? 'update' : 'create'} ${owner}/${repo}/${path}`);
+      const r = await gh('PUT', `/repos/${owner}/${repo}/contents/${encodeURI(path)}`, {
+        message: args.message || `${sha ? 'Update' : 'Create'} ${path}`,
+        content: b64encodeUtf8(args.content ?? ''),
+        branch, ...(sha ? { sha } : {})
+      });
+      termLine('ok', `commit ${r.commit?.sha?.slice(0, 7) || ''}`);
+      return `${sha ? 'Updated' : 'Created'} ${path} on ${branch} — commit ${r.commit?.sha?.slice(0, 7)}. ${r.content?.html_url || ''}`;
+    }
+    case 'github_delete_file': {
+      const { owner, repo, full } = ghRepo(args.repo);
+      const branch = args.branch || (full === db.github.repo && db.github.branch) || await ghDefaultBranch(owner, repo);
+      const path = String(args.path || '').replace(/^\/+/, '');
+      const cur = await gh('GET', `/repos/${owner}/${repo}/contents/${encodeURI(path)}?ref=${encodeURIComponent(branch)}`);
+      termLine('cmd', `gh: delete ${owner}/${repo}/${path}`);
+      const r = await gh('DELETE', `/repos/${owner}/${repo}/contents/${encodeURI(path)}`, {
+        message: args.message || `Delete ${path}`, sha: cur.sha, branch
+      });
+      termLine('ok', `commit ${r.commit?.sha?.slice(0, 7) || ''}`);
+      return `Deleted ${path} on ${branch} — commit ${r.commit?.sha?.slice(0, 7)}.`;
+    }
+    case 'github_create_repo': {
+      const name = String(args.name || '').trim();
+      if (!name) throw new Error('github_create_repo needs a name.');
+      termLine('cmd', `gh: create repo ${name}`);
+      const r = await gh('POST', '/user/repos', {
+        name, private: args.private !== false, auto_init: args.auto_init !== false,
+        description: args.description || ''
+      });
+      // Auto-select the new repo so follow-up file tools target it.
+      db.github.repo = r.full_name; db.github.branch = r.default_branch || 'main'; saveDb(); paintGithub();
+      termLine('ok', r.full_name);
+      return `Created ${r.full_name} (${r.private ? 'private' : 'public'}) and selected it. ${r.html_url}`;
+    }
+    case 'github_pull_request': {
+      const { owner, repo } = ghRepo(args.repo);
+      termLine('cmd', `gh: PR ${args.head} → ${args.base}`);
+      const pr = await gh('POST', `/repos/${owner}/${repo}/pulls`, {
+        title: args.title || `Update from CorX`, head: args.head, base: args.base || await ghDefaultBranch(owner, repo),
+        body: args.body || ''
+      });
+      let note = `Opened PR #${pr.number}: ${pr.html_url}`;
+      if (args.merge) {
+        const m = await gh('PUT', `/repos/${owner}/${repo}/pulls/${pr.number}/merge`, { merge_method: args.merge_method || 'merge' });
+        note += m.merged ? ` — merged (${m.sha?.slice(0, 7)}).` : ` — merge not completed: ${m.message || ''}`;
+      }
+      termLine('ok', `PR #${pr.number}`);
+      return note;
+    }
+
     default:
       return `Unknown tool: ${name}`;
   }
@@ -1116,6 +1275,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fieldEndpoint: $('#field-endpoint'), fieldKey: $('#field-key'), fieldModel: $('#field-model'),
     keyLink: $('#key-link'), keyNote: $('#key-note'), modelList: $('#model-list'),
     msMark: $('#ms-mark'), msName: $('#ms-name'), modelSwitch: $('#model-switch'),
+    githubBtn: $('#github-btn'), githubSheet: $('#github-sheet'), ghToken: $('#gh-token'),
+    ghLoad: $('#gh-load'), ghActive: $('#gh-active'), ghRepoList: $('#gh-repo-list'),
+    ghSave: $('#gh-save'), ghCancel: $('#gh-cancel'),
     dockToggle: $('#dock-toggle'), scrim: $('#chat-scrim'),
     sidebarToggle: $('#sidebar-toggle'), sidebarClose: $('#sidebar-close'), convList: $('#conversation-list'),
     term: $('#terminal-out'), termEmpty: $('#terminal-empty'),
@@ -1207,7 +1369,7 @@ document.addEventListener('DOMContentLoaded', () => {
     els.app.setAttribute('data-dock', 'closed'); closeSidebar();
   });
   window.addEventListener('resize', syncScrim);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSheet(); closeSidebar(); } });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeSheet(); closeSidebar(); els.githubSheet.hidden = true; } });
 
   /* editor */
   $('#editor-save').addEventListener('click', async () => {
@@ -1295,6 +1457,51 @@ document.addEventListener('DOMContentLoaded', () => {
     saveDb(); closeSheet(); paintModelLabel(); checkHealth();
   });
   paintModelLabel();
+
+  /* github */
+  const openGithub = () => {
+    els.ghToken.value = db.github.token;
+    els.ghRepoList.hidden = true; els.ghRepoList.innerHTML = '';
+    paintGithub();
+    els.githubSheet.hidden = false;
+  };
+  function closeGithub() { els.githubSheet.hidden = true; }
+  function selectRepo(fullName, branch) {
+    db.github.repo = fullName; db.github.branch = branch || '';
+    saveDb(); paintGithub();
+    $$('.gh-repo', els.ghRepoList).forEach((el) => el.setAttribute('aria-current', String(el.dataset.repo === fullName)));
+  }
+  els.githubBtn?.addEventListener('click', openGithub);
+  els.ghCancel?.addEventListener('click', closeGithub);
+  els.githubSheet?.addEventListener('click', (e) => { if (e.target === els.githubSheet) closeGithub(); });
+  els.ghSave?.addEventListener('click', () => {
+    db.github.token = els.ghToken.value.trim();
+    if (!db.github.token) { db.github.repo = ''; db.github.branch = ''; }
+    saveDb(); paintGithub(); closeGithub();
+  });
+  els.ghLoad?.addEventListener('click', async () => {
+    db.github.token = els.ghToken.value.trim();
+    if (!db.github.token) { els.ghLoad.textContent = 'Paste a token first'; return; }
+    saveDb();
+    els.ghLoad.disabled = true; els.ghLoad.textContent = 'Loading…';
+    try {
+      const repos = await gh('GET', '/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member');
+      els.ghRepoList.hidden = false;
+      els.ghRepoList.innerHTML = repos.map((r) =>
+        `<button type="button" class="gh-repo" data-repo="${esc(r.full_name)}" data-branch="${esc(r.default_branch)}" aria-current="${r.full_name === db.github.repo}">` +
+        `<span class="gh-repo-name">${esc(r.full_name)}</span>` +
+        `<span class="gh-repo-meta">${r.private ? 'private' : 'public'} · ${esc(r.default_branch)}</span>` +
+        `</button>`).join('') || '<p class="panel-empty">No repositories found for this token.</p>';
+      $$('.gh-repo', els.ghRepoList).forEach((el) =>
+        el.addEventListener('click', () => selectRepo(el.dataset.repo, el.dataset.branch)));
+      els.ghLoad.textContent = `Loaded ${repos.length}`;
+    } catch (e) {
+      els.ghRepoList.hidden = false;
+      els.ghRepoList.innerHTML = `<p class="panel-empty" style="color:#b4453a">${esc(e.message)}</p>`;
+      els.ghLoad.textContent = 'Load my repositories';
+    } finally { els.ghLoad.disabled = false; }
+  });
+  paintGithub();
 
   /* profile */
   els.profileBtn?.addEventListener('click', () => {
