@@ -137,7 +137,13 @@
         <button class="icon-btn nav-only" type="button" id="sidebar-toggle" aria-label="Chats">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         </button>
-        <h1>CorX3.8</h1>
+        <h1 class="chat-title">
+          <button class="model-switch" type="button" id="model-switch" aria-haspopup="dialog" title="Switch model or provider">
+            <span class="ms-mark" id="ms-mark" aria-hidden="true"></span>
+            <span class="ms-name" id="ms-name">CorX3.8</span>
+            <svg class="ms-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </h1>
         <span class="status" id="status" data-state="checking" role="status">
           <span class="dot" aria-hidden="true"></span>
           <span class="status-label">Checking…</span>
@@ -260,22 +266,36 @@
   <div class="chat-scrim" id="chat-scrim" hidden></div>
 </div>
 
-<!-- Connection settings -->
+<!-- Model & connection -->
 <div class="sheet" id="settings" hidden>
-  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-    <h2 id="settings-title">Connection settings</h2>
-    <p>CorX3.8 runs on CorX Labs' own server. Paste the address the notebook printed here — it is
-      saved in this browser only. New to this? Read the <a href="/chat/documentation/">set-up guide</a>.</p>
-    <div class="field">
-      <label for="set-endpoint">Model endpoint</label>
+  <div class="sheet-card sheet-wide" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <h2 id="settings-title">Model &amp; connection</h2>
+    <p>Choose a model backend. Bring your own key for a hosted provider, or point at your own CorX3.8
+      server. Everything is saved in this browser only — each request goes straight from your browser
+      to the provider you pick. New to this? Read the <a href="/chat/documentation/">set-up guide</a>.</p>
+
+    <div class="provider-grid" id="provider-grid" role="radiogroup" aria-label="Model provider"></div>
+    <p class="provider-hint" id="provider-hint"></p>
+
+    <div class="field" id="field-endpoint">
+      <label for="set-endpoint">Server address</label>
       <input id="set-endpoint" type="url" inputmode="url" spellcheck="false" placeholder="https://…trycloudflare.com">
-      <small>The base URL of the OpenAI-compatible server. The <code>/v1</code> is added for you, and it stays saved across a refresh.</small>
+      <small>The base URL your CorX3.8 notebook printed. The <code>/v1</code> is added for you, and it stays saved across a refresh.</small>
     </div>
-    <div class="field">
-      <label for="set-key">API key <span style="color:var(--faint);font-weight:400">(optional)</span></label>
-      <input id="set-key" type="text" spellcheck="false" placeholder="Leave blank if the server is keyless">
-      <small>Only needed if the server was started with authentication turned on.</small>
+
+    <div class="field" id="field-key">
+      <label for="set-key">API key <a id="key-link" href="#" target="_blank" rel="noopener" class="key-link" hidden>Get a key&nbsp;↗</a></label>
+      <input id="set-key" type="password" spellcheck="false" autocomplete="off" placeholder="Paste your key">
+      <small id="key-note">Stored in this browser only, and sent only to this provider.</small>
     </div>
+
+    <div class="field" id="field-model">
+      <label for="set-model">Model</label>
+      <input id="set-model" type="text" spellcheck="false" autocomplete="off" list="model-list" placeholder="model id">
+      <datalist id="model-list"></datalist>
+      <small>Pick a suggested model, or type any model id this provider supports.</small>
+    </div>
+
     <div class="sheet-actions">
       <button class="btn btn-ghost btn-sm" type="button" id="cancel-settings">Cancel</button>
       <button class="btn btn-primary btn-sm" type="button" id="save-settings">Save</button>

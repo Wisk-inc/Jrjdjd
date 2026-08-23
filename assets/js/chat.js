@@ -26,6 +26,60 @@ const DEFAULTS = {
   apiKey: '',
   model: 'corx3.8'
 };
+
+/* -------------------------------------------------------------- providers
+   Bring-your-own-key model backends. Every request goes straight from this
+   browser to the provider — no CorX server in the middle — so a provider
+   only works here if it actually allows cross-origin browser calls.
+
+   browser: true  = documented to allow direct browser calls (CORS open, or
+                    Anthropic's explicit opt-in header). Reliable here.
+            false = the provider blocks browser calls; it needs a proxy, so
+                    it will hit a CORS wall. Kept in the list, but honestly
+                    flagged, because people ask for it.
+
+   kind:  'openai'    — OpenAI-compatible /v1/chat/completions + SSE.
+          'anthropic' — Anthropic /v1/messages (system split out, different
+                        SSE event shape).
+   Keys are stored per-provider in db.keys and never leave the browser
+   except to that provider's own API. */
+const PROVIDERS = {
+  corx: {
+    label: 'CorX3.8', kind: 'openai', tint: '#b06a3b', browser: true, keyless: true,
+    hint: "Your own self-hosted CorX3.8-27B. Keyless by default — just paste the tunnel URL.",
+    models: ['corx3.8'],
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M17 8a6 6 0 1 0 0 8"/></svg>'
+  },
+  openrouter: {
+    label: 'OpenRouter', kind: 'openai', base: 'https://openrouter.ai/api', tint: '#6f7bf7', browser: true,
+    keyUrl: 'https://openrouter.ai/keys',
+    hint: 'One key, hundreds of models (Claude, GPT, Llama, DeepSeek…). Works straight from the browser. Recommended if you want a paid model.',
+    models: ['deepseek/deepseek-chat', 'anthropic/claude-3.5-sonnet', 'openai/gpt-4o-mini', 'google/gemini-flash-1.5', 'meta-llama/llama-3.3-70b-instruct', 'qwen/qwen-2.5-72b-instruct'],
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h6l4 8h6"/><path d="M16 4l4 4-4 4"/><circle cx="4" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="16" r="1.4" fill="currentColor" stroke="none"/><path d="M4 16h5"/></svg>'
+  },
+  anthropic: {
+    label: 'Claude', kind: 'anthropic', base: 'https://api.anthropic.com', tint: '#d4915d', browser: true,
+    keyUrl: 'https://console.anthropic.com/settings/keys',
+    hint: "Anthropic's Claude, called directly with the browser-access header. Needs an Anthropic API key.",
+    models: ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest'],
+    mark: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2l2.2 5.6L20 9l-4.4 3.4L17 18l-5-3-5 3 1.4-5.6L4 9l5.8-1.4z"/></svg>'
+  },
+  deepseek: {
+    label: 'DeepSeek', kind: 'openai', base: 'https://api.deepseek.com', tint: '#4d6bfe', browser: false,
+    keyUrl: 'https://platform.deepseek.com/api_keys',
+    hint: 'DeepSeek direct. Cheap and strong, but DeepSeek may block browser calls — if it fails with a CORS error, route it through OpenRouter instead.',
+    models: ['deepseek-chat', 'deepseek-reasoner'],
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c3 3 13 3 16-2-2 1-4 .5-5-1 3-1 4-4 3-7-1 2-3 3-5 3-4 0-8 3-9 7z"/></svg>'
+  },
+  openai: {
+    label: 'OpenAI', kind: 'openai', base: 'https://api.openai.com', tint: '#10a37f', browser: false,
+    keyUrl: 'https://platform.openai.com/api-keys',
+    hint: 'ChatGPT models direct. OpenAI blocks browser calls, so this usually fails with a CORS error unless you proxy it — OpenRouter is the browser-friendly way to reach GPT models.',
+    models: ['gpt-4o-mini', 'gpt-4o', 'o4-mini'],
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a4 4 0 0 1 3.5 6 4 4 0 0 1-3.5 6 4 4 0 0 1-3.5-6A4 4 0 0 1 12 4z"/><path d="M12 4v16M5 8l14 8M19 8 5 16"/></svg>'
+  }
+};
+const providerOf = () => PROVIDERS[db.provider] || PROVIDERS.corx;
 const STORE = 'corx.chat.v3';
 const OLD_STORE = 'corx.chat.direct';
 const MAX_CONVS = 30;
@@ -74,6 +128,9 @@ function migrate() {
 function defaults() {
   return {
     ...DEFAULTS, ...migrate(),
+    provider: 'corx',
+    keys: {},               // per-provider API keys, e.g. { openrouter: 'sk-...' }
+    modelByProvider: {},    // remembers the last model chosen for each provider
     profile: { name: '', avatar: '' },
     effort: 'medium',
     memory: true,
@@ -98,6 +155,22 @@ function saveDb() {
   } catch { /* quota or private mode */ }
 }
 const base = () => db.endpoint.replace(/\/+$/, '').replace(/\/v1$/, '');
+
+/* Base URL for the active provider: CorX uses the user's own tunnel URL;
+   the hosted providers use their fixed API root. */
+function providerBase() {
+  const p = providerOf();
+  if (db.provider === 'corx') return base();
+  // Normalise: no trailing slash and no trailing /v1 — the request builder
+  // always appends /v1/..., so a base given either way can't double up.
+  return (p.base || '').replace(/\/+$/, '').replace(/\/v1$/, '');
+}
+function activeKey() { return db.provider === 'corx' ? db.apiKey : (db.keys[db.provider] || ''); }
+function activeModel() {
+  const p = providerOf();
+  return db.modelByProvider[db.provider] || db.model || p.models[0];
+}
+
 const activeConv = () => db.conversations.find((c) => c.id === db.activeId) || null;
 function newConversation() {
   const conv = {
@@ -425,8 +498,18 @@ function finishSearch(box, { query, results, error }) {
   }
 }
 
-/* ------------------------------------------------------------------ health */
+/* ------------------------------------------------------------------ health
+   Only CorX3.8's self-hosted server exposes a /health endpoint we can ping
+   (and that we're allowed to hit cross-origin). Hosted providers don't, and
+   a preflight there would just fail CORS — so for those we show readiness
+   from whether a key is present rather than pinging. */
 async function checkHealth() {
+  const p = providerOf();
+  if (db.provider !== 'corx') {
+    if (!activeKey()) setStatus('down', `${p.label} · add key`);
+    else setStatus('ok', p.label);
+    return;
+  }
   setStatus('checking', 'Checking…');
   try {
     const res = await fetch(`${base()}/health`, { method: 'GET' });
@@ -440,6 +523,19 @@ async function checkHealth() {
 function setStatus(stateName, label) {
   els.status.setAttribute('data-state', stateName);
   $('.status-label', els.status).textContent = label;
+}
+
+/* Header pill: the active provider's mark + the active model name. */
+function paintModelLabel() {
+  if (!els.msName) return;
+  const p = providerOf();
+  const model = activeModel();
+  // Show a short model name — drop the "vendor/" prefix OpenRouter uses.
+  const shortModel = String(model).split('/').pop();
+  els.msMark.innerHTML = p.mark;
+  els.msMark.style.setProperty('--tint', p.tint);
+  els.msName.textContent = db.provider === 'corx' ? 'CorX3.8' : shortModel;
+  els.modelSwitch.title = `${p.label} · ${model} — click to switch`;
 }
 
 /* ------------------------------------------------------------- tool runners
@@ -551,29 +647,81 @@ async function execTool(name, args, conv, meta = {}) {
   }
 }
 
+/* Build the HTTP request for whichever provider is active. OpenAI-compatible
+   backends (CorX, OpenRouter, DeepSeek, OpenAI) share one shape; Anthropic's
+   Messages API takes the system prompt as a separate field and needs its own
+   headers, so it gets its own branch. */
+function buildRequest(conv) {
+  const p = providerOf();
+  const eff = EFFORT[conv.effort] || EFFORT.medium;
+  const key = activeKey();
+  const model = activeModel();
+  const sys = buildSystem(conv);
+  const turns = conv.messages.map((m) => ({ role: m.role, content: m.content }));
+
+  if (p.kind === 'anthropic') {
+    // Anthropic requires strictly alternating user/assistant turns — coalesce
+    // any accidental same-role run (e.g. two synthetic user messages) so a
+    // long agent loop can't trip its validation.
+    const msgs = [];
+    for (const t of turns) {
+      const last = msgs[msgs.length - 1];
+      if (last && last.role === t.role) last.content += `\n\n${t.content}`;
+      else msgs.push({ role: t.role, content: t.content });
+    }
+    return {
+      url: `${providerBase()}/v1/messages`,
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: { model, system: sys, messages: msgs, stream: true,
+        max_tokens: eff.maxTokens, temperature: eff.temperature },
+      kind: 'anthropic'
+    };
+  }
+
+  const headers = { 'content-type': 'application/json' };
+  if (key) headers.authorization = `Bearer ${key}`;
+  // OpenRouter likes an attribution header; harmless to others.
+  if (db.provider === 'openrouter') { headers['HTTP-Referer'] = 'https://corx-labs.com/chat/'; headers['X-Title'] = 'CorX Chat'; }
+  return {
+    url: `${providerBase()}/v1/chat/completions`,
+    headers,
+    body: { model, messages: [{ role: 'system', content: sys }, ...turns], stream: true,
+      max_tokens: eff.maxTokens, temperature: eff.temperature },
+    kind: 'openai'
+  };
+}
+
 /* -------------------------------------------------------------- one API call */
 async function streamOnce(conv, bubble) {
   abort = new AbortController();
-  const headers = { 'content-type': 'application/json' };
-  if (db.apiKey) headers.authorization = `Bearer ${db.apiKey}`;
-  const eff = EFFORT[conv.effort] || EFFORT.medium;
+  const req = buildRequest(conv);
 
-  const payload = [{ role: 'system', content: buildSystem(conv) },
-    ...conv.messages.map((m) => ({ role: m.role, content: m.content }))];
-
-  const res = await fetch(`${base()}/v1/chat/completions`, {
-    method: 'POST', signal: abort.signal, headers,
-    body: JSON.stringify({
-      model: db.model || 'corx3.8', messages: payload, stream: true,
-      max_tokens: eff.maxTokens, temperature: eff.temperature
-    })
-  });
+  let res;
+  try {
+    res = await fetch(req.url, {
+      method: 'POST', signal: abort.signal, headers: req.headers,
+      body: JSON.stringify(req.body)
+    });
+  } catch (e) {
+    // A blocked cross-origin call throws a TypeError here rather than
+    // returning a status, so name the likely cause honestly.
+    if (e.name === 'AbortError') throw e;
+    const p = providerOf();
+    throw new Error(`Couldn't reach ${p.label}. ${p.browser === false
+      ? `${p.label} blocks direct browser calls — try OpenRouter instead.`
+      : 'Check the endpoint/key and that the server is up.'} (${e.message})`);
+  }
 
   if (!res.ok) {
     let detail = '';
-    try { const j = await res.json(); detail = j.detail || j.error?.message || ''; }
+    try { const j = await res.json(); detail = j.detail || j.error?.message || (typeof j.error === 'string' ? j.error : ''); }
     catch { detail = await res.text().catch(() => ''); }
-    throw new Error(`Server returned ${res.status}${detail ? ` — ${String(detail).slice(0, 200)}` : ''}`);
+    throw new Error(`${providerOf().label} returned ${res.status}${detail ? ` — ${String(detail).slice(0, 200)}` : ''}`);
   }
   if (!res.body) throw new Error('No response stream.');
 
@@ -581,6 +729,13 @@ async function streamOnce(conv, bubble) {
   const decoder = new TextDecoder();
   let buffer = '', acc = '';
   const startedAt = Date.now();
+  const paint = () => {
+    const { reasoning, answer } = splitThinking(acc);
+    if (reasoning) paintReasoning(bubble, reasoning);
+    bubble.innerHTML = answer ? renderMarkdown(answer)
+      : '<p class="typing"><span></span><span></span><span></span></p>';
+    scrollDown();
+  };
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -593,15 +748,11 @@ async function streamOnce(conv, bubble) {
         const raw = line.slice(5).trim();
         if (!raw || raw === '[DONE]') continue;
         let evt; try { evt = JSON.parse(raw); } catch { continue; }
-        const delta = evt?.choices?.[0]?.delta?.content;
-        if (delta) {
-          acc += delta;
-          const { reasoning, answer } = splitThinking(acc);
-          if (reasoning) paintReasoning(bubble, reasoning);
-          bubble.innerHTML = answer ? renderMarkdown(answer)
-            : '<p class="typing"><span></span><span></span><span></span></p>';
-          scrollDown();
-        }
+        // OpenAI: choices[].delta.content. Anthropic: content_block_delta → delta.text.
+        const delta = req.kind === 'anthropic'
+          ? (evt?.type === 'content_block_delta' ? evt?.delta?.text : '')
+          : evt?.choices?.[0]?.delta?.content;
+        if (delta) { acc += delta; paint(); }
       }
     }
   }
@@ -703,10 +854,12 @@ async function send(text, opts = {}) {
       bubble.innerHTML = bubble.innerHTML.includes('typing') ? '<p><em>Stopped.</em></p>' : bubble.innerHTML + '<p><em>Stopped.</em></p>';
     } else {
       bubble.closest('.msg').classList.add('msg-error');
+      const p = providerOf();
+      const help = db.provider === 'corx'
+        ? 'The model server may be offline, or its address may have changed — open <strong>Settings</strong> to update the endpoint, or the <a href="/chat/documentation/">set-up guide</a>.'
+        : `Open <strong>Settings</strong> to check your ${esc(p.label)} key and model, or switch provider.`;
       bubble.innerHTML = `<p>${esc(err.message)}</p>` +
-        '<p style="margin-top:8px;font-size:.85rem">Can’t reach CorX3.8. The model server may be ' +
-        'offline, or its address may have changed — open <strong>Settings</strong> to update the ' +
-        'endpoint, or the <a href="/chat/documentation/">set-up guide</a>.</p>';
+        `<p style="margin-top:8px;font-size:.85rem">${help}</p>`;
       checkHealth();
     }
   } finally {
@@ -958,7 +1111,11 @@ document.addEventListener('DOMContentLoaded', () => {
     send: $('#send-btn'), stop: $('#stop-btn'), status: $('#status'),
     effortSel: $('#effort-select'),
     upload: $('#upload'), attachRow: $('#attach-row'),
-    sheet: $('#settings'), endpoint: $('#set-endpoint'), key: $('#set-key'),
+    sheet: $('#settings'), endpoint: $('#set-endpoint'), key: $('#set-key'), model: $('#set-model'),
+    providerGrid: $('#provider-grid'), providerHint: $('#provider-hint'),
+    fieldEndpoint: $('#field-endpoint'), fieldKey: $('#field-key'), fieldModel: $('#field-model'),
+    keyLink: $('#key-link'), keyNote: $('#key-note'), modelList: $('#model-list'),
+    msMark: $('#ms-mark'), msName: $('#ms-name'), modelSwitch: $('#model-switch'),
     dockToggle: $('#dock-toggle'), scrim: $('#chat-scrim'),
     sidebarToggle: $('#sidebar-toggle'), sidebarClose: $('#sidebar-close'), convList: $('#conversation-list'),
     term: $('#terminal-out'), termEmpty: $('#terminal-empty'),
@@ -1079,17 +1236,65 @@ document.addEventListener('DOMContentLoaded', () => {
     await syncFiles();
   });
 
-  /* connection settings */
-  const openSheet = () => { els.endpoint.value = db.endpoint; els.key.value = db.apiKey; els.sheet.hidden = false; els.endpoint.focus(); };
+  /* model & connection settings */
+  let draftProvider = db.provider;   // provider being edited in the open sheet
+  function renderProviderGrid() {
+    els.providerGrid.innerHTML = '';
+    for (const [id, p] of Object.entries(PROVIDERS)) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'provider-chip';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', String(id === draftProvider));
+      b.style.setProperty('--tint', p.tint);
+      b.innerHTML = `<span class="pc-mark">${p.mark}</span><span class="pc-label">${esc(p.label)}</span>` +
+        (p.browser === false ? '<span class="pc-flag" title="Blocks direct browser calls">proxy</span>' : '');
+      b.addEventListener('click', () => { draftProvider = id; syncSheetForProvider(); });
+      els.providerGrid.appendChild(b);
+    }
+  }
+  function syncSheetForProvider() {
+    const p = PROVIDERS[draftProvider];
+    $$('.provider-chip', els.providerGrid).forEach((chip, i) => {
+      chip.setAttribute('aria-checked', String(Object.keys(PROVIDERS)[i] === draftProvider));
+    });
+    els.providerHint.textContent = p.hint || '';
+    // CorX shows the endpoint field; hosted providers show a key field.
+    els.fieldEndpoint.hidden = draftProvider !== 'corx';
+    els.fieldKey.hidden = !!p.keyless;
+    if (!p.keyless) {
+      els.key.value = db.keys[draftProvider] || '';
+      if (p.keyUrl) { els.keyLink.href = p.keyUrl; els.keyLink.hidden = false; }
+      else els.keyLink.hidden = true;
+      els.keyNote.textContent = p.browser === false
+        ? `${p.label} blocks browser calls, so this may fail with a CORS error. Stored in this browser only.`
+        : 'Stored in this browser only, and sent only to this provider.';
+    }
+    // model suggestions
+    els.modelList.innerHTML = (p.models || []).map((m) => `<option value="${esc(m)}">`).join('');
+    els.model.value = db.modelByProvider[draftProvider] || (draftProvider === db.provider ? db.model : '') || p.models[0] || '';
+  }
+  const openSheet = () => {
+    draftProvider = db.provider;
+    els.endpoint.value = db.endpoint;
+    renderProviderGrid(); syncSheetForProvider();
+    els.sheet.hidden = false;
+  };
   function closeSheet() { els.sheet.hidden = true; els.profileSheet.hidden = true; }
   $('#open-settings').addEventListener('click', openSheet);
+  els.modelSwitch?.addEventListener('click', openSheet);
   $('#cancel-settings').addEventListener('click', closeSheet);
   els.sheet.addEventListener('click', (e) => { if (e.target === els.sheet) closeSheet(); });
   $('#save-settings').addEventListener('click', () => {
-    db.endpoint = els.endpoint.value.trim() || DEFAULTS.endpoint;
-    db.apiKey = els.key.value.trim();
-    saveDb(); closeSheet(); checkHealth();
+    const p = PROVIDERS[draftProvider];
+    db.provider = draftProvider;
+    if (draftProvider === 'corx') db.endpoint = els.endpoint.value.trim() || DEFAULTS.endpoint;
+    if (!p.keyless) db.keys[draftProvider] = els.key.value.trim();
+    const model = els.model.value.trim() || p.models[0];
+    db.modelByProvider[draftProvider] = model;
+    db.model = model;
+    saveDb(); closeSheet(); paintModelLabel(); checkHealth();
   });
+  paintModelLabel();
 
   /* profile */
   els.profileBtn?.addEventListener('click', () => {
