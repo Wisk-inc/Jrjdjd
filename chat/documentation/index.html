@@ -555,8 +555,9 @@ while True:
           <code>https://something.trycloudflare.com/v1</code>. Copy it <em>without</em> the
           <code>/v1</code> &mdash; the chat adds that for you.</p></div></li>
         <li><div><h3>Open the chat and its settings</h3><p>Go to <a href="/chat/">the chat</a> and
-          click the <strong>gear</strong> icon at the top. Paste the URL into <strong>Model
-          endpoint</strong> and press <strong>Save</strong>.</p></div></li>
+          click the <strong>model name</strong> at the top (or the gear icon) to open
+          <strong>Model &amp; connection</strong>. With <strong>CorX3.8</strong> selected, paste the
+          URL into <strong>Server address</strong> and press <strong>Save</strong>.</p></div></li>
         <li><div><h3>Watch the status dot</h3><p>The dot by the title turns <strong>green &middot;
           Online</strong> when it connects (it checks the server&rsquo;s <code>/health</code>). Red
           means it can&rsquo;t reach the server &mdash; check the cell is still running and the URL is
@@ -565,6 +566,18 @@ while True:
           code blocks on purpose so the notebook doesn&rsquo;t tear it down, and restarts the tunnel
           if it drops.</p></div></li>
       </ol>
+      <div class="callout mt-m">
+        <p><strong>Or bring your own model.</strong> The same <strong>Model &amp; connection</strong>
+          panel has a provider picker: pick <strong>OpenRouter</strong>, <strong>Claude</strong>,
+          <strong>DeepSeek</strong> or <strong>OpenAI</strong>, paste that provider&rsquo;s API key
+          (stored in your browser only, sent only to that provider), and choose a model. The whole
+          agent &mdash; search, terminal, files, plan &mdash; then runs on that model instead. Two of
+          these call the provider straight from the browser and just work: <strong>OpenRouter</strong>
+          (one key, most models) and <strong>Claude</strong>. <strong>DeepSeek</strong> and
+          <strong>OpenAI</strong> block direct browser calls, so they&rsquo;re marked
+          <em>proxy</em> and will hit a CORS wall unless you front them yourself &mdash; use OpenRouter
+          to reach GPT or DeepSeek models from the browser.</p>
+      </div>
     </div>
   </section>
 
