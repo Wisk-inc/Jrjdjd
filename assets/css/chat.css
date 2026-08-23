@@ -181,11 +181,15 @@
   position: fixed; inset: 0; z-index: 60;
   display: grid; place-items: center; padding: 18px;
   background: rgba(20,16,12,.42); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  overflow-y: auto;   /* a tall dialog must still be reachable, not clipped */
 }
 .sheet-card {
   width: min(480px, 100%); background: var(--paper-raised);
   border: 1px solid var(--line-strong); border-radius: var(--r-md);
   box-shadow: var(--glass-shadow); padding: clamp(20px, 4vw, 28px);
+  /* Cap the height at every size and scroll inside: without this, a short
+     window pushed the Save button off-screen with no way to get to it. */
+  max-height: calc(100dvh - 36px); overflow-y: auto;
 }
 .sheet-card h2 { font-family: var(--sans); font-size: 1.1rem; font-weight: 600; }
 .sheet-card p { margin-top: 6px; font-size: .86rem; color: var(--muted); }
@@ -540,7 +544,9 @@
 
 @media (max-width: 560px) {
   .ms-name { max-width: 34vw; }
-  .provider-grid { grid-template-columns: 1fr 1fr; }
+  /* Two columns don't fit a phone once the label and the "proxy" flag are in
+     the chip — the second column ran off the edge. One column, full width. */
+  .provider-grid { grid-template-columns: 1fr; }
 }
 
 /* ==========================================================================
@@ -560,3 +566,52 @@
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gh-repo-meta { font-size: .72rem; color: var(--faint); font-family: var(--mono); }
 #gh-token { font-family: var(--mono); }
+
+/* ==========================================================================
+   Phones. The chat bar was wrapping onto two rows (title on one, the icon
+   buttons on another), which ate a chunk of an already short screen and
+   looked broken. Keep it to a single row that scrolls nothing, and tighten
+   the vertical rhythm so more of the conversation is visible.
+   ========================================================================== */
+@media (max-width: 700px) {
+  .chat-bar { flex-wrap: nowrap; gap: 6px; padding: 9px 0 8px; }
+  .chat-bar .icon-btn { width: 32px; height: 32px; border-radius: 9px; }
+  .chat-bar .icon-btn svg { width: 16px; height: 16px; }
+  .model-switch { padding: 4px 6px 4px 4px; gap: 6px; min-width: 0; }
+  .ms-mark { width: 21px; height: 21px; border-radius: 6px; }
+  .ms-mark svg, .ms-mark .brand-img { width: 13px; height: 13px; }
+  .ms-name { font-size: .88rem; max-width: 27vw; }
+  /* the status pill is the first thing worth losing when space is tight */
+  .status { padding: 4px 8px; font-size: .7rem; }
+  .status .status-label { display: none; }
+  .status .dot { margin: 0; }
+
+  .thread { padding-top: 16px; gap: 18px; }
+  .msg-assistant .bubble,
+  .msg-assistant .msg-reasoning,
+  .msg-assistant .msg-tools { padding-left: 0; }   /* reclaim the indent */
+  .msg-user .bubble { max-width: 88%; }
+  .bubble { font-size: .94rem; }
+  .composer-note { font-size: .68rem; margin-top: 7px; line-height: 1.45; }
+  .composer { border-radius: 20px; padding: 8px 8px 8px 14px; }
+
+  /* dialogs: never taller than the screen, and scroll inside */
+  .sheet { padding: 10px; align-items: start; }
+  .sheet-card { max-height: calc(100dvh - 20px); overflow-y: auto; padding: 18px 16px; }
+  .gh-repo-list { max-height: 180px; }
+}
+
+/* The GitHub manual-entry row stacks rather than squeezing the input. */
+.gh-manual-row { display: flex; gap: 8px; align-items: center; }
+.gh-manual-row input { flex: 1; min-width: 0; }
+.gh-manual-row .btn { flex: none; white-space: nowrap; }
+@media (max-width: 460px) {
+  .gh-manual-row { flex-wrap: wrap; }
+  .gh-manual-row input, .gh-manual-row .btn { flex-basis: 100%; }
+}
+
+/* brand logo images inside the provider marks */
+.brand-img { width: 18px; height: 18px; border-radius: 4px; display: block; object-fit: contain; }
+.pc-mark .brand-img { width: 20px; height: 20px; }
+/* A real favicon carries its own colour, so drop the tinted plate behind it. */
+.pc-mark:has(.brand-img), .ms-mark:has(.brand-img) { background: var(--paper-sunk); border: 1px solid var(--line); }
