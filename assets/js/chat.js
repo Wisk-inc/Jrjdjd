@@ -48,21 +48,21 @@ const PROVIDERS = {
     label: 'CorX3.8', kind: 'openai', tint: '#b06a3b', browser: true, keyless: true,
     hint: "Your own self-hosted CorX3.8-27B. Keyless by default — just paste the tunnel URL.",
     models: ['corx3.8'],
-    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M17 8a6 6 0 1 0 0 8"/></svg>'
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 7.5a7 7 0 1 0 0 9"/></svg>'
   },
   openrouter: {
     label: 'OpenRouter', kind: 'openai', base: 'https://openrouter.ai/api', tint: '#6f7bf7', browser: true,
     keyUrl: 'https://openrouter.ai/keys',
     hint: 'One key, hundreds of models (Claude, GPT, Llama, DeepSeek…). Works straight from the browser. Recommended if you want a paid model.',
     models: ['deepseek/deepseek-chat', 'anthropic/claude-3.5-sonnet', 'openai/gpt-4o-mini', 'google/gemini-flash-1.5', 'meta-llama/llama-3.3-70b-instruct', 'qwen/qwen-2.5-72b-instruct'],
-    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h6l4 8h6"/><path d="M16 4l4 4-4 4"/><circle cx="4" cy="8" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="16" r="1.4" fill="currentColor" stroke="none"/><path d="M4 16h5"/></svg>'
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="7" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="17" r="1.6" fill="currentColor" stroke="none"/><path d="M6.6 7h5.4l4 5h3"/><path d="M6.6 17h5.4l2-2.5"/><path d="M16.5 8.5 20 12l-3.5 3.5"/></svg>'
   },
   anthropic: {
     label: 'Claude', kind: 'anthropic', base: 'https://api.anthropic.com', tint: '#d4915d', browser: true,
     keyUrl: 'https://console.anthropic.com/settings/keys',
     hint: "Anthropic's Claude, called directly with the browser-access header. Needs an Anthropic API key.",
     models: ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest'],
-    mark: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2l2.2 5.6L20 9l-4.4 3.4L17 18l-5-3-5 3 1.4-5.6L4 9l5.8-1.4z"/></svg>'
+    mark: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M17.3041 3.541h-3.6718l6.696 16.918H24ZM6.6959 3.541 0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.541Zm-.3712 10.2231 2.2914-5.9456 2.2914 5.9456Z"/></svg>'
   },
   deepseek: {
     label: 'DeepSeek', kind: 'openai', base: 'https://api.deepseek.com', tint: '#4d6bfe', browser: false,
@@ -76,7 +76,7 @@ const PROVIDERS = {
     keyUrl: 'https://platform.openai.com/api-keys',
     hint: 'ChatGPT models direct. OpenAI blocks browser calls, so this usually fails with a CORS error unless you proxy it — OpenRouter is the browser-friendly way to reach GPT models.',
     models: ['gpt-4o-mini', 'gpt-4o', 'o4-mini'],
-    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a4 4 0 0 1 3.5 6 4 4 0 0 1-3.5 6 4 4 0 0 1-3.5-6A4 4 0 0 1 12 4z"/><path d="M12 4v16M5 8l14 8M19 8 5 16"/></svg>'
+    mark: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.1419.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg>'
   }
 };
 const providerOf = () => PROVIDERS[db.provider] || PROVIDERS.corx;
