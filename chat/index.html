@@ -326,6 +326,14 @@
       <span class="gh-active" id="gh-active" hidden></span>
     </div>
     <div class="gh-repo-list" id="gh-repo-list" hidden></div>
+    <div class="field">
+      <label for="gh-manual">Or enter a repository directly</label>
+      <div class="gh-manual-row">
+        <input id="gh-manual" type="text" spellcheck="false" autocomplete="off" placeholder="owner/repo">
+        <button class="btn btn-ghost btn-sm" type="button" id="gh-manual-add">Use this repo</button>
+      </div>
+      <small>Works even if the list above comes back empty — paste <code>owner/repo</code> or a GitHub URL.</small>
+    </div>
     <div class="sheet-actions">
       <button class="btn btn-ghost btn-sm" type="button" id="gh-cancel">Close</button>
       <button class="btn btn-primary btn-sm" type="button" id="gh-save">Save token</button>

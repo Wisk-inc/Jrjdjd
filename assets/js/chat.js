@@ -45,34 +45,34 @@ const DEFAULTS = {
    except to that provider's own API. */
 const PROVIDERS = {
   corx: {
-    label: 'CorX3.8', kind: 'openai', tint: '#b06a3b', browser: true, keyless: true,
+    label: 'CorX3.8', kind: 'openai', tint: '#b06a3b', browser: true, keyless: true, domain: 'corx-labs.com',
     hint: "Your own self-hosted CorX3.8-27B. Keyless by default — just paste the tunnel URL.",
     models: ['corx3.8'],
     mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 7.5a7 7 0 1 0 0 9"/></svg>'
   },
   openrouter: {
-    label: 'OpenRouter', kind: 'openai', base: 'https://openrouter.ai/api', tint: '#6f7bf7', browser: true,
+    label: 'OpenRouter', kind: 'openai', base: 'https://openrouter.ai/api', tint: '#6f7bf7', browser: true, domain: 'openrouter.ai',
     keyUrl: 'https://openrouter.ai/keys',
     hint: 'One key, hundreds of models (Claude, GPT, Llama, DeepSeek…). Works straight from the browser. Recommended if you want a paid model.',
     models: ['deepseek/deepseek-chat', 'anthropic/claude-3.5-sonnet', 'openai/gpt-4o-mini', 'google/gemini-flash-1.5', 'meta-llama/llama-3.3-70b-instruct', 'qwen/qwen-2.5-72b-instruct'],
     mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="7" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="17" r="1.6" fill="currentColor" stroke="none"/><path d="M6.6 7h5.4l4 5h3"/><path d="M6.6 17h5.4l2-2.5"/><path d="M16.5 8.5 20 12l-3.5 3.5"/></svg>'
   },
   anthropic: {
-    label: 'Claude', kind: 'anthropic', base: 'https://api.anthropic.com', tint: '#d4915d', browser: true,
+    label: 'Claude', kind: 'anthropic', base: 'https://api.anthropic.com', tint: '#d4915d', browser: true, domain: 'claude.ai',
     keyUrl: 'https://console.anthropic.com/settings/keys',
     hint: "Anthropic's Claude, called directly with the browser-access header. Needs an Anthropic API key.",
     models: ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest'],
     mark: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M17.3041 3.541h-3.6718l6.696 16.918H24ZM6.6959 3.541 0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.541Zm-.3712 10.2231 2.2914-5.9456 2.2914 5.9456Z"/></svg>'
   },
   deepseek: {
-    label: 'DeepSeek', kind: 'openai', base: 'https://api.deepseek.com', tint: '#4d6bfe', browser: false,
+    label: 'DeepSeek', kind: 'openai', base: 'https://api.deepseek.com', tint: '#4d6bfe', browser: false, domain: 'deepseek.com',
     keyUrl: 'https://platform.deepseek.com/api_keys',
     hint: 'DeepSeek direct. Cheap and strong, but DeepSeek may block browser calls — if it fails with a CORS error, route it through OpenRouter instead.',
     models: ['deepseek-chat', 'deepseek-reasoner'],
     mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c3 3 13 3 16-2-2 1-4 .5-5-1 3-1 4-4 3-7-1 2-3 3-5 3-4 0-8 3-9 7z"/></svg>'
   },
   openai: {
-    label: 'OpenAI', kind: 'openai', base: 'https://api.openai.com', tint: '#10a37f', browser: false,
+    label: 'OpenAI', kind: 'openai', base: 'https://api.openai.com', tint: '#10a37f', browser: false, domain: 'openai.com',
     keyUrl: 'https://platform.openai.com/api-keys',
     hint: 'ChatGPT models direct. OpenAI blocks browser calls, so this usually fails with a CORS error unless you proxy it — OpenRouter is the browser-friendly way to reach GPT models.',
     models: ['gpt-4o-mini', 'gpt-4o', 'o4-mini'],
@@ -80,6 +80,34 @@ const PROVIDERS = {
   }
 };
 const providerOf = () => PROVIDERS[db.provider] || PROVIDERS.corx;
+
+/* Each provider's real logo, taken from its own site favicon (the same
+   service already used for search-result icons), with the inline SVG mark
+   kept as the fallback if the image can't load — offline, blocked, or the
+   host has no icon. That way the picker shows genuine brand marks rather
+   than approximations, and still renders something sensible when it can't
+   reach the network. */
+function providerMark(p) {
+  if (!p.domain) return p.mark;
+  // The fallback is wired by wireBrandFallbacks() rather than an inline
+  // onerror attribute, which the site's CSP (script-src 'self') blocks.
+  return `<img class="brand-img" alt="" width="18" height="18" loading="lazy"` +
+    ` data-fallback="${esc(p.label)}"` +
+    ` src="https://icons.duckduckgo.com/ip3/${encodeURIComponent(p.domain)}.ico">`;
+}
+/* Swap any brand image that fails to load for that provider's inline mark. */
+function wireBrandFallbacks(root) {
+  for (const img of $$('img.brand-img', root)) {
+    if (img.dataset.wired) continue;
+    img.dataset.wired = '1';
+    img.addEventListener('error', () => {
+      const p = Object.values(PROVIDERS).find((x) => x.label === img.dataset.fallback);
+      const span = document.createElement('span');
+      span.innerHTML = p ? p.mark : '';
+      img.replaceWith(...span.childNodes);
+    }, { once: true });
+  }
+}
 const STORE = 'corx.chat.v3';
 const OLD_STORE = 'corx.chat.direct';
 const MAX_CONVS = 30;
@@ -184,6 +212,33 @@ function newConversation() {
   return conv;
 }
 
+/* ------------------------------------------------------------------ memory
+   Cross-chat memory. search_memory lets the model go looking on purpose, but
+   that only helps if it thinks to ask. This builds a short standing digest of
+   the user's OTHER conversations — what they were about and the last thing
+   said in each — and injects it into every system prompt, so context carries
+   between chats without the model having to request it. Kept small on
+   purpose: a digest, not a transcript, so it can't crowd out the real
+   conversation. */
+function memoryDigest(conv) {
+  if (!db.memory) return '';
+  const others = db.conversations
+    .filter((c) => c.id !== conv.id && c.messages.some((m) => !m.synthetic))
+    .slice(0, 8);
+  if (!others.length) return '';
+  const lines = others.map((c) => {
+    const real = c.messages.filter((m) => !m.synthetic && m.role !== 'system');
+    const firstUser = real.find((m) => m.role === 'user');
+    const last = real[real.length - 1];
+    const when = c.updated ? new Date(c.updated).toISOString().slice(0, 10) : '';
+    const gist = (t) => String(t || '').replace(/<think>[\s\S]*?<\/think>/gi, ' ')
+      .replace(/<tool>[\s\S]*?<\/tool>/gi, ' ').replace(/\s+/g, ' ').trim().slice(0, 160);
+    return `- "${c.title}"${when ? ` (${when})` : ''}: asked — ${gist(firstUser?.content)}` +
+      (last && last !== firstUser ? ` | last — ${gist(last.content)}` : '');
+  });
+  return `\n\nMEMORY — the user's other saved chats in this browser (context carried over; do not bring these up unless relevant):\n${lines.join('\n')}\nUse search_memory to pull the full text of any of these when you need detail.`;
+}
+
 /* -------------------------------------------------------------- system prompt */
 function buildSystem(conv) {
   const eff = EFFORT[conv.effort] || EFFORT.medium;
@@ -201,7 +256,7 @@ GitHub (the user connected a token${db.github.repo ? `, and the active repositor
 - github_create_repo {"name": "my-repo", "private": true, "description": "..."} — create a new repository (and it becomes the active one).
 - github_pull_request {"repo": "owner/name", "title": "...", "head": "feature-branch", "base": "main", "body": "...", "merge": false, "merge_method": "merge"} — open a PR; set "merge": true to merge it right away.` : '';
 
-  return `${base}
+  return `${base}${memoryDigest(conv)}
 
 You always have a real Python sandbox in the user's browser and real internet access — these are not optional extras, use them whenever they would help, without asking permission first. Use tools by writing a line in EXACTLY this form, on its own line, valid JSON, one call per line:
 
@@ -213,7 +268,7 @@ Worked example — the user asks you to write and run a script:
 
 You may call several tools in one reply. After they run, you will be shown their results and can continue. When the task is done, reply normally with no tool line.
 
-Tools (call them by exactly these names):
+COMMANDS YOU CAN RUN RIGHT NOW — this is your full toolset, available from the very first message of every conversation. You do not need to ask for access, and you must never claim you lack one of these:
 - set_plan {"steps": ["step one", ...]} — publish a checklist first for any job with more than two steps. The user watches this live.
 - complete_step {"index": 0} — mark a plan step done (zero-based).
 - run_python {"code": "..."} — run Python. State persists between calls. You get back exactly what it printed. import web gives real internet access from inside the sandbox (web.get(url) / web.post(url, body)) — plain requests/urllib calls do NOT work here, the sandbox has no raw sockets, so always use web for any HTTP call you write yourself. To read an uploaded .zip: zipfile.ZipFile('/work/name.zip'). To create or edit one: open it with mode "a" or "w" and use .write(path, arcname) or .writestr(arcname, data), e.g. "with zipfile.ZipFile('/work/out.zip', 'w') as z: z.writestr('notes.txt', 'hello')".
@@ -237,6 +292,7 @@ Rules:
 - Before you run code you just wrote, look it over in your <think> block first: check the logic, edge cases and syntax, and fix anything you spot — don't wait for it to fail first.
 - If run_python errors anyway, read the traceback and try to fix it yourself on your next call before reporting the error to the user. If you genuinely cannot get it working after real attempts, say that plainly — do not claim it works when it does not.
 - When you search, read more than one source if they might disagree, and say plainly if sources conflict rather than picking one silently.
+- Never ship code you have not run. Build it in pieces: write a piece, run it immediately, read the real output, and only move on once that piece works. If a piece fails, edit the file and run it again — keep going until it actually runs, and only then show it to the user. Saying "this should work" without having run it is not acceptable.
 - Put final code or output in normal markdown for the user, after the tools that made it real. Keep the Patois voice, but tool lines must be exact JSON.`;
 }
 
@@ -359,6 +415,35 @@ async function gh(method, path, body) {
   }
   return data;
 }
+/* List the user's repositories.
+
+   Fine-grained tokens (github_pat_…) behave differently from classic ones:
+   passing `affiliation` can come back with an empty list even though the
+   token has access, and a token scoped to selected repositories only shows
+   those. So try the plain listing first, then fall back to the user's own
+   public listing, then to the GitHub App installation listing. Returns the
+   identity too, so the panel can say who it authenticated as. */
+async function ghListRepos() {
+  const me = await gh('GET', '/user').catch(() => ({}));
+  const tries = [
+    '/user/repos?per_page=100&sort=updated',
+    me.login ? `/users/${encodeURIComponent(me.login)}/repos?per_page=100&sort=updated` : null
+  ].filter(Boolean);
+
+  for (const path of tries) {
+    try {
+      const list = await gh('GET', path);
+      if (Array.isArray(list) && list.length) return { me, repos: list };
+    } catch { /* try the next strategy */ }
+  }
+  // GitHub App installation tokens expose repos under a different route.
+  try {
+    const inst = await gh('GET', '/installation/repositories?per_page=100');
+    if (inst.repositories?.length) return { me, repos: inst.repositories };
+  } catch { /* not an installation token */ }
+  return { me, repos: [] };
+}
+
 /* Resolve owner/repo + branch, defaulting to the selected repo. */
 function ghRepo(arg) {
   const full = (arg || db.github.repo || '').trim();
@@ -591,7 +676,8 @@ function paintModelLabel() {
   const model = activeModel();
   // Show a short model name — drop the "vendor/" prefix OpenRouter uses.
   const shortModel = String(model).split('/').pop();
-  els.msMark.innerHTML = p.mark;
+  els.msMark.innerHTML = providerMark(p);
+  wireBrandFallbacks(els.msMark);
   els.msMark.style.setProperty('--tint', p.tint);
   els.msName.textContent = db.provider === 'corx' ? 'CorX3.8' : shortModel;
   els.modelSwitch.title = `${p.label} · ${model} — click to switch`;
@@ -719,9 +805,13 @@ async function execTool(name, args, conv, meta = {}) {
     /* ---- GitHub tools ---- */
     case 'github_list_repos': {
       termLine('cmd', 'gh: list repos');
-      const repos = await gh('GET', '/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member');
+      const { me, repos } = await ghListRepos();
       termLine('ok', `${repos.length} repos`);
-      return repos.map((r) => `${r.full_name}${r.private ? ' (private)' : ''} — default: ${r.default_branch}${r.description ? ` — ${r.description}` : ''}`).join('\n') || '(no repos)';
+      if (!repos.length) {
+        return `No repositories visible to this token (authenticated as ${me.login || 'unknown'}). ` +
+          'If it is a fine-grained token, its "Repository access" must list the repos, and it needs Contents: read & write.';
+      }
+      return repos.map((r) => `${r.full_name}${r.private ? ' (private)' : ''} — default: ${r.default_branch}${r.description ? ` — ${r.description}` : ''}`).join('\n');
     }
     case 'github_tree': {
       const { owner, repo, full } = ghRepo(args.repo);
@@ -1278,6 +1368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     githubBtn: $('#github-btn'), githubSheet: $('#github-sheet'), ghToken: $('#gh-token'),
     ghLoad: $('#gh-load'), ghActive: $('#gh-active'), ghRepoList: $('#gh-repo-list'),
     ghSave: $('#gh-save'), ghCancel: $('#gh-cancel'),
+    ghManual: $('#gh-manual'), ghManualAdd: $('#gh-manual-add'),
     dockToggle: $('#dock-toggle'), scrim: $('#chat-scrim'),
     sidebarToggle: $('#sidebar-toggle'), sidebarClose: $('#sidebar-close'), convList: $('#conversation-list'),
     term: $('#terminal-out'), termEmpty: $('#terminal-empty'),
@@ -1408,11 +1499,12 @@ document.addEventListener('DOMContentLoaded', () => {
       b.setAttribute('role', 'radio');
       b.setAttribute('aria-checked', String(id === draftProvider));
       b.style.setProperty('--tint', p.tint);
-      b.innerHTML = `<span class="pc-mark">${p.mark}</span><span class="pc-label">${esc(p.label)}</span>` +
+      b.innerHTML = `<span class="pc-mark">${providerMark(p)}</span><span class="pc-label">${esc(p.label)}</span>` +
         (p.browser === false ? '<span class="pc-flag" title="Blocks direct browser calls">proxy</span>' : '');
       b.addEventListener('click', () => { draftProvider = id; syncSheetForProvider(); });
       els.providerGrid.appendChild(b);
     }
+    wireBrandFallbacks(els.providerGrid);
   }
   function syncSheetForProvider() {
     const p = PROVIDERS[draftProvider];
@@ -1485,21 +1577,49 @@ document.addEventListener('DOMContentLoaded', () => {
     saveDb();
     els.ghLoad.disabled = true; els.ghLoad.textContent = 'Loading…';
     try {
-      const repos = await gh('GET', '/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member');
+      const { me, repos } = await ghListRepos();
       els.ghRepoList.hidden = false;
-      els.ghRepoList.innerHTML = repos.map((r) =>
-        `<button type="button" class="gh-repo" data-repo="${esc(r.full_name)}" data-branch="${esc(r.default_branch)}" aria-current="${r.full_name === db.github.repo}">` +
-        `<span class="gh-repo-name">${esc(r.full_name)}</span>` +
-        `<span class="gh-repo-meta">${r.private ? 'private' : 'public'} · ${esc(r.default_branch)}</span>` +
-        `</button>`).join('') || '<p class="panel-empty">No repositories found for this token.</p>';
-      $$('.gh-repo', els.ghRepoList).forEach((el) =>
-        el.addEventListener('click', () => selectRepo(el.dataset.repo, el.dataset.branch)));
-      els.ghLoad.textContent = `Loaded ${repos.length}`;
+      if (!repos.length) {
+        // Empty is almost always a token-scope problem, not a real absence of
+        // repos — say exactly what to change instead of a blank "none found".
+        els.ghRepoList.innerHTML =
+          `<p class="panel-empty">Token works${me.login ? ` (signed in as <strong>${esc(me.login)}</strong>)` : ''}, but no repositories are visible to it.` +
+          '<br><br>If it is a <strong>fine-grained</strong> token, open it on GitHub and set <strong>Repository access</strong> to “All repositories” (or add the ones you want), then give it <strong>Contents: read &amp; write</strong>. Save, and load again.' +
+          '<br><br>Or just type the repo below.</p>';
+      } else {
+        els.ghRepoList.innerHTML = repos.map((r) =>
+          `<button type="button" class="gh-repo" data-repo="${esc(r.full_name)}" data-branch="${esc(r.default_branch || 'main')}" aria-current="${r.full_name === db.github.repo}">` +
+          `<span class="gh-repo-name">${esc(r.full_name)}</span>` +
+          `<span class="gh-repo-meta">${r.private ? 'private' : 'public'} · ${esc(r.default_branch || 'main')}</span>` +
+          `</button>`).join('');
+        $$('.gh-repo', els.ghRepoList).forEach((el) =>
+          el.addEventListener('click', () => selectRepo(el.dataset.repo, el.dataset.branch)));
+      }
+      els.ghLoad.textContent = repos.length ? `Loaded ${repos.length}` : 'Load my repositories';
+    } catch (e) {
+      els.ghRepoList.hidden = false;
+      els.ghRepoList.innerHTML = `<p class="panel-empty" style="color:#b4453a">${esc(e.message)}</p>` +
+        '<p class="panel-empty">A 401 means the token is wrong or revoked. A 403 usually means it is missing a permission.</p>';
+      els.ghLoad.textContent = 'Load my repositories';
+    } finally { els.ghLoad.disabled = false; }
+  });
+  /* Manual entry — always works, even when listing is blocked by token scope. */
+  els.ghManualAdd?.addEventListener('click', async () => {
+    const full = els.ghManual.value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '').replace(/\/+$/, '');
+    if (!/^[^/]+\/[^/]+$/.test(full)) { els.ghManual.focus(); return; }
+    db.github.token = els.ghToken.value.trim() || db.github.token;
+    els.ghManualAdd.disabled = true; els.ghManualAdd.textContent = 'Checking…';
+    try {
+      const info = await gh('GET', `/repos/${full}`);
+      selectRepo(info.full_name, info.default_branch || 'main');
+      els.ghManualAdd.textContent = 'Selected';
+      els.ghRepoList.hidden = false;
+      els.ghRepoList.innerHTML = `<p class="panel-empty">Using <strong>${esc(info.full_name)}</strong> on <code>${esc(info.default_branch || 'main')}</code>.</p>`;
     } catch (e) {
       els.ghRepoList.hidden = false;
       els.ghRepoList.innerHTML = `<p class="panel-empty" style="color:#b4453a">${esc(e.message)}</p>`;
-      els.ghLoad.textContent = 'Load my repositories';
-    } finally { els.ghLoad.disabled = false; }
+      els.ghManualAdd.textContent = 'Use this repo';
+    } finally { els.ghManualAdd.disabled = false; }
   });
   paintGithub();
 
