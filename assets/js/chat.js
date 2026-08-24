@@ -839,7 +839,7 @@ async function execTool(name, args, conv, meta = {}) {
       if (data.error) { termLine('err', data.error); return `Error: ${data.error}`; }
       const text = /text\/html/i.test(data.headers?.['content-type'] || '') ? htmlToText(data.body) : data.body;
       termLine('ok', `${data.status} — ${text.length} chars`);
-      return `HTTP ${data.status} — ${args.url}\n\n${text.slice(0, 12000)}`;
+      return `HTTP ${data.status} — ${args.url}\n\n${text.slice(0, 5000)}`;
     }
     case 'search_memory': {
       const q = String(args.query || '').toLowerCase().trim();
@@ -969,6 +969,48 @@ async function execTool(name, args, conv, meta = {}) {
   }
 }
 
+/* ------------------------------------------------------------ context size
+   Every round re-sends the whole conversation, and the model re-reads all of
+   it before writing a single token. Tool results are big — a fetched page can
+   be 12KB — so an agent run's prompt grew several times over across a few
+   rounds (measured: 941 → 7,109 tokens in five), and the cost of that is paid
+   again on every round. That is the main reason a long run crawls.
+
+   So: cap what goes over the wire. Keep the newest turns in full, hard-cap any
+   single giant message, and always keep the original request so the model
+   never loses the task it is working on. */
+const CTX_BUDGET_CHARS = 14000;   // ~3.5k tokens of conversation
+const MAX_TURN_CHARS = 4000;      // no single turn may dominate the budget
+
+function trimTurns(messages) {
+  const all = messages.filter((m) => m.role !== 'system' && typeof m.content === 'string');
+  const shrink = (m) => {
+    const c = m.content;
+    return c.length <= MAX_TURN_CHARS ? c
+      : `${c.slice(0, MAX_TURN_CHARS)}\n…[${c.length - MAX_TURN_CHARS} more characters trimmed]`;
+  };
+
+  const kept = [];
+  let used = 0;
+  for (let i = all.length - 1; i >= 0; i -= 1) {
+    const content = shrink(all[i]);
+    // Always keep at least the latest turn, even if it is oversized on its own.
+    if (kept.length && used + content.length > CTX_BUDGET_CHARS) break;
+    kept.unshift({ role: all[i].role, content });
+    used += content.length;
+  }
+
+  // The opening request is the task; losing it mid-run makes the model drift.
+  const first = all.find((m) => m.role === 'user' && !m.synthetic);
+  if (first && kept.length < all.length && !kept.some((k) => k.content.startsWith(first.content.slice(0, 60)))) {
+    kept.unshift({
+      role: 'user',
+      content: `[Earlier turns trimmed to keep this fast. The original request was:]\n${shrink(first)}`
+    });
+  }
+  return kept;
+}
+
 /* Build the HTTP request for whichever provider is active. OpenAI-compatible
    backends (CorX, OpenRouter, DeepSeek, OpenAI) share one shape; Anthropic's
    Messages API takes the system prompt as a separate field and needs its own
@@ -979,7 +1021,7 @@ function buildRequest(conv) {
   const key = activeKey();
   const model = activeModel();
   const sys = buildSystem(conv);
-  const turns = conv.messages.map((m) => ({ role: m.role, content: m.content }));
+  const turns = trimTurns(conv.messages);
 
   if (p.kind === 'anthropic') {
     // Anthropic requires strictly alternating user/assistant turns — coalesce
@@ -1051,6 +1093,7 @@ async function streamOnce(conv, bubble) {
   const decoder = new TextDecoder();
   let buffer = '', acc = '';
   const startedAt = Date.now();
+  let firstByteAt = 0;
   const paint = () => {
     const { reasoning, answer } = splitThinking(acc);
     if (reasoning) paintReasoning(bubble, reasoning);
@@ -1076,6 +1119,13 @@ async function streamOnce(conv, bubble) {
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
+    if (!firstByteAt) {
+      firstByteAt = Date.now();
+      // Time to first token is prefill — the model reading the prompt.
+      // Reported so a slow run can be attributed to the server rather
+      // than guessed at.
+      termLine('sys', `first token after ${((firstByteAt - startedAt) / 1000).toFixed(1)}s (prefill)`);
+    }
     armWatchdog(STALL_TIMEOUT_MS);   // it's alive; only silence should kill it
     buffer += decoder.decode(value, { stream: true });
     const frames = buffer.split('\n\n');
@@ -1102,6 +1152,12 @@ async function streamOnce(conv, bubble) {
     throw e;
   } finally {
     clearTimeout(watchdog);
+  }
+  if (firstByteAt) {
+    const genSecs = (Date.now() - firstByteAt) / 1000;
+    const approxTokens = Math.round(acc.length / 4);
+    termLine('sys', `generated ~${approxTokens} tokens in ${genSecs.toFixed(1)}s`
+      + (genSecs > 0.5 ? ` (~${Math.round(approxTokens / genSecs)} tok/s)` : ''));
   }
   const { reasoning } = splitThinking(acc);
   if (reasoning) paintReasoning(bubble, reasoning, Math.max(1, Math.round((Date.now() - startedAt) / 1000)));
@@ -1253,7 +1309,7 @@ async function send(text, opts = {}) {
         if (!failed && (call.name === 'write_file' || call.name === 'deliver_file') && call.args.path) {
           addFileCard(call.args.path);
         }
-        results.push(`[${call.name}] ->\n${String(out).slice(0, 6000)}`);
+        results.push(`[${call.name}] ->\n${String(out).slice(0, 2500)}`);
         toolLog.push({ name: call.name, args: call.args, output: out, failed, results: meta.results, images: meta.images });
       }
       assistantMsg.tools = (assistantMsg.tools || []).concat(toolLog);
