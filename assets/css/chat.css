@@ -581,9 +581,12 @@
   .ms-mark { width: 21px; height: 21px; border-radius: 6px; }
   .ms-mark svg, .ms-mark .brand-img { width: 13px; height: 13px; }
   .ms-name { font-size: .88rem; max-width: 27vw; }
-  /* the status pill is the first thing worth losing when space is tight */
-  .status { padding: 4px 8px; font-size: .7rem; }
-  .status .status-label { display: none; }
+  /* The label carries the only progress and offline reporting there is —
+     hiding it left a bare dot and no way to tell working from broken. Keep
+     it, just narrow; the model name gives up room instead. */
+  .status { padding: 4px 8px; font-size: .68rem; min-width: 0; }
+  .status .status-label { max-width: 38vw; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; }
   .status .dot { margin: 0; }
 
   .thread { padding-top: 16px; gap: 18px; }

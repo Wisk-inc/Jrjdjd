@@ -378,6 +378,8 @@ const TOOL_TIMEOUT_MS = 45000;
 // The model may be loading or prefilling a long prompt on a big model, so
 // the first token gets a generous wait; after it starts, only real silence
 // counts as a stall.
+// Headers back from the server — proves it exists. Short on purpose.
+const CONNECT_TIMEOUT_MS = 25000;
 const FIRST_TOKEN_TIMEOUT_MS = 240000;
 const STALL_TIMEOUT_MS = 90000;
 async function fetchWithTimeout(url, opts = {}, ms = TOOL_TIMEOUT_MS) {
@@ -531,7 +533,9 @@ function setProgress(step, total, startedAt) {
   clearInterval(progressTimer);
   const tick = () => {
     const secs = Math.round((Date.now() - startedAt) / 1000);
-    setStatus('checking', `Step ${step}/${total} · ${secs}s`);
+    // Compact on purpose: this has to survive a narrow phone pill, and the
+    // ticking seconds are the part that proves the run is still alive.
+    setStatus('checking', `${step}/${total} · ${secs}s`);
   };
   tick();
   progressTimer = setInterval(tick, 1000);
@@ -1066,19 +1070,37 @@ async function streamOnce(conv, bubble) {
   const req = buildRequest(conv);
 
   let res;
+  // Getting response headers back is a separate thing from waiting for a
+  // token: headers prove the server is there, and only then is a long wait
+  // reasonable. A dead address (the commonest case — a quick-tunnel URL
+  // changes every restart) otherwise sat here burning the whole first-token
+  // budget before saying anything.
+  let connectTimedOut = false;
+  const connectTimer = setTimeout(() => { connectTimedOut = true; abort.abort(); }, CONNECT_TIMEOUT_MS);
   try {
     res = await fetch(req.url, {
       method: 'POST', signal: abort.signal, headers: req.headers,
       body: JSON.stringify(req.body)
     });
   } catch (e) {
+    const p = providerOf();
+    if (connectTimedOut) {
+      throw new Error(`${p.label} did not respond within ${Math.round(CONNECT_TIMEOUT_MS / 1000)}s at ${base()}. ` +
+        (db.provider === 'corx'
+          ? 'A Cloudflare quick-tunnel address changes every time the notebook restarts — check the URL the cell printed and paste the current one into Settings.'
+          : 'Check the endpoint and your key.'));
+    }
     // A blocked cross-origin call throws a TypeError here rather than
     // returning a status, so name the likely cause honestly.
     if (e.name === 'AbortError') throw e;
-    const p = providerOf();
-    throw new Error(`Couldn't reach ${p.label}. ${p.browser === false
-      ? `${p.label} blocks direct browser calls — try OpenRouter instead.`
-      : 'Check the endpoint/key and that the server is up.'} (${e.message})`);
+    throw new Error(`Couldn't reach ${p.label} at ${db.provider === 'corx' ? base() : p.label}. ${
+      p.browser === false
+        ? `${p.label} blocks direct browser calls — try OpenRouter instead.`
+        : db.provider === 'corx'
+          ? 'A Cloudflare quick-tunnel address changes every time the notebook restarts — check the URL the cell printed and paste the current one into Settings.'
+          : 'Check the endpoint and your key.'} (${e.message})`);
+  } finally {
+    clearTimeout(connectTimer);
   }
 
   if (!res.ok) {
