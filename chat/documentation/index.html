@@ -304,8 +304,12 @@ tok = AutoTokenizer.from_pretrained(MODEL_REPO, **tok_kwargs)
 if tok.pad_token is None:
     tok.pad_token = tok.eos_token
 
-load_kwargs = dict(trust_remote_code=True, low_cpu_mem_usage=True,
-                   torch_dtype=torch.bfloat16)
+load_kwargs = dict(trust_remote_code=True, low_cpu_mem_usage=True)
+# transformers renamed torch_dtype -&gt; dtype; pick whichever this version takes
+# so the load is clean on both.
+import inspect as _inspect
+_load_params = _inspect.signature(AutoModelForCausalLM.from_pretrained).parameters
+load_kwargs[&quot;dtype&quot; if &quot;dtype&quot; in _load_params else &quot;torch_dtype&quot;] = torch.bfloat16
 if HF_TOKEN:
     load_kwargs[&quot;token&quot;] = HF_TOKEN
 
@@ -336,10 +340,11 @@ else:
 
 model = AutoModelForCausalLM.from_pretrained(MODEL_REPO, **load_kwargs)
 model.eval()
-try:
-    model.generation_config.cache_implementation = &quot;static&quot;   # steadier decode
-except Exception:
-    pass
+# NOTE: do not set generation_config.cache_implementation = &quot;static&quot; here.
+# A static cache sends generate() down the torch.compile / _inductor path,
+# which throws inside the worker thread (&quot;Detected that you are using FX
+# tracing...&quot;) — no tokens are ever produced and the request just hangs.
+# The default dynamic cache is correct for this server.
 print(f&quot;Model ready. VRAM in use: {torch.cuda.memory_allocated()/1e9:.1f} GB &quot;
       f&quot;of {TOTAL_VRAM_GB:.0f} GB&quot;)
 
@@ -358,15 +363,27 @@ except Exception:
 # ---------------- GENERATION (single GPU, queued) ----------------
 _job_lock = threading.Lock()
 
-# Worker wrapper to ensure gradients are off in the background thread
-def _generate_thread_worker(kwargs):
+# Worker wrapper to ensure gradients are off in the background thread.
+# If generation dies, end the streamer straight away and hand the reason
+# back — otherwise the reader sits waiting for a token that will never come
+# and the request only fails much later, on a timeout, with no explanation.
+def _generate_thread_worker(kwargs, streamer=None, err_box=None):
     with torch.inference_mode():
         try:
             model.generate(**kwargs)
         except Exception as e:
-            print(f&quot;\n[Generation Error in thread] {e}&quot;)
+            import traceback
+            traceback.print_exc()
+            print(f&quot;\n[Generation Error in thread] {type(e).__name__}: {e}&quot;)
+            if err_box is not None:
+                err_box.append(f&quot;{type(e).__name__}: {e}&quot;)
+            if streamer is not None:
+                try:
+                    streamer.end()        # unblock the reader immediately
+                except Exception:
+                    pass
 
-def _generate(messages, max_new_tokens, temperature, streamer=None):
+def _generate(messages, max_new_tokens, temperature, streamer=None, err_box=None):
     prompt = tok.apply_chat_template(messages, tokenize=False,
                                      add_generation_prompt=True)
     inputs = tok(prompt, return_tensors=&quot;pt&quot;).to(model.device)
@@ -380,7 +397,8 @@ def _generate(messages, max_new_tokens, temperature, streamer=None):
     if streamer is not None:
         kwargs[&quot;streamer&quot;] = streamer
         # Must target our safe wrapper instead of model.generate directly
-        threading.Thread(target=_generate_thread_worker, args=(kwargs,),
+        threading.Thread(target=_generate_thread_worker,
+                         args=(kwargs, streamer, err_box),
                          daemon=True).start()
         return None
 
@@ -469,9 +487,12 @@ async def chat_completions(request: Request):
             # chat as &quot;[Generation Error]&quot; even though nothing actually failed.
             streamer = TextIteratorStreamer(
                 tok, skip_prompt=True, skip_special_tokens=True, timeout=STREAM_TIMEOUT)
-            _generate(messages, max_new, temperature, streamer=streamer)
+            err_box = []          # filled by the worker if generate() throws
+            _generate(messages, max_new, temperature, streamer=streamer,
+                      err_box=err_box)
 
             _DONE = object() # Sentinel value to prevent StopIteration Exception
+            sent_any = False
 
             while True:
                 try:
@@ -485,6 +506,7 @@ async def chat_completions(request: Request):
                             &quot;model&quot;: &quot;corx3.8&quot;,
                             &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;: chunk},
                                          &quot;finish_reason&quot;: None}]}
+                    sent_any = True
                     yield f&quot;data: {json.dumps(data)}\n\n&quot;
 
                 except queue.Empty:
@@ -499,6 +521,16 @@ async def chat_completions(request: Request):
                                         &quot;finish_reason&quot;: &quot;error&quot;}]}
                     yield f&quot;data: {json.dumps(err)}\n\n&quot;
                     break
+
+            # generate() died before producing anything: say what actually
+            # went wrong instead of returning an empty, silent reply.
+            if err_box and not sent_any:
+                err = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
+                       &quot;model&quot;: &quot;corx3.8&quot;,
+                       &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;:
+                                    f&quot;\n[Generation failed on the server: {err_box[0]}]&quot;},
+                                    &quot;finish_reason&quot;: &quot;error&quot;}]}
+                yield f&quot;data: {json.dumps(err)}\n\n&quot;
 
             done = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
                     &quot;model&quot;: &quot;corx3.8&quot;,
