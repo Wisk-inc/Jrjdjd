@@ -234,6 +234,10 @@ API_KEY      = &quot;corx-key&quot;               # used only if NO_AUTH = False
 
 # concurrency
 QUEUE_TIMEOUT = 120                     # seconds a request waits for the GPU
+STREAM_TIMEOUT = 300                    # seconds to wait for a token before
+                                        # giving up. Must cover prefill of the
+                                        # whole prompt on a 27B model — too low
+                                        # and you get &quot;[Generation Error]&quot;.
 # ------------------------------------------
 
 print(&quot;Installing deps (first run only)...&quot;)
@@ -378,8 +382,13 @@ async def chat_completions(request: Request):
 
     async def event_stream():
         try:
+            # This is the wait for the NEXT token, and the first one only
+            # arrives after the whole prompt is prefilled. A 27B model with a
+            # long system prompt (and any CPU offload) can take well over a
+            # minute to get there, so a short timeout here shows up in the
+            # chat as &quot;[Generation Error]&quot; even though nothing actually failed.
             streamer = TextIteratorStreamer(
-                tok, skip_prompt=True, skip_special_tokens=True, timeout=15.0)
+                tok, skip_prompt=True, skip_special_tokens=True, timeout=STREAM_TIMEOUT)
             _generate(messages, max_new, temperature, streamer=streamer)
 
             _DONE = object() # Sentinel value to prevent StopIteration Exception
@@ -399,10 +408,14 @@ async def chat_completions(request: Request):
                     yield f&quot;data: {json.dumps(data)}\n\n&quot;
 
                 except queue.Empty:
-                    print(&quot;[api] Streamer timed out, returning error to client.&quot;)
+                    print(f&quot;[api] No token for {STREAM_TIMEOUT}s — giving up. &quot;
+                          f&quot;Raise STREAM_TIMEOUT, shorten the prompt, or load in 4-bit.&quot;)
                     err = {&quot;id&quot;: cid, &quot;object&quot;: &quot;chat.completion.chunk&quot;,
                            &quot;model&quot;: &quot;corx3.8&quot;,
-                           &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;: &quot;\n[Generation Error]&quot;},
+                           &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;delta&quot;: {&quot;content&quot;:
+                                        f&quot;\n[No token produced within {STREAM_TIMEOUT}s. &quot;
+                                        f&quot;The model is likely still prefilling — raise STREAM_TIMEOUT &quot;
+                                        f&quot;in the server, or load the model in 4-bit so it fits the GPU.]&quot;},
                                         &quot;finish_reason&quot;: &quot;error&quot;}]}
                     yield f&quot;data: {json.dumps(err)}\n\n&quot;
                     break
