@@ -615,3 +615,20 @@
 .pc-mark .brand-img { width: 20px; height: 20px; }
 /* A real favicon carries its own colour, so drop the tinted plate behind it. */
 .pc-mark:has(.brand-img), .ms-mark:has(.brand-img) { background: var(--paper-sunk); border: 1px solid var(--line); }
+
+/* ==========================================================================
+   Images the agent pulls into the conversation.
+   ========================================================================== */
+.img-strip { margin: 8px 0 0; }
+.img-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.img-cell { flex: 0 0 auto; width: 190px; display: flex; flex-direction: column; gap: 5px;
+  text-decoration: none; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  background: var(--paper-raised); transition: border-color var(--fast) var(--ease); }
+.img-cell:hover { border-color: var(--line-strong); }
+.img-cell img { width: 100%; height: 128px; object-fit: cover; display: block; background: var(--paper-sunk); }
+.img-cap { padding: 0 9px 9px; font-size: .78rem; color: var(--ink-strong); line-height: 1.35;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.img-cap small { display: block; font-size: .68rem; color: var(--faint); font-weight: 400;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.img-strip figcaption { margin-top: 6px; font-size: .72rem; color: var(--faint); }
+@media (max-width: 560px) { .img-cell { width: 150px; } .img-cell img { height: 104px; } }

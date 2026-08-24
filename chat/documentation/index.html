@@ -228,6 +228,12 @@ HF_TOKEN     = &quot;&quot;
 PORT         = 8000
 MAX_NEW_TOKENS_CAP = 32000
 
+# 27B needs ~54GB in bf16. Leave this True on anything smaller than ~60GB of
+# VRAM (any 24GB or 40GB card): it keeps the whole model on the GPU instead
+# of spilling to CPU, which is the difference between a first token in
+# seconds and one that never arrives.
+LOAD_IN_4BIT = True
+
 # auth
 NO_AUTH      = True                     # True = keyless (your &quot;unrestricted&quot;)
 API_KEY      = &quot;corx-key&quot;               # used only if NO_AUTH = False
@@ -241,9 +247,11 @@ STREAM_TIMEOUT = 300                    # seconds to wait for a token before
 # ------------------------------------------
 
 print(&quot;Installing deps (first run only)...&quot;)
-subprocess.run([sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;, &quot;-q&quot;, &quot;-U&quot;,
-                &quot;fastapi&quot;, &quot;uvicorn[standard]&quot;, &quot;transformers&quot;,
-                &quot;accelerate&quot;], check=False)
+_deps = [&quot;fastapi&quot;, &quot;uvicorn[standard]&quot;, &quot;transformers&quot;, &quot;accelerate&quot;]
+if LOAD_IN_4BIT:
+    _deps.append(&quot;bitsandbytes&quot;)
+subprocess.run([sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;, &quot;-q&quot;, &quot;-U&quot;, *_deps],
+               check=False)
 
 import torch
 from transformers import (AutoTokenizer, AutoModelForCausalLM,
@@ -261,7 +269,7 @@ tok_kwargs = {&quot;trust_remote_code&quot;: True}
 if HF_TOKEN:
     tok_kwargs[&quot;token&quot;] = HF_TOKEN
 
-print(&quot;Loading CorX3.8-27B in bf16 (1-2 min)...&quot;)
+print(f&quot;Loading CorX3.8-27B in {'4-bit' if LOAD_IN_4BIT else 'bf16'} (1-3 min)...&quot;)
 tok = AutoTokenizer.from_pretrained(MODEL_REPO, **tok_kwargs)
 if tok.pad_token is None:
     tok.pad_token = tok.eos_token
@@ -271,9 +279,31 @@ load_kwargs = dict(device_map=&quot;auto&quot;, trust_remote_code=True,
 if HF_TOKEN:
     load_kwargs[&quot;token&quot;] = HF_TOKEN
 
+# 27B in bf16 is ~54GB. On a 24GB card device_map=&quot;auto&quot; silently spills
+# layers to CPU, and every token then crosses the PCIe bus — that is what
+# makes the first token take minutes and trip the stream timeout. In 4-bit
+# the whole model sits in VRAM and it is dramatically faster.
+if LOAD_IN_4BIT:
+    from transformers import BitsAndBytesConfig
+    load_kwargs[&quot;quantization_config&quot;] = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_compute_dtype=torch.bfloat16,
+        bnb_4bit_quant_type=&quot;nf4&quot;,
+        bnb_4bit_use_double_quant=True)
+
 model = AutoModelForCausalLM.from_pretrained(MODEL_REPO, **load_kwargs)
 model.eval()
 print(f&quot;Model ready. VRAM: {torch.cuda.memory_allocated()/1e9:.1f} GB&quot;)
+
+# Warn early if the model did not fully fit — this is the usual root cause
+# of slow first tokens.
+try:
+    _dev = set(str(d) for d in model.hf_device_map.values())
+    if any(d in (&quot;cpu&quot;, &quot;disk&quot;) for d in _dev):
+        print(&quot;[warn] Part of the model is on CPU/disk — generation will be SLOW.&quot;)
+        print(&quot;       Set LOAD_IN_4BIT = True so it fits entirely in VRAM.&quot;)
+except Exception:
+    pass
 
 # ---------------- GENERATION (single GPU, queued) ----------------
 _job_lock = threading.Lock()
@@ -619,6 +649,7 @@ while True:
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Take a <strong>zip or file you upload</strong> and work on it, with Python's own <code>zipfile</code> module</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Search the web and fetch a page's real content, on its own initiative</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Recall relevant bits of your other saved chats</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Pull real pictures into the chat with <code>find_image</code> (Wikimedia Commons, credited)</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Read its own traceback when code fails and try to fix it on the next round</li>
           </ul>
         </div>

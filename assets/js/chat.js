@@ -269,6 +269,7 @@ COMMANDS YOU CAN RUN RIGHT NOW — your full toolset, from the first message of 
 - deliver_file {"path"} — hand the user a download.
 - web_search {"query": "...", "n": ${eff.searchN}} — real search. Call it for ANY question asking for information (facts, people, places, definitions, how things work, comparisons), not just current events — your training data may be stale. Skip it only for small talk, things already said in this chat, pure code/math, or explaining something just shown to you.
 - fetch_url {"url"} — read a page's real content, including code on it. Use after web_search on the best result.
+- find_image {"query": "...", "n": 3} — find real pictures and show them to the user inline. Use it whenever a picture would help: a character, an animal, a place, a flag, a person, an object, a landmark. The images appear in the chat automatically, so just describe them afterwards.
 - search_memory {"query"} — search the user's other saved chats for detail.
 ${githubTools}
 Rules:
@@ -409,24 +410,35 @@ async function gh(method, path, body) {
    public listing, then to the GitHub App installation listing. Returns the
    identity too, so the panel can say who it authenticated as. */
 async function ghListRepos() {
-  const me = await gh('GET', '/user').catch(() => ({}));
+  const notes = [];   // why each attempt came back empty — surfaced to the user
+  let me = {};
+  try { me = await gh('GET', '/user'); }
+  catch (e) { notes.push(`identity check failed — ${e.message}`); }
+
   const tries = [
+    '/user/repos?per_page=100&sort=updated&visibility=all',
     '/user/repos?per_page=100&sort=updated',
-    me.login ? `/users/${encodeURIComponent(me.login)}/repos?per_page=100&sort=updated` : null
+    me.login ? `/users/${encodeURIComponent(me.login)}/repos?per_page=100&sort=updated&type=all` : null
   ].filter(Boolean);
 
   for (const path of tries) {
     try {
       const list = await gh('GET', path);
-      if (Array.isArray(list) && list.length) return { me, repos: list };
-    } catch { /* try the next strategy */ }
+      if (Array.isArray(list) && list.length) return { me, repos: list, notes };
+      notes.push(`${path.split('?')[0]} returned 0 repositories`);
+    } catch (e) {
+      // A 403 here is the usual fine-grained-token problem (missing the
+      // mandatory Metadata permission). Swallowing it silently is what made
+      // this look like "you have no repos" instead of "fix the token".
+      notes.push(`${path.split('?')[0]} — ${e.message}`);
+    }
   }
   // GitHub App installation tokens expose repos under a different route.
   try {
     const inst = await gh('GET', '/installation/repositories?per_page=100');
-    if (inst.repositories?.length) return { me, repos: inst.repositories };
-  } catch { /* not an installation token */ }
-  return { me, repos: [] };
+    if (inst.repositories?.length) return { me, repos: inst.repositories, notes };
+  } catch { /* not an installation token — not worth reporting */ }
+  return { me, repos: [], notes };
 }
 
 /* Resolve owner/repo + branch, defaulting to the selected repo. */
@@ -500,6 +512,7 @@ const TOOL_LABEL = {
   write_file: 'Writing', read_file: 'Reading', delete_file: 'Deleting',
   list_files: 'Listing files', install_packages: 'Installing', deliver_file: 'Delivering',
   web_search: 'Searching the web', fetch_url: 'Reading a page', search_memory: 'Recalling memory',
+  find_image: 'Finding images',
   github_list_repos: 'GitHub · repos', github_tree: 'GitHub · files', github_read_file: 'GitHub · read',
   github_write_file: 'GitHub · commit', github_delete_file: 'GitHub · delete',
   github_create_repo: 'GitHub · new repo', github_pull_request: 'GitHub · pull request'
@@ -625,6 +638,24 @@ function finishSearch(box, { query, results, error }) {
     body.innerHTML = `<p class="search-error">&ldquo;${esc(query || '')}&rdquo; &mdash; ${esc(error || 'no results')}</p>`;
     if (trackWrap) trackWrap.remove();
   }
+}
+
+/* Images the agent pulled up, shown inline in the conversation. Each keeps
+   its credit and licence visible and links back to the source page, because
+   these are other people's photographs. */
+function renderImages(results, query) {
+  if (!currentTools || !results?.length) return;
+  const wrap = document.createElement('figure');
+  wrap.className = 'img-strip';
+  wrap.innerHTML =
+    `<div class="img-row">${results.map((r) =>
+      `<a class="img-cell" href="${esc(r.full || r.url)}" target="_blank" rel="noopener nofollow">` +
+      `<img loading="lazy" alt="${esc(r.title || query || '')}" src="${esc(r.url)}">` +
+      `<span class="img-cap">${esc(r.title || '')}<small>${esc(r.credit || '')}${r.licence ? ` · ${esc(r.licence)}` : ''}</small></span>` +
+      `</a>`).join('')}</div>` +
+    `<figcaption>Images for &ldquo;${esc(String(query).slice(0, 60))}&rdquo; · Wikimedia Commons</figcaption>`;
+  currentTools.appendChild(wrap);
+  scrollDown();
 }
 
 /* ------------------------------------------------------------------ health
@@ -785,6 +816,25 @@ async function execTool(name, args, conv, meta = {}) {
         }
       }
       return hits.length ? hits.slice(0, 12).join('\n\n') : '(nothing found in other saved chats)';
+    }
+
+    case 'find_image': {
+      const q = String(args.query || '').trim();
+      const n = Math.min(Math.max(1, Number(args.n) || 3), 8);
+      termLine('cmd', `images "${q}" (${n})`);
+      let data;
+      try {
+        const res = await fetch(`/api/images?q=${encodeURIComponent(q)}&n=${n}`);
+        data = await res.json();
+      } catch (e) { data = { error: e.message, results: [] }; }
+      const results = data.results || [];
+      meta.images = results;
+      if (!results.length) { termLine('err', data.error || 'no images'); return `No images found${data.error ? ` (${data.error})` : ''}.`; }
+      termLine('ok', `${results.length} images`);
+      renderImages(results, q);
+      return `Showed the user ${results.length} image(s) for "${q}": ` +
+        results.map((r) => `${r.title} (${r.credit}${r.licence ? `, ${r.licence}` : ''})`).join('; ') +
+        '. They are already displayed — describe or discuss them, do not paste the URLs again.';
     }
 
     /* ---- GitHub tools ---- */
@@ -996,6 +1046,30 @@ async function streamOnce(conv, bubble) {
 }
 
 /* --------------------------------------------------------------------- send */
+/* Does this message look like the user asking for information about
+   something — a thing, a place, an app, a person, an acronym?
+
+   Telling the model to search is not enough on its own: with no native
+   tool-calling it can simply answer from memory and never emit a tool line
+   (asking "what is OpenJM in Jamaica" produced a confident answer with no
+   search at all). So for lookup-shaped questions the client runs the search
+   itself, before the model gets a turn, and hands it the results. That is
+   deterministic — it does not depend on the model choosing to comply. */
+function looksInformational(text) {
+  const t = String(text).trim();
+  if (t.length < 3 || t.length > 400) return false;
+  // Greetings and chatter need no lookup.
+  if (/^(hi|hello|hey|yow|wah ?gwaan|wagwan|morning|thanks|thank you|ok|okay|cool|nice|yes|no|lol)\b/i.test(t)) return false;
+  // Work-on-something requests are handled by the sandbox, not a search.
+  if (/\b(write|create|make|build|code|script|run|fix|debug|refactor|edit|delete|commit|push|install|upload|unzip)\b/i.test(t)) return false;
+  // Things that are plainly about this conversation, not the world.
+  if (/\b(you|your|yourself|our chat|this chat|earlier|before)\b/i.test(t) && !/\bwhat is\b|\bwho is\b/i.test(t)) return false;
+  return /^(what|whats|what's|who|whos|who's|when|where|which|why|how)\b/i.test(t)
+    || /\b(what|who) (is|are|was|were)\b/i.test(t)
+    || /^(tell me|explain|describe|define|look up|search|find out)\b/i.test(t)
+    || /\b(meaning of|stand for|known for)\b/i.test(t);
+}
+
 async function send(text, opts = {}) {
   if (running || !text.trim()) return;
   const conv = activeConv() || newConversation();
@@ -1018,6 +1092,26 @@ async function send(text, opts = {}) {
   let bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>');
   const eff = EFFORT[conv.effort] || EFFORT.medium;
   let nudgedTools = false;
+  let pendingTools = null;
+
+  /* Look it up first, before the model can answer from memory. */
+  if (!opts.silent && looksInformational(text)) {
+    currentTools = $('.msg-tools', bubble.closest('.msg'));
+    const meta = {};
+    let out = '';
+    try { out = await execTool('web_search', { query: text, n: eff.searchN }, conv, meta); }
+    catch (e) { out = `Search failed: ${e.message}`; }
+    if (meta.results?.length) {
+      conv.messages.push({
+        role: 'user', synthetic: true,
+        content: `Web search results for "${text}":\n\n${out}\n\n` +
+          'Answer from these results. Cite what you use. If they do not actually cover it, say so plainly and search again with a better query rather than guessing from memory.'
+      });
+      // Carried onto the first assistant message below, so the sources
+      // dropdown comes back after a refresh (synthetic turns aren't drawn).
+      pendingTools = [{ name: 'web_search', args: { query: text }, output: out, results: meta.results }];
+    }
+  }
 
   try {
     for (let round = 0; round < eff.rounds; round += 1) {
@@ -1037,6 +1131,7 @@ async function send(text, opts = {}) {
       }
 
       const assistantMsg = { role: 'assistant', content: reply };
+      if (pendingTools) { assistantMsg.tools = pendingTools; pendingTools = null; }
       conv.messages.push(assistantMsg);
       if (!calls.length) {
         // The model has no native tool-calling, so nothing forces it to
@@ -1074,9 +1169,9 @@ async function send(text, opts = {}) {
           addFileCard(call.args.path);
         }
         results.push(`[${call.name}] ->\n${String(out).slice(0, 6000)}`);
-        toolLog.push({ name: call.name, args: call.args, output: out, failed, results: meta.results });
+        toolLog.push({ name: call.name, args: call.args, output: out, failed, results: meta.results, images: meta.images });
       }
-      assistantMsg.tools = toolLog;
+      assistantMsg.tools = (assistantMsg.tools || []).concat(toolLog);
       conv.messages.push({
         role: 'user', synthetic: true,
         content: 'Tool results:\n\n' + results.join('\n\n') + '\n\nContinue, or give the final answer if the task is done.'
@@ -1163,6 +1258,7 @@ function renderConversation() {
    just created already-closed instead of starting open. */
 function replayTools(toolLog) {
   for (const t of toolLog) {
+    if (t.name === 'find_image') { renderImages(t.images || [], t.args?.query || ''); continue; }
     if (t.name === 'web_search') {
       const box = renderSearch(t.args?.query || '');
       finishSearch(box, { query: t.args?.query || '', results: t.results, error: t.output });
@@ -1562,14 +1658,15 @@ document.addEventListener('DOMContentLoaded', () => {
     saveDb();
     els.ghLoad.disabled = true; els.ghLoad.textContent = 'Loading…';
     try {
-      const { me, repos } = await ghListRepos();
+      const { me, repos, notes } = await ghListRepos();
       els.ghRepoList.hidden = false;
       if (!repos.length) {
         // Empty is almost always a token-scope problem, not a real absence of
         // repos — say exactly what to change instead of a blank "none found".
         els.ghRepoList.innerHTML =
           `<p class="panel-empty">Token works${me.login ? ` (signed in as <strong>${esc(me.login)}</strong>)` : ''}, but no repositories are visible to it.` +
-          '<br><br>If it is a <strong>fine-grained</strong> token, open it on GitHub and set <strong>Repository access</strong> to “All repositories” (or add the ones you want), then give it <strong>Contents: read &amp; write</strong>. Save, and load again.' +
+          '<br><br>If it is a <strong>fine-grained</strong> token, open it on GitHub and set <strong>Repository access</strong> to “All repositories” (or add the ones you want), then give it <strong>Repository permissions → Metadata: read</strong> (required for listing) and <strong>Contents: read &amp; write</strong>. Save, and load again.' +
+          (notes?.length ? `<br><br><strong>What GitHub actually said:</strong><br>${notes.map((x) => esc(x)).join('<br>')}` : '') +
           '<br><br>Or just type the repo below.</p>';
       } else {
         els.ghRepoList.innerHTML = repos.map((r) =>
