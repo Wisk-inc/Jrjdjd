@@ -131,15 +131,15 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => (
 const TOOL_REFUSAL_RE = /\b(don'?t|do ?not|cannot|can'?t|cyaan|cyah|nuh) (have |gi |get )?access( to)? (real-?time|the internet|di internet|current|live|today'?s|up-?to-?date)|training data (has|only|is limited|goes up)|(as of|since) my (last|training) (update|cutoff|knowledge)|no real-?time (news|access|data|information)|(can'?t|cannot|cyaan) browse (the|di) internet|(don'?t|do not|nuh) have (real-?time|internet) (access|data)/i;
 
 const EFFORT = {
-  low:    { label: 'Low',    maxTokens: 512,  temperature: 0.7,  rounds: 3,  searchN: 3,
+  low:    { label: 'Low',    maxTokens: 512,  temperature: 0.7,  rounds: 3,  searchN: 3,  budgetMs: 120000,
             hint: 'Keep your reasoning short. Answer directly.' },
-  medium: { label: 'Medium', maxTokens: 1024, temperature: 0.7,  rounds: 5,  searchN: 4,
+  medium: { label: 'Medium', maxTokens: 1024, temperature: 0.7,  rounds: 5,  searchN: 4,  budgetMs: 240000,
             hint: 'Think briefly in a <think> block first if the question needs it.' },
-  high:   { label: 'High',   maxTokens: 2048, temperature: 0.65, rounds: 8,  searchN: 6,
+  high:   { label: 'High',   maxTokens: 2048, temperature: 0.65, rounds: 8,  searchN: 6,  budgetMs: 420000,
             hint: 'Think step by step in a <think> block before answering. Break the problem into parts. If you write code, glance back over it once for obvious mistakes before you run it.' },
-  extra:  { label: 'Extra',  maxTokens: 4096, temperature: 0.6,  rounds: 14, searchN: 8,
+  extra:  { label: 'Extra',  maxTokens: 4096, temperature: 0.6,  rounds: 12, searchN: 8,  budgetMs: 720000,
             hint: 'Think carefully and step by step in a <think> block. Consider more than one approach, check your own reasoning for mistakes, and search when you are not sure of something. After you write code or a solution, spend a second <think> pass reviewing what you just made specifically for bugs or missed cases before presenting it as done — do not treat the first draft as the final one.' },
-  max:    { label: 'Max',    maxTokens: 6144, temperature: 0.55, rounds: 24, searchN: 10,
+  max:    { label: 'Max',    maxTokens: 6144, temperature: 0.55, rounds: 16, searchN: 10, budgetMs: 1200000,
             hint: 'This is the highest effort level — spend real tokens on it, a shallow first pass is not acceptable here. Think exhaustively in a <think> block: break the problem into parts, weigh more than one approach, verify each step, search liberally for anything you are not fully sure of. Once you produce code or a solution, stop and deliberately review it in a fresh <think> block as if it were someone else\'s work you were asked to critique — look specifically for bugs, wrong assumptions, missed edge cases and unnecessary steps — then revise or redo whatever you find wrong before answering, and repeat that check again if you changed anything. If partway through you realise something you already told the user was wrong, stop and correct it plainly rather than quietly continuing. Use as many tool calls and rounds as the task genuinely needs.' }
 };
 
@@ -369,6 +369,30 @@ function htmlToText(html) {
     .trim();
 }
 
+/* ----------------------------------------------------------------- timeouts
+   Nothing here used to have one. A single hung request — a slow search
+   scrape, an unreachable page — left the composer spinning forever with no
+   way to tell whether it was working or dead. Every helper call now fails
+   loudly instead of hanging. */
+const TOOL_TIMEOUT_MS = 45000;
+// The model may be loading or prefilling a long prompt on a big model, so
+// the first token gets a generous wait; after it starts, only real silence
+// counts as a stall.
+const FIRST_TOKEN_TIMEOUT_MS = 240000;
+const STALL_TIMEOUT_MS = 90000;
+async function fetchWithTimeout(url, opts = {}, ms = TOOL_TIMEOUT_MS) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  try {
+    return await fetch(url, { ...opts, signal: ctrl.signal });
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error(`timed out after ${Math.round(ms / 1000)}s`);
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /* ------------------------------------------------------------------ github
    The user's GitHub Personal Access Token lives only in this browser and is
    sent only to api.github.com (which allows cross-origin browser calls). The
@@ -384,7 +408,7 @@ function b64decodeUtf8(b64) {
 async function gh(method, path, body) {
   const token = db.github.token;
   if (!token) throw new Error('No GitHub token set. Open the GitHub panel and paste a token.');
-  const res = await fetch(`https://api.github.com${path}`, {
+  const res = await fetchWithTimeout(`https://api.github.com${path}`, {
     method,
     headers: {
       authorization: `Bearer ${token}`,
@@ -499,6 +523,20 @@ function paintReasoning(bubble, reasoning, seconds) {
     $('.think-label', slot).textContent = `Thought for ${seconds} second${seconds === 1 ? '' : 's'}`;
   }
 }
+
+/* Live "step 2 of 8 · 41s" in the status pill. A silent spinner gives no way
+   to tell a slow run from a hung one — this makes the difference visible. */
+let progressTimer = null;
+function setProgress(step, total, startedAt) {
+  clearInterval(progressTimer);
+  const tick = () => {
+    const secs = Math.round((Date.now() - startedAt) / 1000);
+    setStatus('checking', `Step ${step}/${total} · ${secs}s`);
+  };
+  tick();
+  progressTimer = setInterval(tick, 1000);
+}
+function clearProgress() { clearInterval(progressTimer); progressTimer = null; }
 
 function setRunning(on) {
   running = on;
@@ -672,7 +710,7 @@ async function checkHealth() {
   }
   setStatus('checking', 'Checking…');
   try {
-    const res = await fetch(`${base()}/health`, { method: 'GET' });
+    const res = await fetchWithTimeout(`${base()}/health`, { method: 'GET' }, 12000);
     if (!res.ok) throw new Error(String(res.status));
     const j = await res.json().catch(() => ({}));
     setStatus('ok', j.busy ? 'Online · busy' : 'Online');
@@ -778,7 +816,7 @@ async function execTool(name, args, conv, meta = {}) {
       termLine('cmd', `search "${q}" (${n})`);
       let data;
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&n=${n}`);
+        const res = await fetchWithTimeout(`/api/search?q=${encodeURIComponent(q)}&n=${n}`);
         data = await res.json();
       } catch (e) { data = { error: e.message, results: [] }; }
       const results = data.results || [];
@@ -792,7 +830,7 @@ async function execTool(name, args, conv, meta = {}) {
       termLine('cmd', `fetch ${args.url}`);
       let data;
       try {
-        const res = await fetch('/api/fetch', {
+        const res = await fetchWithTimeout('/api/fetch', {
           method: 'POST', headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ url: args.url, method: 'GET' })
         });
@@ -824,7 +862,7 @@ async function execTool(name, args, conv, meta = {}) {
       termLine('cmd', `images "${q}" (${n})`);
       let data;
       try {
-        const res = await fetch(`/api/images?q=${encodeURIComponent(q)}&n=${n}`);
+        const res = await fetchWithTimeout(`/api/images?q=${encodeURIComponent(q)}&n=${n}`);
         data = await res.json();
       } catch (e) { data = { error: e.message, results: [] }; }
       const results = data.results || [];
@@ -1020,9 +1058,25 @@ async function streamOnce(conv, bubble) {
       : '<p class="typing"><span></span><span></span><span></span></p>';
     scrollDown();
   };
+
+  /* Watchdog on silence, not on total length: a big model can legitimately
+     take minutes to prefill before the first token, and a long answer is
+     fine — but if the connection simply stops producing anything, the read
+     below would wait for ever and the composer would spin with no way to
+     tell. Reset on every chunk, so only genuine silence trips it. */
+  let stalled = false;
+  let watchdog = null;
+  const armWatchdog = (ms) => {
+    clearTimeout(watchdog);
+    watchdog = setTimeout(() => { stalled = true; abort.abort(); }, ms);
+  };
+  armWatchdog(FIRST_TOKEN_TIMEOUT_MS);
+
+  try {
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
+    armWatchdog(STALL_TIMEOUT_MS);   // it's alive; only silence should kill it
     buffer += decoder.decode(value, { stream: true });
     const frames = buffer.split('\n\n');
     buffer = frames.pop() || '';
@@ -1039,6 +1093,15 @@ async function streamOnce(conv, bubble) {
         if (delta) { acc += delta; paint(); }
       }
     }
+  }
+  } catch (e) {
+    if (stalled) {
+      throw new Error(`${providerOf().label} went quiet for ${Math.round(STALL_TIMEOUT_MS / 1000)}s and the request was dropped. ` +
+        'The server may still be loading the model or prefilling a long prompt — try again, or lower Effort so there is less to chew through.');
+    }
+    throw e;
+  } finally {
+    clearTimeout(watchdog);
   }
   const { reasoning } = splitThinking(acc);
   if (reasoning) paintReasoning(bubble, reasoning, Math.max(1, Math.round((Date.now() - startedAt) / 1000)));
@@ -1113,8 +1176,18 @@ async function send(text, opts = {}) {
     }
   }
 
+  const runStartedAt = Date.now();
+  const seenCalls = new Map();   // identical tool calls, to catch a real loop
   try {
     for (let round = 0; round < eff.rounds; round += 1) {
+      // A long agent run is expected; an endless one is not. Stop cleanly at
+      // the budget instead of spinning until the user gives up.
+      if (Date.now() - runStartedAt > eff.budgetMs) {
+        bubble.innerHTML = `<p><em>Stopped after ${Math.round((Date.now() - runStartedAt) / 1000)}s — ` +
+          `this run hit the ${EFFORT[conv.effort].label} time budget. Ask me to continue, or raise Effort.</em></p>`;
+        break;
+      }
+      setProgress(round + 1, eff.rounds, runStartedAt);
       const reply = await streamOnce(conv, bubble);
       const calls = parseToolCalls(reply);
       const { answer } = splitThinking(reply);
@@ -1159,11 +1232,23 @@ async function send(text, opts = {}) {
         // web_search gets its own persistent widget (renderSearch/finishSearch,
         // called inside execTool) instead of the generic tool card — showing
         // both was redundant.
+        // Re-issuing an identical call is the model going in circles, not
+        // progress. Answer it from the first result instead of running it
+        // again, and say so — repeating a search or a file read verbatim is
+        // what makes a run look like it has hung.
+        const sig = `${call.name}:${JSON.stringify(call.args || {})}`;
+        if (seenCalls.has(sig)) {
+          results.push(`[${call.name}] -> (already called with exactly these arguments earlier in this run; ` +
+            `the result has not changed) ${String(seenCalls.get(sig)).slice(0, 1500)}\n\n` +
+            'Do not call it again with the same arguments — use this result, change the arguments, or answer.');
+          continue;
+        }
         const card = call.name === 'web_search' ? null : addToolCard(call.name, call.args);
         let out, failed = false;
         const meta = {};
         try { out = await execTool(call.name, call.args, conv, meta); }
         catch (e) { out = `Tool error: ${e.message}`; failed = true; }
+        seenCalls.set(sig, out);
         if (card) finishToolCard(card, out, failed);
         if (!failed && (call.name === 'write_file' || call.name === 'deliver_file') && call.args.path) {
           addFileCard(call.args.path);
@@ -1192,9 +1277,11 @@ async function send(text, opts = {}) {
       checkHealth();
     }
   } finally {
+    clearProgress();
     conv.run = null; conv.updated = Date.now();
     saveDb(); paintConversations();
     setRunning(false);
+    checkHealth();
     els.input.focus();
   }
 }
