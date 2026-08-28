@@ -203,18 +203,10 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is CorX1.5?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "CorX1.5 is an open-source language model with roughly 158 million parameters, built from scratch by CorX Labs in Jamaica. It is a custom decoder-only transformer using RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm, with 10 layers, a 1024-token context window and a 32,768-token custom BPE vocabulary. It is not a fine-tune of an existing base model."
-          }
-        },
-        {
-          "@type": "Question",
           "name": "What is CorX Labs?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "CorX Labs is an independent AI research lab and research station based in Jamaica, in the Caribbean. It designs, trains and open-sources language models built from the ground up rather than adapting existing models."
+            "text": "CorX Labs is an independent AI research lab and research station based in Jamaica, in the Caribbean. It designs, trains and open-sources AI models, and has released three: CorX3.8-27B, CorX1.5 and TriStream-SVS."
           }
         },
         {
@@ -222,7 +214,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
           "name": "Is there an AI company in Jamaica?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. CorX Labs is an AI research lab based in Jamaica. It builds Jamaican AI from the ground up and has released three models: CorX3.8, a 27-billion-parameter Jamaican Patois-speaking large language model; CorX1.5, a 158M-parameter model trained from scratch; and TriStream-SVS, a singing voice synthesis model. All are open-source."
+            "text": "Yes. CorX Labs is an AI research lab based in Jamaica. It builds Jamaican AI from the ground up and has released three open-source models: CorX3.8-27B, a 27-billion-parameter Jamaican Patois-speaking large language model; CorX1.5, a 158M-parameter model trained from scratch; and TriStream-SVS, a singing voice synthesis model."
           }
         },
         {
@@ -230,7 +222,63 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
           "name": "What is the best Jamaican AI or Jamaica LLM?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "CorX3.8 is Jamaica's first large open-weight LLM — a 27-billion-parameter assistant that speaks Jamaican Patois by default. It is built by CorX Labs, an AI lab in Jamaica, and you can chat with it in the browser at corx-labs.com/chat/."
+            "text": "CorX3.8-27B is Jamaica's first large open-weight LLM — a 27-billion-parameter assistant that speaks Jamaican Patois by default. It is built by CorX Labs, an AI lab in Jamaica, and you can chat with it free in your browser at corx-labs.com/chat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is CorX3.8-27B?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CorX3.8-27B is a 27-billion-parameter conversational AI model that speaks Jamaican Patois by default and switches to standard English on request. It is Jamaica's first large open-weight LLM, released under the Apache 2.0 licence at huggingface.co/Sigmandndnns/CorX3.8-27B."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an AI that speaks Jamaican Patois?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. CorX3.8-27B speaks Jamaican Patois by default and switches to standard English when you write in English or ask it to. It answers directly, holds its boundaries and carries everyday Jamaican cultural reference, rather than treating Patois as an accent applied to a foreign voice. You can talk to it at corx-labs.com/chat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is CorX3.8 built from scratch?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, and CorX Labs states this plainly. CorX3.8-27B is a fully merged fine-tune of the open-weight Qwen3.8-27B base (Apache 2.0). The underlying reasoning, code and mathematics come from that base; CorX Labs added the Jamaican voice, register and grounding. CorX1.5 is the model that was trained from random weights."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I chat with a Jamaican AI for free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. corx-labs.com/chat runs CorX3.8 in your browser with no sign-up and no API key. It also searches the web and runs Python on its own when a question needs it. The chat talks to CorX Labs' own server, so it is offline whenever that server is not running; you can also point it at your own endpoint or bring your own API key."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What hardware do I need to run CorX3.8-27B?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About 24GB of GPU memory in 4-bit, or roughly 54GB in full bf16. It runs on a single GPU. The set-up guide has a server script that picks the precision to match your card automatically."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is CorX1.5?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CorX1.5 is an open-source language model with roughly 158 million parameters, built from scratch by CorX Labs in Jamaica. It is a custom decoder-only transformer using RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm, with 10 layers, a 1,024-token context window and a 32,768-token custom BPE vocabulary. It is not a fine-tune of an existing base model."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is TriStream-SVS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TriStream-SVS is a 321.8-million-parameter singing voice synthesis model. It splits the human voice into three parallel encoder streams — pitch, timbre and breath texture — so that singer identity lives in a single inspectable stream. It is released at huggingface.co/Sigmandndnns/TriStream-SVS-300M."
           }
         },
         {
@@ -238,23 +286,31 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
           "name": "Is there an open-source AI model made in Jamaica?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. CorX1.5 is an open-source language model designed and trained in Jamaica by CorX Labs, and released under the Apache 2.0 license on Hugging Face at huggingface.co/Sigmandndnns/CorX1.5-160M."
+            "text": "Yes — three of them. CorX3.8-27B, CorX1.5 and TriStream-SVS are all designed and trained in Jamaica by CorX Labs and released under the Apache 2.0 licence on Hugging Face under the account Sigmandndnns."
           }
         },
         {
           "@type": "Question",
-          "name": "Where can I download or try CorX1.5?",
+          "name": "Can I use CorX models commercially?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "CorX1.5 is published on Hugging Face at huggingface.co/Sigmandndnns/CorX1.5-160M. Weights, tokenizer and the model definition file are available there under the Apache 2.0 license."
+            "text": "Yes. All three models are released under the Apache 2.0 licence, which permits commercial use, modification and redistribution, provided you keep the licence and attribution. CorX Labs does note that CorX1.5 is a research and learning project and is not suitable for production or safety-critical use."
           }
         },
         {
           "@type": "Question",
-          "name": "Who built CorX1.5?",
+          "name": "Where can I download or try CorX Labs' models?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "CorX1.5 was built by Nathan, a solo developer and independent AI researcher from Jamaica and the founder of CorX Labs. The architecture, tokenizer, pretraining pipeline and fine-tuning were all written and trained by one person on a single GPU."
+            "text": "All three are on Hugging Face under Sigmandndnns: weights, tokenizers and the files needed to load them, under Apache 2.0. Each model also has a full card on this site under Our Products, and CorX3.8 can be used directly in the browser at corx-labs.com/chat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who built CorX Labs' models?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nathan, a solo developer and independent AI researcher from Jamaica and the founder of CorX Labs. The architecture, tokenizer, pretraining pipeline and fine-tuning were written and trained by one person on a single GPU."
           }
         }
       ]
@@ -702,48 +758,87 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
 
       <div class="faq column-narrow" data-reveal>
         <details open>
-          <summary>What is CorX1.5?<span class="plus" aria-hidden="true">
+          <summary>What is CorX Labs?<span class="plus" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>CorX1.5 is an open-source language model with roughly 158 million
-            parameters, built from scratch by CorX Labs in Jamaica. It is a custom decoder-only
-            transformer using RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm, with
-            10 layers, a 1,024-token context window and a 32,768-token custom BPE vocabulary. It is
-            not a fine-tune of an existing base model.</p></div>
+          <div class="faq-body"><p>CorX Labs is an independent AI research lab and research station based in Jamaica, in the Caribbean. It designs, trains and open-sources AI models, and has released three: <strong>CorX3.8-27B</strong>, <strong>CorX1.5</strong> and <strong>TriStream-SVS</strong>.</p></div>
         </details>
 
         <details>
-          <summary>What is CorX Labs?<span class="plus" aria-hidden="true">
+          <summary>Is there an AI company in Jamaica?<span class="plus" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>CorX Labs is an independent AI research lab and research station
-            based in Jamaica, in the Caribbean. It designs, trains and open-sources language models
-            built from the ground up rather than adapting existing models.</p></div>
+          <div class="faq-body"><p>Yes. CorX Labs is an AI research lab based in Jamaica. It builds Jamaican AI from the ground up and has released three open-source models: CorX3.8-27B, a 27-billion-parameter Jamaican Patois-speaking large language model; CorX1.5, a 158M-parameter model trained from scratch; and TriStream-SVS, a singing voice synthesis model.</p></div>
+        </details>
+
+        <details>
+          <summary>What is the best Jamaican AI or Jamaica LLM?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>CorX3.8-27B is Jamaica’s first large open-weight LLM — a 27-billion-parameter assistant that speaks Jamaican Patois by default. It is built by CorX Labs, an AI lab in Jamaica, and you can chat with it free in your browser at <a href="/chat/">corx-labs.com/chat</a>.</p></div>
+        </details>
+
+        <details>
+          <summary>What is CorX3.8-27B?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>CorX3.8-27B is a 27-billion-parameter conversational AI model that speaks Jamaican Patois by default and switches to standard English on request. It is Jamaica’s first large open-weight LLM, released under the Apache 2.0 licence at <a href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/CorX3.8-27B</a>.</p></div>
+        </details>
+
+        <details>
+          <summary>Is there an AI that speaks Jamaican Patois?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. CorX3.8-27B speaks Jamaican Patois by default and switches to standard English when you write in English or ask it to. It answers directly, holds its boundaries and carries everyday Jamaican cultural reference, rather than treating Patois as an accent applied to a foreign voice. You can talk to it at <a href="/chat/">corx-labs.com/chat</a>.</p></div>
+        </details>
+
+        <details>
+          <summary>Is CorX3.8 built from scratch?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>No, and CorX Labs states this plainly. CorX3.8-27B is a fully merged fine-tune of the open-weight Qwen3.8-27B base (Apache 2.0). The underlying reasoning, code and mathematics come from that base; CorX Labs added the Jamaican voice, register and grounding. <strong>CorX1.5</strong> is the model that was trained from random weights.</p></div>
+        </details>
+
+        <details>
+          <summary>Can I chat with a Jamaican AI for free?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. <a href="/chat/">corx-labs.com/chat</a> runs CorX3.8 in your browser with no sign-up and no API key. It also searches the web and runs Python on its own when a question needs it. The chat talks to CorX Labs’ own server, so it is offline whenever that server is not running; you can also point it at your own endpoint or bring your own API key.</p></div>
+        </details>
+
+        <details>
+          <summary>What hardware do I need to run CorX3.8-27B?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>About 24GB of GPU memory in 4-bit, or roughly 54GB in full bf16. It runs on a single GPU. The <a href="/chat/documentation/">set-up guide</a> has a server script that picks the precision to match your card automatically.</p></div>
+        </details>
+
+        <details>
+          <summary>What is CorX1.5?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>CorX1.5 is an open-source language model with roughly 158 million parameters, built from scratch by CorX Labs in Jamaica. It is a custom decoder-only transformer using RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm, with 10 layers, a 1,024-token context window and a 32,768-token custom BPE vocabulary. It is not a fine-tune of an existing base model.</p></div>
+        </details>
+
+        <details>
+          <summary>What is TriStream-SVS?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>TriStream-SVS is a 321.8-million-parameter singing voice synthesis model. It splits the human voice into three parallel encoder streams — pitch, timbre and breath texture — so that singer identity lives in a single inspectable stream. It is released at <a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/TriStream-SVS-300M</a>.</p></div>
         </details>
 
         <details>
           <summary>Is there an open-source AI model made in Jamaica?<span class="plus" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Yes. CorX1.5 is an open-source language model designed and trained
-            in Jamaica by CorX Labs, and released under the Apache 2.0 license on Hugging Face at
-            <a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/CorX1.5-160M</a>.</p></div>
+          <div class="faq-body"><p>Yes — three of them. CorX3.8-27B, CorX1.5 and TriStream-SVS are all designed and trained in Jamaica by CorX Labs and released under the Apache 2.0 licence on Hugging Face under the account <a href="https://huggingface.co/Sigmandndnns" rel="noopener" target="_blank">Sigmandndnns</a>.</p></div>
         </details>
 
         <details>
-          <summary>Where can I download or try CorX1.5?<span class="plus" aria-hidden="true">
+          <summary>Can I use CorX models commercially?<span class="plus" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>CorX1.5 is published on Hugging Face at
-            <a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/CorX1.5-160M</a>.
-            Weights, tokenizer and the model definition file are available there under the Apache 2.0
-            license. See the <a href="/models/corx1-5/">CorX1.5 model page</a> for loading
-            instructions.</p></div>
+          <div class="faq-body"><p>Yes. All three models are released under the Apache 2.0 licence, which permits commercial use, modification and redistribution, provided you keep the licence and attribution. CorX Labs does note that CorX1.5 is a research and learning project and is not suitable for production or safety-critical use.</p></div>
         </details>
 
         <details>
-          <summary>Who built CorX1.5?<span class="plus" aria-hidden="true">
+          <summary>Where can I download or try CorX Labs' models?<span class="plus" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>CorX1.5 was built by Nathan, a solo developer and independent AI
-            researcher from Jamaica and the founder of CorX Labs. The architecture, tokenizer,
-            pretraining pipeline and fine-tuning were all written and trained by one person on a
-            single GPU. Read the full story on the <a href="/about/">about page</a>.</p></div>
+          <div class="faq-body"><p>All three are on Hugging Face under <a href="https://huggingface.co/Sigmandndnns" rel="noopener" target="_blank">Sigmandndnns</a>: weights, tokenizers and the files needed to load them, under Apache 2.0. Each model also has a full card on this site under <a href="/models/">our products</a>, and CorX3.8 can be used directly in the browser at <a href="/chat/">corx-labs.com/chat</a>.</p></div>
+        </details>
+
+        <details>
+          <summary>Who built CorX Labs' models?<span class="plus" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Nathan, a solo developer and independent AI researcher from Jamaica and the founder of CorX Labs. The architecture, tokenizer, pretraining pipeline and fine-tuning were written and trained by one person on a single GPU. Read the full story on the <a href="/about/">about page</a>.</p></div>
         </details>
       </div>
     </div>
