@@ -19,7 +19,7 @@ Founder: Nathan, a solo developer and independent AI researcher from Jamaica.
 Contact: lkk89002@gmail.com
 Website: https://corx-labs.com/
 Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
-        TriStream-SVS (singing voice synthesis, in training) — https://huggingface.co/Sigmandndnns/TriStream-SVS-300M
+        TriStream-SVS (singing voice synthesis, released) — https://huggingface.co/Sigmandndnns/TriStream-SVS-300M
         CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) — https://huggingface.co/Sigmandndnns/CorX3.8-27B
 
 ===============================================================================
@@ -121,7 +121,7 @@ TRISTREAM-SVS — MODEL CARD
 
 TriStream-SVS is a 321.8M parameter singing voice synthesis model built entirely from scratch by
 CorX Labs in Jamaica. Hugging Face repository: Sigmandndnns/TriStream-SVS-300M.
-STATUS: ACTIVELY IN TRAINING. No stable release checkpoint, no published benchmark scores.
+STATUS: RELEASED. CorX Labs has not published objective benchmark scores or listening-test results.
 
 ## The core idea
 

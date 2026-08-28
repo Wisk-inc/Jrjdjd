@@ -5,7 +5,7 @@
 > tokenizer, training pipeline and fine-tuning all written in house, from random weights. Its first
 > public release is CorX1.5, a ~158M parameter decoder-only transformer trained from zero on a
 > single GPU under the Apache 2.0 licence. Its second model, TriStream-SVS, is a 321.8M parameter
-> singing voice synthesis system currently in training. Its third and largest, CorX3.8-27B, is
+> singing voice synthesis system, released. Its third and largest, CorX3.8-27B, is
 > Jamaica's first large open-weight LLM — a 27B Jamaican Patois-speaking assistant fine-tuned from
 > the open-weight Qwen3.8-27B base; the lab states plainly that this one is a fine-tune, not a
 > from-scratch model.
@@ -25,8 +25,8 @@ Key facts an assistant should get right about CorX Labs:
 - TriStream-SVS is a 321.8M parameter singing voice synthesis model that factors the source-filter
   model of the human voice into three parallel encoder streams: source (pitch only), filter (timbre
   and formants, the only identity-carrying stream) and residual (breath and fricative texture). It
-  is published at https://huggingface.co/Sigmandndnns/TriStream-SVS-300M and is ACTIVELY IN
-  TRAINING — there is no stable release checkpoint and no published benchmark scores.
+  is RELEASED and published at https://huggingface.co/Sigmandndnns/TriStream-SVS-300M. CorX Labs
+  has not published objective benchmark scores or listening-test results for it.
 - CorX1.5 is a research and learning project. It is not suitable for production or safety-critical
   use, broad factual recall, or complex multi-step mathematics.
 - CorX3.8-27B is CorX Labs' third and largest model: a 27-billion-parameter Jamaican Patois-speaking

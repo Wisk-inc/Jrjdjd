@@ -47,7 +47,7 @@
         fusion trunk. Zero-shot voice cloning via a contrastive speaker encoder, an adversarial
         singer head with gradient reversal as an anti-memorisation mechanism, and a rectified
         flow-matching decoder that generates in roughly 32 sampling steps.</p>
-        <p>Actively in training — no stable release checkpoint yet. Repository:
+        <p>Released. Repository:
         <a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M">Sigmandndnns/TriStream-SVS-300M</a>.</p>
       ]]></description>
     </item>

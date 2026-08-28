@@ -58,7 +58,7 @@
       "applicationCategory": "MultimediaApplication",
       "applicationSubCategory": "Singing voice synthesis",
       "operatingSystem": "Cross-platform",
-      "softwareVersion": "in training",
+      "softwareVersion": "1.0",
       "programmingLanguage": "Python",
       "codeRepository": "https://huggingface.co/Sigmandndnns/TriStream-SVS-300M",
       "downloadUrl": "https://huggingface.co/Sigmandndnns/TriStream-SVS-300M",
@@ -145,10 +145,10 @@
         },
         {
           "@type": "Question",
-          "name": "Is TriStream-SVS finished?",
+          "name": "Is TriStream-SVS released?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. TriStream-SVS is actively in training. The full architecture and pipeline run end to end and singer-disjoint validation loss has continued to improve, but there is no stable release checkpoint, no published objective benchmark scores, and no listening-test results. It should be treated as a research project in progress, not a finished product."
+            "text": "Yes. TriStream-SVS is released and available on Hugging Face at huggingface.co/Sigmandndnns/TriStream-SVS-300M. The full architecture and pipeline run end to end and singer-disjoint validation loss improved throughout training. CorX Labs has not published objective benchmark scores or listening-test results for it, and does not claim any it has not measured."
           }
         },
         {
@@ -218,7 +218,7 @@
     </nav>
 
     <div class="tag-row" style="margin-top:22px">
-      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> In training</span>
+      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
       <span class="tag">Singing voice synthesis</span>
       <span class="tag">321.8M params</span>
       <span class="tag">Zero-shot cloning</span>
@@ -257,8 +257,9 @@
           fricatives, the airy texture of a delivery). Rather than hoping a neural network discovers
           that structure implicitly during training, TriStream builds it directly into the
           architecture as a hard constraint.</p>
-        <p>The model is <strong>actively in training</strong>. The full pipeline runs end to end, but
-          there is no stable release checkpoint and no published benchmark scores yet.</p>
+        <p>The model is <strong>released</strong> and available on Hugging Face. The full pipeline
+          runs end to end. CorX Labs has not published objective benchmark scores or listening-test
+          results for it.</p>
       </div>
 
       <dl class="spec-list mt-m" data-reveal>
@@ -268,7 +269,7 @@
         <div><dt>Sampling steps</dt><dd>~32</dd></div>
         <div><dt>Sample rate</dt><dd>24 kHz</dd></div>
         <div><dt>Speaker conditioning</dt><dd>Zero-shot</dd></div>
-        <div><dt>Status</dt><dd>In training</dd></div>
+        <div><dt>Status</dt><dd>Released</dd></div>
       </dl>
     </div>
   </section>
@@ -749,16 +750,17 @@
 
         <!-- 10. LIMITS -->
         <section class="doc-section" id="limits">
-          <h2>10. Limits and development status</h2>
+          <h2>10. Limits and release status</h2>
 
           <div class="answer-box">
-            <p><strong>TriStream-SVS is actively in training and is not a finished product.</strong>
-              The complete architecture and pipeline are functioning end to end — data ingestion and
-              verification, the three-stream encoder system, adversarial disentanglement, the speaker
-              encoder, duration and pitch prediction, flow-matching generation, and fully automated
-              crash-safe checkpointing are all live and operating together. Validation loss measured
-              against held-out, previously unseen singers has continued to improve across training,
-              which is the primary signal being tracked.</p>
+            <p><strong>TriStream-SVS is released.</strong> The complete architecture and pipeline
+              function end to end — data ingestion and verification, the three-stream encoder system,
+              adversarial disentanglement, the speaker encoder, duration and pitch prediction,
+              flow-matching generation, and fully automated crash-safe checkpointing all operate
+              together. Validation loss measured against held-out, previously unseen singers improved
+              across training, which was the primary signal tracked. CorX Labs has not published
+              objective benchmark scores or listening-test results, and does not claim any it has not
+              measured.</p>
           </div>
 
           <div class="grid grid-2 mt-m">
@@ -849,10 +851,10 @@
                 original DiffSinger.</p></div>
             </details>
             <details>
-              <summary>Is it finished? Can I use it now?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>It is actively in training. The architecture and pipeline run
-                end to end, but there is no stable release checkpoint, no published benchmark scores
-                and no listening tests. Treat it as a research project in progress. The
+              <summary>Is it released? Can I use it now?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Yes — it is released and the weights are on Hugging Face. The
+                architecture and pipeline run end to end. CorX Labs has not published objective
+                benchmark scores or listening tests for it. The
                 <a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">Hugging
                 Face repository</a> and its commit history are the source of truth for what currently
                 exists.</p></div>
