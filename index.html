@@ -23,15 +23,15 @@
 <meta property="og:site_name" content="CorX Labs">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/">
-<meta property="og:title" content="CorX Labs — AI Research Lab in Jamaica | Makers of CorX1.5">
-<meta property="og:description" content="An independent AI research lab in the Caribbean, building open-source language models from scratch. Home of CorX1.5.">
+<meta property="og:title" content="CorX Labs — Jamaica's AI Research Lab | Jamaican AI Models">
+<meta property="og:description" content="Jamaica's independent AI research lab. Home of CorX3.8-27B, the island's first large open-weight LLM, plus CorX1.5 and TriStream-SVS — all open-source.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="CorX Labs — architecting the future, from the ground up.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CorX Labs — AI Research Lab in Jamaica | Makers of CorX1.5">
-<meta name="twitter:description" content="An independent AI research lab in the Caribbean, building open-source language models from scratch. Home of CorX1.5.">
+<meta name="twitter:title" content="CorX Labs — Jamaica's AI Research Lab | Jamaican AI Models">
+<meta name="twitter:description" content="Jamaica's independent AI research lab. Home of CorX3.8-27B, the island's first large open-weight LLM, plus CorX1.5 and TriStream-SVS — all open-source.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-default.jpg">
 <meta name="twitter:image:alt" content="CorX Labs — architecting the future, from the ground up.">
 
@@ -71,7 +71,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       },
       "image": { "@id": "https://corx-labs.com/#logo" },
       "slogan": "Architecting the future.",
-      "description": "CorX Labs is an independent artificial intelligence research lab based in Jamaica, in the Caribbean. It designs and trains open-source language models from scratch, including CorX1.5.",
+      "description": "CorX Labs is an independent artificial intelligence research lab based in Jamaica, in the Caribbean. It designs and trains open-source AI models, including CorX3.8-27B — Jamaica's first large open-weight LLM and a Jamaican Patois-speaking assistant — CorX1.5, trained from scratch, and TriStream-SVS, a singing voice synthesis model.",
       "foundingDate": "2026",
       "foundingLocation": {
         "@type": "Place",
@@ -105,7 +105,12 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         "areaServed": "Worldwide"
       },
       "founder": { "@id": "https://corx-labs.com/#nathan" },
-      "sameAs": ["https://huggingface.co/Sigmandndnns/CorX1.5-160M"]
+      "sameAs": [
+        "https://huggingface.co/Sigmandndnns",
+        "https://huggingface.co/Sigmandndnns/CorX3.8-27B",
+        "https://huggingface.co/Sigmandndnns/CorX1.5-160M",
+        "https://huggingface.co/Sigmandndnns/TriStream-SVS-300M"
+      ]
     },
     {
       "@type": "Person",
@@ -115,7 +120,9 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "description": "Independent AI researcher from Jamaica. Designed, trained and released CorX1.5 solo — architecture, tokenizer, training pipeline and fine-tuning.",
       "nationality": { "@type": "Country", "name": "Jamaica" },
       "worksFor": { "@id": "https://corx-labs.com/#organization" },
-      "knowsAbout": ["Transformer architecture", "Language model pretraining", "Knowledge distillation", "Tokenizer design"]
+      "founder": { "@id": "https://corx-labs.com/#organization" },
+      "knowsAbout": ["Transformer architecture", "Language model pretraining", "Knowledge distillation", "Tokenizer design", "Jamaican Patois language modelling", "Singing voice synthesis"],
+      "sameAs": ["https://huggingface.co/Sigmandndnns"]
     },
     {
       "@type": "WebSite",
@@ -141,7 +148,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "dateModified": "2026-08-23",
       "speakable": {
         "@type": "SpeakableSpecification",
-        "cssSelector": [".answer-box", "h1"]
+        "cssSelector": [".answer-box", ".fact-list", "h1"]
       }
     },
     {
@@ -468,6 +475,20 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <div class="stat"><dt>Open datasets</dt><dd>25</dd></div>
         <div class="stat"><dt>Developers</dt><dd>1</dd></div>
       </dl>
+
+      <!-- Short, self-contained factual statements. Each one stands on its own
+           out of context, which is what search engines and AI assistants quote. -->
+      <div class="answer-box mt-l" data-reveal id="key-facts">
+        <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600;margin-bottom:10px">CorX Labs at a glance</h3>
+        <ul class="fact-list">
+          <li><strong>CorX Labs is an artificial intelligence research lab based in Jamaica</strong>, in the Caribbean. It was founded in 2026 by Nathan, an independent researcher from Jamaica.</li>
+          <li><strong>CorX3.8-27B is Jamaica's first large open-weight LLM</strong> — a 27-billion-parameter assistant that speaks Jamaican Patois by default. It is a fine-tune of the open-weight Qwen3.8-27B base, not a from-scratch model.</li>
+          <li><strong>CorX1.5 is a 158-million-parameter language model trained from random weights</strong> on a single GPU — architecture, tokenizer and training pipeline all written in house. It is not a fine-tune of any existing model.</li>
+          <li><strong>TriStream-SVS is a 321.8-million-parameter singing voice synthesis model</strong> that splits the human voice into three encoder streams: pitch, timbre and breath texture.</li>
+          <li><strong>All three models are open-source under the Apache 2.0 licence</strong> and published on Hugging Face under the account <a href="https://huggingface.co/Sigmandndnns" rel="noopener" target="_blank">Sigmandndnns</a>.</li>
+          <li><strong>You can talk to CorX3.8 free in a browser</strong> at <a href="/chat/">corx-labs.com/chat</a>, with no sign-up and no API key.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
