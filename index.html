@@ -147,17 +147,21 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
     {
       "@type": "NewsArticle",
       "@id": "https://corx-labs.com/#announcement",
-      "headline": "CorX Labs releases CorX1.5, an open-source language model built from scratch in Jamaica",
-      "description": "CorX Labs, an independent AI research lab in Jamaica, announced the open-source release of CorX1.5 — a 158-million-parameter language model designed and trained entirely from scratch by a single developer on a single GPU.",
+      "headline": "CorX Labs releases three open-source AI models built in Jamaica, including the island's first large language model",
+      "description": "CorX Labs, an independent AI research lab in Jamaica, has released three open-source models: CorX3.8-27B, a 27-billion-parameter Jamaican Patois-speaking assistant and the island's first large open-weight LLM; CorX1.5, a 158-million-parameter language model trained entirely from scratch; and TriStream-SVS, a 321.8-million-parameter singing voice synthesis model currently in training.",
       "url": "https://corx-labs.com/#announcement",
       "mainEntityOfPage": { "@id": "https://corx-labs.com/#webpage" },
       "datePublished": "2026-08-01",
-      "dateModified": "2026-08-01",
+      "dateModified": "2026-08-28",
       "inLanguage": "en",
       "author": { "@id": "https://corx-labs.com/#nathan" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "image": "https://corx-labs.com/assets/img/og-default.jpg",
-      "about": { "@id": "https://corx-labs.com/models/corx1-5/#model" }
+      "about": [
+        { "@id": "https://corx-labs.com/models/corx3-8/#model" },
+        { "@id": "https://corx-labs.com/models/corx1-5/#model" },
+        { "@id": "https://corx-labs.com/models/tristream-svs/#model" }
+      ]
     },
     {
       "@type": "ItemList",
@@ -329,16 +333,37 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       <article class="announce" data-reveal>
         <p class="announce-tag"><i class="dot" aria-hidden="true"></i> Announcement</p>
 
-        <h2 id="announce-title">CorX Labs releases CorX1.5, an open-source language model built from
-          scratch in Jamaica.</h2>
+        <h2 id="announce-title">CorX Labs releases three open-source AI models built in Jamaica,
+          including the island's first large language model.</h2>
 
-        <p class="dateline">Jamaica &middot; <time datetime="2026-08-01">1 August 2026</time> &middot; For immediate release</p>
+        <p class="dateline">Jamaica &middot; <time datetime="2026-08-28">28 August 2026</time> &middot; For immediate release</p>
 
         <div class="prose">
           <p><strong>CorX Labs</strong>, an independent artificial intelligence research lab and
-            research station based in Jamaica, today announced the open-source release of
-            <strong>CorX1.5</strong> — a 158-million-parameter language model designed and trained
-            entirely from scratch by a single developer on a single GPU.</p>
+            research station based in Jamaica, has released three open-source models:
+            <strong>CorX3.8-27B</strong>, a 27-billion-parameter Jamaican Patois-speaking assistant
+            and the island's first large open-weight LLM; <strong>CorX1.5</strong>, a
+            158-million-parameter language model designed and trained entirely from scratch; and
+            <strong>TriStream-SVS</strong>, a 321.8-million-parameter singing voice synthesis model,
+            currently in training. All three are the work of a single developer on a single GPU.</p>
+
+          <h3>CorX3.8-27B — a model that speaks Patois</h3>
+
+          <p>CorX3.8-27B is a 27-billion-parameter conversational assistant that speaks Jamaican
+            Patois by default and switches to standard English on request. It answers directly, holds
+            its boundaries, and carries everyday Jamaican cultural reference rather than treating
+            Patois as a novelty accent applied to a foreign voice.</p>
+
+          <p>The lab states plainly that this one is <em>not</em> built from scratch. CorX3.8-27B is a
+            fully merged fine-tune of the open-weight Qwen3.8-27B base (Apache 2.0): the underlying
+            reasoning, code and mathematics come from that base, and CorX Labs contributed the
+            Jamaican voice, register and grounding. It is also not a Jamaican knowledge base — it
+            should not be trusted for specific facts such as addresses, current laws or prices
+            without a retrieval layer, which the lab ships to ground answers on real Jamaican sources
+            including OpenStreetMap and public government documents. It runs in 4-bit on a single
+            ~24GB GPU, or about 54GB in full bf16.</p>
+
+          <h3>CorX1.5 — built from random weights</h3>
 
           <p>CorX1.5 is not a fine-tune of an existing base model. Its architecture, its
             32,768-token tokenizer, its pretraining pipeline and its fine-tuning were all written in
@@ -362,17 +387,44 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
             The model also ships with a hardcoded crisis-response layer, implemented in code rather
             than left to the model's judgment.</p>
 
+          <h3>TriStream-SVS — a voice factored into three streams</h3>
+
+          <p>TriStream-SVS is a 321.8-million-parameter singing voice synthesis system that factors
+            the source-filter model of the human voice into three parallel encoder streams: a
+            <strong>source</strong> stream carrying pitch alone, a <strong>filter</strong> stream
+            carrying timbre and formants — the only stream that carries singer identity — and a
+            <strong>residual</strong> stream for breath and fricative texture. Separating identity
+            into a single stream is a deliberate design choice: it makes the part of the model that
+            determines who the voice sounds like an isolated, inspectable component.</p>
+
+          <p>TriStream-SVS is <strong>actively in training</strong>. There is no stable release
+            checkpoint and no published benchmark scores, and the lab is not claiming any until
+            training completes.</p>
+
           <blockquote>
             <p>“For years I've shared a dream to build something great — my own AI. Today that dream
               came through, and I can say I made it from scratch, from the ground up.”</p>
             <cite>Nathan, founder of CorX Labs</cite>
           </blockquote>
 
-          <p><strong>Availability.</strong> CorX1.5 is available now under the Apache 2.0 licence on
-            Hugging Face at
-            <a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/CorX1.5-160M</a>,
-            including weights, tokenizer and the model definition required to load it. Training is
-            ongoing, with updated checkpoints released as new data is added.</p>
+          <p><strong>Availability.</strong> All three models are published on Hugging Face under the
+            Apache 2.0 licence:</p>
+
+          <ul>
+            <li><strong>CorX3.8-27B</strong> —
+              <a href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/CorX3.8-27B</a>
+              (merged weights). You can talk to it in the browser at
+              <a href="/chat/">corx-labs.com/chat</a>.</li>
+            <li><strong>CorX1.5</strong> —
+              <a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/CorX1.5-160M</a>,
+              including weights, tokenizer and the model definition required to load it.</li>
+            <li><strong>TriStream-SVS</strong> —
+              <a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">huggingface.co/Sigmandndnns/TriStream-SVS-300M</a>
+              (in training; no stable checkpoint yet).</li>
+          </ul>
+
+          <p>Training is ongoing across the line-up, with updated checkpoints released as new data is
+            added.</p>
 
           <p><strong>About CorX Labs.</strong> CorX Labs is an independent AI research lab and
             research station in Jamaica, in the Caribbean. It designs, trains and open-sources
@@ -381,8 +433,10 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         </div>
 
         <div class="btn-row mt-m">
-          <a class="btn btn-primary" href="/models/corx1-5/">Read the model card</a>
-          <a class="btn btn-ghost" href="/blog/3-billion-tokens-one-gpu/">How it was trained</a>
+          <a class="btn btn-primary" href="/models/corx3-8/">CorX3.8-27B model card</a>
+          <a class="btn btn-ghost" href="/models/corx1-5/">CorX1.5 model card</a>
+          <a class="btn btn-ghost" href="/models/tristream-svs/">TriStream-SVS model card</a>
+          <a class="btn btn-ghost" href="/blog/3-billion-tokens-one-gpu/">How CorX1.5 was trained</a>
         </div>
       </article>
     </div>
