@@ -1767,6 +1767,7 @@ document.addEventListener('DOMContentLoaded', () => {
     keyLink: $('#key-link'), keyNote: $('#key-note'), modelList: $('#model-list'),
     msMark: $('#ms-mark'), msName: $('#ms-name'), modelSwitch: $('#model-switch'),
     jumpBtn: $('#jump-latest'),
+    personaBtn: $('#persona-btn'),
     personaList: $('#persona-list'), personaName: $('#persona-name'),
     personaBrief: $('#persona-brief'), personaAdd: $('#persona-add'),
     githubBtn: $('#github-btn'), githubSheet: $('#github-sheet'), ghToken: $('#gh-token'),
@@ -2053,7 +2054,7 @@ document.addEventListener('DOMContentLoaded', () => {
     off.type = 'button'; off.className = 'persona';
     off.setAttribute('aria-current', String(!db.personality));
     off.innerHTML = '<span class="persona-name">Off — normal assistant</span>';
-    off.addEventListener('click', () => { db.personality = ''; saveDb(); paintPersonas(); });
+    off.addEventListener('click', () => { db.personality = ''; saveDb(); paintPersonas(); paintPersonaBtn(); });
     els.personaList.appendChild(off);
 
     for (const p of db.personalities) {
@@ -2064,18 +2065,39 @@ document.addEventListener('DOMContentLoaded', () => {
       pick.setAttribute('aria-current', String(db.personality === p.id));
       pick.innerHTML = `<span class="persona-name">${esc(p.name)}</span>` +
         `<span class="persona-brief">${esc(p.brief.slice(0, 70))}</span>`;
-      pick.addEventListener('click', () => { db.personality = p.id; saveDb(); paintPersonas(); });
+      pick.addEventListener('click', () => { db.personality = p.id; saveDb(); paintPersonas(); paintPersonaBtn(); });
       const del = document.createElement('button');
       del.type = 'button'; del.className = 'link-btn danger'; del.textContent = 'Delete';
       del.addEventListener('click', () => {
         db.personalities = db.personalities.filter((x) => x.id !== p.id);
         if (db.personality === p.id) db.personality = '';
-        saveDb(); paintPersonas();
+        saveDb(); paintPersonas(); paintPersonaBtn();
       });
       row.append(pick, del);
       els.personaList.appendChild(row);
     }
   }
+  /* The personality panel lives inside the profile sheet, which was two taps
+     deep and below the fold — people could not find it. This opens that sheet
+     and takes you straight to the section, and the button itself shows when a
+     personality is switched on. */
+  function paintPersonaBtn() {
+    if (!els.personaBtn) return;
+    const active = db.personalities.find((x) => x.id === db.personality);
+    els.personaBtn.classList.toggle('is-on', !!active);
+    els.personaBtn.title = active
+      ? `Personality: ${active.name} — tap to change`
+      : 'Personality — give it a character';
+  }
+  els.personaBtn?.addEventListener('click', () => {
+    openProfileSheet();
+    // let the sheet lay out, then bring the section into view
+    requestAnimationFrame(() => {
+      document.getElementById('personality')?.scrollIntoView({ block: 'start' });
+      els.personaName?.focus({ preventScroll: true });
+    });
+  });
+
   els.personaAdd?.addEventListener('click', () => {
     const name = els.personaName.value.trim();
     const brief = els.personaBrief.value.trim();
@@ -2084,16 +2106,17 @@ document.addEventListener('DOMContentLoaded', () => {
     db.personalities.unshift({ id, name, brief });
     db.personality = id;                      // switch straight to the new one
     els.personaName.value = ''; els.personaBrief.value = '';
-    saveDb(); paintPersonas();
+    saveDb(); paintPersonas(); paintPersonaBtn();
   });
 
-  els.profileBtn?.addEventListener('click', () => {
+  function openProfileSheet() {
     paintPersonas();
     els.profileNameInput.value = db.profile.name;
     els.profileAvatarPreview.innerHTML = db.profile.avatar ? `<img alt="" src="${db.profile.avatar}">` : 'No photo';
     els.memoryToggle.setAttribute('aria-checked', String(db.memory));
     els.profileSheet.hidden = false;
-  });
+  }
+  els.profileBtn?.addEventListener('click', openProfileSheet);
   $('#cancel-profile').addEventListener('click', closeSheet);
   els.profileSheet?.addEventListener('click', (e) => { if (e.target === els.profileSheet) closeSheet(); });
   els.profileAvatarInput?.addEventListener('change', () => {
@@ -2123,6 +2146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#resume-now')?.addEventListener('click', () => { clearTimeout(resumeTimer); resumeRun(activeConv()); });
 
   paintProfile();
+  paintPersonaBtn();
   renderConversation();
   paintConversations();
   checkHealth();
