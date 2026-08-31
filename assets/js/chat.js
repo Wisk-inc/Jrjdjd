@@ -1173,12 +1173,36 @@ async function streamOnce(conv, bubble) {
   let buffer = '', acc = '';
   const startedAt = Date.now();
   let firstByteAt = 0;
-  const paint = () => {
+  /* Repainting the bubble means replacing its whole DOM subtree, and tokens
+     arrive many times a second. Doing that per chunk thrashes layout and is
+     the other half of the scroll judder — so coalesce to at most one repaint
+     per animation frame, and hold the reader's scroll position across the
+     swap whenever they have scrolled away. */
+  let paintQueued = false;
+  const repaint = () => {
+    paintQueued = false;
     const { reasoning, answer } = splitThinking(acc);
     if (reasoning) paintReasoning(bubble, reasoning);
+
+    const keepPos = !stickToBottom;
+    const prevTop = keepPos ? els.thread.scrollTop : 0;
+
     bubble.innerHTML = answer ? renderMarkdown(answer)
       : '<p class="typing"><span></span><span></span><span></span></p>';
-    scrollDown();
+
+    if (keepPos) {
+      // The growing message sits below the viewport while you are scrolled
+      // up, so the offset you were reading at is still the right one. Put it
+      // back if replacing the subtree disturbed it.
+      if (els.thread.scrollTop !== prevTop) els.thread.scrollTop = prevTop;
+    } else {
+      scrollDown();
+    }
+  };
+  const paint = () => {
+    if (paintQueued) return;
+    paintQueued = true;
+    requestAnimationFrame(repaint);
   };
 
   /* Watchdog on silence, not on total length: a big model can legitimately
@@ -1232,6 +1256,7 @@ async function streamOnce(conv, bubble) {
   } finally {
     clearTimeout(watchdog);
   }
+  if (paintQueued) repaint();   // flush the last frame-pending repaint
   if (firstByteAt) {
     const genSecs = (Date.now() - firstByteAt) / 1000;
     const approxTokens = Math.round(acc.length / 4);
@@ -1732,7 +1757,10 @@ document.addEventListener('DOMContentLoaded', () => {
     send(b.getAttribute('data-prompt'));
   }));
 
-  $('#new-chat').addEventListener('click', () => {
+  // Start a fresh conversation. Offered in two places — the sidebar, and
+  // next to the GitHub button in the bar — so it is reachable without
+  // opening the sidebar first. Both run exactly this.
+  const startNewChat = () => {
     // Clicking New chat while already sitting on an untouched "New chat"
     // used to stack another empty, identically-titled conversation on top
     // of it — same name, same nothing-in-it, no way to tell them apart in
@@ -1742,8 +1770,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cur || cur.messages.some((m) => !m.synthetic)) newConversation();
     renderConversation(); paintConversations();
     closeSidebar();
+    stickToBottom = true;
     els.input.focus();
-  });
+  };
+  $('#new-chat').addEventListener('click', startNewChat);
+  $('#new-chat-top')?.addEventListener('click', startNewChat);
 
   /* uploads → stage into the sandbox (zips included; the agent uses zipfile) */
   els.upload.addEventListener('change', async () => {

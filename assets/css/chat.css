@@ -60,8 +60,12 @@
   /* Deliberately NOT scroll-behavior: smooth. The thread is auto-scrolled on
      every streamed chunk, and animating each of those turns a steady stream
      into a visible judder that also fights the reader. Jumps that are worth
-     animating ask for it explicitly instead. */
-  overflow-anchor: none;
+     animating ask for it explicitly instead.
+
+     overflow-anchor is left at its default (auto) on purpose: scroll
+     anchoring is what holds your viewport still when a message above it
+     grows mid-stream. Turning it off — which an earlier version of this
+     file did — is what made scrolling up jitter. */
 }
 /* Every message and the composer share one centred reading column, the way
    ChatGPT and Claude lay a conversation out. */
