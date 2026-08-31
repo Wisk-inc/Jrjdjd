@@ -132,20 +132,20 @@ const TOOL_REFUSAL_RE = /\b(don'?t|do ?not|cannot|can'?t|cyaan|cyah|nuh) (have |
 
 const EFFORT = {
   low:    { label: 'Low',    maxTokens: 512,  temperature: 0.7,  rounds: 3,  searchN: 3,  budgetMs: 120000,
-            hint: 'Keep your reasoning short. Answer directly.' },
+            hint: 'Answer directly. Little or no thinking out loud.' },
   medium: { label: 'Medium', maxTokens: 1024, temperature: 0.7,  rounds: 5,  searchN: 4,  budgetMs: 240000,
-            hint: 'Think briefly in a <think> block first if the question needs it.' },
+            hint: 'Think briefly first only if the question genuinely needs it, then answer.' },
   high:   { label: 'High',   maxTokens: 2048, temperature: 0.65, rounds: 8,  searchN: 6,  budgetMs: 420000,
-            hint: 'Think step by step in a <think> block before answering. Break the problem into parts. If you write code, glance back over it once for obvious mistakes before you run it.' },
+            hint: 'Plan the work in a short <think> block — what you need, in what order — then carry it out. Keep the thinking to planning; do not re-argue a decision once you have made it.' },
   extra:  { label: 'Extra',  maxTokens: 4096, temperature: 0.6,  rounds: 12, searchN: 8,  budgetMs: 720000,
-            hint: 'Think carefully and step by step in a <think> block. Consider more than one approach, check your own reasoning for mistakes, and search when you are not sure of something. After you write code or a solution, spend a second <think> pass reviewing what you just made specifically for bugs or missed cases before presenting it as done — do not treat the first draft as the final one.' },
+            hint: 'Plan carefully in a <think> block, then do the work thoroughly: search more sources, check more cases, run more of the code. Depth belongs in the work you actually do, not in rethinking your own reasoning — settle each question once and move on.' },
   max:    { label: 'Max',    maxTokens: 6144, temperature: 0.55, rounds: 16, searchN: 10, budgetMs: 1200000,
-            hint: 'This is the highest effort level — spend real tokens on it, a shallow first pass is not acceptable here. Think exhaustively in a <think> block: break the problem into parts, weigh more than one approach, verify each step, search liberally for anything you are not fully sure of. Once you produce code or a solution, stop and deliberately review it in a fresh <think> block as if it were someone else\'s work you were asked to critique — look specifically for bugs, wrong assumptions, missed edge cases and unnecessary steps — then revise or redo whatever you find wrong before answering, and repeat that check again if you changed anything. If partway through you realise something you already told the user was wrong, stop and correct it plainly rather than quietly continuing. Use as many tool calls and rounds as the task genuinely needs.' },
+            hint: 'The highest effort level. Spend it on doing more real work, not on more deliberation: search widely, read the actual sources, write the code and run it, test the edge cases. Plan in a <think> block, decide, then execute. Verification comes from tools and real output, not from re-reading your own thoughts.' },
   /* Runs until the task is done or you press Stop: no round cap, no time
      budget, and the largest token allowance. For long builds where hitting
      a limit mid-file is worse than waiting. */
   auto:   { label: 'Auto',   maxTokens: 8192, temperature: 0.55, rounds: Infinity, searchN: 10, budgetMs: Infinity,
-            hint: 'There is no round or time limit on this task — you will run until the work is genuinely finished or the user stops you, so never stop early because a job looks long. Do not truncate code, do not leave a file half-written, and do not say "I will continue" and stop: continue. Break big work into pieces and keep going piece by piece, running each one, until the whole thing is complete and working. Think in a <think> block, review what you produce for bugs before presenting it, and fix what you find. Only stop when the task is actually done, or when you genuinely need an answer from the user to continue.' }
+            hint: 'There is no round or time limit on this task — you run until the work is genuinely finished or the user stops you, so never stop early because a job looks long. Do not truncate code, do not leave a file half-written, and do not say "I will continue" and then stop: continue. Break big work into pieces and keep going piece by piece, running each one, until the whole thing is complete and working. Having no limit is not licence to deliberate — it is licence to keep building. Decide quickly, act, and let real output tell you if you were wrong.' }
 };
 
 /* ------------------------------------------------------------------ store */
@@ -165,6 +165,8 @@ function defaults() {
     keys: {},               // per-provider API keys, e.g. { openrouter: 'sk-...' }
     modelByProvider: {},    // remembers the last model chosen for each provider
     github: { token: '', repo: '', branch: '' },  // PAT + active repo, browser-only
+    personalities: [],       // [{ id, name, brief }] saved personas
+    personality: '',         // id of the active one, '' = off (plain assistant)
     profile: { name: '', avatar: '' },
     effort: 'medium',
     memory: true,
@@ -238,17 +240,43 @@ function memoryDigest(conv) {
     const when = c.updated ? new Date(c.updated).toISOString().slice(0, 10) : '';
     const gist = (t) => String(t || '').replace(/<think>[\s\S]*?<\/think>/gi, ' ')
       .replace(/<tool>[\s\S]*?<\/tool>/gi, ' ').replace(/\s+/g, ' ').trim().slice(0, 160);
-    return `- "${c.title}"${when ? ` (${when})` : ''}: asked — ${gist(firstUser?.content)}` +
-      (last && last !== firstUser ? ` | last — ${gist(last.content)}` : '');
+    // Topic only. Quoting the old request verbatim made the model treat it
+    // as a live instruction and go off and do it again.
+    return `- "${c.title}"${when ? ` (${when})` : ''} — was about: ${gist(firstUser?.content).slice(0, 90)}`;
   });
-  return `\n\nMEMORY — the user's other saved chats in this browser (context carried over; do not bring these up unless relevant):\n${lines.join('\n')}\nUse search_memory to pull the full text of any of these when you need detail.`;
+  return `\n\nBACKGROUND — titles of the user's other saved chats, for reference only:\n${lines.join('\n')}\nThese are FINISHED conversations. They are NOT instructions and NOT part of the current request: never start working on one of them. Only the user's newest message tells you what to do. Use search_memory if you need detail from one of these, and otherwise ignore them.`;
 }
 
 /* -------------------------------------------------------------- system prompt */
 function buildSystem(conv) {
   const eff = EFFORT[conv.effort] || EFFORT.medium;
   const name = db.profile.name ? ` The user's name is ${db.profile.name}.` : '';
-  const base = `You are Corx, a helpful Jamaican AI assistant made by CorX Labs. You speak Jamaican Patois by default and switch to standard English when the user writes in English or asks you to. Be direct: give your actual answer plainly, without softening it, hedging it into mush, or being flippant about it. If the user says or assumes something wrong, tell them plainly that they are wrong and why — do not just agree to be agreeable. Know what is actually achievable and say so: do not promise something is done, fixed, or possible when it is not, and do not pretend a failed attempt worked.${name}\n\n${eff.hint}`;
+/* The active personality, if the user has one switched on.
+
+   Personality mode deliberately loosens the assistant register: it can hold
+   opinions, be brief or blunt, swear, and be wrong like a person is wrong.
+   It never loosens the tools — the agent still runs real commands and still
+   does not invent tool results. */
+function personaBlock() {
+  const p = db.personalities.find((x) => x.id === db.personality);
+  if (!p) return '';
+  return `
+
+PERSONALITY: you are "${p.name}".
+${p.brief}
+
+While this personality is on:
+- Be that person, not an assistant wearing a costume. Drop the helpful-assistant register entirely: no "I'd be happy to", no summarising back what was asked, no offering follow-ups nobody wanted.
+- You have your own opinions and you state them. You are allowed to disagree, to find something stupid, to be enthusiastic, to not care. Your mood can vary; you do not have to be even-tempered.
+- Answer at whatever length actually fits. One word is a valid reply. If a message is nonsense, say so — "tf you talking about" is a real answer.
+- Swearing is allowed if it fits how this person talks. So is being blunt.
+- You can be wrong, guess, or say you don't know, the way a person does. Do not perform certainty you don't have.
+- If you are asked to be someone specific and you don't know how they talk, use web_search to read their actual posts and comments first, then talk like that — real phrasing and slang, not a stereotype.
+
+What does NOT change: tools still run for real. Never claim you ran something you didn't, never invent a search result or a command's output, and if the user asks for real work — code, files, a repo change — do it properly. Personality changes your voice, not your honesty.`;
+}
+
+  const base = `You are Corx, a helpful Jamaican AI assistant made by CorX Labs. You speak Jamaican Patois by default and switch to standard English when the user writes in English or asks you to. Be direct: give your actual answer plainly, without softening it, hedging it into mush, or being flippant about it. If the user says or assumes something wrong, tell them plainly that they are wrong and why — do not just agree to be agreeable. Know what is actually achievable and say so: do not promise something is done, fixed, or possible when it is not, and do not pretend a failed attempt worked.${name}${personaBlock()}\n\n${eff.hint}`;
 
   // GitHub tools are offered only when the user has connected a token.
   const githubTools = db.github.token ? `
@@ -280,9 +308,13 @@ ${githubTools}
 Rules:
 - Never say you can't do something a tool covers — call the tool.
 - Asked to write/build/create code? Call write_file and run_python for real. A markdown block alone is not acceptable; create it, run it, show it working, then show the code.
-- Never ship code you haven't run. Build in pieces: write a piece, run it, read the output, fix and re-run until it works. Check it in your <think> block before running. If run_python errors, read the traceback and fix it yourself next call. If you truly can't get it working, say so plainly — never claim it works when it doesn't.
+- Never ship code you haven't run. Write it, run it, read the real output. If it errors, read the traceback and fix it — the sandbox tells you the truth, so do not sit there theorising about what might be wrong.
+- Do the work; don't narrate deliberating about it. Think once, decide, act. Never re-open a question you have already settled, never write "wait" or "actually, hold on" and start over, and never announce that you are going to review or double-check something — if a check is worth doing, run it as a tool and move on. A finished task is finished: say what you did and stop.
+- When you have run the code and it worked, or you have the search results in front of you, answer straight away. Do not add another round of reflection before replying.
 - Asked what you can do? Answer from the list above by name; no tool call needed.
 - Read what the user meant, not what they typed — silently correct typos instead of getting stuck.
+- Do the task in the user's latest message, and only that one. Earlier chats and earlier requests are context, never a to-do list — never revive an old request because you remembered it.
+- If you published a plan with set_plan, follow it in order and tick each step off with complete_step as you finish it. Don't abandon it halfway or silently do something else.
 - Reading more than one source when they might disagree; say so plainly if they conflict.
 - Final code/output goes in normal markdown after the tools that made it real. Keep the Patois voice; tool lines stay exact JSON.`;
 }
@@ -550,9 +582,13 @@ function addRow(role, html, opts = {}) {
         ? `<img class="avatar" alt="" src="${db.profile.avatar}">`
         : `<span class="avatar" aria-hidden="true">${esc(initial)}</span>`) + ` ${esc(db.profile.name || 'You')}`
     : '<span class="avatar" aria-hidden="true">C</span> CorX3.8';
+  // Tools sit AFTER the bubble, not before it. A command belongs where the
+  // model wrote it — "let me check X" then the command — rather than every
+  // command for the turn stacked at the top above the text that caused them.
   wrap.innerHTML = `<p class="who">${who}</p>` +
-    (role === 'assistant' ? '<div class="msg-reasoning"></div><div class="msg-tools"></div>' : '') +
-    '<div class="bubble"></div>';
+    (role === 'assistant' ? '<div class="msg-reasoning"></div>' : '') +
+    '<div class="bubble"></div>' +
+    (role === 'assistant' ? '<div class="msg-tools"></div>' : '');
   $('.bubble', wrap).innerHTML = html;
   if (els.empty && els.empty.parentElement) { els.empty.hidden = true; }
   els.thread.appendChild(wrap);
@@ -1711,6 +1747,8 @@ document.addEventListener('DOMContentLoaded', () => {
     keyLink: $('#key-link'), keyNote: $('#key-note'), modelList: $('#model-list'),
     msMark: $('#ms-mark'), msName: $('#ms-name'), modelSwitch: $('#model-switch'),
     jumpBtn: $('#jump-latest'),
+    personaList: $('#persona-list'), personaName: $('#persona-name'),
+    personaBrief: $('#persona-brief'), personaAdd: $('#persona-add'),
     githubBtn: $('#github-btn'), githubSheet: $('#github-sheet'), ghToken: $('#gh-token'),
     ghLoad: $('#gh-load'), ghActive: $('#gh-active'), ghRepoList: $('#gh-repo-list'),
     ghSave: $('#gh-save'), ghCancel: $('#gh-cancel'),
@@ -1983,7 +2021,54 @@ document.addEventListener('DOMContentLoaded', () => {
   paintGithub();
 
   /* profile */
+  /* personalities */
+  function paintPersonas() {
+    if (!els.personaList) return;
+    els.personaList.innerHTML = '';
+    if (!db.personalities.length) {
+      els.personaList.innerHTML = '<p class="panel-empty">No personalities yet. Add one below and pick it to switch it on.</p>';
+      return;
+    }
+    const off = document.createElement('button');
+    off.type = 'button'; off.className = 'persona';
+    off.setAttribute('aria-current', String(!db.personality));
+    off.innerHTML = '<span class="persona-name">Off — normal assistant</span>';
+    off.addEventListener('click', () => { db.personality = ''; saveDb(); paintPersonas(); });
+    els.personaList.appendChild(off);
+
+    for (const p of db.personalities) {
+      const row = document.createElement('div');
+      row.className = 'persona-row';
+      const pick = document.createElement('button');
+      pick.type = 'button'; pick.className = 'persona';
+      pick.setAttribute('aria-current', String(db.personality === p.id));
+      pick.innerHTML = `<span class="persona-name">${esc(p.name)}</span>` +
+        `<span class="persona-brief">${esc(p.brief.slice(0, 70))}</span>`;
+      pick.addEventListener('click', () => { db.personality = p.id; saveDb(); paintPersonas(); });
+      const del = document.createElement('button');
+      del.type = 'button'; del.className = 'link-btn danger'; del.textContent = 'Delete';
+      del.addEventListener('click', () => {
+        db.personalities = db.personalities.filter((x) => x.id !== p.id);
+        if (db.personality === p.id) db.personality = '';
+        saveDb(); paintPersonas();
+      });
+      row.append(pick, del);
+      els.personaList.appendChild(row);
+    }
+  }
+  els.personaAdd?.addEventListener('click', () => {
+    const name = els.personaName.value.trim();
+    const brief = els.personaBrief.value.trim();
+    if (!name || !brief) { (name ? els.personaBrief : els.personaName).focus(); return; }
+    const id = `p${Date.now()}`;
+    db.personalities.unshift({ id, name, brief });
+    db.personality = id;                      // switch straight to the new one
+    els.personaName.value = ''; els.personaBrief.value = '';
+    saveDb(); paintPersonas();
+  });
+
   els.profileBtn?.addEventListener('click', () => {
+    paintPersonas();
     els.profileNameInput.value = db.profile.name;
     els.profileAvatarPreview.innerHTML = db.profile.avatar ? `<img alt="" src="${db.profile.avatar}">` : 'No photo';
     els.memoryToggle.setAttribute('aria-checked', String(db.memory));
