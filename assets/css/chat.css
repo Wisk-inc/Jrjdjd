@@ -57,7 +57,11 @@
 .thread {
   flex: 1; min-height: 0; overflow-y: auto;
   padding: 26px 0 8px; display: flex; flex-direction: column; gap: 26px;
-  scroll-behavior: smooth;
+  /* Deliberately NOT scroll-behavior: smooth. The thread is auto-scrolled on
+     every streamed chunk, and animating each of those turns a steady stream
+     into a visible judder that also fights the reader. Jumps that are worth
+     animating ask for it explicitly instead. */
+  overflow-anchor: none;
 }
 /* Every message and the composer share one centred reading column, the way
    ChatGPT and Claude lay a conversation out. */
@@ -635,3 +639,32 @@
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .img-strip figcaption { margin-top: 6px; font-size: .72rem; color: var(--faint); }
 @media (max-width: 560px) { .img-cell { width: 150px; } .img-cell img { height: 104px; } }
+
+/* ==========================================================================
+   Work-panel activity dot + jump-to-latest.
+   ========================================================================== */
+/* A command ran while the panel was closed. A quiet dot, not a takeover. */
+.icon-btn.has-activity { position: relative; color: var(--ink-strong); border-color: var(--line-strong); }
+.icon-btn.has-activity::after {
+  content: ""; position: absolute; top: -3px; right: -3px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--espresso); border: 2px solid var(--paper);
+  animation: activity-in var(--fast) var(--ease);
+}
+@keyframes activity-in { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Shown only when you have scrolled away from a live stream. */
+.jump-latest {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: calc(100% + 10px); z-index: 5;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--paper-raised);
+  font: inherit; font-size: .8rem; color: var(--ink-strong);
+  box-shadow: 0 4px 16px -6px rgba(20,16,12,.35);
+}
+.jump-latest:hover { border-color: var(--ink); }
+.jump-latest[hidden] { display: none; }
+.jump-latest svg { width: 14px; height: 14px; }
+/* the composer wrap is the positioning context for the pill above it */
+.composer-wrap { position: relative; }

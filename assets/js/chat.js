@@ -140,7 +140,12 @@ const EFFORT = {
   extra:  { label: 'Extra',  maxTokens: 4096, temperature: 0.6,  rounds: 12, searchN: 8,  budgetMs: 720000,
             hint: 'Think carefully and step by step in a <think> block. Consider more than one approach, check your own reasoning for mistakes, and search when you are not sure of something. After you write code or a solution, spend a second <think> pass reviewing what you just made specifically for bugs or missed cases before presenting it as done — do not treat the first draft as the final one.' },
   max:    { label: 'Max',    maxTokens: 6144, temperature: 0.55, rounds: 16, searchN: 10, budgetMs: 1200000,
-            hint: 'This is the highest effort level — spend real tokens on it, a shallow first pass is not acceptable here. Think exhaustively in a <think> block: break the problem into parts, weigh more than one approach, verify each step, search liberally for anything you are not fully sure of. Once you produce code or a solution, stop and deliberately review it in a fresh <think> block as if it were someone else\'s work you were asked to critique — look specifically for bugs, wrong assumptions, missed edge cases and unnecessary steps — then revise or redo whatever you find wrong before answering, and repeat that check again if you changed anything. If partway through you realise something you already told the user was wrong, stop and correct it plainly rather than quietly continuing. Use as many tool calls and rounds as the task genuinely needs.' }
+            hint: 'This is the highest effort level — spend real tokens on it, a shallow first pass is not acceptable here. Think exhaustively in a <think> block: break the problem into parts, weigh more than one approach, verify each step, search liberally for anything you are not fully sure of. Once you produce code or a solution, stop and deliberately review it in a fresh <think> block as if it were someone else\'s work you were asked to critique — look specifically for bugs, wrong assumptions, missed edge cases and unnecessary steps — then revise or redo whatever you find wrong before answering, and repeat that check again if you changed anything. If partway through you realise something you already told the user was wrong, stop and correct it plainly rather than quietly continuing. Use as many tool calls and rounds as the task genuinely needs.' },
+  /* Runs until the task is done or you press Stop: no round cap, no time
+     budget, and the largest token allowance. For long builds where hitting
+     a limit mid-file is worse than waiting. */
+  auto:   { label: 'Auto',   maxTokens: 8192, temperature: 0.55, rounds: Infinity, searchN: 10, budgetMs: Infinity,
+            hint: 'There is no round or time limit on this task — you will run until the work is genuinely finished or the user stops you, so never stop early because a job looks long. Do not truncate code, do not leave a file half-written, and do not say "I will continue" and stop: continue. Break big work into pieces and keep going piece by piece, running each one, until the whole thing is complete and working. Think in a <think> block, review what you produce for bugs before presenting it, and fix what you find. Only stop when the task is actually done, or when you genuinely need an answer from the user to continue.' }
 };
 
 /* ------------------------------------------------------------------ store */
@@ -486,7 +491,55 @@ let abort = null;
 let currentTools = null;
 const state = { attachments: new Set(), files: new Map(), openFile: null };
 
-function scrollDown() { els.thread.scrollTop = els.thread.scrollHeight; }
+/* Stick to the bottom only while the reader is already there.
+
+   This used to force scrollTop to the end on every streamed chunk, which
+   meant scrolling up to re-read something got yanked back down a few times
+   a second — the thread appeared to fight you. Now: if you are near the
+   bottom we follow the stream; the moment you scroll away we leave you
+   alone until you come back down. */
+let stickToBottom = true;
+const NEAR_BOTTOM_PX = 120;
+
+function atBottom() {
+  if (!els.thread) return true;
+  const { scrollTop, scrollHeight, clientHeight } = els.thread;
+  return scrollHeight - (scrollTop + clientHeight) <= NEAR_BOTTOM_PX;
+}
+function scrollDown(force = false) {
+  if (!els.thread) return;
+  if (!force && !stickToBottom) return;
+  els.thread.scrollTop = els.thread.scrollHeight;
+}
+function syncJumpBtn() {
+  if (els.jumpBtn) els.jumpBtn.hidden = stickToBottom || !running;
+}
+function watchScroll() {
+  if (!els.thread) return;
+
+  // Detach on the gesture, not just on the resulting position. Position alone
+  // is unreliable here: a chunk can land between the gesture and the scroll
+  // event and re-pin us to the bottom, so scrolling up during a fast stream
+  // would sometimes snap back. An explicit wheel/touch/key means the reader
+  // wants control, full stop.
+  const detach = () => {
+    if (!stickToBottom) return;
+    stickToBottom = false;
+    syncJumpBtn();
+  };
+  for (const ev of ['wheel', 'touchmove', 'keydown']) {
+    els.thread.addEventListener(ev, (e) => {
+      if (ev === 'keydown' && !['ArrowUp', 'PageUp', 'Home', 'ArrowDown', 'PageDown', 'End', ' '].includes(e.key)) return;
+      detach();
+    }, { passive: true });
+  }
+
+  // Re-attach purely by arriving back at the bottom.
+  els.thread.addEventListener('scroll', () => {
+    if (atBottom()) stickToBottom = true;
+    syncJumpBtn();
+  }, { passive: true });
+}
 
 function addRow(role, html, opts = {}) {
   const wrap = document.createElement('div');
@@ -535,7 +588,9 @@ function setProgress(step, total, startedAt) {
     const secs = Math.round((Date.now() - startedAt) / 1000);
     // Compact on purpose: this has to survive a narrow phone pill, and the
     // ticking seconds are the part that proves the run is still alive.
-    setStatus('checking', `${step}/${total} · ${secs}s`);
+    // Auto has no round cap, so show the step alone rather than "1/Infinity".
+    const of = Number.isFinite(total) ? `/${total}` : '';
+    setStatus('checking', `${step}${of} · ${secs}s`);
   };
   tick();
   progressTimer = setInterval(tick, 1000);
@@ -546,6 +601,8 @@ function setRunning(on) {
   running = on;
   els.send.hidden = on;
   els.stop.hidden = !on;
+  // The jump-back button is only meaningful while something is streaming.
+  syncJumpBtn();
 }
 
 /* tool cards, inline in the conversation */
@@ -777,14 +834,14 @@ async function execTool(name, args, conv, meta = {}) {
       return `Step ${i + 1} done.`;
     }
     case 'run_python': {
-      openDock('terminal');
+      noteActivity('terminal');
       const r = await sandbox.runPython(args.code || '');
       await syncFiles();
       if (!r.ok) throw new Error(r.output || 'Python raised an error with no message.');
       return r.output || '(no output)';
     }
     case 'install_packages': {
-      openDock('terminal');
+      noteActivity('terminal');
       const r = await sandbox.installPackages(args.packages || []);
       if (!r.ok) throw new Error(r.output || 'Package install failed.');
       return r.output;
@@ -1227,6 +1284,9 @@ async function send(text, opts = {}) {
     conv.messages.push({ role: 'user', content: text, synthetic: true });
   }
 
+  // Sending re-attaches you to the bottom: you asked for this reply.
+  stickToBottom = true;
+  scrollDown(true);
   conv.run = { active: true };
   saveDb();
   setRunning(true);
@@ -1556,8 +1616,22 @@ function openDock(panel) {
   els.app.setAttribute('data-dock', 'open');
   els.dockToggle.setAttribute('aria-pressed', 'true');
   if (panel) selectPanel(panel);
+  clearActivity();
   syncScrim();
 }
+
+/* Something happened in the work panel while it was closed.
+
+   Running a command used to fling the panel open mid-sentence, which is
+   maddening when you are reading the reply. Now it just lights a dot on the
+   panel button — the information is "a command ran, look when you want to"
+   rather than a demand for your attention. */
+function noteActivity(panel) {
+  if (panel) selectPanel(panel);              // ready for when it is opened
+  if (els.app.getAttribute('data-dock') === 'open') return;   // already visible
+  els.dockToggle?.classList.add('has-activity');
+}
+function clearActivity() { els.dockToggle?.classList.remove('has-activity'); }
 function selectPanel(panel) {
   $$('.dock-tab').forEach((t) => t.setAttribute('aria-selected', String(t.getAttribute('data-panel') === panel)));
   $$('.dock-panel').forEach((p) => { p.hidden = p.getAttribute('data-panel') !== panel; });
@@ -1611,6 +1685,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fieldEndpoint: $('#field-endpoint'), fieldKey: $('#field-key'), fieldModel: $('#field-model'),
     keyLink: $('#key-link'), keyNote: $('#key-note'), modelList: $('#model-list'),
     msMark: $('#ms-mark'), msName: $('#ms-name'), modelSwitch: $('#model-switch'),
+    jumpBtn: $('#jump-latest'),
     githubBtn: $('#github-btn'), githubSheet: $('#github-sheet'), ghToken: $('#gh-token'),
     ghLoad: $('#gh-load'), ghActive: $('#gh-active'), ghRepoList: $('#gh-repo-list'),
     ghSave: $('#gh-save'), ghCancel: $('#gh-cancel'),
@@ -1691,7 +1766,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const open = els.app.getAttribute('data-dock') === 'open';
     els.app.setAttribute('data-dock', open ? 'closed' : 'open');
     els.dockToggle.setAttribute('aria-pressed', String(!open));
-    if (!open) els.app.setAttribute('data-sidebar', 'closed');
+    if (!open) { els.app.setAttribute('data-sidebar', 'closed'); clearActivity(); }
     syncScrim();
   });
   $('#dock-close').addEventListener('click', () => { els.app.setAttribute('data-dock', 'closed'); syncScrim(); });
@@ -1782,6 +1857,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeSheet() { els.sheet.hidden = true; els.profileSheet.hidden = true; }
   $('#open-settings').addEventListener('click', openSheet);
   els.modelSwitch?.addEventListener('click', openSheet);
+  watchScroll();
+  els.jumpBtn?.addEventListener('click', () => {
+    stickToBottom = true;
+    scrollDown(true);
+    els.jumpBtn.hidden = true;
+  });
   $('#cancel-settings').addEventListener('click', closeSheet);
   els.sheet.addEventListener('click', (e) => { if (e.target === els.sheet) closeSheet(); });
   $('#save-settings').addEventListener('click', () => {

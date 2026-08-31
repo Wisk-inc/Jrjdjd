@@ -183,6 +183,10 @@
       </div>
 
       <div class="composer-wrap">
+        <button class="jump-latest" id="jump-latest" type="button" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          Jump to latest
+        </button>
         <form class="composer" id="composer-form">
           <div class="attach-row" id="attach-row" hidden></div>
           <label class="visually-hidden" for="composer-input">Message CorX3.8</label>
@@ -195,6 +199,7 @@
               <option value="high">Effort: High</option>
               <option value="extra">Effort: Extra</option>
               <option value="max">Effort: Max</option>
+              <option value="auto">Effort: Auto — until I stop it</option>
             </select>
             <span class="spacer"></span>
             <label class="chip icon-only" for="upload" title="Upload files or a zip">
