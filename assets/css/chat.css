@@ -530,6 +530,10 @@
 .ms-mark svg { width: 15px; height: 15px; }
 .ms-name { font-size: .95rem; max-width: 44vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ms-caret { width: 14px; height: 14px; color: var(--muted); flex: none; }
+/* Heretic is a different set of weights behind the same endpoint. Mark the pill
+   so you can tell at a glance which build you are actually talking to. */
+.model-switch.is-heretic .ms-mark { background: #8d2f2f; }
+.model-switch.is-heretic .ms-name { color: #8d2f2f; }
 
 .sheet-wide .sheet-card, .sheet-card.sheet-wide { max-width: 540px; }
 .provider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px;
