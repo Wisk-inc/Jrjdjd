@@ -46,8 +46,8 @@ const DEFAULTS = {
 const PROVIDERS = {
   corx: {
     label: 'CorX3.8', kind: 'openai', tint: '#b06a3b', browser: true, keyless: true, domain: 'corx-labs.com',
-    hint: "Your own self-hosted CorX3.8-27B. Keyless by default — just paste the tunnel URL.",
-    models: ['corx3.8'],
+    hint: "Your own self-hosted CorX3.8-27B. Keyless by default — just paste the tunnel URL. Running the Heretic cell instead? Use corx3.8-heretic.",
+    models: ['corx3.8', 'corx3.8-heretic'],
     mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 7.5a7 7 0 1 0 0 9"/></svg>'
   },
   openrouter: {
@@ -206,6 +206,9 @@ function activeModel() {
   const p = providerOf();
   return db.modelByProvider[db.provider] || db.model || p.models[0];
 }
+/* Heretic is the abliterated build served by the second cell in the set-up
+   guide. Same endpoint and same tools — only the weights differ. */
+function isHeretic() { return /heretic/i.test(String(activeModel())); }
 
 const activeConv = () => db.conversations.find((c) => c.id === db.activeId) || null;
 function newConversation() {
@@ -850,7 +853,12 @@ function paintModelLabel() {
   els.msMark.innerHTML = providerMark(p);
   wireBrandFallbacks(els.msMark);
   els.msMark.style.setProperty('--tint', p.tint);
-  els.msName.textContent = db.provider === 'corx' ? 'CorX3.8' : shortModel;
+  // Self-hosted is always CorX3.8 — except Heretic, which is a different set of
+  // weights and worth saying out loud rather than hiding behind the same label.
+  els.msName.textContent = db.provider !== 'corx'
+    ? shortModel
+    : (isHeretic() ? 'CorX3.8 Heretic' : 'CorX3.8');
+  els.modelSwitch.classList.toggle('is-heretic', db.provider === 'corx' && isHeretic());
   els.modelSwitch.title = `${p.label} · ${model} — click to switch`;
 }
 
