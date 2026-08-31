@@ -374,6 +374,25 @@
       <span>Memory<small>Let CorX3.8 recall your other saved chats when it uses the search_memory tool</small></span>
       <button class="toggle" type="button" id="memory-toggle" role="switch" aria-checked="true"><i></i></button>
     </div>
+    <hr class="rule" style="margin:20px 0 4px">
+    <h3 style="font-family:var(--sans);font-size:.95rem;font-weight:600;margin-bottom:4px">Personality</h3>
+    <p style="margin-top:0">Give it a character and it stops answering like an assistant — it gets
+      opinions, moods, its own way of talking, and can be as short or blunt as it likes. Tools still
+      run for real; only the voice changes.</p>
+    <div class="persona-list" id="persona-list"></div>
+    <div class="field">
+      <label for="persona-name">Name</label>
+      <input id="persona-name" type="text" spellcheck="false" maxlength="40" placeholder="e.g. Deej, a Kingston selector">
+    </div>
+    <div class="field">
+      <label for="persona-brief">Who are they?</label>
+      <textarea id="persona-brief" rows="3" spellcheck="false" placeholder="How they talk, what they care about, their attitude. Or name a real person and it will look them up."></textarea>
+      <small>Saved in this browser only.</small>
+    </div>
+    <div class="sheet-actions" style="margin-top:12px">
+      <button class="btn btn-ghost btn-sm" type="button" id="persona-add">Save personality</button>
+    </div>
+
     <div class="sheet-actions">
       <button class="btn btn-ghost btn-sm" type="button" id="cancel-profile">Cancel</button>
       <button class="btn btn-primary btn-sm" type="button" id="save-profile">Save</button>

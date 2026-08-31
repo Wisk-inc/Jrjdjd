@@ -672,3 +672,22 @@
 .jump-latest svg { width: 14px; height: 14px; }
 /* the composer wrap is the positioning context for the pill above it */
 .composer-wrap { position: relative; }
+
+/* ==========================================================================
+   Personalities.
+   ========================================================================== */
+.persona-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 4px;
+  max-height: 190px; overflow-y: auto; }
+.persona-row { display: flex; align-items: center; gap: 8px; }
+.persona { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  text-align: left; cursor: pointer; font: inherit; padding: 8px 11px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--paper-raised); }
+.persona:hover { border-color: var(--line-strong); }
+.persona[aria-current="true"] { border-color: var(--espresso); box-shadow: 0 0 0 1px var(--espresso) inset; }
+.persona-name { font-size: .86rem; font-weight: 600; color: var(--ink-strong);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.persona-brief { font-size: .74rem; color: var(--faint);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#persona-brief { width: 100%; font: inherit; font-size: .92rem; color: var(--ink); resize: vertical;
+  border: 1px solid var(--line-strong); border-radius: 10px; background: var(--paper); padding: 10px 12px; }
+#persona-brief:focus { outline: none; border-color: var(--espresso); }
