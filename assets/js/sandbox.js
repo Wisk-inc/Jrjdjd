@@ -478,6 +478,109 @@ export async function boot() {
 
 export const isReady = () => Boolean(pyodide);
 
+/* ------------------------------------------------------------- javascript
+   Real JavaScript, in a Worker. The site's CSP has no 'unsafe-eval', so eval()
+   and new Function() are both dead ends — but worker-src allows blob:, and a
+   Worker's source IS the blob. So the code is not evaluated, it is loaded as a
+   script, which needs no policy change at all.
+
+   Two things fall out of that for free: it runs off the main thread, so a long
+   loop no longer freezes the tab the way long Python does, and it can be
+   terminated, so Stop actually stops it. It reaches the network through the
+   same /api/fetch proxy Python uses. It has no DOM and no access to the page. */
+const JS_PREAMBLE = `
+const __out = [];
+const __ser = (v) => {
+  if (typeof v === 'string') return v;
+  if (v instanceof Error) return v.stack || String(v);
+  try { const s = JSON.stringify(v, null, 2); return s === undefined ? String(v) : s; }
+  catch { return String(v); }
+};
+const __log = (...a) => { if (__out.length < 5000) __out.push(a.map(__ser).join(' ')); };
+self.console = { log: __log, info: __log, warn: __log, error: __log, debug: __log, table: __log };
+const __call = async (url, method, body, headers) => {
+  // A blob: worker's base URL is the blob itself, so a relative path here
+  // throws "Failed to parse URL". __ORIGIN is baked in at creation.
+  const r = await fetch(__ORIGIN + '/api/fetch', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ url, method, body, headers: headers || {} })
+  });
+  return r.json();
+};
+self.web = {
+  get: (url, headers) => __call(url, 'GET', null, headers),
+  post: (url, body, headers) => __call(url, 'POST', body, headers)
+};
+(async () => {
+  try {
+    const __v = await (async () => {
+`;
+const JS_POSTAMBLE = `
+    })();
+    self.postMessage({ ok: true, out: __out, value: __v === undefined ? '' : __ser(__v) });
+  } catch (e) {
+    self.postMessage({ ok: false, out: __out, error: __ser(e) });
+  }
+})();
+`;
+
+let jsWorker = null;
+export function stopJs() {
+  if (jsWorker) { jsWorker.terminate(); jsWorker = null; return true; }
+  return false;
+}
+
+export function runJs(code, { timeoutMs = 0 } = {}) {
+  emit('cmd', String(code));
+  return new Promise((resolve) => {
+    let url;
+    try {
+      const blob = new Blob([
+        `const __ORIGIN = ${JSON.stringify(self.location.origin)};\n`,
+        JS_PREAMBLE, String(code || ''), JS_POSTAMBLE
+      ], { type: 'text/javascript' });
+      url = URL.createObjectURL(blob);
+      jsWorker = new Worker(url);
+    } catch (e) {
+      emit('err', String(e.message || e));
+      return resolve({ ok: false, output: `Could not start the JS worker: ${e.message}` });
+    }
+    let done = false;
+    const finish = (res) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      URL.revokeObjectURL(url);
+      if (jsWorker) { jsWorker.terminate(); jsWorker = null; }
+      resolve(res);
+    };
+    const timer = timeoutMs > 0 ? setTimeout(() => {
+      emit('err', `Stopped after ${Math.round(timeoutMs / 1000)}s.`);
+      finish({ ok: false, output: `Still running after ${Math.round(timeoutMs / 1000)}s and was stopped. ` +
+        'Break the work into smaller pieces, or print progress as you go.' });
+    }, timeoutMs) : null;
+
+    jsWorker.onmessage = (ev) => {
+      const d = ev.data || {};
+      const printed = (d.out || []).join('\n');
+      if (printed) emit('out', printed);
+      if (!d.ok) {
+        emit('err', d.error || 'unknown error');
+        return finish({ ok: false, output: [printed, d.error].filter(Boolean).join('\n') });
+      }
+      if (d.value) emit('out', d.value);
+      const body = [printed, d.value].filter(Boolean).join('\n');
+      finish({ ok: true, output: body || '(no output)' });
+    };
+    // A syntax error in the supplied code surfaces here, not as a message.
+    jsWorker.onerror = (ev) => {
+      const msg = ev.message || 'Script error';
+      emit('err', msg);
+      finish({ ok: false, output: `${msg}${ev.lineno ? ` (line ${ev.lineno})` : ''}` });
+    };
+  });
+}
+
 /* --------------------------------------------------- archives and formats
    Thin wrappers over the `fmt` module above. These exist as their own tools
    rather than leaving the model to write the Python each time: a 27B gets

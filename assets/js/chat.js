@@ -342,6 +342,7 @@ COMMANDS YOU CAN RUN RIGHT NOW — your full toolset, from the first message of 
 - run_python {"code": "..."} — run Python; state persists; you get what it printed. For HTTP inside the sandbox use "import web" then web.get(url)/web.post(url, body) — requests/urllib do NOT work. Zips: zipfile.ZipFile('/work/x.zip'); write with mode 'w'/'a' and .writestr(name, data).
 - write_file {"path","content"} / read_file {"path"} / delete_file {"path"} / list_files {} — files in /work.
 - install_packages {"packages": ["numpy"]} — micropip.
+- run_js {"code": "..."} — real JavaScript, in a worker off the main thread, so a long loop does not freeze anything and Stop really stops it. console.log to print, "return x" for a value, and web.get(url)/web.post(url, body) for the internet. No DOM.
 - deliver_file {"path"} — hand the user a download.
 - make_zip {"paths":["a.py","src"],"out":"bundle.zip"} — zip files or whole folders. unzip {"path","into"} extracts one back.
 - convert_file {"from":"data.csv","to":"data.json"} — real format conversion, both directions. Tabular (csv tsv json jsonl md html xml yaml) round-trips exactly, so "convert it back" works. Also archives, images (needs pillow), and base64/hex encode and decode. inspect_file {"path"} says what a file actually is; list_formats {} lists every format.
@@ -716,7 +717,7 @@ const TOOL_LABEL = {
   list_files: 'Listing files', install_packages: 'Installing', deliver_file: 'Delivering',
   web_search: 'Searching the web', fetch_url: 'Reading a page', search_memory: 'Recalling memory',
   find_image: 'Finding images',
-  list_skills: 'Skills', load_skill: 'Loading a skill',
+  run_js: 'Running JavaScript', list_skills: 'Skills', load_skill: 'Loading a skill',
   assign_partner: 'Handing off', ask_partner: 'Asking partner', review_by_partner: 'Requesting review',
   make_zip: 'Zipping', unzip: 'Extracting', convert_file: 'Converting',
   inspect_file: 'Inspecting', list_formats: 'Formats', clear_workspace: 'Clearing files',
@@ -1126,6 +1127,12 @@ async function execTool(name, args, conv, meta = {}) {
       await syncFiles();
       if (!r.ok) throw new Error(r.output || 'Python raised an error with no message.');
       return r.output || '(no output)';
+    }
+    case 'run_js': {
+      noteActivity('terminal');
+      const r = await sandbox.runJs(args.code || '', { timeoutMs: Number(args.timeout_ms) || 0 });
+      if (!r.ok) throw new Error(r.output || 'The JavaScript failed with no message.');
+      return r.output;
     }
     case 'install_packages': {
       noteActivity('terminal');
@@ -2109,7 +2116,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); }
   });
   els.form.addEventListener('submit', (e) => { e.preventDefault(); submit(); });
-  els.stop.addEventListener('click', () => abort?.abort());
+  // Stop means stop everything: the model request and any JavaScript still
+  // looping in its worker.
+  els.stop.addEventListener('click', () => { sandbox.stopJs(); abort?.abort(); });
   function submit() {
     const text = els.input.value.trim();
     if (!text || running) return;
