@@ -323,6 +323,9 @@ COMMANDS YOU CAN RUN RIGHT NOW — your full toolset, from the first message of 
 - write_file {"path","content"} / read_file {"path"} / delete_file {"path"} / list_files {} — files in /work.
 - install_packages {"packages": ["numpy"]} — micropip.
 - deliver_file {"path"} — hand the user a download.
+- make_zip {"paths":["a.py","src"],"out":"bundle.zip"} — zip files or whole folders. unzip {"path","into"} extracts one back.
+- convert_file {"from":"data.csv","to":"data.json"} — real format conversion, both directions. Tabular (csv tsv json jsonl md html xml yaml) round-trips exactly, so "convert it back" works. Also archives, images (needs pillow), and base64/hex encode and decode. inspect_file {"path"} says what a file actually is; list_formats {} lists every format.
+- clear_workspace {"keep":["keep.py"]} — delete the files you made in /work.
 - web_search {"query": "...", "n": ${eff.searchN}} — real search. Call it for ANY question asking for information (facts, people, places, definitions, how things work, comparisons), not just current events — your training data may be stale. Skip it only for small talk, things already said in this chat, pure code/math, or explaining something just shown to you.
 - fetch_url {"url"} — read a page's real content, including code on it. Use after web_search on the best result.
 - find_image {"query": "...", "n": 3} — find real pictures and show them to the user inline. Use it whenever a picture would help: a character, an animal, a place, a flag, a person, an object, a landmark. The images appear in the chat automatically, so just describe them afterwards.
@@ -676,6 +679,8 @@ const TOOL_LABEL = {
   list_files: 'Listing files', install_packages: 'Installing', deliver_file: 'Delivering',
   web_search: 'Searching the web', fetch_url: 'Reading a page', search_memory: 'Recalling memory',
   find_image: 'Finding images',
+  make_zip: 'Zipping', unzip: 'Extracting', convert_file: 'Converting',
+  inspect_file: 'Inspecting', list_formats: 'Formats', clear_workspace: 'Clearing files',
   github_list_repos: 'GitHub · repos', github_tree: 'GitHub · files', github_read_file: 'GitHub · read',
   github_write_file: 'GitHub · commit', github_delete_file: 'GitHub · delete',
   github_create_repo: 'GitHub · new repo', github_pull_request: 'GitHub · pull request'
@@ -972,6 +977,53 @@ async function execTool(name, args, conv, meta = {}) {
         download(name, bytes);
         return `Delivered ${name} as a download.`;
       } catch (e) { return e.message; }
+    }
+    case 'make_zip': {
+      noteActivity('terminal');
+      const paths = args.paths || args.path || [];
+      const r = await sandbox.makeZip(paths, args.out || 'bundle.zip', args.compress !== false);
+      await syncFiles();
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'unzip': {
+      noteActivity('terminal');
+      const r = await sandbox.unpackArchive(args.path, args.into || '');
+      await syncFiles();
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'convert_file': {
+      noteActivity('terminal');
+      const from = args.from || args.src || args.path;
+      const to = args.to || args.dst || args.out;
+      if (!from || !to) throw new Error('convert_file needs "from" and "to" paths, e.g. {"from":"data.csv","to":"data.json"}.');
+      const r = await sandbox.convertFile(from, to);
+      await syncFiles();
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'inspect_file': {
+      const r = await sandbox.inspectFile(args.path);
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'list_formats': {
+      const r = await sandbox.formatSupport();
+      return r.ok ? r.output : r.output;
+    }
+    case 'clear_workspace': {
+      // "delete the code you made" — a real reset, not a claim of one.
+      const files = await sandbox.listFiles();
+      const keep = new Set((args.keep || []).map(String));
+      let n = 0;
+      for (const f of files) {
+        const name = f.path.split('/').pop();
+        if (keep.has(f.path) || keep.has(name)) continue;
+        try { await sandbox.deleteFile(f.path); n += 1; } catch { /* keep going */ }
+      }
+      await syncFiles();
+      return `Deleted ${n} file${n === 1 ? '' : 's'} from /work${keep.size ? `, kept ${[...keep].join(', ')}` : ''}.`;
     }
     case 'web_search': {
       const q = String(args.query || '').trim();
