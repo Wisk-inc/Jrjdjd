@@ -896,8 +896,29 @@ while True:
         <pre class="server-code"><code id="heretic-code">&quot;&quot;&quot;
 ================================================================
  CorX3.8-27B &quot;HERETIC&quot; — uncensored API server
- Build 10 — molab (marimo cloud notebook), RTX PRO 6000 Blackwell
+ Build 11 — molab (marimo cloud notebook), RTX PRO 6000 Blackwell
  CorX Labs / Nathan
+
+ ---- what build 10 got wrong ----
+
+ * &quot;No GPU backend could be set up&quot; on a box that HAS the NVIDIA
+   Vulkan driver. Two separate causes, both fixed:
+
+   - The CUDA last resort died on &quot;OpenPGP signature verification
+     failed&quot;. NVIDIA publishes no Debian 13 (trixie) repo, so the
+     script borrows debian12 — but Debian 13&#x27;s apt 3.0 then rejects
+     that repo&#x27;s InRelease signature, and the per-line error check
+     dutifully marked every candidate unreachable. The repo is now
+     marked trusted (trust_cuda_sources) right after the keyring is
+     installed, so apt stops refusing NVIDIA&#x27;s own HTTPS host, and a
+     signature warning is no longer treated as &quot;not reachable&quot;.
+
+   - The Vulkan path should have won before CUDA was ever reached,
+     since the driver is present. A prebuilt Ubuntu binary that
+     will not start here — one missing shared library — used to be
+     abandoned outright. ensure_runnable() now reads ldd, installs
+     the library apt actually knows, and retries, instead of
+     falling through a fixable link error to the CUDA mess.
 
  ---- what build 9 got wrong ----
 
@@ -1215,6 +1236,59 @@ def _works(path):
     return True
 
 
+# A prebuilt binary built on Ubuntu often refuses to start on this container
+# for one dull reason: a shared library it links against is absent or named
+# differently here. That returns _works() == False and the whole prebuilt path
+# is abandoned — which is very likely why the Vulkan binary was skipped and the
+# run fell through to CUDA. So read ldd, install what is actually missing, and
+# retry, instead of giving up on a fixable link error.
+_SONAME_PKG = {
+    &quot;libvulkan.so&quot;: [&quot;libvulkan1&quot;],
+    &quot;libgomp.so&quot;: [&quot;libgomp1&quot;],
+    &quot;libcurl.so&quot;: [&quot;libcurl4t64&quot;, &quot;libcurl4&quot;],
+    &quot;libstdc++.so&quot;: [&quot;libstdc++6&quot;],
+    &quot;libgcc_s.so&quot;: [&quot;libgcc-s1&quot;],
+    &quot;libgfortran.so&quot;: [&quot;libgfortran5&quot;],
+    &quot;libnuma.so&quot;: [&quot;libnuma1&quot;],
+    &quot;libopenblas.so&quot;: [&quot;libopenblas0-pthread&quot;, &quot;libopenblas0&quot;],
+    &quot;libgomp1.so&quot;: [&quot;libgomp1&quot;],
+}
+
+
+def _missing_libs(path):
+    try:
+        r = subprocess.run([&quot;ldd&quot;, path], capture_output=True, text=True,
+                           env=dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(path)))
+    except Exception:
+        return []
+    miss = []
+    for line in (r.stdout + r.stderr).splitlines():
+        m = re.search(r&quot;(\S+)\s*=&gt;\s*not found&quot;, line)
+        if m:
+            miss.append(m.group(1))
+    return miss
+
+
+def ensure_runnable(path):
+    &quot;&quot;&quot;_works(), and if it fails on a missing .so, install it and try once more.&quot;&quot;&quot;
+    if _works(path):
+        return True
+    miss = _missing_libs(path)
+    if not miss:
+        return False
+    print(f&quot;[build]   binary needs libraries this box lacks: {&#x27;, &#x27;.join(miss)}&quot;)
+    for so in miss:
+        stem = so.split(&quot;.so&quot;)[0] + &quot;.so&quot;
+        for pkg in _SONAME_PKG.get(stem, []):
+            if apt_has(pkg) and apt([pkg]):
+                break
+    still = _missing_libs(path)
+    if still:
+        print(f&quot;[build]   still missing after install: {&#x27;, &#x27;.join(still)} &quot;
+              &quot;(no apt package maps to these).&quot;)
+    return _works(path)
+
+
 def _install_binary(src_dir):
     &quot;&quot;&quot;Copy a built or extracted bin directory into BIN_DIR and check it runs.
     Also pulls a sibling lib/ if the archive uses that layout.&quot;&quot;&quot;
@@ -1230,7 +1304,7 @@ def _install_binary(src_dir):
                 shutil.copy2(s, os.path.join(BIN_DIR, f))
     if os.path.exists(SERVER_BIN):
         os.chmod(SERVER_BIN, 0o755)
-    return _works(SERVER_BIN)
+    return ensure_runnable(SERVER_BIN)
 
 
 # ---------------------------------------------------------------- CUDA toolkit
@@ -1306,6 +1380,52 @@ def drop_cuda_sources():
        stderr=subprocess.DEVNULL)
 
 
+def trust_cuda_sources():
+    &quot;&quot;&quot;Mark the NVIDIA CUDA apt source trusted.
+
+    This is the fix for &quot;OpenPGP signature verification failed&quot; on this box.
+    NVIDIA publishes no Debian 13 (trixie) repo, so we borrow debian12; but
+    Debian 13&#x27;s apt (3.0) then rejects the InRelease signature and every
+    candidate looks unreachable. The keyring is installed and the repo is
+    NVIDIA&#x27;s own host over HTTPS, so tell apt to trust it rather than fail on a
+    cross-release signature check. Handles both the one-line (.list) and the
+    deb822 (.sources) formats a keyring might drop.&quot;&quot;&quot;
+    touched = False
+    for f in glob.glob(&quot;/etc/apt/sources.list.d/cuda*&quot;):
+        try:
+            txt = open(f).read()
+        except OSError:
+            continue
+        if f.endswith(&quot;.sources&quot;):
+            # deb822: add &quot;Trusted: yes&quot; to each stanza (blank-line separated)
+            # that does not already carry it.
+            stanzas = re.split(r&quot;\n\s*\n&quot;, txt.strip())
+            fixed = []
+            for st in stanzas:
+                if st.strip() and not re.search(r&quot;(?im)^\s*trusted:&quot;, st):
+                    st = st.rstrip() + &quot;\nTrusted: yes&quot;
+                    touched = True
+                fixed.append(st)
+            new = &quot;\n\n&quot;.join(fixed) + &quot;\n&quot;
+        else:
+            new_lines = []
+            for line in txt.splitlines():
+                s = line.strip()
+                if s.startswith(&quot;deb&quot;) and &quot;trusted=yes&quot; not in s:
+                    if &quot;[&quot; in s:
+                        s = s.replace(&quot;[&quot;, &quot;[trusted=yes &quot;, 1)
+                    else:
+                        s = s.replace(&quot;deb &quot;, &quot;deb [trusted=yes] &quot;, 1)
+                    touched = True
+                new_lines.append(s)
+            new = &quot;\n&quot;.join(new_lines) + &quot;\n&quot;
+        try:
+            open(f, &quot;w&quot;).write(new)
+        except OSError:
+            pass
+    return touched
+
+
 def install_cuda_toolkit():
     &quot;&quot;&quot;Install just the pieces llama.cpp needs: nvcc, cudart headers, cuBLAS
     dev. About a third of the full toolkit. Needs root.&quot;&quot;&quot;
@@ -1338,6 +1458,11 @@ def install_cuda_toolkit():
             print(f&quot;[cuda]   keyring would not install for {d}&quot;)
             continue
 
+        # Trust the repo BEFORE updating: on Debian 13 the InRelease signature
+        # is rejected (&quot;OpenPGP signature verification failed&quot;), so without this
+        # the update below fails and the candidate is discarded.
+        trust_cuda_sources()
+
         # build 9 tested `&quot;404&quot; in blob or &quot;Err:&quot; in blob` against the WHOLE
         # apt-get update output. The NVIDIA domain appears in normal successful
         # Get: lines, so any unrelated broken source anywhere in sources.list
@@ -1347,9 +1472,13 @@ def install_cuda_toolkit():
         upd = sh(&quot;apt-get update -o Acquire::Retries=2&quot;, check=False,
                  capture_output=True, text=True)
         lines = ((upd.stdout or &quot;&quot;) + (upd.stderr or &quot;&quot;)).splitlines()
+        # A signature warning is no longer fatal now the repo is trusted; only a
+        # genuine fetch failure (404/could-not-connect) means &quot;not reachable&quot;.
         broken = [l for l in lines
-                  if l.strip().startswith((&quot;Err:&quot;, &quot;E:&quot;, &quot;W:&quot;))
-                  and &quot;developer.download.nvidia.com&quot; in l]
+                  if l.strip().startswith((&quot;Err:&quot;, &quot;E:&quot;))
+                  and &quot;developer.download.nvidia.com&quot; in l
+                  and &quot;signature&quot; not in l.lower()
+                  and &quot;signed&quot; not in l.lower()]
         if broken:
             print(f&quot;[cuda]   {d} repo is not reachable:&quot;)
             for l in broken[:3]:
