@@ -215,12 +215,6 @@
 @media (max-width: 560px) {
   .starter-row { grid-template-columns: 1fr; }
   .composer textarea { font-size: 16px; }  /* stop iOS zoom on focus */
-  /* Agent chip + effort select + upload + send together are too wide for a
-     phone next to the input on one line — wrap them onto their own row
-     rather than squeezing the textarea down to a sliver. */
-  .composer { flex-wrap: wrap; }
-  .composer textarea { flex-basis: 100%; }
-  .composer-controls { flex-basis: 100%; justify-content: space-between; }
   .effort-select { font-size: .74rem; padding: 7px 8px; }
 }
 
@@ -446,10 +440,16 @@
 .toggle[aria-checked="true"] { background: var(--espresso); border-color: var(--espresso); }
 .toggle[aria-checked="true"] i { transform: translateX(16px); background: var(--paper); }
 
-/* effort select + composer row layout */
-.composer-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.composer-controls .spacer { flex: 1 1 auto; }
-.effort-select { flex: none; padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line);
+/* effort select + composer row layout.
+   This row must never wrap: Send belongs at the right end at every width. The
+   select is the only thing here allowed to shrink — the buttons are fixed hit
+   targets — and it truncates rather than pushing them around. (It used to wrap,
+   and on a 360px phone that put Send on a second line over on the left.) */
+.composer-controls { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+.composer-controls .spacer { flex: 1 1 auto; min-width: 0; }
+.effort-select { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line);
   background: transparent; font: inherit; font-size: .78rem; color: var(--muted); cursor: pointer; }
 .effort-select:hover { border-color: var(--line-strong); color: var(--ink-strong); }
 .chip.icon-only { padding: 8px; }
@@ -601,6 +601,20 @@
     text-overflow: ellipsis; white-space: nowrap; }
   .status .dot { margin: 0; }
 
+  /* The two text items must actually give way, not just be capped. A max-width
+     still floors at min-content, so on a 360-375px phone the bar ran wider than
+     the screen and the whole page slid sideways. min-width:0 down the chain lets
+     the model name and the status label ellipsize instead; the buttons are fixed
+     hit targets and keep their size. */
+  /* h1 must be a flex container here, not a block: an inline-flex child keeps
+     its intrinsic width inside a narrowed block and spills out under the status
+     pill instead of ellipsizing. */
+  .chat-bar h1 { display: flex; min-width: 0; flex: 0 8 auto; }
+  .chat-bar h1 .model-switch { min-width: 0; max-width: 100%; }
+  .model-switch .ms-name { flex: 0 1 auto; min-width: 0; }
+  .status { flex: 0 1 auto; }
+  .status .status-label { min-width: 0; }
+
   .thread { padding-top: 16px; gap: 18px; }
   .msg-assistant .bubble,
   .msg-assistant .msg-reasoning,
@@ -608,12 +622,35 @@
   .msg-user .bubble { max-width: 88%; }
   .bubble { font-size: .94rem; }
   .composer-note { font-size: .68rem; margin-top: 7px; line-height: 1.45; }
-  .composer { border-radius: 20px; padding: 8px 8px 8px 14px; }
+  .composer { border-radius: 20px; padding: 8px 10px 10px 14px; }
 
   /* dialogs: never taller than the screen, and scroll inside */
   .sheet { padding: 10px; align-items: start; }
   .sheet-card { max-height: calc(100dvh - 20px); overflow-y: auto; padding: 18px 16px; }
   .gh-repo-list { max-height: 180px; }
+}
+
+/* Narrow phones: six buttons plus the model pill and the status pill do not fit
+   at 360-375px at full size. Tighten the chrome rather than let anything
+   overflow, and drop the caret — the pill still reads as tappable without it. */
+@media (max-width: 430px) {
+  .chat-bar { gap: 5px; }
+  .chat-bar .icon-btn { width: 30px; height: 30px; border-radius: 8px; }
+  .chat-bar .icon-btn svg { width: 15px; height: 15px; }
+  .ms-caret { display: none; }
+  .model-switch { padding: 3px 5px 3px 3px; gap: 5px; }
+  /* A floor, or the name shrinks away before the label gives up any room.
+     Matches the selector that sets min-width:0 above, or that one wins. */
+  .model-switch .ms-name { max-width: none; min-width: 3.5em; }
+  .status { padding: 4px 7px; gap: 5px; }
+  .status .status-label { max-width: none; }
+}
+
+@media (max-width: 379px) {
+  /* Below this there is not room for both texts. The status label wins — it is
+     the only offline and progress reporting there is — and the coloured mark
+     still says which model, with the pill still tappable to change it. */
+  .ms-name { display: none; }
 }
 
 /* The GitHub manual-entry row stacks rather than squeezing the input. */
