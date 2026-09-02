@@ -1587,12 +1587,39 @@ async function streamOnce(conv, bubble, agent = null) {
   };
   armWatchdog(FIRST_TOKEN_TIMEOUT_MS);
 
+  /* Before the first token there is nothing to paint, so the bubble sits on a
+     mute spinner — which on a slow server reads as "stuck on the loading
+     screen" for minutes. Turn that wait into a live, ticking message, and once
+     it has gone on a while ask /health so the reason (server prefilling, on the
+     CPU, or an address that is not answering) shows in the bubble itself. */
+  let waitTimer = null;
+  let diagnosing = false;
+  const stopWaitNotice = () => { clearInterval(waitTimer); waitTimer = null; };
+  const showWaitNotice = () => {
+    let extra = '';
+    waitTimer = setInterval(async () => {
+      if (firstByteAt || abort.signal.aborted) return stopWaitNotice();
+      const secs = Math.round((Date.now() - startedAt) / 1000);
+      if (secs >= 25 && pid === 'corx' && !diagnosing && !extra) {
+        diagnosing = true;
+        try { extra = await diagnoseSelfHosted(); } catch { /* leave blank */ }
+      }
+      if (firstByteAt || abort.signal.aborted) return stopWaitNotice();
+      bubble.innerHTML = '<p class="typing"><span></span><span></span><span></span></p>'
+        + `<p class="wait-note">Waiting for your server${firstByteAt ? '' : ''}… ${secs}s.`
+        + (extra ? ` ${esc(extra)}` : ' A large model can take a while to read a long prompt.')
+        + '</p>';
+    }, 1000);
+  };
+  const waitStart = setTimeout(showWaitNotice, 8000);
+
   try {
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
     if (!firstByteAt) {
       firstByteAt = Date.now();
+      clearTimeout(waitStart); stopWaitNotice();
       // Time to first token is prefill — the model reading the prompt.
       // Reported so a slow run can be attributed to the server rather
       // than guessed at.
@@ -1624,6 +1651,7 @@ async function streamOnce(conv, bubble, agent = null) {
     throw e;
   } finally {
     clearTimeout(watchdog);
+    clearTimeout(waitStart); stopWaitNotice();
   }
   if (paintQueued) repaint();   // flush the last frame-pending repaint
   if (firstByteAt) {
