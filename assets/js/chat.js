@@ -347,7 +347,7 @@ COMMANDS YOU CAN RUN RIGHT NOW — your full toolset, from the first message of 
 - make_zip {"paths":["a.py","src"],"out":"bundle.zip"} — zip files or whole folders. unzip {"path","into"} extracts one back.
 - convert_file {"from":"data.csv","to":"data.json"} — real format conversion, both directions. Tabular (csv tsv json jsonl md html xml yaml) round-trips exactly, so "convert it back" works. Also archives, images (needs pillow), and base64/hex encode and decode. inspect_file {"path"} says what a file actually is; list_formats {} lists every format.
 - clear_workspace {"keep":["keep.py"]} — delete the files you made in /work.
-- web_search {"query": "...", "n": ${eff.searchN}} — real search. Call it for ANY question asking for information (facts, people, places, definitions, how things work, comparisons), not just current events — your training data may be stale. Skip it only for small talk, things already said in this chat, pure code/math, or explaining something just shown to you.
+- web_search {"query": "...", "n": ${eff.searchN}} — real search, yours to call when you judge you need it. Reach for it when the answer depends on something current, local, niche or specific — a real product, company, person, event, price, version, or anything after your training. Do not search for something you already know: a definition, an explanation, general knowledge, code, or maths. A question starting with "what" or "why" is not on its own a reason to search. If you do answer from memory and you are not certain, say so rather than searching to look thorough.
 - fetch_url {"url"} — read a page's real content, including code on it. Use after web_search on the best result.
 - find_image {"query": "...", "n": 3} — find real pictures and show them to the user inline. Use it whenever a picture would help: a character, an animal, a place, a flag, a person, an object, a landmark. The images appear in the chat automatically, so just describe them afterwards.
 - search_memory {"query"} — search the user's other saved chats for detail.
@@ -1638,29 +1638,12 @@ async function streamOnce(conv, bubble, agent = null) {
 }
 
 /* --------------------------------------------------------------------- send */
-/* Does this message look like the user asking for information about
-   something — a thing, a place, an app, a person, an acronym?
-
-   Telling the model to search is not enough on its own: with no native
-   tool-calling it can simply answer from memory and never emit a tool line
-   (asking "what is OpenJM in Jamaica" produced a confident answer with no
-   search at all). So for lookup-shaped questions the client runs the search
-   itself, before the model gets a turn, and hands it the results. That is
-   deterministic — it does not depend on the model choosing to comply. */
-function looksInformational(text) {
-  const t = String(text).trim();
-  if (t.length < 3 || t.length > 400) return false;
-  // Greetings and chatter need no lookup.
-  if (/^(hi|hello|hey|yow|wah ?gwaan|wagwan|morning|thanks|thank you|ok|okay|cool|nice|yes|no|lol)\b/i.test(t)) return false;
-  // Work-on-something requests are handled by the sandbox, not a search.
-  if (/\b(write|create|make|build|code|script|run|fix|debug|refactor|edit|delete|commit|push|install|upload|unzip)\b/i.test(t)) return false;
-  // Things that are plainly about this conversation, not the world.
-  if (/\b(you|your|yourself|our chat|this chat|earlier|before)\b/i.test(t) && !/\bwhat is\b|\bwho is\b/i.test(t)) return false;
-  return /^(what|whats|what's|who|whos|who's|when|where|which|why|how)\b/i.test(t)
-    || /\b(what|who) (is|are|was|were)\b/i.test(t)
-    || /^(tell me|explain|describe|define|look up|search|find out)\b/i.test(t)
-    || /\b(meaning of|stand for|known for)\b/i.test(t);
-}
+/* There used to be a looksInformational() check here that ran a web search on
+   the client before the model got a turn, whenever a message opened with what
+   / why / who / how. It was deterministic, which was the point, but it also
+   searched for questions the model could answer perfectly well on its own and
+   for ones that were not about the world at all. Searching is the model's call
+   now: it has web_search in every message and decides when to reach for it. */
 
 async function send(text, opts = {}) {
   if (running || !text.trim()) return;
@@ -1687,26 +1670,6 @@ async function send(text, opts = {}) {
   let bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
   const eff = EFFORT[conv.effort] || EFFORT.medium;
   let nudgedTools = false;
-  let pendingTools = null;
-
-  /* Look it up first, before the model can answer from memory. */
-  if (!opts.silent && looksInformational(text)) {
-    currentTools = $('.msg-tools', bubble.closest('.msg'));
-    const meta = {};
-    let out = '';
-    try { out = await execTool('web_search', { query: text, n: eff.searchN }, conv, meta); }
-    catch (e) { out = `Search failed: ${e.message}`; }
-    if (meta.results?.length) {
-      conv.messages.push({
-        role: 'user', synthetic: true,
-        content: `Web search results for "${text}":\n\n${out}\n\n` +
-          'Answer from these results. Cite what you use. If they do not actually cover it, say so plainly and search again with a better query rather than guessing from memory.'
-      });
-      // Carried onto the first assistant message below, so the sources
-      // dropdown comes back after a refresh (synthetic turns aren't drawn).
-      pendingTools = [{ name: 'web_search', args: { query: text }, output: out, results: meta.results }];
-    }
-  }
 
   const runStartedAt = Date.now();
   const seenCalls = new Map();   // identical tool calls, to catch a real loop
@@ -1736,7 +1699,6 @@ async function send(text, opts = {}) {
       }
 
       const assistantMsg = { role: 'assistant', content: reply };
-      if (pendingTools) { assistantMsg.tools = pendingTools; pendingTools = null; }
       conv.messages.push(assistantMsg);
       if (!calls.length) {
         // The model has no native tool-calling, so nothing forces it to
