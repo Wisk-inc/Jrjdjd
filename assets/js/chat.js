@@ -18,6 +18,7 @@
    ========================================================================== */
 
 import * as sandbox from '/assets/js/sandbox.js';
+import * as skills from '/assets/js/skills.js';
 
 const DEFAULTS = {
   // The current CorX3.8 endpoint. The quick-tunnel URL changes whenever the
@@ -167,6 +168,9 @@ function defaults() {
     github: { token: '', repo: '', branch: '' },  // PAT + active repo, browser-only
     personalities: [],       // [{ id, name, brief }] saved personas
     personality: '',         // id of the active one, '' = off (plain assistant)
+    // Split mode: a second model works alongside the first, on its own
+    // provider if you like, sharing the same sandbox and files.
+    split: { on: false, provider: 'corx', model: '', name: 'Partner', leadName: 'Lead' },
     profile: { name: '', avatar: '' },
     effort: 'medium',
     memory: true,
@@ -178,6 +182,10 @@ let db = defaults();
 function loadDb() {
   try { db = { ...defaults(), ...(JSON.parse(localStorage.getItem(STORE)) || {}) }; }
   catch { db = defaults(); }
+  // A stored db from before a setting existed would otherwise leave it
+  // undefined and every read of it would throw. Fill nested objects in.
+  const d = defaults();
+  for (const k of ['split', 'github', 'profile']) db[k] = { ...d[k], ...(db[k] || {}) };
 }
 function saveDb() {
   try {
@@ -194,17 +202,21 @@ const base = () => db.endpoint.replace(/\/+$/, '').replace(/\/v1$/, '');
 
 /* Base URL for the active provider: CorX uses the user's own tunnel URL;
    the hosted providers use their fixed API root. */
-function providerBase() {
-  const p = providerOf();
-  if (db.provider === 'corx') return base();
+/* Every one of these takes an optional provider id. Split mode runs a second
+   model beside the first — possibly on a different provider entirely — so
+   nothing that builds a request may assume db.provider is the one being asked. */
+function providerBase(id = db.provider) {
+  const p = PROVIDERS[id] || PROVIDERS.corx;
+  if (id === 'corx') return base();
   // Normalise: no trailing slash and no trailing /v1 — the request builder
   // always appends /v1/..., so a base given either way can't double up.
   return (p.base || '').replace(/\/+$/, '').replace(/\/v1$/, '');
 }
-function activeKey() { return db.provider === 'corx' ? db.apiKey : (db.keys[db.provider] || ''); }
-function activeModel() {
-  const p = providerOf();
-  return db.modelByProvider[db.provider] || db.model || p.models[0];
+function activeKey(id = db.provider) { return id === 'corx' ? db.apiKey : (db.keys[id] || ''); }
+function activeModel(id = db.provider) {
+  const p = PROVIDERS[id] || PROVIDERS.corx;
+  if (id !== db.provider) return db.modelByProvider[id] || p.models[0];
+  return db.modelByProvider[id] || db.model || p.models[0];
 }
 /* Heretic is the abliterated build served by the second cell in the set-up
    guide. Same endpoint and same tools — only the weights differ. */
@@ -302,6 +314,14 @@ function buildSystem(conv) {
   const base = `${identityBlock()}\n\n${eff.hint}`;
 
   // GitHub tools are offered only when the user has connected a token.
+  // Split mode's tools only exist when there is actually a partner to talk to.
+  const splitTools = splitOn() ? `
+SPLIT MODE IS ON. You are ${leadName()} and you have a second engineer, ${partnerName()} (${String(partnerModel()).split('/').pop()}), working in the same sandbox on the same /work files. They have every tool you have. Use them like a colleague, not a search engine:
+- assign_partner {"task":"..."} — hand them a piece of work while you do something else. Be specific: which file, what outcome. They will do it for real and report back.
+- ask_partner {"question":"..."} — a question you want their answer to.
+- review_by_partner {"what":"...","path":"file.py"} — have them read and run your work and tell you what is wrong with it.
+Split the job when it actually has two parts; do not delegate something smaller than the cost of explaining it. When they report a flaw, fix it or say why they are wrong — do not just thank them. You own the final answer to the user.` : '';
+
   const githubTools = db.github.token ? `
 GitHub is connected${db.github.repo ? ` — active repo ${db.github.repo}${db.github.branch ? ` on ${db.github.branch}` : ''}` : ''}. Before any change: github_tree to see the repo, github_read_file on what you'll touch, then write. repo/branch default to the active one.
 - github_list_repos {} / github_tree {} / github_read_file {"path"} — read the project.
@@ -322,11 +342,18 @@ COMMANDS YOU CAN RUN RIGHT NOW — your full toolset, from the first message of 
 - run_python {"code": "..."} — run Python; state persists; you get what it printed. For HTTP inside the sandbox use "import web" then web.get(url)/web.post(url, body) — requests/urllib do NOT work. Zips: zipfile.ZipFile('/work/x.zip'); write with mode 'w'/'a' and .writestr(name, data).
 - write_file {"path","content"} / read_file {"path"} / delete_file {"path"} / list_files {} — files in /work.
 - install_packages {"packages": ["numpy"]} — micropip.
+- run_js {"code": "..."} — real JavaScript, in a worker off the main thread, so a long loop does not freeze anything and Stop really stops it. console.log to print, "return x" for a value, and web.get(url)/web.post(url, body) for the internet. No DOM.
 - deliver_file {"path"} — hand the user a download.
+- make_zip {"paths":["a.py","src"],"out":"bundle.zip"} — zip files or whole folders. unzip {"path","into"} extracts one back.
+- convert_file {"from":"data.csv","to":"data.json"} — real format conversion, both directions. Tabular (csv tsv json jsonl md html xml yaml) round-trips exactly, so "convert it back" works. Also archives, images (needs pillow), and base64/hex encode and decode. inspect_file {"path"} says what a file actually is; list_formats {} lists every format.
+- clear_workspace {"keep":["keep.py"]} — delete the files you made in /work.
 - web_search {"query": "...", "n": ${eff.searchN}} — real search. Call it for ANY question asking for information (facts, people, places, definitions, how things work, comparisons), not just current events — your training data may be stale. Skip it only for small talk, things already said in this chat, pure code/math, or explaining something just shown to you.
 - fetch_url {"url"} — read a page's real content, including code on it. Use after web_search on the best result.
 - find_image {"query": "...", "n": 3} — find real pictures and show them to the user inline. Use it whenever a picture would help: a character, an animal, a place, a flag, a person, an object, a landmark. The images appear in the chat automatically, so just describe them afterwards.
 - search_memory {"query"} — search the user's other saved chats for detail.
+- list_skills {} / load_skill {"name":"pdf"} — written guides for specific jobs, pulled in when the task needs one. Load one BEFORE starting that kind of work, not after. Available:
+${skills.catalogue()}
+${splitTools}
 ${githubTools}
 Rules:
 - Never say you can't do something a tool covers — call the tool.
@@ -438,8 +465,13 @@ const TOOL_TIMEOUT_MS = 45000;
 // The model may be loading or prefilling a long prompt on a big model, so
 // the first token gets a generous wait; after it starts, only real silence
 // counts as a stall.
-// Headers back from the server — proves it exists. Short on purpose.
+// Headers back from the server — proves it exists. Short on purpose for hosted
+// APIs. Your own box gets longer: it may still be loading 54GB of weights, and
+// a wrong "it's offline" there sends you hunting the wrong problem.
 const CONNECT_TIMEOUT_MS = 25000;
+const SELF_HOSTED_CONNECT_TIMEOUT_MS = 60000;
+const connectTimeoutMs = (id = db.provider) =>
+  (id === 'corx' ? SELF_HOSTED_CONNECT_TIMEOUT_MS : CONNECT_TIMEOUT_MS);
 const FIRST_TOKEN_TIMEOUT_MS = 240000;
 const STALL_TIMEOUT_MS = 90000;
 async function fetchWithTimeout(url, opts = {}, ms = TOOL_TIMEOUT_MS) {
@@ -600,11 +632,19 @@ function addRow(role, html, opts = {}) {
   const wrap = document.createElement('div');
   wrap.className = `msg msg-${role}`;
   const initial = (db.profile.name || 'Y')[0].toUpperCase();
+  // In split mode two models answer in the same thread, so an assistant row has
+  // to say which one is talking — otherwise the team reads as one voice
+  // arguing with itself.
+  const speaker = opts.speaker || null;
   const who = role === 'user'
     ? (db.profile.avatar
         ? `<img class="avatar" alt="" src="${db.profile.avatar}">`
         : `<span class="avatar" aria-hidden="true">${esc(initial)}</span>`) + ` ${esc(db.profile.name || 'You')}`
-    : '<span class="avatar" aria-hidden="true">C</span> CorX3.8';
+    : speaker
+      ? `<span class="avatar" aria-hidden="true">${esc(speaker.initial)}</span> ${esc(speaker.name)}`
+        + `<span class="who-model">${esc(speaker.model)}</span>`
+      : '<span class="avatar" aria-hidden="true">C</span> CorX3.8';
+  if (speaker) wrap.classList.add(`msg-${speaker.role}`);
   // Tools sit AFTER the bubble, not before it. A command belongs where the
   // model wrote it — "let me check X" then the command — rather than every
   // command for the turn stacked at the top above the text that caused them.
@@ -665,12 +705,22 @@ function setRunning(on) {
 }
 
 /* tool cards, inline in the conversation */
+/* Tools whose own output is already the visible record, so a generic card
+   above them would only repeat it — out of order, in the partner's case,
+   because the card lives on the lead's row while the partner's rows are
+   appended after it. */
+const SILENT_TOOLS = new Set(['web_search', 'assign_partner', 'ask_partner', 'review_by_partner']);
+
 const TOOL_LABEL = {
   set_plan: 'Planning', complete_step: 'Step done', run_python: 'Running Python',
   write_file: 'Writing', read_file: 'Reading', delete_file: 'Deleting',
   list_files: 'Listing files', install_packages: 'Installing', deliver_file: 'Delivering',
   web_search: 'Searching the web', fetch_url: 'Reading a page', search_memory: 'Recalling memory',
   find_image: 'Finding images',
+  run_js: 'Running JavaScript', list_skills: 'Skills', load_skill: 'Loading a skill',
+  assign_partner: 'Handing off', ask_partner: 'Asking partner', review_by_partner: 'Requesting review',
+  make_zip: 'Zipping', unzip: 'Extracting', convert_file: 'Converting',
+  inspect_file: 'Inspecting', list_formats: 'Formats', clear_workspace: 'Clearing files',
   github_list_repos: 'GitHub · repos', github_tree: 'GitHub · files', github_read_file: 'GitHub · read',
   github_write_file: 'GitHub · commit', github_delete_file: 'GitHub · delete',
   github_create_repo: 'GitHub · new repo', github_pull_request: 'GitHub · pull request'
@@ -838,6 +888,40 @@ async function checkHealth() {
     setStatus('down', 'Offline');
   }
 }
+/* When your own server misses the connect window, "it timed out" is not enough
+   to act on — a dead quick-tunnel URL and a model that landed on the CPU look
+   identical from here. /health answers in milliseconds even while generation
+   crawls, so ask it and say which of the two it actually is. */
+async function diagnoseSelfHosted() {
+  const STALE = 'A Cloudflare quick-tunnel address changes every time the notebook '
+    + 'restarts — check the URL the cell printed and paste the current one into Settings.';
+  let h;
+  try {
+    const res = await fetchWithTimeout(`${base()}/health`, { method: 'GET' }, 8000);
+    if (!res.ok) throw new Error(String(res.status));
+    h = await res.json();
+  } catch {
+    return `The address is not answering at all. ${STALE}`;
+  }
+  const bits = [];
+  if (h.device) bits.push(`device ${h.device}`);
+  if (typeof h.gpu_layers === 'number') bits.push(`${h.gpu_layers} layers on GPU`);
+  if (h.tokens_per_sec) bits.push(`~${h.tokens_per_sec} tok/s`);
+  const detail = bits.length ? ` It reports: ${bits.join(', ')}.` : '';
+  if (h.busy) {
+    return 'The server is up but busy with another request — one GPU serves one reply '
+      + `at a time. Wait for that one to finish and try again.${detail}`;
+  }
+  if (h.tokens_per_sec && h.tokens_per_sec < 3) {
+    return 'The server is up, but it is generating at CPU speed, so the reply never '
+      + `started in time.${detail} Check the device line the set-up cell printed — if it `
+      + 'says a software rasteriser or 0 layers on GPU, the model is not on the card.';
+  }
+  return `The server is up and answering /health, so the address is right — it just `
+    + `did not start the reply in time.${detail} A very long prompt or a cold cache can `
+    + `do this; try again, and if it repeats, lower the effort level.`;
+}
+
 function setStatus(stateName, label) {
   els.status.setAttribute('data-state', stateName);
   $('.status-label', els.status).textContent = label;
@@ -855,11 +939,18 @@ function paintModelLabel() {
   els.msMark.style.setProperty('--tint', p.tint);
   // Self-hosted is always CorX3.8 — except Heretic, which is a different set of
   // weights and worth saying out loud rather than hiding behind the same label.
-  els.msName.textContent = db.provider !== 'corx'
+  const own = db.provider !== 'corx'
     ? shortModel
     : (isHeretic() ? 'CorX3.8 Heretic' : 'CorX3.8');
+  // With split on the header names both seats, so it is obvious at a glance
+  // that two models are answering rather than one.
+  els.msName.textContent = splitOn()
+    ? `${own} + ${String(partnerModel()).split('/').pop()}`
+    : own;
   els.modelSwitch.classList.toggle('is-heretic', db.provider === 'corx' && isHeretic());
-  els.modelSwitch.title = `${p.label} · ${model} — click to switch`;
+  els.modelSwitch.title = splitOn()
+    ? `${leadName()}: ${p.label} · ${model}  +  ${partnerName()}: ${PROVIDERS[partnerProvider()]?.label} · ${partnerModel()} — click to change`
+    : `${p.label} · ${model} — click to switch`;
 }
 
 /* GitHub button reflects whether a token is connected and which repo is active. */
@@ -874,6 +965,139 @@ function paintGithub() {
     els.ghActive.hidden = !db.github.repo;
     els.ghActive.textContent = db.github.repo ? `Active: ${db.github.repo}` : '';
   }
+}
+
+/* =========================================================== split mode
+   A second model works in the same conversation, on the same sandbox and the
+   same files. The lead delegates to it, asks it questions, and has it review
+   work; the partner does real tool calls of its own and can push back. Both
+   sides are drawn in the thread with their own name, so the exchange is
+   something you watch rather than something that happens off-screen.
+
+   The partner is a full agent run, not a single completion: it gets the whole
+   toolset and loops until it is done, then hands a written report back as the
+   lead's tool result. */
+const PARTNER_ROUNDS = 6;
+
+const splitOn = () => Boolean(db.split?.on);
+const partnerProvider = () => db.split?.provider || 'corx';
+const partnerModel = () => db.split?.model || activeModel(partnerProvider());
+const partnerName = () => (db.split?.name || 'Partner').trim() || 'Partner';
+const leadName = () => (db.split?.leadName || 'Lead').trim() || 'Lead';
+
+/* Only label the lead when there is someone to tell it apart from. With split
+   off the thread should look exactly as it always has. */
+const leadRow = () => (splitOn() ? { speaker: speakerFor('lead') } : {});
+
+const speakerFor = (role) => role === 'partner'
+  ? { role: 'partner', name: partnerName(), initial: partnerName()[0].toUpperCase(),
+      model: String(partnerModel()).split('/').pop() }
+  : { role: 'lead', name: leadName(), initial: leadName()[0].toUpperCase(),
+      model: String(activeModel()).split('/').pop() };
+
+/* The partner's own system prompt. It is a colleague, not an echo: it is told
+   to do the work itself, and to say so when the lead is wrong. */
+function partnerSystem(conv) {
+  const eff = EFFORT[conv.effort] || EFFORT.medium;
+  return `You are ${partnerName()}, the second engineer on a two-model team working in one shared workspace with ${leadName()}, who is leading. You are talking to ${leadName()}, not to the user — the user is reading over both your shoulders.
+
+You have the same sandbox, the same /work files and the same tools as ${leadName()}, and you use them yourself. Do the work you are given; do not hand it back undone or describe what someone else should do.
+
+${eff.hint}
+
+Call a tool by writing this on its own line, valid JSON, one per line:
+<tool>{"name": "TOOL_NAME", "arguments": { ... }}</tool>
+
+Tools: run_python, write_file, read_file, delete_file, list_files, install_packages, make_zip, unzip, convert_file, inspect_file, list_formats, web_search, fetch_url, deliver_file.
+
+How you work with ${leadName()}:
+- Finish the task, then report: what you changed, which files, and what you actually ran to prove it works.
+- If the instruction is wrong, unclear, or would break something, say that plainly and say what you did instead. You are not here to agree.
+- Reviewing ${leadName()}'s work means reading the real file with read_file and running it — not guessing from the description. Name the specific line or behaviour that is wrong. If it is fine, say it is fine and stop; do not invent problems to look useful.
+- Stay on your assignment. ${leadName()} handles the rest.
+- Keep it short. No preamble, no restating the task back.`;
+}
+
+/* Run the partner as a real agent turn: its own rounds, its own tools, drawn
+   in the thread under its own name. Returns what the lead sees. */
+async function runPartner(conv, task, kind = 'task') {
+  if (!splitOn()) {
+    return 'Split mode is off, so there is no partner to talk to. The user can turn it on in Settings → Split mode.';
+  }
+  const brief = String(task || '').trim();
+  if (!brief) return 'Nothing was passed to the partner — say what the task or question is.';
+
+  const files = await sandbox.listFiles().catch(() => []);
+  const fileList = files.length
+    ? files.map((f) => `${f.path} (${f.size}B)`).join('\n')
+    : '(the workspace is empty)';
+  const opening = kind === 'review'
+    ? `${leadName()} is asking you to review this and be honest about it:\n\n${brief}`
+    : kind === 'question'
+      ? `${leadName()} asks:\n\n${brief}`
+      : `${leadName()} has assigned you this:\n\n${brief}`;
+
+  const messages = [{
+    role: 'user',
+    content: `${opening}\n\nFiles in the shared workspace right now:\n${fileList}\n\n`
+      + (kind === 'question'
+        ? 'Answer it directly. Use tools if you need to check something rather than guessing.'
+        : 'Do it now with your tools, then report back briefly.')
+  }];
+
+  const agent = {
+    provider: partnerProvider(), model: partnerModel(),
+    name: partnerName(), system: partnerSystem(conv), messages
+  };
+  const speaker = speakerFor('partner');
+  let bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', { speaker });
+  const transcript = [];
+
+  try {
+    for (let round = 0; round < PARTNER_ROUNDS; round += 1) {
+      const reply = await streamOnce(conv, bubble, agent);
+      const calls = parseToolCalls(reply);
+      const { answer } = splitThinking(reply);
+      if (answer) bubble.innerHTML = renderMarkdown(answer);
+      else if (calls.length) bubble.remove();
+      else bubble.innerHTML = '<p>(no reply)</p>';
+
+      const msg = { role: 'assistant', content: reply, speaker: 'partner' };
+      messages.push({ role: 'assistant', content: reply });
+      conv.messages.push({ ...msg, synthetic: false });
+      if (answer) transcript.push(answer);
+      if (!calls.length) break;
+
+      const results = [];
+      const toolLog = [];
+      for (const call of calls) {
+        const card = SILENT_TOOLS.has(call.name) ? null : addToolCard(call.name, call.args);
+        let out, failed = false;
+        const meta = {};
+        try { out = await execTool(call.name, call.args, conv, meta); }
+        catch (e) { out = `Tool error: ${e.message}`; failed = true; }
+        if (card) finishToolCard(card, out, failed);
+        results.push(`[${call.name}] ->\n${String(out).slice(0, 2000)}`);
+        toolLog.push({ name: call.name, args: call.args, output: out, failed, results: meta.results });
+      }
+      msg.tools = toolLog;
+      conv.messages[conv.messages.length - 1].tools = toolLog;
+      messages.push({
+        role: 'user',
+        content: 'Tool results:\n\n' + results.join('\n\n') + '\n\nCarry on, or report back if you are done.'
+      });
+      bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', { speaker });
+    }
+  } catch (e) {
+    if (bubble) bubble.innerHTML = `<p><em>${esc(partnerName())} stopped: ${esc(e.message)}</em></p>`;
+    return `${partnerName()} could not finish: ${e.message}`;
+  }
+
+  saveDb();
+  const said = transcript.join('\n\n').trim();
+  return said
+    ? `${partnerName()} replied:\n\n${said}`
+    : `${partnerName()} ran its tools but wrote no summary.`;
 }
 
 /* ------------------------------------------------------------- tool runners
@@ -904,6 +1128,12 @@ async function execTool(name, args, conv, meta = {}) {
       if (!r.ok) throw new Error(r.output || 'Python raised an error with no message.');
       return r.output || '(no output)';
     }
+    case 'run_js': {
+      noteActivity('terminal');
+      const r = await sandbox.runJs(args.code || '', { timeoutMs: Number(args.timeout_ms) || 0 });
+      if (!r.ok) throw new Error(r.output || 'The JavaScript failed with no message.');
+      return r.output;
+    }
     case 'install_packages': {
       noteActivity('terminal');
       const r = await sandbox.installPackages(args.packages || []);
@@ -933,6 +1163,77 @@ async function execTool(name, args, conv, meta = {}) {
         download(name, bytes);
         return `Delivered ${name} as a download.`;
       } catch (e) { return e.message; }
+    }
+    case 'make_zip': {
+      noteActivity('terminal');
+      const paths = args.paths || args.path || [];
+      const r = await sandbox.makeZip(paths, args.out || 'bundle.zip', args.compress !== false);
+      await syncFiles();
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'unzip': {
+      noteActivity('terminal');
+      const r = await sandbox.unpackArchive(args.path, args.into || '');
+      await syncFiles();
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'convert_file': {
+      noteActivity('terminal');
+      const from = args.from || args.src || args.path;
+      const to = args.to || args.dst || args.out;
+      if (!from || !to) throw new Error('convert_file needs "from" and "to" paths, e.g. {"from":"data.csv","to":"data.json"}.');
+      const r = await sandbox.convertFile(from, to);
+      await syncFiles();
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'inspect_file': {
+      const r = await sandbox.inspectFile(args.path);
+      if (!r.ok) throw new Error(r.output);
+      return r.output;
+    }
+    case 'list_formats': {
+      const r = await sandbox.formatSupport();
+      return r.ok ? r.output : r.output;
+    }
+    case 'list_skills':
+      return skills.describe();
+    case 'load_skill': {
+      noteActivity('terminal');
+      termLine('cmd', `load skill ${args.name}`);
+      const text = await skills.load(args.name, async (url) => {
+        const res = await fetchWithTimeout('/api/fetch', {
+          method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ url, method: 'GET' })
+        }, 20000);
+        const data = await res.json();
+        return { ok: !data.error && data.status < 400, status: data.status, body: data.body };
+      });
+      termLine('ok', `loaded ${args.name}`);
+      return text;
+    }
+    case 'assign_partner':
+      return runPartner(conv, args.task || args.work || args.brief, 'task');
+    case 'ask_partner':
+      return runPartner(conv, args.question || args.ask || args.task, 'question');
+    case 'review_by_partner':
+      return runPartner(conv,
+        [args.what || args.notes || '', args.path ? `File to review: ${args.path}` : '']
+          .filter(Boolean).join('\n\n'), 'review');
+    case 'clear_workspace': {
+      // "delete the code you made" — a real reset, not a claim of one.
+      const files = await sandbox.listFiles();
+      const keep = new Set((args.keep || []).map(String));
+      let n = 0;
+      for (const f of files) {
+        const name = f.path.split('/').pop();
+        if (keep.has(f.path) || keep.has(name)) continue;
+        try { await sandbox.deleteFile(f.path); n += 1; } catch { /* keep going */ }
+      }
+      await syncFiles();
+      return `Deleted ${n} file${n === 1 ? '' : 's'} from /work${keep.size ? `, kept ${[...keep].join(', ')}` : ''}.`;
     }
     case 'web_search': {
       const q = String(args.query || '').trim();
@@ -1140,13 +1441,16 @@ function trimTurns(messages) {
    backends (CorX, OpenRouter, DeepSeek, OpenAI) share one shape; Anthropic's
    Messages API takes the system prompt as a separate field and needs its own
    headers, so it gets its own branch. */
-function buildRequest(conv) {
-  const p = providerOf();
+function buildRequest(conv, agent = null) {
+  // `agent` is split mode's second seat: its own provider, model, system prompt
+  // and message list, sharing nothing with the lead but the sandbox.
+  const pid = agent?.provider || db.provider;
+  const p = PROVIDERS[pid] || PROVIDERS.corx;
   const eff = EFFORT[conv.effort] || EFFORT.medium;
-  const key = activeKey();
-  const model = activeModel();
-  const sys = buildSystem(conv);
-  const turns = trimTurns(conv.messages);
+  const key = activeKey(pid);
+  const model = agent?.model || activeModel(pid);
+  const sys = agent?.system || buildSystem(conv);
+  const turns = trimTurns(agent?.messages || conv.messages);
 
   if (p.kind === 'anthropic') {
     // Anthropic requires strictly alternating user/assistant turns — coalesce
@@ -1159,7 +1463,7 @@ function buildRequest(conv) {
       else msgs.push({ role: t.role, content: t.content });
     }
     return {
-      url: `${providerBase()}/v1/messages`,
+      url: `${providerBase(pid)}/v1/messages`,
       headers: {
         'content-type': 'application/json',
         'x-api-key': key,
@@ -1175,9 +1479,9 @@ function buildRequest(conv) {
   const headers = { 'content-type': 'application/json' };
   if (key) headers.authorization = `Bearer ${key}`;
   // OpenRouter likes an attribution header; harmless to others.
-  if (db.provider === 'openrouter') { headers['HTTP-Referer'] = 'https://corx-labs.com/chat/'; headers['X-Title'] = 'CorX Chat'; }
+  if (pid === 'openrouter') { headers['HTTP-Referer'] = 'https://corx-labs.com/chat/'; headers['X-Title'] = 'CorX Chat'; }
   return {
-    url: `${providerBase()}/v1/chat/completions`,
+    url: `${providerBase(pid)}/v1/chat/completions`,
     headers,
     body: { model, messages: [{ role: 'system', content: sys }, ...turns], stream: true,
       max_tokens: eff.maxTokens, temperature: eff.temperature },
@@ -1186,9 +1490,10 @@ function buildRequest(conv) {
 }
 
 /* -------------------------------------------------------------- one API call */
-async function streamOnce(conv, bubble) {
+async function streamOnce(conv, bubble, agent = null) {
   abort = new AbortController();
-  const req = buildRequest(conv);
+  const req = buildRequest(conv, agent);
+  const pid = agent?.provider || db.provider;
 
   let res;
   // Getting response headers back is a separate thing from waiting for a
@@ -1197,27 +1502,27 @@ async function streamOnce(conv, bubble) {
   // changes every restart) otherwise sat here burning the whole first-token
   // budget before saying anything.
   let connectTimedOut = false;
-  const connectTimer = setTimeout(() => { connectTimedOut = true; abort.abort(); }, CONNECT_TIMEOUT_MS);
+  const connectMs = connectTimeoutMs(pid);
+  const connectTimer = setTimeout(() => { connectTimedOut = true; abort.abort(); }, connectMs);
   try {
     res = await fetch(req.url, {
       method: 'POST', signal: abort.signal, headers: req.headers,
       body: JSON.stringify(req.body)
     });
   } catch (e) {
-    const p = providerOf();
+    const p = PROVIDERS[pid] || PROVIDERS.corx;
+    const who = agent ? `${agent.name || 'The partner'} (${p.label})` : p.label;
     if (connectTimedOut) {
-      throw new Error(`${p.label} did not respond within ${Math.round(CONNECT_TIMEOUT_MS / 1000)}s at ${base()}. ` +
-        (db.provider === 'corx'
-          ? 'A Cloudflare quick-tunnel address changes every time the notebook restarts — check the URL the cell printed and paste the current one into Settings.'
-          : 'Check the endpoint and your key.'));
+      throw new Error(`${who} did not respond within ${Math.round(connectMs / 1000)}s at ${pid === 'corx' ? base() : p.label}. ` +
+        (pid === 'corx' ? await diagnoseSelfHosted() : 'Check the endpoint and your key.'));
     }
     // A blocked cross-origin call throws a TypeError here rather than
     // returning a status, so name the likely cause honestly.
     if (e.name === 'AbortError') throw e;
-    throw new Error(`Couldn't reach ${p.label} at ${db.provider === 'corx' ? base() : p.label}. ${
+    throw new Error(`Couldn't reach ${who} at ${pid === 'corx' ? base() : p.label}. ${
       p.browser === false
         ? `${p.label} blocks direct browser calls — try OpenRouter instead.`
-        : db.provider === 'corx'
+        : pid === 'corx'
           ? 'A Cloudflare quick-tunnel address changes every time the notebook restarts — check the URL the cell printed and paste the current one into Settings.'
           : 'Check the endpoint and your key.'} (${e.message})`);
   } finally {
@@ -1228,7 +1533,7 @@ async function streamOnce(conv, bubble) {
     let detail = '';
     try { const j = await res.json(); detail = j.detail || j.error?.message || (typeof j.error === 'string' ? j.error : ''); }
     catch { detail = await res.text().catch(() => ''); }
-    throw new Error(`${providerOf().label} returned ${res.status}${detail ? ` — ${String(detail).slice(0, 200)}` : ''}`);
+    throw new Error(`${(PROVIDERS[pid] || PROVIDERS.corx).label} returned ${res.status}${detail ? ` — ${String(detail).slice(0, 200)}` : ''}`);
   }
   if (!res.body) throw new Error('No response stream.');
 
@@ -1313,7 +1618,7 @@ async function streamOnce(conv, bubble) {
   }
   } catch (e) {
     if (stalled) {
-      throw new Error(`${providerOf().label} went quiet for ${Math.round(STALL_TIMEOUT_MS / 1000)}s and the request was dropped. ` +
+      throw new Error(`${(PROVIDERS[pid] || PROVIDERS.corx).label} went quiet for ${Math.round(STALL_TIMEOUT_MS / 1000)}s and the request was dropped. ` +
         'The server may still be loading the model or prefilling a long prompt — try again, or lower Effort so there is less to chew through.');
     }
     throw e;
@@ -1379,7 +1684,7 @@ async function send(text, opts = {}) {
   conv.run = { active: true };
   saveDb();
   setRunning(true);
-  let bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>');
+  let bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
   const eff = EFFORT[conv.effort] || EFFORT.medium;
   let nudgedTools = false;
   let pendingTools = null;
@@ -1446,7 +1751,7 @@ async function send(text, opts = {}) {
             role: 'user', synthetic: true,
             content: 'You do have a real web_search tool right now, available in every message — you are not limited to your training data. Use it: reply with <tool>{"name": "web_search", "arguments": {"query": "..."}}</tool> for what I just asked, then answer from the results.'
           });
-          bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>');
+          bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
           continue;
         }
         setStatus('ok', 'Online');
@@ -1470,7 +1775,7 @@ async function send(text, opts = {}) {
             'Do not call it again with the same arguments — use this result, change the arguments, or answer.');
           continue;
         }
-        const card = call.name === 'web_search' ? null : addToolCard(call.name, call.args);
+        const card = SILENT_TOOLS.has(call.name) ? null : addToolCard(call.name, call.args);
         let out, failed = false;
         const meta = {};
         try { out = await execTool(call.name, call.args, conv, meta); }
@@ -1488,7 +1793,7 @@ async function send(text, opts = {}) {
         role: 'user', synthetic: true,
         content: 'Tool results:\n\n' + results.join('\n\n') + '\n\nContinue, or give the final answer if the task is done.'
       });
-      bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>');
+      bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
     }
   } catch (err) {
     if (err.name === 'AbortError') {
@@ -1556,7 +1861,10 @@ function renderConversation() {
     if (!text && !(m.tools && m.tools.length)) continue;
     if (m.role === 'user') { addRow('user', renderMarkdown(text)); continue; }
     const { reasoning, answer } = splitThinking(text);
-    const bubble = addRow('assistant', answer ? renderMarkdown(answer) : '');
+    // A reloaded split conversation has to come back as a conversation between
+    // two named models, not one voice talking to itself.
+    const opts = m.speaker === 'partner' ? { speaker: speakerFor('partner') } : leadRow();
+    const bubble = addRow('assistant', answer ? renderMarkdown(answer) : '', opts);
     if (reasoning) paintReasoning(bubble, reasoning);
     if (m.tools && m.tools.length) replayTools(m.tools);
     if (!answer && m.tools && m.tools.length) bubble.remove();
@@ -1578,6 +1886,8 @@ function replayTools(toolLog) {
       finishSearch(box, { query: t.args?.query || '', results: t.results, error: t.output });
       continue;
     }
+    // The partner's own rows are replayed separately and are the record.
+    if (SILENT_TOOLS.has(t.name)) continue;
     const card = addToolCard(t.name, t.args || {});
     finishToolCard(card, t.output, t.failed);
     if (!t.failed && (t.name === 'write_file' || t.name === 'deliver_file') && t.args?.path) {
@@ -1806,7 +2116,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); }
   });
   els.form.addEventListener('submit', (e) => { e.preventDefault(); submit(); });
-  els.stop.addEventListener('click', () => abort?.abort());
+  // Stop means stop everything: the model request and any JavaScript still
+  // looping in its worker.
+  els.stop.addEventListener('click', () => { sandbox.stopJs(); abort?.abort(); });
   function submit() {
     const text = els.input.value.trim();
     if (!text || running) return;
@@ -1946,10 +2258,40 @@ document.addEventListener('DOMContentLoaded', () => {
     els.modelList.innerHTML = (p.models || []).map((m) => `<option value="${esc(m)}">`).join('');
     els.model.value = db.modelByProvider[draftProvider] || (draftProvider === db.provider ? db.model : '') || p.models[0] || '';
   }
+  /* split mode */
+  const splitEls = {
+    toggle: $('#split-toggle'), fields: $('#split-fields'),
+    provider: $('#split-provider'), model: $('#split-model'),
+    list: $('#split-model-list'), name: $('#split-name'), leadName: $('#split-lead-name')
+  };
+  function paintSplitModels() {
+    const p = PROVIDERS[splitEls.provider.value] || PROVIDERS.corx;
+    splitEls.list.innerHTML = (p.models || []).map((m) => `<option value="${esc(m)}">`).join('');
+    if (!splitEls.model.value) splitEls.model.value = p.models[0] || '';
+  }
+  function paintSplit() {
+    const s = db.split;
+    splitEls.toggle.setAttribute('aria-checked', String(Boolean(s.on)));
+    splitEls.fields.hidden = !s.on;
+    splitEls.provider.innerHTML = Object.entries(PROVIDERS)
+      .map(([id, p]) => `<option value="${esc(id)}">${esc(p.label)}</option>`).join('');
+    splitEls.provider.value = s.provider || 'corx';
+    splitEls.model.value = s.model || '';
+    splitEls.name.value = s.name || '';
+    splitEls.leadName.value = s.leadName || '';
+    paintSplitModels();
+  }
+  splitEls.toggle.addEventListener('click', () => {
+    const on = splitEls.toggle.getAttribute('aria-checked') !== 'true';
+    splitEls.toggle.setAttribute('aria-checked', String(on));
+    splitEls.fields.hidden = !on;
+  });
+  splitEls.provider.addEventListener('change', () => { splitEls.model.value = ''; paintSplitModels(); });
+
   const openSheet = () => {
     draftProvider = db.provider;
     els.endpoint.value = db.endpoint;
-    renderProviderGrid(); syncSheetForProvider();
+    renderProviderGrid(); syncSheetForProvider(); paintSplit();
     els.sheet.hidden = false;
   };
   function closeSheet() { els.sheet.hidden = true; els.profileSheet.hidden = true; }
@@ -1971,6 +2313,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const model = els.model.value.trim() || p.models[0];
     db.modelByProvider[draftProvider] = model;
     db.model = model;
+    const sp = PROVIDERS[splitEls.provider.value] ? splitEls.provider.value : 'corx';
+    db.split = {
+      on: splitEls.toggle.getAttribute('aria-checked') === 'true',
+      provider: sp,
+      model: splitEls.model.value.trim() || PROVIDERS[sp].models[0] || '',
+      name: splitEls.name.value.trim() || 'Partner',
+      leadName: splitEls.leadName.value.trim() || 'Lead'
+    };
     saveDb(); closeSheet(); paintModelLabel(); checkHealth();
   });
   paintModelLabel();

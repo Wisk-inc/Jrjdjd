@@ -898,21 +898,40 @@ while True:
  CorX3.8-27B &quot;HERETIC&quot; — uncensored API server for the CorX site
  CorX Labs / Nathan
 
- Same contract as the standard server — OpenAI-compatible, open
- CORS, /health, and a public Cloudflare URL — but it serves the
- abliterated build instead:
+ Serves the abliterated build with the same contract as the
+ standard server — OpenAI-compatible, open CORS, /health, and a
+ public Cloudflare URL:
 
    0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF
 
- That repo ships GGUF, not safetensors, so the backend here is
- llama.cpp rather than transformers. &quot;Full precision&quot; for a GGUF
- repo means the F16/BF16 file (~54 GB) with every layer on the
- GPU — no quantisation anywhere in the path.
+ That repo ships GGUF, so the runtime is llama.cpp.
+
+ v8 — why the &quot;did not respond within 25s&quot; happened, and what
+ changed:
+
+   * The Vulkan build was the trap. On a notebook box
+     mesa-vulkan-drivers is lavapipe, a SOFTWARE Vulkan device,
+     so &quot;-ngl 999&quot; happily offloaded all 62 layers to the CPU.
+     A 27B at F16 there is seconds per token — prefill alone
+     blows past any front-end timeout. This is CUDA-first now:
+     prebuilt CUDA binary, else compiled from source for your
+     exact card.
+   * Nothing checked that the GPU was actually used. Now the
+     startup log is parsed for the real device and the offloaded
+     layer count, and the cell refuses to hand you a URL for a
+     server that quietly landed on the CPU.
+   * The stream relay swallowed every exception, so an upstream
+     failure became an empty 200 that just looked like a hang.
+     Errors are now written into the stream where you can read
+     them.
+   * It now runs a warm-up generation and prints measured
+     tokens/sec BEFORE the URL, so you know it is fast enough
+     without having to find out in the chat.
 
  Abliterated means the refusal direction has been removed from
- the weights. It will answer almost anything, including things
- it should not. You are the only filter left. Do not put this
- URL somewhere strangers can reach it.
+ the weights. It answers almost anything, including things it
+ should not, and it is no more accurate for it. You are the only
+ filter left.
 ================================================================
 &quot;&quot;&quot;
 
@@ -926,40 +945,51 @@ import time
 import threading
 import re
 import platform
+import shutil
+import tarfile
+import zipfile
+import glob
 import urllib.request
 
 # ---------------- SETTINGS ----------------
 MODEL_REPO = &quot;0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF&quot;
-MODEL_ID   = &quot;corx3.8-heretic&quot;          # what the chat shows and sends
+MODEL_ID   = &quot;corx3.8-heretic&quot;
 HF_TOKEN   = &quot;&quot;
-PORT       = 8000                       # the public port (what the tunnel sees)
-LLAMA_PORT = 8081                       # llama-server, localhost only
-CTX        = 32768                      # context window in tokens
-MAX_NEW_TOKENS_CAP = 32000
+PORT       = 8000                  # public port, what the tunnel points at
+LLAMA_PORT = 8081                  # llama-server, localhost only
 
-# Precision. GGUF repos ship one file per quantisation, so &quot;precision&quot; here
-# is really &quot;which file do we pull&quot;.
-#   &quot;full&quot; — the F16/BF16 file. ~54 GB of weights, nothing quantised.
-#   &quot;auto&quot; — measure the card and take the largest file that fits.
-#   &quot;q8_0&quot; / &quot;q6_k&quot; / &quot;q4_k_m&quot; — force that quant by name.
+# Context window. 4096 is too small for this agent — the system prompt, the
+# tool list and a few turns of history do not fit, and llama.cpp then silently
+# drops the oldest messages. On a GPU the prefill cost of a bigger window is
+# milliseconds, so the small window buys nothing. 16384 is a sane default;
+# raise it if you have the VRAM.
+CTX = 16384
+MAX_NEW_TOKENS_CAP = 8192
+
+# Which GGUF file to pull.
+#   &quot;full&quot; — the F16/BF16 file, ~54 GB, nothing quantised.
+#   &quot;auto&quot; — the largest file that actually fits this card.
+#   &quot;q8_0&quot; / &quot;q6_k&quot; / &quot;q4_k_m&quot; — force one by name.
 PRECISION = &quot;full&quot;
 
-# auth
-NO_AUTH = True                          # True = keyless, same as the main server
-API_KEY = &quot;corx-key&quot;                    # used only when NO_AUTH = False
+# Refuse to serve if the model ended up on the CPU. Leave this True: a CPU-bound
+# 27B is the exact failure that reads as &quot;the server is broken&quot; in the chat.
+REQUIRE_GPU = True
 
-# concurrency
-CONNECT_TIMEOUT = 60                    # seconds to wait for llama-server to boot
-LOAD_TIMEOUT    = 900                   # seconds to wait for a 54 GB load
+# auth — keyless by default, same as the standard server
+NO_AUTH = True
+API_KEY = &quot;corx-key&quot;
+
+LOAD_TIMEOUT = 1800                # seconds to wait for a 54 GB load
 # ------------------------------------------
 
 BEST_TO_WORST = [&quot;f32&quot;, &quot;bf16&quot;, &quot;f16&quot;, &quot;fp16&quot;, &quot;q8_0&quot;, &quot;q6_k&quot;,
                  &quot;q5_k_m&quot;, &quot;q5_k_s&quot;, &quot;q5_0&quot;, &quot;q4_k_m&quot;, &quot;q4_k_s&quot;, &quot;q4_0&quot;, &quot;q3_k_m&quot;]
 
-# Rough VRAM needed for weights + a 32k KV cache on a 27B, in GB.
-NEEDS_GB = {&quot;f32&quot;: 120, &quot;bf16&quot;: 64, &quot;f16&quot;: 64, &quot;fp16&quot;: 64, &quot;q8_0&quot;: 38, &quot;q6_k&quot;: 30,
-            &quot;q5_k_m&quot;: 26, &quot;q5_k_s&quot;: 25, &quot;q5_0&quot;: 25, &quot;q4_k_m&quot;: 22, &quot;q4_k_s&quot;: 21,
-            &quot;q4_0&quot;: 21, &quot;q3_k_m&quot;: 18}
+# Rough VRAM for weights + a 16k KV cache on a 27B, in GB.
+NEEDS_GB = {&quot;f32&quot;: 118, &quot;bf16&quot;: 62, &quot;f16&quot;: 62, &quot;fp16&quot;: 62, &quot;q8_0&quot;: 36, &quot;q6_k&quot;: 29,
+            &quot;q5_k_m&quot;: 25, &quot;q5_k_s&quot;: 24, &quot;q5_0&quot;: 24, &quot;q4_k_m&quot;: 21, &quot;q4_k_s&quot;: 20,
+            &quot;q4_0&quot;: 20, &quot;q3_k_m&quot;: 17}
 
 
 def sh(cmd, **kw):
@@ -968,17 +998,20 @@ def sh(cmd, **kw):
 
 # ---------------- LOOK AT THE ACTUAL CARD ----------------
 def gpu_info():
-    &quot;&quot;&quot;Name, total VRAM in GB, compute capability — straight from nvidia-smi so
-    this script does not need torch installed at all.&quot;&quot;&quot;
+    &quot;&quot;&quot;Name, VRAM in GB, compute capability — from nvidia-smi, so this script
+    needs no torch.&quot;&quot;&quot;
     try:
         out = subprocess.check_output(
             [&quot;nvidia-smi&quot;, &quot;--query-gpu=name,memory.total,compute_cap&quot;,
              &quot;--format=csv,noheader,nounits&quot;], text=True).strip().splitlines()
+        name, mem, cap = [x.strip() for x in out[0].split(&quot;,&quot;)]
+        return name, float(mem) / 1024.0, cap
     except Exception as e:
-        raise RuntimeError(f&quot;No usable GPU found ({type(e).__name__}). &quot;
-                           &quot;Heretic needs a CUDA card.&quot;) from e
-    name, mem, cap = [x.strip() for x in out[0].split(&quot;,&quot;)]
-    return name, float(mem) / 1024.0, cap
+        raise RuntimeError(
+            f&quot;No NVIDIA GPU visible ({type(e).__name__}). Heretic needs a CUDA &quot;
+            &quot;card — a 27B on CPU is minutes per reply, which is what the &quot;
+            &quot;front-end reports as a timeout.&quot;
+        ) from e
 
 
 GPU_NAME, VRAM_GB, COMPUTE_CAP = gpu_info()
@@ -986,67 +1019,145 @@ CUDA_ARCH = COMPUTE_CAP.replace(&quot;.&quot;, &quot;&quot;)          # &quot;12
 print(f&quot;GPU: {GPU_NAME} — {VRAM_GB:.0f} GB VRAM, compute {COMPUTE_CAP} (sm_{CUDA_ARCH})&quot;)
 
 
-# ---------------- BUILD llama.cpp WITH CUDA ----------------
-# The Heretic weights are GGUF, so llama.cpp is the runtime. There is no
-# reliable prebuilt CUDA wheel for brand-new cards, so we build once and
-# reuse it — the binary is cached, later runs of this cell skip straight past.
-LLAMA_DIR = os.path.abspath(&quot;./llama.cpp&quot;)
-SERVER_BIN = os.path.join(LLAMA_DIR, &quot;build&quot;, &quot;bin&quot;, &quot;llama-server&quot;)
+# ════════════════════════════════════════════════════════════════
+#  llama-server with CUDA: prebuilt first, source build as fallback
+# ════════════════════════════════════════════════════════════════
+BIN_DIR = os.path.abspath(&quot;./llama-bin&quot;)
+SERVER_BIN = os.path.join(BIN_DIR, &quot;llama-server&quot;)
+LLAMA_SRC = os.path.abspath(&quot;./llama.cpp&quot;)
 
 
-def build_llama_cpp():
-    if os.path.exists(SERVER_BIN):
-        print(f&quot;[build] llama-server already built at {SERVER_BIN}&quot;)
-        return
+def _works(path):
+    if not (os.path.isfile(path) and os.access(path, os.X_OK)):
+        return False
+    try:
+        env = dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(path))
+        subprocess.run([path, &quot;--version&quot;], stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL, timeout=60, env=env)
+        return True
+    except Exception:
+        return False
+
+
+def _release(tag=None):
+    url = (&quot;https://api.github.com/repos/ggml-org/llama.cpp/releases/latest&quot;
+           if tag is None else
+           f&quot;https://api.github.com/repos/ggml-org/llama.cpp/releases/tags/{tag}&quot;)
+    req = urllib.request.Request(url, headers={&quot;User-Agent&quot;: &quot;corx-heretic&quot;})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return json.load(r)
+    except Exception as e:
+        print(f&quot;[build] could not read release info ({type(e).__name__})&quot;)
+        return {}
+
+
+def try_prebuilt_cuda():
+    &quot;&quot;&quot;llama.cpp publishes CUDA builds for Linux x64. When one is there it saves
+    the 5-15 minute compile. Not always published, so this may find nothing —
+    that is not an error, we just build instead.&quot;&quot;&quot;
+    machine = platform.machine().lower()
+    if machine not in (&quot;x86_64&quot;, &quot;amd64&quot;):
+        print(f&quot;[build] no prebuilt CUDA for {machine}; building from source.&quot;)
+        return None
+    for tag in (None,):
+        rel = _release(tag)
+        for a in rel.get(&quot;assets&quot;, []):
+            n = a[&quot;name&quot;].lower()
+            if (&quot;ubuntu&quot; in n or &quot;linux&quot; in n) and &quot;cuda&quot; in n \
+                    and (&quot;x64&quot; in n or &quot;amd64&quot; in n) \
+                    and (n.endswith(&quot;.tar.gz&quot;) or n.endswith(&quot;.zip&quot;)):
+                print(f&quot;[build] prebuilt CUDA asset: {a[&#x27;name&#x27;]}&quot;)
+                try:
+                    dl = os.path.join(&quot;/tmp&quot;, a[&quot;name&quot;])
+                    urllib.request.urlretrieve(a[&quot;browser_download_url&quot;], dl)
+                    ex = &quot;/tmp/llama-cuda-extract&quot;
+                    shutil.rmtree(ex, ignore_errors=True)
+                    os.makedirs(ex, exist_ok=True)
+                    if dl.endswith(&quot;.zip&quot;):
+                        with zipfile.ZipFile(dl) as zf:
+                            zf.extractall(ex)
+                    else:
+                        with tarfile.open(dl, &quot;r:gz&quot;) as tf:
+                            tf.extractall(ex)
+                    found = glob.glob(os.path.join(ex, &quot;**&quot;, &quot;llama-server&quot;),
+                                      recursive=True)
+                    if not found:
+                        print(&quot;[build] archive had no llama-server; building instead.&quot;)
+                        return None
+                    src_dir = os.path.dirname(found[0])
+                    os.makedirs(BIN_DIR, exist_ok=True)
+                    # the shared ggml/cuda libs sit beside the binary — take them all
+                    for f in os.listdir(src_dir):
+                        s = os.path.join(src_dir, f)
+                        if os.path.isfile(s):
+                            shutil.copy2(s, os.path.join(BIN_DIR, f))
+                    os.chmod(SERVER_BIN, 0o755)
+                    if _works(SERVER_BIN):
+                        print(f&quot;[build] using prebuilt CUDA binary: {SERVER_BIN}&quot;)
+                        return SERVER_BIN
+                    print(&quot;[build] prebuilt binary would not run here; building instead.&quot;)
+                    return None
+                except Exception as e:
+                    print(f&quot;[build] prebuilt fetch failed ({type(e).__name__}: {e}); &quot;
+                          &quot;building instead.&quot;)
+                    return None
+    print(&quot;[build] no prebuilt CUDA asset published; building from source.&quot;)
+    return None
+
+
+def build_from_source():
     print(&quot;[build] installing build deps...&quot;)
-    sh(&quot;apt-get -qq update &amp;&amp; apt-get -qq install -y build-essential cmake &quot;
-       &quot;libcurl4-openssl-dev git ccache&quot;, check=False,
-       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-    if not os.path.isdir(LLAMA_DIR):
+    sh(&quot;apt-get -qq update &amp;&amp; apt-get -qq install -y build-essential cmake git ccache&quot;,
+       check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if not os.path.isdir(LLAMA_SRC):
         print(&quot;[build] cloning llama.cpp...&quot;)
         sh([&quot;git&quot;, &quot;clone&quot;, &quot;--depth&quot;, &quot;1&quot;,
-            &quot;https://github.com/ggml-org/llama.cpp&quot;, LLAMA_DIR], check=True)
+            &quot;https://github.com/ggml-org/llama.cpp&quot;, LLAMA_SRC], check=True)
 
-    # nvcc must be new enough to emit code for the card. Blackwell is sm_120
-    # and needs CUDA 12.8+; on an older toolkit the build fails deep in a
-    # compile log nobody reads, so check it here and say so plainly.
+    # nvcc must know the card. Blackwell is sm_120 and needs CUDA 12.8+; on an
+    # older toolkit this dies deep in a compile log nobody reads.
     try:
         nvcc = subprocess.check_output([&quot;nvcc&quot;, &quot;--version&quot;], text=True)
-        ver = re.search(r&quot;release (\d+)\.(\d+)&quot;, nvcc)
-        if ver:
-            major, minor = int(ver.group(1)), int(ver.group(2))
+        v = re.search(r&quot;release (\d+)\.(\d+)&quot;, nvcc)
+        if v:
+            major, minor = int(v.group(1)), int(v.group(2))
             print(f&quot;[build] CUDA toolkit {major}.{minor}&quot;)
             if int(CUDA_ARCH) &gt;= 120 and (major, minor) &lt; (12, 8):
-                print(f&quot;[warn] sm_{CUDA_ARCH} needs CUDA 12.8 or newer — this &quot;
-                      f&quot;toolkit is {major}.{minor}. The build will likely fail.&quot;)
-                print(&quot;       Use a runtime with CUDA 12.8+, or set &quot;
-                      &quot;CUDA_ARCH manually to a lower arch.&quot;)
+                print(f&quot;[warn] sm_{CUDA_ARCH} needs CUDA 12.8 or newer; this is &quot;
+                      f&quot;{major}.{minor}. Expect the build to fail — use a runtime &quot;
+                      f&quot;with a newer toolkit.&quot;)
     except Exception:
         print(&quot;[warn] nvcc not found — is the CUDA toolkit installed?&quot;)
 
-    print(f&quot;[build] compiling for sm_{CUDA_ARCH} (5-15 min, once)...&quot;)
-    sh([&quot;cmake&quot;, &quot;-S&quot;, LLAMA_DIR, &quot;-B&quot;, os.path.join(LLAMA_DIR, &quot;build&quot;),
-        &quot;-DGGML_CUDA=ON&quot;,
-        f&quot;-DCMAKE_CUDA_ARCHITECTURES={CUDA_ARCH}&quot;,
-        &quot;-DLLAMA_CURL=OFF&quot;,   # we fetch the GGUF ourselves, so skip libcurl
+    build = os.path.join(LLAMA_SRC, &quot;build&quot;)
+    print(f&quot;[build] compiling for sm_{CUDA_ARCH} (5-15 min, cached afterwards)...&quot;)
+    sh([&quot;cmake&quot;, &quot;-S&quot;, LLAMA_SRC, &quot;-B&quot;, build, &quot;-DGGML_CUDA=ON&quot;,
+        f&quot;-DCMAKE_CUDA_ARCHITECTURES={CUDA_ARCH}&quot;, &quot;-DLLAMA_CURL=OFF&quot;,
         &quot;-DCMAKE_BUILD_TYPE=Release&quot;], check=True)
-    sh([&quot;cmake&quot;, &quot;--build&quot;, os.path.join(LLAMA_DIR, &quot;build&quot;),
-        &quot;--config&quot;, &quot;Release&quot;, &quot;-j&quot;, str(os.cpu_count() or 4),
-        &quot;--target&quot;, &quot;llama-server&quot;], check=True)
-
-    if not os.path.exists(SERVER_BIN):
-        raise RuntimeError(&quot;llama.cpp built but llama-server is missing — &quot;
-                           &quot;check the compile log above.&quot;)
+    sh([&quot;cmake&quot;, &quot;--build&quot;, build, &quot;--config&quot;, &quot;Release&quot;,
+        &quot;-j&quot;, str(os.cpu_count() or 4), &quot;--target&quot;, &quot;llama-server&quot;], check=True)
+    built = os.path.join(build, &quot;bin&quot;, &quot;llama-server&quot;)
+    if not os.path.exists(built):
+        raise RuntimeError(&quot;Build finished but llama-server is missing — see the log above.&quot;)
+    os.makedirs(BIN_DIR, exist_ok=True)
+    for f in os.listdir(os.path.dirname(built)):
+        s = os.path.join(os.path.dirname(built), f)
+        if os.path.isfile(s):
+            shutil.copy2(s, os.path.join(BIN_DIR, f))
+    os.chmod(SERVER_BIN, 0o755)
     print(f&quot;[build] ok: {SERVER_BIN}&quot;)
+    return SERVER_BIN
 
 
-build_llama_cpp()
+if _works(SERVER_BIN):
+    print(f&quot;[build] llama-server already here: {SERVER_BIN}&quot;)
+else:
+    if try_prebuilt_cuda() is None:
+        build_from_source()
 
 
 # ---------------- FIND AND FETCH THE RIGHT GGUF ----------------
-# Filenames differ between GGUF repos and large quants are split into shards,
-# so nothing is hardcoded: ask the Hub what is actually in there, then choose.
 _SPLIT_RE = re.compile(r&quot;^(?P&lt;stem&gt;.+)-(?P&lt;idx&gt;\d{5})-of-(?P&lt;tot&gt;\d{5})\.gguf$&quot;, re.I)
 
 
@@ -1056,12 +1167,11 @@ def list_repo_files():
     if HF_TOKEN:
         req.add_header(&quot;Authorization&quot;, f&quot;Bearer {HF_TOKEN}&quot;)
     with urllib.request.urlopen(req, timeout=30) as r:
-        info = json.load(r)
-    return [s[&quot;rfilename&quot;] for s in info.get(&quot;siblings&quot;, [])]
+        return [s[&quot;rfilename&quot;] for s in json.load(r).get(&quot;siblings&quot;, [])]
 
 
 def gguf_variants(files):
-    &quot;&quot;&quot;One entry per model variant: {label: [file, ...]} with shards joined.&quot;&quot;&quot;
+    &quot;&quot;&quot;One entry per variant, with split shards grouped together.&quot;&quot;&quot;
     groups = {}
     for f in files:
         if not f.lower().endswith(&quot;.gguf&quot;):
@@ -1074,7 +1184,6 @@ def gguf_variants(files):
 
 
 def choose_variant(variants):
-    &quot;&quot;&quot;Pick the file set to download, and say why.&quot;&quot;&quot;
     def tag_of(stem):
         low = stem.lower()
         for t in BEST_TO_WORST:
@@ -1085,11 +1194,9 @@ def choose_variant(variants):
     scored = []
     for (folder, stem), files in variants.items():
         t = tag_of(stem)
-        if t is None:
-            continue
-        scored.append((BEST_TO_WORST.index(t), t, stem, files))
+        if t is not None:
+            scored.append((BEST_TO_WORST.index(t), t, stem, files))
     if not scored:
-        # No recognisable quant tag — take whatever is there rather than fail.
         (folder, stem), files = sorted(variants.items())[0]
         print(f&quot;[model] no quant tag in any filename; using {stem}&quot;)
         return stem, files
@@ -1099,51 +1206,44 @@ def choose_variant(variants):
         for rank, t, stem, files in scored:
             if t in (&quot;f32&quot;, &quot;bf16&quot;, &quot;f16&quot;, &quot;fp16&quot;):
                 if NEEDS_GB[t] &gt; VRAM_GB:
-                    print(f&quot;[warn] {t.upper()} wants ~{NEEDS_GB[t]} GB but the card &quot;
-                          f&quot;has {VRAM_GB:.0f} GB. It will spill to system RAM and &quot;
-                          f&quot;crawl. Set PRECISION = \&quot;auto\&quot; to fit it instead.&quot;)
+                    print(f&quot;[warn] {t.upper()} wants ~{NEEDS_GB[t]} GB and this card &quot;
+                          f&quot;has {VRAM_GB:.0f} GB. It will spill to system RAM and be &quot;
+                          f&quot;unusably slow. Set PRECISION = \&quot;auto\&quot; instead.&quot;)
                 print(f&quot;[model] full precision → {stem} ({t.upper()})&quot;)
                 return stem, files
-        best = scored[0]
-        print(f&quot;[warn] this repo has no F16/BF16 file. Falling back to the &quot;
-              f&quot;largest available: {best[2]} ({best[1].upper()}).&quot;)
-        return best[2], best[3]
+        print(f&quot;[warn] no F16/BF16 in this repo; taking the largest: {scored[0][2]}&quot;)
+        return scored[0][2], scored[0][3]
 
     if PRECISION == &quot;auto&quot;:
         for rank, t, stem, files in scored:
             if NEEDS_GB[t] &lt;= VRAM_GB:
-                print(f&quot;[model] auto → {stem} ({t.upper()}, needs ~{NEEDS_GB[t]} GB &quot;
+                print(f&quot;[model] auto → {stem} ({t.upper()}, ~{NEEDS_GB[t]} GB &quot;
                       f&quot;of {VRAM_GB:.0f} GB)&quot;)
                 return stem, files
-        best = scored[-1]
-        print(f&quot;[warn] nothing in this repo fits {VRAM_GB:.0f} GB. Using the &quot;
-              f&quot;smallest file, {best[2]} — expect offloading.&quot;)
-        return best[2], best[3]
+        print(f&quot;[warn] nothing here fits {VRAM_GB:.0f} GB; using the smallest.&quot;)
+        return scored[-1][2], scored[-1][3]
 
     want = PRECISION.lower()
     for rank, t, stem, files in scored:
         if want in stem.lower():
             print(f&quot;[model] forced → {stem}&quot;)
             return stem, files
-    raise RuntimeError(
-        f&#x27;PRECISION = &quot;{PRECISION}&quot; matches nothing in {MODEL_REPO}. &#x27;
-        f&quot;Available: {sorted({s[2] for s in scored})}&quot;)
+    raise RuntimeError(f&#x27;PRECISION = &quot;{PRECISION}&quot; matches nothing in {MODEL_REPO}. &#x27;
+                       f&quot;Available: {sorted({s[2] for s in scored})}&quot;)
 
 
 print(f&quot;[model] reading {MODEL_REPO} ...&quot;)
 try:
     repo_files = list_repo_files()
 except Exception as e:
-    raise RuntimeError(
-        f&quot;Could not read {MODEL_REPO} from the Hub ({type(e).__name__}: {e}). &quot;
-        &quot;Check the name, and set HF_TOKEN if the repo is gated.&quot;) from e
+    raise RuntimeError(f&quot;Could not read {MODEL_REPO} from the Hub &quot;
+                       f&quot;({type(e).__name__}: {e}). Check the name, and set &quot;
+                       &quot;HF_TOKEN if it is gated.&quot;) from e
 
 variants = gguf_variants(repo_files)
 if not variants:
     raise RuntimeError(f&quot;{MODEL_REPO} contains no .gguf files.&quot;)
-print(f&quot;[model] {len(variants)} variant(s): &quot;
-      f&quot;{&#x27;, &#x27;.join(sorted(stem for _, stem in variants))}&quot;)
-
+print(f&quot;[model] variants: {&#x27;, &#x27;.join(sorted(stem for _, stem in variants))}&quot;)
 stem, wanted_files = choose_variant(variants)
 
 subprocess.run([sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;, &quot;-q&quot;, &quot;-U&quot;,
@@ -1153,53 +1253,79 @@ from huggingface_hub import hf_hub_download
 
 if len(wanted_files) &gt; 1:
     print(f&quot;[model] {len(wanted_files)} shards to fetch — this is the slow part.&quot;)
-local_paths = []
-for f in wanted_files:
-    local_paths.append(hf_hub_download(
-        repo_id=MODEL_REPO, filename=f, token=HF_TOKEN or None))
-# llama.cpp only needs shard 1; it finds the rest beside it.
-MODEL_PATH = local_paths[0]
-_size = sum(os.path.getsize(p) for p in local_paths) / 1e9
-print(f&quot;[model] {_size:.1f} GB on disk → {MODEL_PATH}&quot;)
+local_paths = [hf_hub_download(repo_id=MODEL_REPO, filename=f,
+                               token=HF_TOKEN or None) for f in wanted_files]
+MODEL_PATH = local_paths[0]           # llama.cpp finds the rest beside it
+print(f&quot;[model] {sum(os.path.getsize(p) for p in local_paths) / 1e9:.1f} GB → {MODEL_PATH}&quot;)
 
 
-# ---------------- START llama-server (localhost) ----------------
+# ---------------- START llama-server ----------------
 llama_cmd = [
-    SERVER_BIN,
-    &quot;-m&quot;, MODEL_PATH,
-    &quot;--host&quot;, &quot;127.0.0.1&quot;,
-    &quot;--port&quot;, str(LLAMA_PORT),
+    SERVER_BIN, &quot;-m&quot;, MODEL_PATH,
+    &quot;--host&quot;, &quot;127.0.0.1&quot;, &quot;--port&quot;, str(LLAMA_PORT),
     &quot;-ngl&quot;, &quot;999&quot;,                 # every layer on the GPU
     &quot;-c&quot;, str(CTX),
     &quot;--jinja&quot;,                     # use the model&#x27;s own chat template
-    &quot;-a&quot;, MODEL_ID,                # the name it reports to the API
+    &quot;-a&quot;, MODEL_ID,
 ]
 print(&quot;[llama] &quot; + &quot; &quot;.join(llama_cmd))
-llama_proc = subprocess.Popen(llama_cmd, stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT, text=True, bufsize=1)
+llama_proc = subprocess.Popen(
+    llama_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+    bufsize=1, env=dict(os.environ, LD_LIBRARY_PATH=BIN_DIR))
+
+# Watch the startup log for what device it actually chose. This is the check
+# that was missing: &quot;-ngl 999&quot; is a request, not a guarantee, and when it is
+# refused llama.cpp says so here and then runs on the CPU anyway.
+DEVICE_INFO = {&quot;device&quot;: None, &quot;offloaded&quot;: None, &quot;layers&quot;: None,
+               &quot;cpu_only&quot;: None, &quot;software&quot;: False}
+_LOG_TAIL = []
 
 
-def _echo_llama():
+def _note_llama_line(line):
+    &quot;&quot;&quot;Read one startup line. Kept separate so the logic is testable.
+
+    A software Vulkan device is sticky: llama.cpp still prints
+    &quot;offloaded 63/63 layers to GPU&quot; when that GPU is llvmpipe, so a later
+    happy-looking line must not clear the finding.&quot;&quot;&quot;
+    low = line.lower()
+    m = re.search(r&quot;offloaded\s+(\d+)\s*/\s*(\d+)\s+layers?\s+to\s+gpu&quot;, low)
+    if m:
+        DEVICE_INFO[&quot;offloaded&quot;] = int(m.group(1))
+        DEVICE_INFO[&quot;layers&quot;] = int(m.group(2))
+    m2 = re.search(r&quot;using device (\S+)\s*\((.*?)\)&quot;, line, re.I)
+    if m2 and not DEVICE_INFO[&quot;device&quot;]:
+        DEVICE_INFO[&quot;device&quot;] = f&quot;{m2.group(1)} ({m2.group(2)})&quot;
+    if &quot;llvmpipe&quot; in low or &quot;lavapipe&quot; in low or &quot;swiftshader&quot; in low:
+        DEVICE_INFO[&quot;device&quot;] = &quot;SOFTWARE RASTERISER (CPU)&quot;
+        DEVICE_INFO[&quot;software&quot;] = True
+    DEVICE_INFO[&quot;cpu_only&quot;] = bool(
+        DEVICE_INFO[&quot;software&quot;]
+        or (DEVICE_INFO[&quot;offloaded&quot;] is not None and DEVICE_INFO[&quot;offloaded&quot;] == 0))
+
+
+def _watch_llama():
     for line in llama_proc.stdout:
+        _LOG_TAIL.append(line)
+        del _LOG_TAIL[:-400]
+        _note_llama_line(line)
         sys.stdout.write(&quot;[llama] &quot; + line)
 
 
-threading.Thread(target=_echo_llama, daemon=True).start()
+threading.Thread(target=_watch_llama, daemon=True).start()
 
 
 def wait_for_llama(timeout):
-    &quot;&quot;&quot;llama-server answers /health with 503 while the weights load and 200
-    once it can generate. A 54 GB file takes a while, so wait properly rather
-    than racing the tunnel.&quot;&quot;&quot;
+    &quot;&quot;&quot;llama-server answers /health with 503 while loading, 200 once it can
+    generate.&quot;&quot;&quot;
     start = time.time()
     while time.time() - start &lt; timeout:
         if llama_proc.poll() is not None:
             raise RuntimeError(
-                f&quot;llama-server exited with code {llama_proc.returncode} before &quot;
-                &quot;it was ready — see the [llama] lines above for the reason.&quot;)
+                f&quot;llama-server exited with code {llama_proc.returncode} before it &quot;
+                f&quot;was ready. Last lines:\n&quot; + &quot;&quot;.join(_LOG_TAIL[-25:]))
         try:
-            with urllib.request.urlopen(
-                    f&quot;http://127.0.0.1:{LLAMA_PORT}/health&quot;, timeout=5) as r:
+            with urllib.request.urlopen(f&quot;http://127.0.0.1:{LLAMA_PORT}/health&quot;,
+                                        timeout=5) as r:
                 if r.status == 200:
                     return True
         except Exception:
@@ -1210,15 +1336,60 @@ def wait_for_llama(timeout):
 
 print(f&quot;[llama] loading weights (up to {LOAD_TIMEOUT}s for a full-precision file)...&quot;)
 if not wait_for_llama(LOAD_TIMEOUT):
-    raise RuntimeError(f&quot;llama-server was not ready within {LOAD_TIMEOUT}s. &quot;
-                       &quot;Raise LOAD_TIMEOUT, or use a smaller PRECISION.&quot;)
+    raise RuntimeError(f&quot;llama-server was not ready within {LOAD_TIMEOUT}s. Raise &quot;
+                       &quot;LOAD_TIMEOUT, or use a smaller PRECISION.&quot;)
 print(&quot;[llama] ready.&quot;)
 
+if DEVICE_INFO[&quot;offloaded&quot;] is not None:
+    print(f&quot;[llama] device: {DEVICE_INFO[&#x27;device&#x27;] or &#x27;CUDA&#x27;} — &quot;
+          f&quot;{DEVICE_INFO[&#x27;offloaded&#x27;]}/{DEVICE_INFO[&#x27;layers&#x27;]} layers on GPU&quot;)
+if DEVICE_INFO[&quot;cpu_only&quot;]:
+    msg = (&quot;The model is running on the CPU, not the GPU &quot;
+           f&quot;(device: {DEVICE_INFO[&#x27;device&#x27;]}). A 27B like this is seconds per &quot;
+           &quot;token there, which is exactly what shows up in the chat as &quot;
+           &quot;\&quot;did not respond within 25s\&quot;. Fix the backend rather than raising &quot;
+           &quot;timeouts.&quot;)
+    if REQUIRE_GPU:
+        llama_proc.terminate()
+        raise RuntimeError(msg)
+    print(&quot;[warn] &quot; + msg)
 
-# ---------------- OPENAI SHIM: CORS + /health, same as the main server ----------------
-# llama-server already speaks OpenAI, but the site expects our /health shape and
-# a permissive CORS policy it can call from the browser. This thin layer in front
-# guarantees both, so the chat cannot tell the two servers apart.
+
+# ---------------- WARM-UP: measure it before trusting it ----------------
+# The first request pays for prompt prefill and CUDA graph setup. Do that here
+# so the chat&#x27;s first message is not the thing that discovers it, and print the
+# real rate so &quot;is it fast enough&quot; is answered by this cell.
+def warmup():
+    body = {&quot;model&quot;: MODEL_ID, &quot;max_tokens&quot;: 24, &quot;stream&quot;: False,
+            &quot;messages&quot;: [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Say READY and nothing else.&quot;}]}
+    req = urllib.request.Request(
+        f&quot;http://127.0.0.1:{LLAMA_PORT}/v1/chat/completions&quot;,
+        data=json.dumps(body).encode(),
+        headers={&quot;content-type&quot;: &quot;application/json&quot;})
+    t0 = time.time()
+    with urllib.request.urlopen(req, timeout=300) as r:
+        out = json.load(r)
+    dt = time.time() - t0
+    n = (out.get(&quot;usage&quot;) or {}).get(&quot;completion_tokens&quot;) or 24
+    return dt, n / dt if dt &gt; 0 else 0.0
+
+
+print(&quot;[llama] warming up...&quot;)
+try:
+    WARM_S, TOK_S = warmup()
+    print(f&quot;[llama] warm-up took {WARM_S:.1f}s — about {TOK_S:.1f} tokens/sec&quot;)
+    if TOK_S &lt; 3:
+        print(&quot;[warn] under 3 tok/s. That is CPU-class speed; replies will take &quot;
+              &quot;minutes and the chat will look hung. Check the device line above.&quot;)
+except Exception as e:
+    WARM_S, TOK_S = 0.0, 0.0
+    print(f&quot;[warn] warm-up failed ({type(e).__name__}: {e}) — continuing anyway.&quot;)
+
+
+# ---------------- OPENAI SHIM: CORS + /health ----------------
+# llama-server already speaks OpenAI. This thin layer guarantees the /health
+# shape and the permissive CORS the site needs, so the chat cannot tell the
+# standard server and this one apart.
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -1232,8 +1403,13 @@ app.add_middleware(CORSMiddleware, allow_origins=[&quot;*&quot;], allow_credenti
 
 # No read timeout: a long generation is not a stalled connection.
 _client = httpx.AsyncClient(timeout=httpx.Timeout(None, connect=30.0))
-_inflight = 0
-_inflight_lock = threading.Lock()
+_inflight = [0]
+_lock = threading.Lock()
+
+
+def _bump(n):
+    with _lock:
+        _inflight[0] += n
 
 
 def check_auth(request: Request):
@@ -1246,8 +1422,9 @@ def check_auth(request: Request):
 @app.get(&quot;/health&quot;)
 async def health():
     return {&quot;status&quot;: &quot;ok&quot;, &quot;model&quot;: MODEL_ID, &quot;backend&quot;: &quot;llama.cpp&quot;,
-            &quot;precision&quot;: stem, &quot;vram_gb&quot;: round(VRAM_GB, 1),
-            &quot;busy&quot;: _inflight &gt; 0}
+            &quot;precision&quot;: stem, &quot;device&quot;: DEVICE_INFO[&quot;device&quot;] or &quot;cuda&quot;,
+            &quot;gpu_layers&quot;: DEVICE_INFO[&quot;offloaded&quot;], &quot;tokens_per_sec&quot;: round(TOK_S, 1),
+            &quot;ctx&quot;: CTX, &quot;busy&quot;: _inflight[0] &gt; 0}
 
 
 @app.get(&quot;/v1/models&quot;)
@@ -1257,22 +1434,25 @@ async def list_models(request: Request):
             &quot;data&quot;: [{&quot;id&quot;: MODEL_ID, &quot;object&quot;: &quot;model&quot;, &quot;owned_by&quot;: &quot;corx-labs&quot;}]}
 
 
+def _err_chunk(text):
+    return (&quot;data: &quot; + json.dumps({
+        &quot;object&quot;: &quot;chat.completion.chunk&quot;, &quot;model&quot;: MODEL_ID,
+        &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;finish_reason&quot;: &quot;error&quot;,
+                     &quot;delta&quot;: {&quot;content&quot;: text}}]}) + &quot;\n\n&quot;).encode()
+
+
 @app.post(&quot;/v1/chat/completions&quot;)
 async def chat_completions(request: Request):
-    global _inflight
     check_auth(request)
     body = await request.json()
     if not body.get(&quot;messages&quot;):
         raise HTTPException(status_code=400, detail=&quot;messages required&quot;)
-    # One model is loaded; whatever the client asked for, this is what it gets.
-    body[&quot;model&quot;] = MODEL_ID
+    body[&quot;model&quot;] = MODEL_ID          # one model is loaded; this is what you get
     if body.get(&quot;max_tokens&quot;):
         body[&quot;max_tokens&quot;] = min(int(body[&quot;max_tokens&quot;]), MAX_NEW_TOKENS_CAP)
     stream = bool(body.get(&quot;stream&quot;, False))
 
-    with _inflight_lock:
-        _inflight += 1
-
+    _bump(1)
     if not stream:
         try:
             r = await _client.post(f&quot;{LLAMA}/v1/chat/completions&quot;, json=body)
@@ -1281,40 +1461,32 @@ async def chat_completions(request: Request):
             return JSONResponse(status_code=500, content={&quot;error&quot;: {
                 &quot;message&quot;: f&quot;{type(e).__name__}: {e}&quot;, &quot;type&quot;: &quot;generation_error&quot;}})
         finally:
-            with _inflight_lock:
-                _inflight -= 1
+            _bump(-1)
 
     async def relay():
-        global _inflight
         try:
             async with _client.stream(
                     &quot;POST&quot;, f&quot;{LLAMA}/v1/chat/completions&quot;, json=body,
-                    # identity so aiter_bytes forwards exactly what llama.cpp wrote
                     headers={&quot;Accept&quot;: &quot;text/event-stream&quot;,
                              &quot;Accept-Encoding&quot;: &quot;identity&quot;}) as r:
                 if r.status_code != 200:
                     detail = (await r.aread()).decode(&quot;utf-8&quot;, &quot;replace&quot;)[:400]
-                    err = {&quot;object&quot;: &quot;chat.completion.chunk&quot;, &quot;model&quot;: MODEL_ID,
-                           &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;finish_reason&quot;: &quot;error&quot;,
-                                        &quot;delta&quot;: {&quot;content&quot;:
-                                                  f&quot;\n[llama.cpp returned {r.status_code}: {detail}]&quot;}}]}
-                    yield f&quot;data: {json.dumps(err)}\n\n&quot;.encode()
+                    yield _err_chunk(f&quot;\n[llama.cpp returned {r.status_code}: {detail}]&quot;)
                     yield b&quot;data: [DONE]\n\n&quot;
                     return
-                # Pass the SSE bytes through untouched — llama.cpp already emits
-                # the exact chunk shape the chat parses, [DONE] included.
+                # llama.cpp already emits exactly the chunk shape the chat parses,
+                # [DONE] included, so pass the bytes straight through.
                 async for chunk in r.aiter_bytes():
                     yield chunk
         except Exception as e:
-            err = {&quot;object&quot;: &quot;chat.completion.chunk&quot;, &quot;model&quot;: MODEL_ID,
-                   &quot;choices&quot;: [{&quot;index&quot;: 0, &quot;finish_reason&quot;: &quot;error&quot;,
-                                &quot;delta&quot;: {&quot;content&quot;:
-                                          f&quot;\n[Generation failed on the server: {type(e).__name__}: {e}]&quot;}}]}
-            yield f&quot;data: {json.dumps(err)}\n\n&quot;.encode()
+            # Swallowing this was why a failure looked like a hang: the browser
+            # got a 200 with an empty body and waited for tokens that never came.
+            tail = &quot;&quot;.join(_LOG_TAIL[-6:]).strip().replace(&quot;\n&quot;, &quot; &quot;)[:300]
+            yield _err_chunk(f&quot;\n[Generation failed on the server: &quot;
+                             f&quot;{type(e).__name__}: {e}. Last server log: {tail}]&quot;)
             yield b&quot;data: [DONE]\n\n&quot;
         finally:
-            with _inflight_lock:
-                _inflight -= 1
+            _bump(-1)
 
     return StreamingResponse(relay(), media_type=&quot;text/event-stream&quot;)
 
@@ -1325,14 +1497,13 @@ _server_ready = threading.Event()
 def serve():
     config = uvicorn.Config(app, host=&quot;0.0.0.0&quot;, port=PORT, log_level=&quot;warning&quot;)
     server = uvicorn.Server(config)
-    _server_ready.set()
+    _server_ready.set()               # before run(), which never returns
     server.run()
 
 
 threading.Thread(target=serve, daemon=True).start()
 _server_ready.wait(timeout=10)
 time.sleep(2)
-
 try:
     urllib.request.urlopen(f&quot;http://127.0.0.1:{PORT}/health&quot;, timeout=5)
     print(f&quot;[api] shim healthy on :{PORT}&quot;)
@@ -1346,12 +1517,9 @@ def get_cloudflared():
     if os.path.exists(path):
         return path
     arch = platform.machine().lower()
-    if &quot;aarch64&quot; in arch or &quot;arm64&quot; in arch:
-        url = (&quot;https://github.com/cloudflare/cloudflared/releases/latest/&quot;
-               &quot;download/cloudflared-linux-arm64&quot;)
-    else:
-        url = (&quot;https://github.com/cloudflare/cloudflared/releases/latest/&quot;
-               &quot;download/cloudflared-linux-amd64&quot;)
+    suffix = &quot;arm64&quot; if (&quot;aarch64&quot; in arch or &quot;arm64&quot; in arch) else &quot;amd64&quot;
+    url = (&quot;https://github.com/cloudflare/cloudflared/releases/latest/&quot;
+           f&quot;download/cloudflared-linux-{suffix}&quot;)
     print(f&quot;[tunnel] downloading cloudflared ({arch})...&quot;)
     urllib.request.urlretrieve(url, path)
     os.chmod(path, 0o755)
@@ -1363,9 +1531,8 @@ def start_cloudflare_tunnel(port, timeout=40):
     proc = subprocess.Popen(
         [binary, &quot;tunnel&quot;, &quot;--no-autoupdate&quot;, &quot;--url&quot;, f&quot;http://localhost:{port}&quot;],
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-    url = None
     url_re = re.compile(r&quot;https://[-a-z0-9]+\.trycloudflare\.com&quot;)
-    start = time.time()
+    url, start = None, time.time()
     while time.time() - start &lt; timeout:
         line = proc.stdout.readline()
         if not line:
@@ -1384,17 +1551,15 @@ def start_cloudflare_tunnel(port, timeout=40):
     return url, proc
 
 
-PUBLIC_URL = None
-tunnel_proc = None
+PUBLIC_URL, tunnel_proc = None, None
 for attempt in range(2):
     try:
         PUBLIC_URL, tunnel_proc = start_cloudflare_tunnel(PORT)
         if PUBLIC_URL:
-            print(f&quot;[tunnel] live: {PUBLIC_URL}&quot;)
             break
         time.sleep(3)
     except Exception as e:
-        print(f&quot;[tunnel] attempt {attempt+1} failed: {str(e)[:80]}&quot;)
+        print(f&quot;[tunnel] attempt {attempt + 1} failed: {str(e)[:80]}&quot;)
         time.sleep(3)
 
 print(&quot;\n&quot; + &quot;=&quot; * 66)
@@ -1405,7 +1570,10 @@ if PUBLIC_URL:
     print(f&quot; Health     : {PUBLIC_URL}/health&quot;)
     print(f&quot; Auth       : {&#x27;NONE (open)&#x27; if NO_AUTH else &#x27;Bearer &#x27; + API_KEY}&quot;)
     print(f&quot; Model      : {MODEL_ID}   ({stem})&quot;)
-    print(f&quot; Backend    : llama.cpp, {CTX} ctx, all layers on {GPU_NAME}&quot;)
+    print(f&quot; Device     : {DEVICE_INFO[&#x27;device&#x27;] or &#x27;CUDA&#x27;}&quot;
+          + (f&quot; — {DEVICE_INFO[&#x27;offloaded&#x27;]}/{DEVICE_INFO[&#x27;layers&#x27;]} layers on GPU&quot;
+             if DEVICE_INFO[&quot;offloaded&quot;] is not None else &quot;&quot;))
+    print(f&quot; Speed      : ~{TOK_S:.1f} tokens/sec, {CTX} ctx&quot;)
 else:
     print(&quot; TUNNEL FAILED — API is live LOCALLY&quot;)
 print(&quot;=&quot; * 66)
@@ -1428,7 +1596,7 @@ while True:
             new_url, tunnel_proc = start_cloudflare_tunnel(PORT)
             if new_url:
                 PUBLIC_URL = new_url
-                print(f&quot;[tunnel] back up: {PUBLIC_URL}/v1&quot;)
+                print(f&quot;[tunnel] back up: {PUBLIC_URL}/v1  — paste this into Settings&quot;)
             _KEEP_ALIVE = tunnel_proc
     except KeyboardInterrupt:
         print(&quot;stopped by user.&quot;)
@@ -1458,6 +1626,25 @@ while True:
           Public URL into settings the same way, then set the model field to
           <code>corx3.8-heretic</code>. Sandbox, search, files, GitHub and personalities all work
           exactly as they do on the normal build.</p>
+      </div>
+
+      <div class="callout mt-m">
+        <p><strong>If the chat says it &ldquo;did not respond within 25s&rdquo;.</strong> That is
+          almost never the address. The usual cause is the model running on the
+          <strong>CPU</strong> while everything still looks fine: a Vulkan build on a notebook box
+          picks up <code>lavapipe</code>, a software rasteriser, so <code>-ngl 999</code> reports
+          &ldquo;63/63 layers offloaded to GPU&rdquo; and then generates at a few seconds per token.
+          A 27B is unusable there, and the front end can only report the silence.</p>
+        <p style="margin-top:10px">This cell will not let that happen quietly. It is
+          <strong>CUDA-first</strong>, it reads the startup log for the device it actually got, and
+          it <strong>refuses to hand you a URL</strong> if the model landed on the CPU. Before
+          printing the address it runs a warm-up generation and tells you the measured
+          <strong>tokens/sec</strong> — so you know it is fast enough without finding out in the
+          chat. Set <code>REQUIRE_GPU = False</code> if you want it to serve anyway.</p>
+        <p style="margin-top:10px">The chat helps from its side too: when your own server misses the
+          window it asks <code>/health</code> — which answers instantly even while generation crawls
+          — and tells you which problem you have, a dead tunnel URL or a model on the wrong device,
+          quoting the device and tok/s it reported.</p>
       </div>
     </div>
   </section>
