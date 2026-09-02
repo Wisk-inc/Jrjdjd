@@ -438,8 +438,13 @@ const TOOL_TIMEOUT_MS = 45000;
 // The model may be loading or prefilling a long prompt on a big model, so
 // the first token gets a generous wait; after it starts, only real silence
 // counts as a stall.
-// Headers back from the server — proves it exists. Short on purpose.
+// Headers back from the server — proves it exists. Short on purpose for hosted
+// APIs. Your own box gets longer: it may still be loading 54GB of weights, and
+// a wrong "it's offline" there sends you hunting the wrong problem.
 const CONNECT_TIMEOUT_MS = 25000;
+const SELF_HOSTED_CONNECT_TIMEOUT_MS = 60000;
+const connectTimeoutMs = () =>
+  (db.provider === 'corx' ? SELF_HOSTED_CONNECT_TIMEOUT_MS : CONNECT_TIMEOUT_MS);
 const FIRST_TOKEN_TIMEOUT_MS = 240000;
 const STALL_TIMEOUT_MS = 90000;
 async function fetchWithTimeout(url, opts = {}, ms = TOOL_TIMEOUT_MS) {
@@ -838,6 +843,40 @@ async function checkHealth() {
     setStatus('down', 'Offline');
   }
 }
+/* When your own server misses the connect window, "it timed out" is not enough
+   to act on — a dead quick-tunnel URL and a model that landed on the CPU look
+   identical from here. /health answers in milliseconds even while generation
+   crawls, so ask it and say which of the two it actually is. */
+async function diagnoseSelfHosted() {
+  const STALE = 'A Cloudflare quick-tunnel address changes every time the notebook '
+    + 'restarts — check the URL the cell printed and paste the current one into Settings.';
+  let h;
+  try {
+    const res = await fetchWithTimeout(`${base()}/health`, { method: 'GET' }, 8000);
+    if (!res.ok) throw new Error(String(res.status));
+    h = await res.json();
+  } catch {
+    return `The address is not answering at all. ${STALE}`;
+  }
+  const bits = [];
+  if (h.device) bits.push(`device ${h.device}`);
+  if (typeof h.gpu_layers === 'number') bits.push(`${h.gpu_layers} layers on GPU`);
+  if (h.tokens_per_sec) bits.push(`~${h.tokens_per_sec} tok/s`);
+  const detail = bits.length ? ` It reports: ${bits.join(', ')}.` : '';
+  if (h.busy) {
+    return 'The server is up but busy with another request — one GPU serves one reply '
+      + `at a time. Wait for that one to finish and try again.${detail}`;
+  }
+  if (h.tokens_per_sec && h.tokens_per_sec < 3) {
+    return 'The server is up, but it is generating at CPU speed, so the reply never '
+      + `started in time.${detail} Check the device line the set-up cell printed — if it `
+      + 'says a software rasteriser or 0 layers on GPU, the model is not on the card.';
+  }
+  return `The server is up and answering /health, so the address is right — it just `
+    + `did not start the reply in time.${detail} A very long prompt or a cold cache can `
+    + `do this; try again, and if it repeats, lower the effort level.`;
+}
+
 function setStatus(stateName, label) {
   els.status.setAttribute('data-state', stateName);
   $('.status-label', els.status).textContent = label;
@@ -1197,7 +1236,8 @@ async function streamOnce(conv, bubble) {
   // changes every restart) otherwise sat here burning the whole first-token
   // budget before saying anything.
   let connectTimedOut = false;
-  const connectTimer = setTimeout(() => { connectTimedOut = true; abort.abort(); }, CONNECT_TIMEOUT_MS);
+  const connectMs = connectTimeoutMs();
+  const connectTimer = setTimeout(() => { connectTimedOut = true; abort.abort(); }, connectMs);
   try {
     res = await fetch(req.url, {
       method: 'POST', signal: abort.signal, headers: req.headers,
@@ -1206,10 +1246,8 @@ async function streamOnce(conv, bubble) {
   } catch (e) {
     const p = providerOf();
     if (connectTimedOut) {
-      throw new Error(`${p.label} did not respond within ${Math.round(CONNECT_TIMEOUT_MS / 1000)}s at ${base()}. ` +
-        (db.provider === 'corx'
-          ? 'A Cloudflare quick-tunnel address changes every time the notebook restarts — check the URL the cell printed and paste the current one into Settings.'
-          : 'Check the endpoint and your key.'));
+      throw new Error(`${p.label} did not respond within ${Math.round(connectMs / 1000)}s at ${base()}. ` +
+        (db.provider === 'corx' ? await diagnoseSelfHosted() : 'Check the endpoint and your key.'));
     }
     // A blocked cross-origin call throws a TypeError here rather than
     // returning a status, so name the likely cause honestly.
