@@ -906,27 +906,29 @@ while True:
 
  That repo ships GGUF, so the runtime is llama.cpp.
 
- v8 — why the &quot;did not respond within 25s&quot; happened, and what
- changed:
+ What went wrong before, and what this does about it:
 
-   * The Vulkan build was the trap. On a notebook box
-     mesa-vulkan-drivers is lavapipe, a SOFTWARE Vulkan device,
-     so &quot;-ngl 999&quot; happily offloaded all 62 layers to the CPU.
-     A 27B at F16 there is seconds per token — prefill alone
-     blows past any front-end timeout. This is CUDA-first now:
-     prebuilt CUDA binary, else compiled from source for your
-     exact card.
-   * Nothing checked that the GPU was actually used. Now the
-     startup log is parsed for the real device and the offloaded
-     layer count, and the cell refuses to hand you a URL for a
-     server that quietly landed on the CPU.
+   * &quot;did not respond within 25s&quot; was the model running on the
+     CPU. mesa-vulkan-drivers installs lavapipe, a SOFTWARE
+     Vulkan device, so &quot;-ngl 999&quot; happily reported all 62 layers
+     &quot;offloaded to GPU&quot; onto the CPU, where a 27B is seconds per
+     token. The startup log is now read for the device actually
+     chosen, and the cell refuses to hand you a URL for a server
+     that landed on the CPU.
+   * &quot;CUDA Toolkit not found&quot; was the opposite problem: a
+     container with the NVIDIA driver but no nvcc, so nothing
+     could be compiled. Getting a backend is now a ladder —
+     compile with CUDA if nvcc exists, else use the real NVIDIA
+     Vulkan driver if it is installed, else install a CUDA
+     toolkit and compile. Software Vulkan is refused at every
+     step, so it can fail loudly but never silently on the CPU.
    * The stream relay swallowed every exception, so an upstream
      failure became an empty 200 that just looked like a hang.
      Errors are now written into the stream where you can read
      them.
-   * It now runs a warm-up generation and prints measured
-     tokens/sec BEFORE the URL, so you know it is fast enough
-     without having to find out in the chat.
+   * It runs a warm-up generation and prints measured tokens/sec
+     BEFORE the URL, so you know it is fast enough without
+     finding out in the chat.
 
  Abliterated means the refusal direction has been removed from
  the weights. It answers almost anything, including things it
@@ -976,6 +978,19 @@ PRECISION = &quot;full&quot;
 # 27B is the exact failure that reads as &quot;the server is broken&quot; in the chat.
 REQUIRE_GPU = True
 
+# How to get a GPU-capable llama-server.
+#   &quot;auto&quot;   — compile with CUDA if nvcc is here; otherwise use the real NVIDIA
+#              Vulkan driver if one is installed; otherwise install a CUDA
+#              toolkit and compile. Never falls back to the CPU.
+#   &quot;cuda&quot;   — insist on CUDA.
+#   &quot;vulkan&quot; — insist on Vulkan (still refuses a software Vulkan device).
+BACKEND = &quot;auto&quot;
+
+# May this cell apt-get a CUDA toolkit when nothing else gives GPU access?
+# About 1 GB, once, and it needs root. Set False to be told what is missing
+# instead of having it fixed for you.
+INSTALL_CUDA_TOOLKIT = True
+
 # auth — keyless by default, same as the standard server
 NO_AUTH = True
 API_KEY = &quot;corx-key&quot;
@@ -1020,93 +1035,137 @@ print(f&quot;GPU: {GPU_NAME} — {VRAM_GB:.0f} GB VRAM, compute {COMPUTE_CAP} (s
 
 
 # ════════════════════════════════════════════════════════════════
-#  llama-server with CUDA: prebuilt first, source build as fallback
+#  Getting a GPU-capable llama-server
+#
+#  This box is where the last two failures happened, so it is worth
+#  being clear about the ground truth:
+#
+#   * A notebook container normally has the NVIDIA *driver* but no
+#     CUDA *toolkit*. nvidia-smi works, nvcc does not exist, and a
+#     source build dies at &quot;CUDA Toolkit not found&quot;.
+#   * No PyPI wheel ships nvcc. nvidia-cuda-nvcc-cu12 contains
+#     ptxas and nvvm only — checked, twice, on 12.4 and 12.9. So
+#     &quot;just pip install the toolkit&quot; is not a fix.
+#   * llama.cpp publishes no Linux CUDA binary, which is why the
+#     Vulkan build is tempting. Vulkan is fine *if* it binds to the
+#     real NVIDIA driver; the trap is mesa-vulkan-drivers, which
+#     installs lavapipe, a software rasteriser, and then every layer
+#     &quot;offloads to GPU&quot; onto the CPU.
+#
+#  So: use whatever real GPU path already exists, in order of speed,
+#  and only pay for a toolkit install if nothing else is there.
 # ════════════════════════════════════════════════════════════════
 BIN_DIR = os.path.abspath(&quot;./llama-bin&quot;)
 SERVER_BIN = os.path.join(BIN_DIR, &quot;llama-server&quot;)
 LLAMA_SRC = os.path.abspath(&quot;./llama.cpp&quot;)
+BACKEND_USED = None                 # filled in below: &quot;cuda&quot; or &quot;vulkan&quot;
 
 
 def _works(path):
     if not (os.path.isfile(path) and os.access(path, os.X_OK)):
         return False
     try:
-        env = dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(path))
         subprocess.run([path, &quot;--version&quot;], stdout=subprocess.DEVNULL,
-                       stderr=subprocess.DEVNULL, timeout=60, env=env)
+                       stderr=subprocess.DEVNULL, timeout=120,
+                       env=dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(path)))
         return True
     except Exception:
         return False
 
 
-def _release(tag=None):
-    url = (&quot;https://api.github.com/repos/ggml-org/llama.cpp/releases/latest&quot;
-           if tag is None else
-           f&quot;https://api.github.com/repos/ggml-org/llama.cpp/releases/tags/{tag}&quot;)
-    req = urllib.request.Request(url, headers={&quot;User-Agent&quot;: &quot;corx-heretic&quot;})
-    try:
-        with urllib.request.urlopen(req, timeout=20) as r:
-            return json.load(r)
-    except Exception as e:
-        print(f&quot;[build] could not read release info ({type(e).__name__})&quot;)
-        return {}
+def _install_binary(src_dir):
+    &quot;&quot;&quot;Copy a built/extracted bin directory into BIN_DIR and check it runs.&quot;&quot;&quot;
+    os.makedirs(BIN_DIR, exist_ok=True)
+    for f in os.listdir(src_dir):
+        s = os.path.join(src_dir, f)
+        if os.path.isfile(s):
+            shutil.copy2(s, os.path.join(BIN_DIR, f))
+    if os.path.exists(SERVER_BIN):
+        os.chmod(SERVER_BIN, 0o755)
+    return _works(SERVER_BIN)
 
 
-def try_prebuilt_cuda():
-    &quot;&quot;&quot;llama.cpp publishes CUDA builds for Linux x64. When one is there it saves
-    the 5-15 minute compile. Not always published, so this may find nothing —
-    that is not an error, we just build instead.&quot;&quot;&quot;
-    machine = platform.machine().lower()
-    if machine not in (&quot;x86_64&quot;, &quot;amd64&quot;):
-        print(f&quot;[build] no prebuilt CUDA for {machine}; building from source.&quot;)
-        return None
-    for tag in (None,):
-        rel = _release(tag)
-        for a in rel.get(&quot;assets&quot;, []):
-            n = a[&quot;name&quot;].lower()
-            if (&quot;ubuntu&quot; in n or &quot;linux&quot; in n) and &quot;cuda&quot; in n \
-                    and (&quot;x64&quot; in n or &quot;amd64&quot; in n) \
-                    and (n.endswith(&quot;.tar.gz&quot;) or n.endswith(&quot;.zip&quot;)):
-                print(f&quot;[build] prebuilt CUDA asset: {a[&#x27;name&#x27;]}&quot;)
-                try:
-                    dl = os.path.join(&quot;/tmp&quot;, a[&quot;name&quot;])
-                    urllib.request.urlretrieve(a[&quot;browser_download_url&quot;], dl)
-                    ex = &quot;/tmp/llama-cuda-extract&quot;
-                    shutil.rmtree(ex, ignore_errors=True)
-                    os.makedirs(ex, exist_ok=True)
-                    if dl.endswith(&quot;.zip&quot;):
-                        with zipfile.ZipFile(dl) as zf:
-                            zf.extractall(ex)
-                    else:
-                        with tarfile.open(dl, &quot;r:gz&quot;) as tf:
-                            tf.extractall(ex)
-                    found = glob.glob(os.path.join(ex, &quot;**&quot;, &quot;llama-server&quot;),
-                                      recursive=True)
-                    if not found:
-                        print(&quot;[build] archive had no llama-server; building instead.&quot;)
-                        return None
-                    src_dir = os.path.dirname(found[0])
-                    os.makedirs(BIN_DIR, exist_ok=True)
-                    # the shared ggml/cuda libs sit beside the binary — take them all
-                    for f in os.listdir(src_dir):
-                        s = os.path.join(src_dir, f)
-                        if os.path.isfile(s):
-                            shutil.copy2(s, os.path.join(BIN_DIR, f))
-                    os.chmod(SERVER_BIN, 0o755)
-                    if _works(SERVER_BIN):
-                        print(f&quot;[build] using prebuilt CUDA binary: {SERVER_BIN}&quot;)
-                        return SERVER_BIN
-                    print(&quot;[build] prebuilt binary would not run here; building instead.&quot;)
-                    return None
-                except Exception as e:
-                    print(f&quot;[build] prebuilt fetch failed ({type(e).__name__}: {e}); &quot;
-                          &quot;building instead.&quot;)
-                    return None
-    print(&quot;[build] no prebuilt CUDA asset published; building from source.&quot;)
+# ---------------------------------------------------------------- CUDA toolkit
+def find_nvcc():
+    &quot;&quot;&quot;nvcc on PATH, in the usual /usr/local/cuda locations, or under CUDA_HOME.&quot;&quot;&quot;
+    p = shutil.which(&quot;nvcc&quot;)
+    if p:
+        return p
+    roots = [os.environ.get(&quot;CUDA_HOME&quot;), os.environ.get(&quot;CUDA_PATH&quot;),
+             &quot;/usr/local/cuda&quot;] + sorted(glob.glob(&quot;/usr/local/cuda-*&quot;), reverse=True)
+    for r in roots:
+        if not r:
+            continue
+        c = os.path.join(r, &quot;bin&quot;, &quot;nvcc&quot;)
+        if os.path.isfile(c) and os.access(c, os.X_OK):
+            return c
     return None
 
 
-def build_from_source():
+def nvcc_version(nvcc):
+    try:
+        out = subprocess.check_output([nvcc, &quot;--version&quot;], text=True)
+        m = re.search(r&quot;release (\d+)\.(\d+)&quot;, out)
+        return (int(m.group(1)), int(m.group(2))) if m else None
+    except Exception:
+        return None
+
+
+def install_cuda_toolkit():
+    &quot;&quot;&quot;Install just the pieces llama.cpp needs from NVIDIA&#x27;s apt repo.
+
+    Not the whole ~3 GB toolkit: nvcc, the cudart headers and cuBLAS dev is
+    enough to compile, and is about a third of the size. Needs root.&quot;&quot;&quot;
+    if os.geteuid() != 0:
+        print(&quot;[cuda] no toolkit and not root, so it cannot be installed here.&quot;)
+        return None
+    try:
+        osr = dict(l.strip().split(&quot;=&quot;, 1) for l in open(&quot;/etc/os-release&quot;)
+                   if &quot;=&quot; in l)
+        distro = (osr.get(&quot;ID&quot;, &quot;&quot;).strip(&#x27;&quot;&#x27;) +
+                  osr.get(&quot;VERSION_ID&quot;, &quot;&quot;).strip(&#x27;&quot;&#x27;).replace(&quot;.&quot;, &quot;&quot;))
+    except Exception:
+        distro = &quot;&quot;
+    candidates = [d for d in (distro, &quot;ubuntu2404&quot;, &quot;ubuntu2204&quot;, &quot;debian12&quot;) if d]
+
+    for d in candidates:
+        url = (&quot;https://developer.download.nvidia.com/compute/cuda/repos/&quot;
+               f&quot;{d}/x86_64/cuda-keyring_1.1-1_all.deb&quot;)
+        print(f&quot;[cuda] trying NVIDIA&#x27;s apt repo for {d} ...&quot;)
+        deb = &quot;/tmp/cuda-keyring.deb&quot;
+        try:
+            urllib.request.urlretrieve(url, deb)
+        except Exception:
+            continue
+        if sh([&quot;dpkg&quot;, &quot;-i&quot;, deb], check=False,
+              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
+            continue
+        sh(&quot;apt-get -qq update&quot;, check=False,
+           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # sm_120 needs 12.8+; ask for 12-9 and fall back a step.
+        for ver in (&quot;12-9&quot;, &quot;12-8&quot;):
+            pkgs = [f&quot;cuda-nvcc-{ver}&quot;, f&quot;cuda-cudart-dev-{ver}&quot;,
+                    f&quot;libcublas-dev-{ver}&quot;, f&quot;cuda-cccl-{ver}&quot;]
+            print(f&quot;[cuda] installing {&#x27; &#x27;.join(pkgs)} (about 1 GB, once)...&quot;)
+            r = sh([&quot;apt-get&quot;, &quot;-qq&quot;, &quot;install&quot;, &quot;-y&quot;] + pkgs, check=False)
+            if r.returncode == 0:
+                nv = find_nvcc()
+                if nv:
+                    print(f&quot;[cuda] toolkit installed: {nv}&quot;)
+                    return nv
+        break
+    print(&quot;[cuda] could not install a CUDA toolkit from NVIDIA&#x27;s apt repo.&quot;)
+    return None
+
+
+def build_cuda(nvcc):
+    &quot;&quot;&quot;Compile llama-server with CUDA for this exact card.&quot;&quot;&quot;
+    ver = nvcc_version(nvcc)
+    if ver:
+        print(f&quot;[build] CUDA toolkit {ver[0]}.{ver[1]} at {nvcc}&quot;)
+        if int(CUDA_ARCH) &gt;= 120 and ver &lt; (12, 8):
+            print(f&quot;[warn] sm_{CUDA_ARCH} needs CUDA 12.8 or newer and this is &quot;
+                  f&quot;{ver[0]}.{ver[1]}. The build will probably fail.&quot;)
     print(&quot;[build] installing build deps...&quot;)
     sh(&quot;apt-get -qq update &amp;&amp; apt-get -qq install -y build-essential cmake git ccache&quot;,
        check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -1115,47 +1174,162 @@ def build_from_source():
         sh([&quot;git&quot;, &quot;clone&quot;, &quot;--depth&quot;, &quot;1&quot;,
             &quot;https://github.com/ggml-org/llama.cpp&quot;, LLAMA_SRC], check=True)
 
-    # nvcc must know the card. Blackwell is sm_120 and needs CUDA 12.8+; on an
-    # older toolkit this dies deep in a compile log nobody reads.
-    try:
-        nvcc = subprocess.check_output([&quot;nvcc&quot;, &quot;--version&quot;], text=True)
-        v = re.search(r&quot;release (\d+)\.(\d+)&quot;, nvcc)
-        if v:
-            major, minor = int(v.group(1)), int(v.group(2))
-            print(f&quot;[build] CUDA toolkit {major}.{minor}&quot;)
-            if int(CUDA_ARCH) &gt;= 120 and (major, minor) &lt; (12, 8):
-                print(f&quot;[warn] sm_{CUDA_ARCH} needs CUDA 12.8 or newer; this is &quot;
-                      f&quot;{major}.{minor}. Expect the build to fail — use a runtime &quot;
-                      f&quot;with a newer toolkit.&quot;)
-    except Exception:
-        print(&quot;[warn] nvcc not found — is the CUDA toolkit installed?&quot;)
-
     build = os.path.join(LLAMA_SRC, &quot;build&quot;)
+    toolkit_root = os.path.dirname(os.path.dirname(nvcc))
     print(f&quot;[build] compiling for sm_{CUDA_ARCH} (5-15 min, cached afterwards)...&quot;)
     sh([&quot;cmake&quot;, &quot;-S&quot;, LLAMA_SRC, &quot;-B&quot;, build, &quot;-DGGML_CUDA=ON&quot;,
-        f&quot;-DCMAKE_CUDA_ARCHITECTURES={CUDA_ARCH}&quot;, &quot;-DLLAMA_CURL=OFF&quot;,
-        &quot;-DCMAKE_BUILD_TYPE=Release&quot;], check=True)
+        f&quot;-DCMAKE_CUDA_ARCHITECTURES={CUDA_ARCH}&quot;,
+        f&quot;-DCMAKE_CUDA_COMPILER={nvcc}&quot;,
+        f&quot;-DCUDAToolkit_ROOT={toolkit_root}&quot;,
+        &quot;-DLLAMA_CURL=OFF&quot;, &quot;-DCMAKE_BUILD_TYPE=Release&quot;], check=True)
     sh([&quot;cmake&quot;, &quot;--build&quot;, build, &quot;--config&quot;, &quot;Release&quot;,
         &quot;-j&quot;, str(os.cpu_count() or 4), &quot;--target&quot;, &quot;llama-server&quot;], check=True)
     built = os.path.join(build, &quot;bin&quot;, &quot;llama-server&quot;)
     if not os.path.exists(built):
-        raise RuntimeError(&quot;Build finished but llama-server is missing — see the log above.&quot;)
-    os.makedirs(BIN_DIR, exist_ok=True)
-    for f in os.listdir(os.path.dirname(built)):
-        s = os.path.join(os.path.dirname(built), f)
-        if os.path.isfile(s):
-            shutil.copy2(s, os.path.join(BIN_DIR, f))
-    os.chmod(SERVER_BIN, 0o755)
+        raise RuntimeError(&quot;Build finished but llama-server is missing — see the log.&quot;)
+    if not _install_binary(os.path.dirname(built)):
+        raise RuntimeError(&quot;Built llama-server will not run here.&quot;)
     print(f&quot;[build] ok: {SERVER_BIN}&quot;)
-    return SERVER_BIN
+    return &quot;cuda&quot;
+
+
+# -------------------------------------------------------------------- Vulkan
+def vulkan_device_kind():
+    &quot;&quot;&quot;Which Vulkan drivers are actually installed: &#x27;nvidia&#x27;, &#x27;software&#x27;, or None.
+
+    Read from the ICD manifests rather than by running anything, because
+    vulkaninfo is usually not present. This is the check whose absence made
+    v7 look healthy while it ran on the CPU.&quot;&quot;&quot;
+    icds = []
+    for d in (&quot;/usr/share/vulkan/icd.d&quot;, &quot;/etc/vulkan/icd.d&quot;,
+              &quot;/usr/local/share/vulkan/icd.d&quot;):
+        icds += glob.glob(os.path.join(d, &quot;*.json&quot;))
+    names = &quot; &quot;.join(os.path.basename(i).lower() for i in icds)
+    if not icds:
+        return None
+    if &quot;nvidia&quot; in names:
+        return &quot;nvidia&quot;
+    if &quot;lvp&quot; in names or &quot;lavapipe&quot; in names or &quot;swrast&quot; in names:
+        return &quot;software&quot;
+    return &quot;other&quot;
+
+
+def try_prebuilt(kind):
+    &quot;&quot;&quot;Fetch a published llama.cpp binary. kind is &#x27;cuda&#x27; or &#x27;vulkan&#x27;.
+
+    There may well be no CUDA asset for Linux — that is not an error, it just
+    means we compile instead.&quot;&quot;&quot;
+    machine = platform.machine().lower()
+    if machine not in (&quot;x86_64&quot;, &quot;amd64&quot;):
+        return None
+    url = &quot;https://api.github.com/repos/ggml-org/llama.cpp/releases/latest&quot;
+    req = urllib.request.Request(url, headers={&quot;User-Agent&quot;: &quot;corx-heretic&quot;})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            rel = json.load(r)
+    except Exception as e:
+        print(f&quot;[build] could not read release info ({type(e).__name__})&quot;)
+        return None
+
+    for a in rel.get(&quot;assets&quot;, []):
+        n = a[&quot;name&quot;].lower()
+        if not ((&quot;ubuntu&quot; in n or &quot;linux&quot; in n) and kind in n
+                and (&quot;x64&quot; in n or &quot;amd64&quot; in n)
+                and (n.endswith(&quot;.tar.gz&quot;) or n.endswith(&quot;.zip&quot;))):
+            continue
+        print(f&quot;[build] downloading prebuilt {kind} binary ({a[&#x27;name&#x27;]})...&quot;)
+        try:
+            dl = os.path.join(&quot;/tmp&quot;, a[&quot;name&quot;])
+            urllib.request.urlretrieve(a[&quot;browser_download_url&quot;], dl)
+            ex = f&quot;/tmp/llama-{kind}-extract&quot;
+            shutil.rmtree(ex, ignore_errors=True)
+            os.makedirs(ex, exist_ok=True)
+            if dl.endswith(&quot;.zip&quot;):
+                with zipfile.ZipFile(dl) as zf:
+                    zf.extractall(ex)
+            else:
+                with tarfile.open(dl, &quot;r:gz&quot;) as tf:
+                    tf.extractall(ex)
+            found = glob.glob(os.path.join(ex, &quot;**&quot;, &quot;llama-server&quot;), recursive=True)
+            if found and _install_binary(os.path.dirname(found[0])):
+                print(f&quot;[build] using prebuilt {kind} binary.&quot;)
+                return kind
+            print(&quot;[build] that archive would not run here.&quot;)
+        except Exception as e:
+            print(f&quot;[build] prebuilt fetch failed ({type(e).__name__}: {e})&quot;)
+        return None
+    print(f&quot;[build] no {kind} binary published for Linux x64.&quot;)
+    return None
+
+
+# ---------------------------------------------------------------- the decision
+def acquire_backend():
+    if BACKEND in (&quot;cuda&quot;, &quot;vulkan&quot;):
+        print(f&quot;[build] BACKEND is pinned to {BACKEND}.&quot;)
+
+    want_cuda = BACKEND in (&quot;auto&quot;, &quot;cuda&quot;)
+    want_vulkan = BACKEND in (&quot;auto&quot;, &quot;vulkan&quot;)
+
+    # 1. A toolkit is already here: compile, which is the fastest option to run.
+    if want_cuda:
+        nvcc = find_nvcc()
+        if nvcc:
+            return build_cuda(nvcc)
+        print(&quot;[build] no nvcc on this machine — the driver is here, the CUDA &quot;
+              &quot;toolkit is not.&quot;)
+        got = try_prebuilt(&quot;cuda&quot;)
+        if got:
+            return got
+
+    # 2. Vulkan, but only against the real driver. Software Vulkan is the trap
+    #    that makes a 27B look broken, so it is refused outright here.
+    if want_vulkan:
+        kind = vulkan_device_kind()
+        if kind is None and BACKEND == &quot;vulkan&quot;:
+            print(&quot;[build] no Vulkan driver installed; installing libvulkan1 &quot;
+                  &quot;(NOT mesa, which is the software one)...&quot;)
+            sh(&quot;apt-get -qq update &amp;&amp; apt-get -qq install -y libvulkan1&quot;,
+               check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            kind = vulkan_device_kind()
+        if kind == &quot;nvidia&quot;:
+            print(&quot;[build] real NVIDIA Vulkan driver found — using the Vulkan &quot;
+                  &quot;build, no toolkit needed. Somewhat slower than CUDA, but it &quot;
+                  &quot;is a genuine GPU path.&quot;)
+            got = try_prebuilt(&quot;vulkan&quot;)
+            if got:
+                return got
+        elif kind == &quot;software&quot;:
+            print(&quot;[build] the only Vulkan driver here is a software one &quot;
+                  &quot;(lavapipe). Refusing it: that runs the model on the CPU while &quot;
+                  &quot;reporting layers offloaded to GPU.&quot;)
+        elif kind is not None:
+            print(f&quot;[build] Vulkan drivers present but not NVIDIA ({kind}); skipping.&quot;)
+
+    # 3. Nothing free left. Install a toolkit and compile.
+    if want_cuda and INSTALL_CUDA_TOOLKIT:
+        print(&quot;[cuda] no GPU backend available yet — installing a CUDA toolkit.&quot;)
+        nvcc = install_cuda_toolkit()
+        if nvcc:
+            return build_cuda(nvcc)
+
+    raise RuntimeError(
+        &quot;No GPU backend could be set up.\n&quot;
+        &quot;  - nvcc was not found, so llama.cpp cannot be compiled for CUDA.\n&quot;
+        &quot;  - no prebuilt CUDA binary is published for Linux.\n&quot;
+        f&quot;  - Vulkan: {vulkan_device_kind() or &#x27;no driver installed&#x27;}.\n&quot;
+        &quot;Fix one of these and re-run:\n&quot;
+        &quot;  * use a runtime image that includes the CUDA toolkit (nvcc), or\n&quot;
+        &quot;  * run as root so this cell can install it (INSTALL_CUDA_TOOLKIT), or\n&quot;
+        &quot;  * install the NVIDIA Vulkan driver, then set BACKEND = \&quot;vulkan\&quot;.\n&quot;
+        &quot;Do not work around this by letting it run on the CPU — a 27B there is &quot;
+        &quot;minutes per reply.&quot;)
 
 
 if _works(SERVER_BIN):
     print(f&quot;[build] llama-server already here: {SERVER_BIN}&quot;)
+    BACKEND_USED = &quot;existing&quot;
 else:
-    if try_prebuilt_cuda() is None:
-        build_from_source()
-
+    BACKEND_USED = acquire_backend()
 
 # ---------------- FIND AND FETCH THE RIGHT GGUF ----------------
 _SPLIT_RE = re.compile(r&quot;^(?P&lt;stem&gt;.+)-(?P&lt;idx&gt;\d{5})-of-(?P&lt;tot&gt;\d{5})\.gguf$&quot;, re.I)
@@ -1421,7 +1595,8 @@ def check_auth(request: Request):
 
 @app.get(&quot;/health&quot;)
 async def health():
-    return {&quot;status&quot;: &quot;ok&quot;, &quot;model&quot;: MODEL_ID, &quot;backend&quot;: &quot;llama.cpp&quot;,
+    return {&quot;status&quot;: &quot;ok&quot;, &quot;model&quot;: MODEL_ID,
+            &quot;backend&quot;: f&quot;llama.cpp/{BACKEND_USED}&quot;,
             &quot;precision&quot;: stem, &quot;device&quot;: DEVICE_INFO[&quot;device&quot;] or &quot;cuda&quot;,
             &quot;gpu_layers&quot;: DEVICE_INFO[&quot;offloaded&quot;], &quot;tokens_per_sec&quot;: round(TOK_S, 1),
             &quot;ctx&quot;: CTX, &quot;busy&quot;: _inflight[0] &gt; 0}
@@ -1570,7 +1745,8 @@ if PUBLIC_URL:
     print(f&quot; Health     : {PUBLIC_URL}/health&quot;)
     print(f&quot; Auth       : {&#x27;NONE (open)&#x27; if NO_AUTH else &#x27;Bearer &#x27; + API_KEY}&quot;)
     print(f&quot; Model      : {MODEL_ID}   ({stem})&quot;)
-    print(f&quot; Device     : {DEVICE_INFO[&#x27;device&#x27;] or &#x27;CUDA&#x27;}&quot;
+    print(f&quot; Backend    : llama.cpp / {BACKEND_USED}&quot;)
+    print(f&quot; Device     : {DEVICE_INFO[&#x27;device&#x27;] or BACKEND_USED}&quot;
           + (f&quot; — {DEVICE_INFO[&#x27;offloaded&#x27;]}/{DEVICE_INFO[&#x27;layers&#x27;]} layers on GPU&quot;
              if DEVICE_INFO[&quot;offloaded&quot;] is not None else &quot;&quot;))
     print(f&quot; Speed      : ~{TOK_S:.1f} tokens/sec, {CTX} ctx&quot;)
@@ -1635,12 +1811,27 @@ while True:
           picks up <code>lavapipe</code>, a software rasteriser, so <code>-ngl 999</code> reports
           &ldquo;63/63 layers offloaded to GPU&rdquo; and then generates at a few seconds per token.
           A 27B is unusable there, and the front end can only report the silence.</p>
-        <p style="margin-top:10px">This cell will not let that happen quietly. It is
-          <strong>CUDA-first</strong>, it reads the startup log for the device it actually got, and
-          it <strong>refuses to hand you a URL</strong> if the model landed on the CPU. Before
-          printing the address it runs a warm-up generation and tells you the measured
-          <strong>tokens/sec</strong> — so you know it is fast enough without finding out in the
-          chat. Set <code>REQUIRE_GPU = False</code> if you want it to serve anyway.</p>
+        <p style="margin-top:10px">This cell will not let that happen quietly. It reads the startup
+          log for the device it actually got and <strong>refuses to hand you a URL</strong> if the
+          model landed on the CPU. Before printing the address it runs a warm-up generation and tells
+          you the measured <strong>tokens/sec</strong> — so you know it is fast enough without
+          finding out in the chat. Set <code>REQUIRE_GPU = False</code> if you want it to serve
+          anyway.</p>
+        <p style="margin-top:10px"><strong>If it said &ldquo;CUDA Toolkit not found&rdquo;</strong>,
+          that is the opposite problem and just as common: a notebook container ships the NVIDIA
+          <em>driver</em> but no <em>toolkit</em>, so <code>nvidia-smi</code> works,
+          <code>nvcc</code> does not exist, and there is nothing to compile with. No pip wheel fixes
+          it either &mdash; <code>nvidia-cuda-nvcc-cu12</code> contains <code>ptxas</code> and
+          <code>nvvm</code> only, not <code>nvcc</code>.</p>
+        <p style="margin-top:10px">So getting a backend is a <strong>ladder</strong>, and the cell
+          walks it for you: compile with CUDA if <code>nvcc</code> is already there; else use a
+          prebuilt CUDA binary if one is published; else use the <strong>real NVIDIA Vulkan
+          driver</strong> if it is installed, which is a genuine GPU path needing no toolkit at all;
+          else install about 1&nbsp;GB of CUDA from NVIDIA&rsquo;s own apt repo and compile. A
+          software Vulkan device is refused at every rung. If none of it is possible it stops with a
+          list of what to change &mdash; it will never quietly serve from the CPU. Pin a rung with
+          <code>BACKEND = "cuda"</code> or <code>"vulkan"</code>, and set
+          <code>INSTALL_CUDA_TOOLKIT = False</code> to be told rather than fixed.</p>
         <p style="margin-top:10px">The chat helps from its side too: when your own server misses the
           window it asks <code>/health</code> — which answers instantly even while generation crawls
           — and tells you which problem you have, a dead tunnel URL or a model on the wrong device,
