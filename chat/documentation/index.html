@@ -896,8 +896,35 @@ while True:
         <pre class="server-code"><code id="heretic-code">&quot;&quot;&quot;
 ================================================================
  CorX3.8-27B &quot;HERETIC&quot; — uncensored API server
- Build 11 — molab (marimo cloud notebook), RTX PRO 6000 Blackwell
+ Build 12 — molab (marimo cloud notebook), RTX PRO 6000 Blackwell
  CorX Labs / Nathan
+
+ ---- what build 11 got wrong ----
+
+ * &quot;The source directory /marimo/llama.cpp does not appear to
+   contain CMakeLists.txt&quot;. clone_llama() asked the wrong question:
+   `if not os.path.isdir(LLAMA_SRC)`. build_vulkan() calls it first,
+   and when that clone failed it left an empty directory behind — so
+   the CUDA build that followed saw a directory, skipped cloning,
+   and handed cmake an empty folder. It now tests for CMakeLists.txt
+   (the file that proves a checkout), deletes anything incomplete,
+   retries three times, and leaves nothing behind when it gives up,
+   so a failed run cannot poison the next one.
+
+ * One failing rung killed the whole cell. A CUDA build that threw
+   ended the run even though the NVIDIA Vulkan driver was sitting
+   right there unused. Every rung is now attempted independently;
+   only an exhausted ladder is fatal, and it then reports each
+   reason it collected.
+
+ * A stale CMakeCache.txt from an earlier, different configure
+   poisons every later one with a message that is not obviously
+   about the cache. A failed configure now wipes the build
+   directory and tries once more.
+
+ * If nvcc rejects the host compiler as too new (&quot;unsupported GNU
+   version&quot;), the build retries with an older g++ instead of
+   stopping.
 
  ---- what build 10 got wrong ----
 
@@ -1512,44 +1539,117 @@ def install_cuda_toolkit():
 
 # -------------------------------------------------------------------- builds
 def clone_llama():
+    &quot;&quot;&quot;Get a llama.cpp source tree, and be certain it is actually a source tree.
+
+    This is what broke build 10. The check was `if not os.path.isdir(LLAMA_SRC)`,
+    which is not the same question. build_vulkan() calls this first; when its
+    clone failed it left an empty /marimo/llama.cpp behind, and the CUDA build
+    that followed saw a directory, skipped the clone, and handed cmake a folder
+    with nothing in it — &quot;does not appear to contain CMakeLists.txt&quot;. Test for
+    the file that proves the checkout, not for the directory.&quot;&quot;&quot;
     apt([&quot;build-essential&quot;, &quot;cmake&quot;, &quot;git&quot;, &quot;ccache&quot;, &quot;pkg-config&quot;])
     if not shutil.which(&quot;cmake&quot;):
         raise RuntimeError(&quot;cmake is not installed and could not be installed &quot;
                            &quot;(root=%s). Nothing can be compiled here.&quot; % IS_ROOT)
-    if not os.path.isdir(LLAMA_SRC):
-        print(&quot;[build] cloning llama.cpp...&quot;)
-        sh([&quot;git&quot;, &quot;clone&quot;, &quot;--depth&quot;, &quot;1&quot;,
-            &quot;https://github.com/ggml-org/llama.cpp&quot;, LLAMA_SRC], check=True)
+    if not shutil.which(&quot;git&quot;):
+        raise RuntimeError(&quot;git is not installed and could not be installed &quot;
+                           &quot;(root=%s).&quot; % IS_ROOT)
 
+    marker = os.path.join(LLAMA_SRC, &quot;CMakeLists.txt&quot;)
+    if os.path.isfile(marker):
+        return
 
-def _run_loud(cmd, what):
-    &quot;&quot;&quot;Run a build step and, on failure, print the tail of its output.
-
-    build 9 raised a bare CalledProcessError whose message was just the argv,
-    so the real cause (a missing SPIRV-Headers package) was only visible by
-    scrolling the cell. Never hide the reason a build died.&quot;&quot;&quot;
-    r = subprocess.run(cmd, capture_output=True, text=True)
-    if r.returncode != 0:
-        tail = ((r.stdout or &quot;&quot;) + (r.stderr or &quot;&quot;)).strip().splitlines()[-30:]
-        print(f&quot;[build] {what} failed (exit {r.returncode}):&quot;)
+    tail = []
+    for attempt in range(3):
+        if os.path.exists(LLAMA_SRC):
+            print(&quot;[build] llama.cpp checkout is incomplete — removing and re-cloning.&quot;)
+            shutil.rmtree(LLAMA_SRC, ignore_errors=True)
+        print(f&quot;[build] cloning llama.cpp (attempt {attempt + 1}/3)...&quot;)
+        r = sh([&quot;git&quot;, &quot;clone&quot;, &quot;--depth&quot;, &quot;1&quot;,
+                &quot;https://github.com/ggml-org/llama.cpp&quot;, LLAMA_SRC],
+               check=False, capture_output=True, text=True)
+        if os.path.isfile(marker):
+            return
+        tail = ((r.stdout or &quot;&quot;) + (r.stderr or &quot;&quot;)).strip().splitlines()[-4:]
         for l in tail:
             print(&quot;        &quot; + l[:160])
-        raise subprocess.CalledProcessError(r.returncode, cmd)
-    return r
+        time.sleep(2 * (attempt + 1))
+
+    # Leave nothing behind: a half-cloned directory here is exactly what made
+    # the *next* build skip cloning and fail on a missing CMakeLists.txt.
+    shutil.rmtree(LLAMA_SRC, ignore_errors=True)
+    raise RuntimeError(
+        &quot;Could not clone llama.cpp after 3 attempts. Last output: &quot;
+        + (&quot; | &quot;.join(tail) if tail else &quot;(none)&quot;))
+
+
+def _run_capture(cmd):
+    &quot;&quot;&quot;Run and hand back (returncode, combined output). Never hide the reason a
+    build died — build 9 raised a bare CalledProcessError whose message was just
+    the argv, so the real cause was only visible by scrolling the cell.&quot;&quot;&quot;
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    return r.returncode, (r.stdout or &quot;&quot;) + (r.stderr or &quot;&quot;)
+
+
+def _print_tail(what, rc, out, n=30):
+    print(f&quot;[build] {what} failed (exit {rc}):&quot;)
+    for l in out.strip().splitlines()[-n:]:
+        print(&quot;        &quot; + l[:160])
 
 
 def cmake_build(build_dir, flags):
-    _run_loud([&quot;cmake&quot;, &quot;-S&quot;, LLAMA_SRC, &quot;-B&quot;, build_dir] + flags +
-              [&quot;-DLLAMA_CURL=OFF&quot;, &quot;-DCMAKE_BUILD_TYPE=Release&quot;], &quot;cmake configure&quot;)
-    _run_loud([&quot;cmake&quot;, &quot;--build&quot;, build_dir, &quot;--config&quot;, &quot;Release&quot;,
-               &quot;-j&quot;, str(os.cpu_count() or 4), &quot;--target&quot;, &quot;llama-server&quot;],
-              &quot;cmake build&quot;)
+    base = [&quot;-DLLAMA_CURL=OFF&quot;, &quot;-DCMAKE_BUILD_TYPE=Release&quot;]
+    rc, out = _run_capture([&quot;cmake&quot;, &quot;-S&quot;, LLAMA_SRC, &quot;-B&quot;, build_dir] + flags + base)
+    if rc != 0:
+        # A CMakeCache.txt from an earlier, different configure (different source
+        # path or compiler) poisons every later one, and the message for that is
+        # not obviously about the cache. Wipe and try once more before believing
+        # the failure is real.
+        print(&quot;[build] configure failed — clearing the build directory and retrying.&quot;)
+        shutil.rmtree(build_dir, ignore_errors=True)
+        rc, out = _run_capture([&quot;cmake&quot;, &quot;-S&quot;, LLAMA_SRC, &quot;-B&quot;, build_dir] + flags + base)
+    if rc != 0:
+        _print_tail(&quot;cmake configure&quot;, rc, out)
+        raise RuntimeError(f&quot;cmake configure failed: {_short_reason(out)}&quot;)
+
+    rc, out = _run_capture([&quot;cmake&quot;, &quot;--build&quot;, build_dir, &quot;--config&quot;, &quot;Release&quot;,
+                            &quot;-j&quot;, str(os.cpu_count() or 4), &quot;--target&quot;, &quot;llama-server&quot;])
+    if rc != 0:
+        _print_tail(&quot;cmake build&quot;, rc, out)
+        raise RuntimeError(f&quot;cmake build failed: {_short_reason(out)}&quot;)
+
     built = os.path.join(build_dir, &quot;bin&quot;, &quot;llama-server&quot;)
     if not os.path.exists(built):
         raise RuntimeError(&quot;Build finished but llama-server is missing — see the log.&quot;)
     if not _install_binary(os.path.dirname(built)):
         raise RuntimeError(&quot;Built llama-server will not run here.&quot;)
     return built
+
+
+def _short_reason(out):
+    &quot;&quot;&quot;The one line worth putting in an exception message.&quot;&quot;&quot;
+    for l in out.strip().splitlines():
+        s = l.strip()
+        if s.startswith((&quot;CMake Error&quot;, &quot;error:&quot;, &quot;fatal error:&quot;)) or &quot;unsupported&quot; in s:
+            return s[:200]
+    tail = out.strip().splitlines()
+    return tail[-1][:200] if tail else &quot;no output&quot;
+
+
+def _older_gcc():
+    &quot;&quot;&quot;A host compiler nvcc will accept, if the default one is too new.
+
+    CUDA pins the maximum supported GCC; Debian 13 ships a newer one than some
+    toolkits allow, and nvcc then stops with &quot;unsupported GNU version&quot;.&quot;&quot;&quot;
+    for v in (&quot;14&quot;, &quot;13&quot;, &quot;12&quot;, &quot;11&quot;):
+        exe = shutil.which(f&quot;g++-{v}&quot;)
+        if exe:
+            return exe
+        if apt_has(f&quot;g++-{v}&quot;) and apt([f&quot;g++-{v}&quot;]):
+            exe = shutil.which(f&quot;g++-{v}&quot;)
+            if exe:
+                return exe
+    return None
 
 
 def build_cuda(nvcc):
@@ -1561,12 +1661,24 @@ def build_cuda(nvcc):
                   f&quot;{ver[0]}.{ver[1]}. The build will probably fail.&quot;)
     clone_llama()
     toolkit_root = os.path.dirname(os.path.dirname(nvcc))
+    flags = [&quot;-DGGML_CUDA=ON&quot;,
+             f&quot;-DCMAKE_CUDA_ARCHITECTURES={CUDA_ARCH}&quot;,
+             f&quot;-DCMAKE_CUDA_COMPILER={nvcc}&quot;,
+             f&quot;-DCUDAToolkit_ROOT={toolkit_root}&quot;]
     print(f&quot;[build] compiling for sm_{CUDA_ARCH} (5-15 min, cached afterwards)...&quot;)
-    cmake_build(os.path.join(LLAMA_SRC, &quot;build-cuda&quot;),
-                [&quot;-DGGML_CUDA=ON&quot;,
-                 f&quot;-DCMAKE_CUDA_ARCHITECTURES={CUDA_ARCH}&quot;,
-                 f&quot;-DCMAKE_CUDA_COMPILER={nvcc}&quot;,
-                 f&quot;-DCUDAToolkit_ROOT={toolkit_root}&quot;])
+    try:
+        cmake_build(os.path.join(LLAMA_SRC, &quot;build-cuda&quot;), flags)
+    except RuntimeError as e:
+        # The one CUDA failure worth a second attempt: a host compiler newer than
+        # this toolkit accepts. Everything else is reported as-is.
+        if &quot;unsupported GNU version&quot; not in str(e) and &quot;unsupported&quot; not in str(e).lower():
+            raise
+        gxx = _older_gcc()
+        if not gxx:
+            raise
+        print(f&quot;[build] host compiler rejected by nvcc — retrying with {gxx}&quot;)
+        cmake_build(os.path.join(LLAMA_SRC, &quot;build-cuda&quot;),
+                    flags + [f&quot;-DCMAKE_CUDA_HOST_COMPILER={gxx}&quot;])
     print(f&quot;[build] ok: {SERVER_BIN}&quot;)
     return &quot;cuda&quot;
 
@@ -1729,15 +1841,29 @@ def acquire_backend():
         print(f&quot;[build] BACKEND is pinned to {BACKEND}.&quot;)
     want_cuda = BACKEND in (&quot;auto&quot;, &quot;cuda&quot;)
     want_vulkan = BACKEND in (&quot;auto&quot;, &quot;vulkan&quot;)
+    failures = []
+
+    def attempt(label, fn):
+        &quot;&quot;&quot;A rung that fails must not kill the run — the next one may work.
+        Only an exhausted ladder is fatal, and then we report every reason.&quot;&quot;&quot;
+        try:
+            return fn()
+        except Exception as e:
+            print(f&quot;[build] {label} failed: {e}&quot;)
+            failures.append(f&quot;{label}: {e}&quot;)
+            return None
 
     # 1. Toolkit already present: compile CUDA, the fastest thing to run.
     if want_cuda:
         nvcc = find_nvcc()
         if nvcc:
-            return build_cuda(nvcc)
-        print(&quot;[build] no nvcc here — the driver is installed, the CUDA toolkit &quot;
-              &quot;is not.&quot;)
-        got = try_prebuilt(&quot;cuda&quot;)
+            got = attempt(&quot;CUDA build&quot;, lambda: build_cuda(nvcc))
+            if got:
+                return got
+        else:
+            print(&quot;[build] no nvcc here — the driver is installed, the CUDA &quot;
+                  &quot;toolkit is not.&quot;)
+        got = attempt(&quot;prebuilt CUDA&quot;, lambda: try_prebuilt(&quot;cuda&quot;))
         if got:
             return got
 
@@ -1752,10 +1878,10 @@ def acquire_backend():
         if kind == &quot;nvidia&quot;:
             print(&quot;[build] real NVIDIA Vulkan driver found — a genuine GPU path, &quot;
                   &quot;somewhat slower than CUDA.&quot;)
-            got = try_prebuilt(&quot;vulkan&quot;)
+            got = attempt(&quot;prebuilt Vulkan&quot;, lambda: try_prebuilt(&quot;vulkan&quot;))
             if got:
                 return got
-            got = build_vulkan()      # the fallback build 8 was missing
+            got = attempt(&quot;Vulkan build&quot;, build_vulkan)
             if got:
                 return got
         elif kind == &quot;software&quot;:
@@ -1766,18 +1892,21 @@ def acquire_backend():
             print(f&quot;[build] Vulkan drivers present but not NVIDIA ({kind}); skipping.&quot;)
 
     # 3. Nothing free left. Pay for a toolkit and compile.
-    if want_cuda and INSTALL_CUDA_TOOLKIT:
+    if want_cuda and INSTALL_CUDA_TOOLKIT and not find_nvcc():
         print(&quot;[cuda] no GPU backend yet — installing a CUDA toolkit.&quot;)
         nvcc = install_cuda_toolkit()
         if nvcc:
-            return build_cuda(nvcc)
+            got = attempt(&quot;CUDA build (fresh toolkit)&quot;, lambda: build_cuda(nvcc))
+            if got:
+                return got
 
     raise RuntimeError(
         &quot;No GPU backend could be set up.\n&quot;
         f&quot;  - nvcc: {find_nvcc() or &#x27;not found&#x27;}\n&quot;
         f&quot;  - Vulkan ICD: {vulkan_device_kind() or &#x27;no driver installed&#x27;}\n&quot;
         f&quot;  - root: {IS_ROOT}\n&quot;
-        &quot;Fix one of these and re-run:\n&quot;
+        + (&quot;What was tried:\n&quot; + &quot;&quot;.join(f&quot;  - {f}\n&quot; for f in failures) if failures else &quot;&quot;)
+        + &quot;Fix one of these and re-run:\n&quot;
         &quot;  * install glslc + libvulkan-dev so the Vulkan build can compile, or\n&quot;
         &quot;  * use a runtime image that ships the CUDA toolkit (nvcc), or\n&quot;
         &quot;  * run as root so this cell can install one.\n&quot;
