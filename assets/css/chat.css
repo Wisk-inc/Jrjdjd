@@ -106,6 +106,20 @@
   font-size: .92rem; color: var(--paper); background: var(--espresso);
 }
 
+/* Split mode: two models in one thread. Give the partner its own colour and a
+   rule down the left so a hand-off is readable at a glance, and print each
+   one's model next to its name — the whole point is seeing who said what. */
+.msg .who-model {
+  font-weight: 500; font-size: .72rem; color: var(--faint);
+  font-family: var(--mono); padding: 1px 6px; border-radius: 999px;
+  border: 1px solid var(--line); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; max-width: 40vw;
+}
+.msg-partner .avatar { background: #3f6f8d; }
+.msg-partner .who { color: #3f6f8d; }
+.msg-partner { border-left: 2px solid rgba(63, 111, 141, .32); padding-left: 12px; }
+.msg-lead .avatar { background: var(--espresso); }
+
 .bubble { font-size: .97rem; line-height: 1.7; color: var(--ink); overflow-wrap: anywhere; }
 .msg-assistant .bubble { padding-left: 32px; }   /* align under the avatar+name */
 

@@ -310,6 +310,42 @@
       <small>Pick a suggested model, or type any model id this provider supports.</small>
     </div>
 
+    <hr class="rule" style="margin:22px 0 4px">
+    <h3 id="split" style="font-family:var(--sans);font-size:.95rem;font-weight:600;margin-bottom:4px">Split mode</h3>
+    <p style="margin-top:0">Bring a second model into the chat as a colleague. It shares the same
+      sandbox and the same <code>/work</code> files, has every tool the first one has, and the two of
+      them hand work over, ask each other questions and review each other in front of you. Useful
+      when a job really has two halves; overkill for a one-liner.</p>
+
+    <div class="row-between">
+      <span>Work as a team of two</span>
+      <button class="toggle" type="button" id="split-toggle" role="switch" aria-checked="false"><i></i></button>
+    </div>
+
+    <div id="split-fields" hidden>
+      <div class="field">
+        <label for="split-provider">Second model&rsquo;s provider</label>
+        <select id="split-provider"></select>
+        <small>It can run on a different provider from the first — a big local model leading, a fast
+          hosted one doing the legwork, for instance. It uses the key you saved for that provider.</small>
+      </div>
+      <div class="field">
+        <label for="split-model">Second model</label>
+        <input id="split-model" type="text" spellcheck="false" autocomplete="off" list="split-model-list" placeholder="model id">
+        <datalist id="split-model-list"></datalist>
+      </div>
+      <div class="gh-manual-row">
+        <div class="field" style="flex:1;min-width:0">
+          <label for="split-lead-name">Leader&rsquo;s name</label>
+          <input id="split-lead-name" type="text" spellcheck="false" placeholder="Lead" maxlength="18">
+        </div>
+        <div class="field" style="flex:1;min-width:0">
+          <label for="split-name">Partner&rsquo;s name</label>
+          <input id="split-name" type="text" spellcheck="false" placeholder="Partner" maxlength="18">
+        </div>
+      </div>
+    </div>
+
     <div class="sheet-actions">
       <button class="btn btn-ghost btn-sm" type="button" id="cancel-settings">Cancel</button>
       <button class="btn btn-primary btn-sm" type="button" id="save-settings">Save</button>
