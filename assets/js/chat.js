@@ -18,6 +18,7 @@
    ========================================================================== */
 
 import * as sandbox from '/assets/js/sandbox.js';
+import * as skills from '/assets/js/skills.js';
 
 const DEFAULTS = {
   // The current CorX3.8 endpoint. The quick-tunnel URL changes whenever the
@@ -349,6 +350,8 @@ COMMANDS YOU CAN RUN RIGHT NOW — your full toolset, from the first message of 
 - fetch_url {"url"} — read a page's real content, including code on it. Use after web_search on the best result.
 - find_image {"query": "...", "n": 3} — find real pictures and show them to the user inline. Use it whenever a picture would help: a character, an animal, a place, a flag, a person, an object, a landmark. The images appear in the chat automatically, so just describe them afterwards.
 - search_memory {"query"} — search the user's other saved chats for detail.
+- list_skills {} / load_skill {"name":"pdf"} — written guides for specific jobs, pulled in when the task needs one. Load one BEFORE starting that kind of work, not after. Available:
+${skills.catalogue()}
 ${splitTools}
 ${githubTools}
 Rules:
@@ -713,6 +716,7 @@ const TOOL_LABEL = {
   list_files: 'Listing files', install_packages: 'Installing', deliver_file: 'Delivering',
   web_search: 'Searching the web', fetch_url: 'Reading a page', search_memory: 'Recalling memory',
   find_image: 'Finding images',
+  list_skills: 'Skills', load_skill: 'Loading a skill',
   assign_partner: 'Handing off', ask_partner: 'Asking partner', review_by_partner: 'Requesting review',
   make_zip: 'Zipping', unzip: 'Extracting', convert_file: 'Converting',
   inspect_file: 'Inspecting', list_formats: 'Formats', clear_workspace: 'Clearing files',
@@ -1186,6 +1190,22 @@ async function execTool(name, args, conv, meta = {}) {
     case 'list_formats': {
       const r = await sandbox.formatSupport();
       return r.ok ? r.output : r.output;
+    }
+    case 'list_skills':
+      return skills.describe();
+    case 'load_skill': {
+      noteActivity('terminal');
+      termLine('cmd', `load skill ${args.name}`);
+      const text = await skills.load(args.name, async (url) => {
+        const res = await fetchWithTimeout('/api/fetch', {
+          method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ url, method: 'GET' })
+        }, 20000);
+        const data = await res.json();
+        return { ok: !data.error && data.status < 400, status: data.status, body: data.body };
+      });
+      termLine('ok', `loaded ${args.name}`);
+      return text;
     }
     case 'assign_partner':
       return runPartner(conv, args.task || args.work || args.brief, 'task');
