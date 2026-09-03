@@ -1080,7 +1080,9 @@ INSTALL_CUDA_TOOLKIT = True   # may this cell apt-get a toolkit as a last resort
 NO_AUTH = True
 API_KEY = &quot;corx-key&quot;
 LOAD_TIMEOUT = 1800           # seconds to wait for weights to load
-BLOCK_CELL = False            # True = old behaviour, cell never completes
+# The server runs in a DETACHED process, so the cell always finishes and the
+# notebook stays usable. Set True to tear the running one down and start over.
+RESTART_RUNNER = False
 MIN_FREE_GB = 5               # headroom to leave on the disk after download
 # ════════════════════════════════════════════════════════════════
 
@@ -2063,39 +2065,93 @@ print(f&quot;[model] {sum(os.path.getsize(p) for p in local_paths) / 1e9:.1f} GB
       f&quot;{MODEL_PATH}&quot;)
 
 
-# ---------------- START llama-server ----------------
-llama_cmd = [
-    SERVER_BIN, &quot;-m&quot;, MODEL_PATH,
-    &quot;--host&quot;, &quot;127.0.0.1&quot;, &quot;--port&quot;, str(LLAMA_PORT),
-    &quot;-ngl&quot;, &quot;999&quot;,                 # every layer on the GPU
-    &quot;-c&quot;, str(CTX),
-    &quot;--jinja&quot;,                     # use the model&#x27;s own chat template
-    &quot;-a&quot;, MODEL_ID,
-]
-print(&quot;[llama] &quot; + &quot; &quot;.join(llama_cmd))
-llama_proc = subprocess.Popen(
-    llama_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-    bufsize=1, env=dict(os.environ, LD_LIBRARY_PATH=BIN_DIR))
+# ════════════════════════════════════════════════════════════════
+#  HAND OFF TO A DETACHED RUNNER
+#
+#  Build 12 kept llama-server, the API shim and cloudflared alive
+#  from daemon threads inside the notebook kernel. Daemon threads
+#  die with the process that owns them, so the moment molab
+#  recycled or idled out the kernel, the whole server went with it
+#  — &quot;it just stopped running&quot;.
+#
+#  Nothing that lives inside the kernel can survive the kernel. So
+#  everything that has to keep running is written out as its own
+#  script and launched with start_new_session=True: a separate
+#  session, its own process group, stdin closed, output to a log.
+#  It survives the cell finishing, the kernel restarting, and the
+#  notebook being closed. It restarts llama-server and cloudflared
+#  by itself and republishes the tunnel URL when it changes.
+#
+#  Re-running this cell finds a healthy runner and just reprints
+#  the URL instead of starting a second one.
+# ════════════════════════════════════════════════════════════════
+RUN_DIR = os.path.abspath(&quot;./corx-run&quot;)
+os.makedirs(RUN_DIR, exist_ok=True)
+CFG_PATH = os.path.join(RUN_DIR, &quot;config.json&quot;)
+RUNNER_PATH = os.path.join(RUN_DIR, &quot;runner.py&quot;)
+URL_PATH = os.path.join(RUN_DIR, &quot;url.txt&quot;)
+STATUS_PATH = os.path.join(RUN_DIR, &quot;status.json&quot;)
+LOG_PATH = os.path.join(RUN_DIR, &quot;runner.log&quot;)
+PID_PATH = os.path.join(RUN_DIR, &quot;runner.pid&quot;)
 
-# Watch the startup log for the device it ACTUALLY chose. &quot;-ngl 999&quot; is a
-# request, not a guarantee: when it is refused llama.cpp says so here and then
-# runs on the CPU anyway.
+RUNNER_SRC = r&#x27;&#x27;&#x27;
+# CorX Heretic runner — owns llama-server, the OpenAI shim and the tunnel.
+# Launched detached by the notebook cell; supervises everything for ever.
+import json, os, re, signal, subprocess, sys, threading, time, urllib.request, asyncio
+
+CFG = json.load(open(sys.argv[1]))
+SERVER_BIN   = CFG[&quot;server_bin&quot;]
+MODEL_PATH   = CFG[&quot;model_path&quot;]
+BIN_DIR      = CFG[&quot;bin_dir&quot;]
+MODEL_ID     = CFG[&quot;model_id&quot;]
+PORT         = CFG[&quot;port&quot;]
+LLAMA_PORT   = CFG[&quot;llama_port&quot;]
+CTX          = CFG[&quot;ctx&quot;]
+MAX_NEW      = CFG[&quot;max_new_tokens_cap&quot;]
+NO_AUTH      = CFG[&quot;no_auth&quot;]
+API_KEY      = CFG[&quot;api_key&quot;]
+REQUIRE_GPU  = CFG[&quot;require_gpu&quot;]
+LOAD_TIMEOUT = CFG[&quot;load_timeout&quot;]
+BACKEND_USED = CFG[&quot;backend&quot;]
+PRECISION_ST = CFG[&quot;precision&quot;]
+URL_PATH     = CFG[&quot;url_file&quot;]
+STATUS_PATH  = CFG[&quot;status_file&quot;]
+
+STATE = {&quot;url&quot;: None, &quot;tunnel&quot;: None, &quot;llama&quot;: None, &quot;tok_s&quot;: 0.0,
+         &quot;ready&quot;: False, &quot;tunnel_fails&quot;: 0}
 DEVICE_INFO = {&quot;device&quot;: None, &quot;offloaded&quot;: None, &quot;layers&quot;: None,
                &quot;cpu_only&quot;: None, &quot;software&quot;: False}
 _LOG_TAIL = []
+_inflight = [0]
+_lock = threading.Lock()
 
+
+def say(m):
+    print(m, flush=True)
+
+
+def write_status(**kw):
+    d = {&quot;url&quot;: STATE[&quot;url&quot;], &quot;ready&quot;: STATE[&quot;ready&quot;], &quot;tokens_per_sec&quot;: STATE[&quot;tok_s&quot;],
+         &quot;device&quot;: DEVICE_INFO[&quot;device&quot;], &quot;gpu_layers&quot;: DEVICE_INFO[&quot;offloaded&quot;],
+         &quot;backend&quot;: BACKEND_USED, &quot;precision&quot;: PRECISION_ST}
+    d.update(kw)
+    try:
+        tmp = STATUS_PATH + &quot;.tmp&quot;
+        with open(tmp, &quot;w&quot;) as f:
+            json.dump(d, f)
+        os.replace(tmp, STATUS_PATH)
+    except Exception:
+        pass
+
+
+# ---------------- llama-server ----------------
 _RE_OFFLOAD = re.compile(r&quot;offloaded\s+(\d+)\s*/\s*(\d+)\s+layers?\s+to\s+gpu&quot;)
 _RE_USING = re.compile(r&quot;using device (\S+)\s*\((.*?)\)&quot;, re.I)
 _RE_VK = re.compile(r&quot;ggml_vulkan:\s*\d+\s*=\s*(.+?)\s*\|&quot;)
 _RE_CUDA = re.compile(r&quot;Device\s+\d+:\s*(.+?),\s*compute capability&quot;)
 
 
-def _note_llama_line(line):
-    &quot;&quot;&quot;Read one startup line. Separated out so the logic stays testable.
-
-    A software Vulkan device is sticky: llama.cpp still prints
-    &#x27;offloaded 63/63 layers to GPU&#x27; when that GPU is llvmpipe, so a later
-    happy-looking line must not clear the finding.&quot;&quot;&quot;
+def note_line(line):
     low = line.lower()
     m = _RE_OFFLOAD.search(low)
     if m:
@@ -2116,102 +2172,99 @@ def _note_llama_line(line):
         or (DEVICE_INFO[&quot;offloaded&quot;] is not None and DEVICE_INFO[&quot;offloaded&quot;] == 0))
 
 
-def _watch_llama():
-    for line in llama_proc.stdout:
-        _LOG_TAIL.append(line)
-        del _LOG_TAIL[:-400]
-        _note_llama_line(line)
-        sys.stdout.write(&quot;[llama] &quot; + line)
+# Performance flags. This card is an RTX PRO 6000 Blackwell class part; the
+# defaults leave a lot on the table. Flash attention and a bigger micro-batch
+# are the two that matter most for prefill. Not every llama.cpp build accepts
+# every spelling, so if the server rejects them we retry with the plain set
+# rather than refusing to run.
+FAST_FLAGS = [&quot;-fa&quot;, &quot;-b&quot;, &quot;4096&quot;, &quot;-ub&quot;, &quot;2048&quot;,
+              &quot;-t&quot;, str(os.cpu_count() or 8), &quot;--no-warmup&quot;]
 
 
-threading.Thread(target=_watch_llama, daemon=True).start()
+def llama_cmd(extra):
+    return ([SERVER_BIN, &quot;-m&quot;, MODEL_PATH,
+             &quot;--host&quot;, &quot;127.0.0.1&quot;, &quot;--port&quot;, str(LLAMA_PORT),
+             &quot;-ngl&quot;, &quot;999&quot;, &quot;-c&quot;, str(CTX), &quot;--jinja&quot;, &quot;-a&quot;, MODEL_ID] + extra)
 
 
-def wait_for_llama(timeout):
-    &quot;&quot;&quot;llama-server answers /health with 503 while loading, 200 once it can
-    generate.&quot;&quot;&quot;
-    start = time.time()
-    while time.time() - start &lt; timeout:
-        if llama_proc.poll() is not None:
-            raise RuntimeError(
-                f&quot;llama-server exited with code {llama_proc.returncode} before it &quot;
-                &quot;was ready. Last lines:\n&quot; + &quot;&quot;.join(_LOG_TAIL[-25:]))
+def spawn_llama(extra):
+    cmd = llama_cmd(extra)
+    say(&quot;[llama] &quot; + &quot; &quot;.join(cmd))
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                         text=True, bufsize=1,
+                         env=dict(os.environ, LD_LIBRARY_PATH=BIN_DIR))
+
+    def watch():
+        for line in p.stdout:
+            _LOG_TAIL.append(line)
+            del _LOG_TAIL[:-400]
+            note_line(line)
+            sys.stdout.write(&quot;[llama] &quot; + line)
+            sys.stdout.flush()
+    threading.Thread(target=watch, daemon=True).start()
+    return p
+
+
+def llama_healthy():
+    try:
+        with urllib.request.urlopen(&quot;http://127.0.0.1:%d/health&quot; % LLAMA_PORT, timeout=5) as r:
+            return r.status == 200
+    except Exception:
+        return False
+
+
+def start_llama():
+    # Try the fast flags first; fall back if this build will not take them.
+    for extra in (FAST_FLAGS, []):
+        p = spawn_llama(extra)
+        start = time.time()
+        while time.time() - start &lt; LOAD_TIMEOUT:
+            if p.poll() is not None:
+                bad = &quot;&quot;.join(_LOG_TAIL[-6:]).lower()
+                if extra and (&quot;unrecognized&quot; in bad or &quot;invalid&quot; in bad or &quot;usage&quot; in bad):
+                    say(&quot;[llama] this build rejected the tuning flags — retrying plain.&quot;)
+                    break
+                say(&quot;[llama] exited with %s. Last lines:&quot; % p.returncode)
+                for l in _LOG_TAIL[-12:]:
+                    say(&quot;        &quot; + l.rstrip())
+                break
+            if llama_healthy():
+                say(&quot;[llama] ready (%s)&quot; % (&quot;tuned&quot; if extra else &quot;default flags&quot;))
+                return p
+            time.sleep(2)
         try:
-            with urllib.request.urlopen(f&quot;http://127.0.0.1:{LLAMA_PORT}/health&quot;,
-                                        timeout=5) as r:
-                if r.status == 200:
-                    return True
+            p.kill()
         except Exception:
             pass
-        time.sleep(3)
-    return False
+    return None
 
 
-print(f&quot;[llama] loading weights (up to {LOAD_TIMEOUT}s)...&quot;)
-if not wait_for_llama(LOAD_TIMEOUT):
-    llama_proc.terminate()
-    raise RuntimeError(f&quot;llama-server was not ready within {LOAD_TIMEOUT}s. Raise &quot;
-                       &quot;LOAD_TIMEOUT, or use a smaller PRECISION.&quot;)
-print(&quot;[llama] ready.&quot;)
-
-if DEVICE_INFO[&quot;offloaded&quot;] is not None:
-    print(f&quot;[llama] device: {DEVICE_INFO[&#x27;device&#x27;] or BACKEND_USED} — &quot;
-          f&quot;{DEVICE_INFO[&#x27;offloaded&#x27;]}/{DEVICE_INFO[&#x27;layers&#x27;]} layers on GPU&quot;)
-if DEVICE_INFO[&quot;cpu_only&quot;]:
-    msg = (&quot;The model is running on the CPU, not the GPU &quot;
-           f&quot;(device: {DEVICE_INFO[&#x27;device&#x27;]}). A 27B is seconds per token there, &quot;
-           &quot;which is exactly what shows up in the chat as \&quot;did not respond within &quot;
-           &quot;25s\&quot;. Fix the backend rather than raising timeouts.&quot;)
-    if REQUIRE_GPU:
-        llama_proc.terminate()
-        raise RuntimeError(msg)
-    print(&quot;[warn] &quot; + msg)
-
-
-# ---------------- WARM-UP: measure it before trusting it ----------------
 def warmup():
     body = {&quot;model&quot;: MODEL_ID, &quot;max_tokens&quot;: 24, &quot;stream&quot;: False,
             &quot;messages&quot;: [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Say READY and nothing else.&quot;}]}
     req = urllib.request.Request(
-        f&quot;http://127.0.0.1:{LLAMA_PORT}/v1/chat/completions&quot;,
+        &quot;http://127.0.0.1:%d/v1/chat/completions&quot; % LLAMA_PORT,
         data=json.dumps(body).encode(),
         headers={&quot;content-type&quot;: &quot;application/json&quot;})
     t0 = time.time()
-    with urllib.request.urlopen(req, timeout=300) as r:
+    with urllib.request.urlopen(req, timeout=600) as r:
         out = json.load(r)
     dt = time.time() - t0
     n = (out.get(&quot;usage&quot;) or {}).get(&quot;completion_tokens&quot;) or 24
-    return dt, (n / dt if dt &gt; 0 else 0.0)
+    return (n / dt) if dt &gt; 0 else 0.0
 
 
-print(&quot;[llama] warming up...&quot;)
-try:
-    WARM_S, TOK_S = warmup()
-    print(f&quot;[llama] warm-up took {WARM_S:.1f}s — about {TOK_S:.1f} tokens/sec&quot;)
-    if TOK_S &lt; 3:
-        print(&quot;[warn] under 3 tok/s. That is CPU-class speed; replies will take &quot;
-              &quot;minutes and the chat will look hung. Check the device line above.&quot;)
-except Exception as e:
-    WARM_S, TOK_S = 0.0, 0.0
-    print(f&quot;[warn] warm-up failed ({type(e).__name__}: {e}) — continuing anyway.&quot;)
-
-
-# ---------------- OPENAI SHIM: CORS + /health ----------------
+# ---------------- OpenAI shim ----------------
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-import httpx
-import uvicorn
+import httpx, uvicorn
 
-LLAMA = f&quot;http://127.0.0.1:{LLAMA_PORT}&quot;
+LLAMA = &quot;http://127.0.0.1:%d&quot; % LLAMA_PORT
 app = FastAPI(title=&quot;CorX3.8 Heretic API&quot;)
 app.add_middleware(CORSMiddleware, allow_origins=[&quot;*&quot;], allow_credentials=True,
                    allow_methods=[&quot;*&quot;], allow_headers=[&quot;*&quot;])
-
-# No read timeout: a long generation is not a stalled connection.
 _client = httpx.AsyncClient(timeout=httpx.Timeout(None, connect=30.0))
-_inflight = [0]
-_lock = threading.Lock()
 
 
 def _bump(n):
@@ -2219,19 +2272,21 @@ def _bump(n):
         _inflight[0] += n
 
 
-def check_auth(request: Request):
+def check_auth(request):
     if NO_AUTH:
         return
-    if request.headers.get(&quot;authorization&quot;, &quot;&quot;) != f&quot;Bearer {API_KEY}&quot;:
+    if request.headers.get(&quot;authorization&quot;, &quot;&quot;) != &quot;Bearer &quot; + API_KEY:
         raise HTTPException(status_code=401, detail=&quot;bad api key&quot;)
 
 
 @app.get(&quot;/health&quot;)
 async def health():
     return {&quot;status&quot;: &quot;ok&quot;, &quot;model&quot;: MODEL_ID,
-            &quot;backend&quot;: f&quot;llama.cpp/{BACKEND_USED}&quot;,
-            &quot;precision&quot;: stem, &quot;device&quot;: DEVICE_INFO[&quot;device&quot;] or BACKEND_USED,
-            &quot;gpu_layers&quot;: DEVICE_INFO[&quot;offloaded&quot;], &quot;tokens_per_sec&quot;: round(TOK_S, 1),
+            &quot;backend&quot;: &quot;llama.cpp/&quot; + str(BACKEND_USED),
+            &quot;precision&quot;: PRECISION_ST,
+            &quot;device&quot;: DEVICE_INFO[&quot;device&quot;] or BACKEND_USED,
+            &quot;gpu_layers&quot;: DEVICE_INFO[&quot;offloaded&quot;],
+            &quot;tokens_per_sec&quot;: round(STATE[&quot;tok_s&quot;], 1),
             &quot;ctx&quot;: CTX, &quot;busy&quot;: _inflight[0] &gt; 0}
 
 
@@ -2255,38 +2310,27 @@ async def chat_completions(request: Request):
     body = await request.json()
     if not body.get(&quot;messages&quot;):
         raise HTTPException(status_code=400, detail=&quot;messages required&quot;)
-    body[&quot;model&quot;] = MODEL_ID          # one model is loaded; this is what you get
+    body[&quot;model&quot;] = MODEL_ID
     if body.get(&quot;max_tokens&quot;):
-        body[&quot;max_tokens&quot;] = min(int(body[&quot;max_tokens&quot;]), MAX_NEW_TOKENS_CAP)
+        body[&quot;max_tokens&quot;] = min(int(body[&quot;max_tokens&quot;]), MAX_NEW)
     stream = bool(body.get(&quot;stream&quot;, False))
 
     _bump(1)
     if not stream:
         try:
-            r = await _client.post(f&quot;{LLAMA}/v1/chat/completions&quot;, json=body)
+            r = await _client.post(LLAMA + &quot;/v1/chat/completions&quot;, json=body)
             return JSONResponse(status_code=r.status_code, content=r.json())
         except Exception as e:
             return JSONResponse(status_code=500, content={&quot;error&quot;: {
-                &quot;message&quot;: f&quot;{type(e).__name__}: {e}&quot;, &quot;type&quot;: &quot;generation_error&quot;}})
+                &quot;message&quot;: &quot;%s: %s&quot; % (type(e).__name__, e), &quot;type&quot;: &quot;generation_error&quot;}})
         finally:
             _bump(-1)
 
-    # THE &quot;LOADS BUT NEVER STREAMS&quot; BUG.
-    #
-    # A Cloudflare quick tunnel buffers a response body unless it is told very
-    # plainly not to. With only a content-type set, the edge holds every token
-    # and hands the browser the whole reply at once, minutes later — which
-    # looks exactly like &quot;it loads forever and then appears in one lump&quot;.
-    #
-    # Three things are needed, and all three matter:
-    #   * the headers below (no-cache, no-transform, X-Accel-Buffering: no),
-    #   * some bytes IMMEDIATELY, so the proxy commits to streaming instead of
-    #     waiting to see how big the body is,
-    #   * bytes at least every few seconds while the model prefills, or the
-    #     idle connection gets buffered or dropped anyway.
-    #
-    # &quot;:&quot; lines are SSE comments. The browser&#x27;s parser ignores them, so they
-    # cost nothing but keep the pipe demonstrably alive.
+    # A Cloudflare quick tunnel buffers a body unless told plainly not to, which
+    # is what made replies arrive in one lump minutes later instead of
+    # streaming. Needs all three: the headers below, bytes immediately, and
+    # bytes every few seconds while the model prefills. &quot;:&quot; lines are SSE
+    # comments the browser ignores.
     async def relay():
         q = asyncio.Queue()
         got_content = asyncio.Event()
@@ -2294,41 +2338,34 @@ async def chat_completions(request: Request):
         async def pump():
             try:
                 async with _client.stream(
-                        &quot;POST&quot;, f&quot;{LLAMA}/v1/chat/completions&quot;, json=body,
+                        &quot;POST&quot;, LLAMA + &quot;/v1/chat/completions&quot;, json=body,
                         headers={&quot;Accept&quot;: &quot;text/event-stream&quot;,
                                  &quot;Accept-Encoding&quot;: &quot;identity&quot;}) as r:
                     if r.status_code != 200:
                         detail = (await r.aread()).decode(&quot;utf-8&quot;, &quot;replace&quot;)[:400]
-                        await q.put(_err_chunk(
-                            f&quot;\n[llama.cpp returned {r.status_code}: {detail}]&quot;))
+                        await q.put(_err_chunk(&quot;\n[llama.cpp returned %s: %s]&quot;
+                                               % (r.status_code, detail)))
                         await q.put(b&quot;data: [DONE]\n\n&quot;)
                         return
-                    # llama.cpp already emits the exact chunk shape the chat
-                    # parses, [DONE] included, so pass the bytes straight through.
                     async for chunk in r.aiter_bytes():
                         got_content.set()
                         await q.put(chunk)
             except Exception as e:
-                # Swallowing this was why a failure looked like a hang: the
-                # browser got a 200 with an empty body and waited for ever.
                 tail = &quot;&quot;.join(_LOG_TAIL[-6:]).strip().replace(&quot;\n&quot;, &quot; &quot;)[:300]
-                await q.put(_err_chunk(f&quot;\n[Generation failed on the server: &quot;
-                                       f&quot;{type(e).__name__}: {e}. &quot;
-                                       f&quot;Last server log: {tail}]&quot;))
+                await q.put(_err_chunk(
+                    &quot;\n[Generation failed on the server: %s: %s. Last server log: %s]&quot;
+                    % (type(e).__name__, e, tail)))
                 await q.put(b&quot;data: [DONE]\n\n&quot;)
             finally:
                 await q.put(None)
 
         task = asyncio.create_task(pump())
-        yield b&quot;: open\n\n&quot;          # flush the headers past the proxy at once
+        yield b&quot;: open\n\n&quot;
         try:
             while True:
                 try:
                     item = await asyncio.wait_for(q.get(), timeout=5)
                 except asyncio.TimeoutError:
-                    # Only while prefilling. Once real tokens are flowing their
-                    # own arrival keeps the pipe warm, and silence there is a
-                    # genuine stall the client should be allowed to time out on.
                     if not got_content.is_set():
                         yield b&quot;: ping\n\n&quot;
                     continue
@@ -2339,150 +2376,263 @@ async def chat_completions(request: Request):
             task.cancel()
             _bump(-1)
 
-    return StreamingResponse(
-        relay(),
-        media_type=&quot;text/event-stream&quot;,
-        headers={
-            &quot;Cache-Control&quot;: &quot;no-cache, no-store, no-transform&quot;,
-            &quot;X-Accel-Buffering&quot;: &quot;no&quot;,     # nginx and friends
-            &quot;Connection&quot;: &quot;keep-alive&quot;,
-        })
+    return StreamingResponse(relay(), media_type=&quot;text/event-stream&quot;, headers={
+        &quot;Cache-Control&quot;: &quot;no-cache, no-store, no-transform&quot;,
+        &quot;X-Accel-Buffering&quot;: &quot;no&quot;,
+        &quot;Connection&quot;: &quot;keep-alive&quot;})
 
 
-_server_ready = threading.Event()
+def serve_shim():
+    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=PORT, log_level=&quot;warning&quot;)
 
 
-def serve():
-    config = uvicorn.Config(app, host=&quot;0.0.0.0&quot;, port=PORT, log_level=&quot;warning&quot;)
-    server = uvicorn.Server(config)
-    _server_ready.set()               # before run(), which never returns
-    server.run()
-
-
-threading.Thread(target=serve, daemon=True).start()
-_server_ready.wait(timeout=10)
-time.sleep(2)
-try:
-    urllib.request.urlopen(f&quot;http://127.0.0.1:{PORT}/health&quot;, timeout=5)
-    print(f&quot;[api] shim healthy on :{PORT}&quot;)
-except Exception as e:
-    print(f&quot;[api] WARNING: shim not responding ({type(e).__name__})&quot;)
-
-
-# ---------------- CLOUDFLARE QUICK TUNNEL (zero account) ----------------
-def get_cloudflared():
-    path = os.path.abspath(&quot;./cloudflared&quot;)
-    if os.path.exists(path):
-        return path
-    arch = platform.machine().lower()
+# ---------------- cloudflared ----------------
+def cloudflared_path():
+    p = os.path.abspath(&quot;./cloudflared&quot;)
+    if os.path.exists(p):
+        return p
+    import platform as _pf
+    arch = _pf.machine().lower()
     suffix = &quot;arm64&quot; if (&quot;aarch64&quot; in arch or &quot;arm64&quot; in arch) else &quot;amd64&quot;
     url = (&quot;https://github.com/cloudflare/cloudflared/releases/latest/&quot;
-           f&quot;download/cloudflared-linux-{suffix}&quot;)
-    print(f&quot;[tunnel] downloading cloudflared ({arch})...&quot;)
-    urllib.request.urlretrieve(url, path)
-    os.chmod(path, 0o755)
-    return path
+           &quot;download/cloudflared-linux-&quot; + suffix)
+    urllib.request.urlretrieve(url, p)
+    os.chmod(p, 0o755)
+    return p
 
 
-def start_cloudflare_tunnel(port, timeout=40):
-    binary = get_cloudflared()
-    proc = subprocess.Popen(
-        [binary, &quot;tunnel&quot;, &quot;--no-autoupdate&quot;, &quot;--url&quot;, f&quot;http://localhost:{port}&quot;],
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-    url_re = re.compile(r&quot;https://[-a-z0-9]+\.trycloudflare\.com&quot;)
+def start_tunnel(timeout=60):
+    b = cloudflared_path()
+    p = subprocess.Popen([b, &quot;tunnel&quot;, &quot;--no-autoupdate&quot;, &quot;--url&quot;,
+                          &quot;http://localhost:%d&quot; % PORT],
+                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                         text=True, bufsize=1)
+    rx = re.compile(r&quot;https://[-a-z0-9]+\.trycloudflare\.com&quot;)
     url, start = None, time.time()
     while time.time() - start &lt; timeout:
-        line = proc.stdout.readline()
+        line = p.stdout.readline()
         if not line:
-            if proc.poll() is not None:
+            if p.poll() is not None:
                 break
             continue
-        m = url_re.search(line)
+        m = rx.search(line)
         if m:
             url = m.group(0)
             break
-
-    def _drain():
-        for _ in proc.stdout:
-            pass
-    threading.Thread(target=_drain, daemon=True).start()
-    return url, proc
+    threading.Thread(target=lambda: [None for _ in p.stdout], daemon=True).start()
+    return url, p
 
 
-# STATE, not bare names: marimo compiles a cell into a function, so a nested
-# function reassigning a top-level name would need `nonlocal`. A dict sidesteps
-# the whole question and keeps the watchdog readable.
-STATE = {&quot;url&quot;: None, &quot;tunnel&quot;: None}
-
-for attempt in range(2):
+def publish(url):
+    STATE[&quot;url&quot;] = url
     try:
-        u, p = start_cloudflare_tunnel(PORT)
-        STATE[&quot;url&quot;], STATE[&quot;tunnel&quot;] = u, p
-        if u:
-            break
-        time.sleep(3)
+        tmp = URL_PATH + &quot;.tmp&quot;
+        with open(tmp, &quot;w&quot;) as f:
+            f.write(url or &quot;&quot;)
+        os.replace(tmp, URL_PATH)
+    except Exception:
+        pass
+    write_status()
+    say(&quot;[tunnel] &quot; + str(url))
+
+
+# ---------------- bring everything up, then keep it up ----------------
+write_status(stage=&quot;starting llama-server&quot;)
+STATE[&quot;llama&quot;] = start_llama()
+if STATE[&quot;llama&quot;] is None:
+    write_status(stage=&quot;failed&quot;, error=&quot;llama-server would not start&quot;)
+    say(&quot;[fatal] llama-server would not start; see the log above.&quot;)
+    sys.exit(1)
+
+if DEVICE_INFO[&quot;cpu_only&quot;] and REQUIRE_GPU:
+    write_status(stage=&quot;failed&quot;, error=&quot;model landed on the CPU&quot;)
+    say(&quot;[fatal] the model is on the CPU, not the GPU. Refusing to serve.&quot;)
+    try:
+        STATE[&quot;llama&quot;].kill()
+    except Exception:
+        pass
+    sys.exit(1)
+
+write_status(stage=&quot;warming up&quot;)
+try:
+    STATE[&quot;tok_s&quot;] = warmup()
+    say(&quot;[llama] warm-up: about %.1f tokens/sec&quot; % STATE[&quot;tok_s&quot;])
+except Exception as e:
+    say(&quot;[warn] warm-up failed (%s: %s)&quot; % (type(e).__name__, e))
+
+threading.Thread(target=serve_shim, daemon=True).start()
+time.sleep(2)
+
+u, t = start_tunnel()
+STATE[&quot;tunnel&quot;] = t
+if not u:
+    STATE[&quot;tunnel_fails&quot;] = 1
+STATE[&quot;ready&quot;] = True
+publish(u)
+write_status(stage=&quot;live&quot; if u else &quot;live locally — no tunnel yet&quot;)
+say(&quot;[runner] live. This process is detached and will keep running.&quot;)
+
+while True:
+    time.sleep(10)
+    try:
+        if STATE[&quot;llama&quot;] is None or STATE[&quot;llama&quot;].poll() is not None:
+            say(&quot;[llama] died — restarting.&quot;)
+            write_status(stage=&quot;restarting llama-server&quot;, ready=False)
+            STATE[&quot;ready&quot;] = False
+            STATE[&quot;llama&quot;] = start_llama()
+            if STATE[&quot;llama&quot;] is not None:
+                try:
+                    STATE[&quot;tok_s&quot;] = warmup()
+                except Exception:
+                    pass
+                STATE[&quot;ready&quot;] = True
+                write_status(stage=&quot;live&quot;)
+        if STATE[&quot;tunnel&quot;] is not None and STATE[&quot;tunnel&quot;].poll() is not None:
+            # Back off rather than hammering: if cloudflared cannot start at all
+            # (no egress, say) a tight retry loop just floods the log. The API
+            # is still served locally in the meantime.
+            wait = min(60, 5 * (2 ** STATE[&quot;tunnel_fails&quot;]))
+            say(&quot;[tunnel] cloudflared exited — retrying in %ds.&quot; % wait)
+            time.sleep(wait)
+            u, t = start_tunnel()
+            STATE[&quot;tunnel&quot;] = t
+            if u:
+                STATE[&quot;tunnel_fails&quot;] = 0
+            else:
+                STATE[&quot;tunnel_fails&quot;] = min(4, STATE[&quot;tunnel_fails&quot;] + 1)
+            publish(u)
     except Exception as e:
-        print(f&quot;[tunnel] attempt {attempt + 1} failed: {str(e)[:80]}&quot;)
-        time.sleep(3)
-
-PUBLIC_URL = STATE[&quot;url&quot;]
-
-print(&quot;\n&quot; + &quot;=&quot; * 66)
-if PUBLIC_URL:
-    print(&quot; CorX3.8-27B HERETIC API IS LIVE&quot;)
-    print(&quot;=&quot; * 66)
-    print(f&quot; Public URL : {PUBLIC_URL}/v1&quot;)
-    print(f&quot; Health     : {PUBLIC_URL}/health&quot;)
-    print(f&quot; Auth       : {&#x27;NONE (open)&#x27; if NO_AUTH else &#x27;Bearer &#x27; + API_KEY}&quot;)
-    print(f&quot; Model      : {MODEL_ID}   ({stem})&quot;)
-    print(f&quot; Backend    : llama.cpp / {BACKEND_USED}&quot;)
-    print(f&quot; Device     : {DEVICE_INFO[&#x27;device&#x27;] or BACKEND_USED}&quot;
-          + (f&quot; — {DEVICE_INFO[&#x27;offloaded&#x27;]}/{DEVICE_INFO[&#x27;layers&#x27;]} layers on GPU&quot;
-             if DEVICE_INFO[&quot;offloaded&quot;] is not None else &quot;&quot;))
-    print(f&quot; Speed      : ~{TOK_S:.1f} tokens/sec, {CTX} ctx&quot;)
-else:
-    print(&quot; TUNNEL FAILED — API is live LOCALLY on :%d&quot; % PORT)
-print(&quot;=&quot; * 66)
-print(&quot;Paste the Public URL (without /v1) into the CorX chat Settings,&quot;)
-print(f&quot;and set the model to  {MODEL_ID}&quot;)
-print(&quot;This build has had its refusals removed. Keep the URL to yourself.&quot;)
+        say(&quot;[runner] %s: %s&quot; % (type(e).__name__, e))
+        time.sleep(5)
+&#x27;&#x27;&#x27;
 
 
-# ---------------- WATCHDOG ----------------
-# In marimo a blocking cell freezes the notebook, so this runs in a daemon
-# thread instead. Daemon threads and child processes live as long as the
-# kernel does, so the server keeps serving while you use other cells.
-def _watchdog():
-    while True:
-        time.sleep(15)
-        try:
-            if llama_proc.poll() is not None:
-                print(f&quot;[llama] llama-server exited ({llama_proc.returncode}). &quot;
-                      &quot;Re-run this cell.&quot;)
-                return
-            t = STATE[&quot;tunnel&quot;]
-            if t is not None and t.poll() is not None:
-                print(&quot;[tunnel] cloudflared exited — restarting...&quot;)
-                u, p = start_cloudflare_tunnel(PORT)
-                STATE[&quot;url&quot;], STATE[&quot;tunnel&quot;] = u, p
-                if u:
-                    print(f&quot;[tunnel] back up: {u}/v1 — paste this into Settings&quot;)
-        except Exception as _e:
-            print(f&quot;[keepalive] {type(_e).__name__}: {_e}&quot;)
-            time.sleep(5)
-
-
-threading.Thread(target=_watchdog, daemon=True).start()
-
-if BLOCK_CELL:
+def runner_pid():
     try:
-        while llama_proc.poll() is None:
-            time.sleep(15)
-    except KeyboardInterrupt:
-        print(&quot;stopped by user.&quot;)
+        pid = int(open(PID_PATH).read().strip())
+    except Exception:
+        return None
+    try:
+        os.kill(pid, 0)
+        return pid
+    except OSError:
+        return None
+
+
+def stop_runner():
+    pid = runner_pid()
+    if pid:
+        try:
+            os.killpg(os.getpgid(pid), signal.SIGTERM)
+        except Exception:
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except Exception:
+                pass
+        time.sleep(2)
+    for p in (PORT, LLAMA_PORT):
+        free_port(p)
+
+
+def read_status():
+    try:
+        return json.load(open(STATUS_PATH))
+    except Exception:
+        return {}
+
+
+# Already up and healthy? Then this is a re-run: report and leave it alone.
+_existing = runner_pid()
+if _existing and not RESTART_RUNNER:
+    st = read_status()
+    if st.get(&quot;ready&quot;) and st.get(&quot;url&quot;):
+        print(&quot;\n&quot; + &quot;=&quot; * 66)
+        print(&quot; ALREADY RUNNING (pid %d) — nothing to do.&quot; % _existing)
+        print(&quot;=&quot; * 66)
+        print(&quot; Public URL : %s/v1&quot; % st[&quot;url&quot;])
+        print(&quot; Model      : %s   (%s)&quot; % (MODEL_ID, st.get(&quot;precision&quot;)))
+        print(&quot; Device     : %s&quot; % st.get(&quot;device&quot;))
+        print(&quot; Speed      : ~%.1f tokens/sec&quot; % (st.get(&quot;tokens_per_sec&quot;) or 0))
+        print(&quot;=&quot; * 66)
+        print(&quot;Set RESTART_RUNNER = True and re-run to restart it.&quot;)
+        raise SystemExit
+print(&quot;[runner] starting a fresh detached runner...&quot;)
+stop_runner()
+
+with open(RUNNER_PATH, &quot;w&quot;) as f:
+    f.write(RUNNER_SRC)
+with open(CFG_PATH, &quot;w&quot;) as f:
+    json.dump({
+        &quot;server_bin&quot;: SERVER_BIN, &quot;model_path&quot;: MODEL_PATH, &quot;bin_dir&quot;: BIN_DIR,
+        &quot;model_id&quot;: MODEL_ID, &quot;port&quot;: PORT, &quot;llama_port&quot;: LLAMA_PORT,
+        &quot;ctx&quot;: CTX, &quot;max_new_tokens_cap&quot;: MAX_NEW_TOKENS_CAP,
+        &quot;no_auth&quot;: NO_AUTH, &quot;api_key&quot;: API_KEY, &quot;require_gpu&quot;: REQUIRE_GPU,
+        &quot;load_timeout&quot;: LOAD_TIMEOUT, &quot;backend&quot;: BACKEND_USED,
+        &quot;precision&quot;: stem, &quot;url_file&quot;: URL_PATH, &quot;status_file&quot;: STATUS_PATH,
+    }, f)
+for stale in (URL_PATH, STATUS_PATH):
+    try:
+        os.remove(stale)
+    except OSError:
+        pass
+
+_log = open(LOG_PATH, &quot;ab&quot;, buffering=0)
+_proc = subprocess.Popen(
+    [sys.executable, &quot;-u&quot;, RUNNER_PATH, CFG_PATH],
+    stdout=_log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+    start_new_session=True,          # its own session: survives the kernel
+    cwd=os.getcwd())
+with open(PID_PATH, &quot;w&quot;) as f:
+    f.write(str(_proc.pid))
+print(&quot;[runner] pid %d, log %s&quot; % (_proc.pid, LOG_PATH))
+
+# Wait for it to publish a URL, showing what it is doing meanwhile.
+_last = None
+_deadline = time.time() + LOAD_TIMEOUT + 300
+while time.time() &lt; _deadline:
+    if _proc.poll() is not None:
+        print(&quot;[runner] exited early (%s). Last of its log:&quot; % _proc.returncode)
+        try:
+            print(&quot;&quot;.join(open(LOG_PATH, errors=&quot;replace&quot;).read().splitlines(True)[-25:]))
+        except Exception:
+            pass
+        raise SystemExit
+    st = read_status()
+    stage = st.get(&quot;stage&quot;)
+    if stage and stage != _last:
+        print(&quot;[runner] %s&quot; % stage)
+        _last = stage
+    if st.get(&quot;error&quot;):
+        print(&quot;[runner] FAILED: %s&quot; % st[&quot;error&quot;])
+        try:
+            print(&quot;&quot;.join(open(LOG_PATH, errors=&quot;replace&quot;).read().splitlines(True)[-25:]))
+        except Exception:
+            pass
+        raise SystemExit
+    if st.get(&quot;ready&quot;) and st.get(&quot;url&quot;):
+        PUBLIC_URL = st[&quot;url&quot;]
+        print(&quot;\n&quot; + &quot;=&quot; * 66)
+        print(&quot; CorX3.8-27B HERETIC API IS LIVE&quot;)
+        print(&quot;=&quot; * 66)
+        print(&quot; Public URL : %s/v1&quot; % PUBLIC_URL)
+        print(&quot; Health     : %s/health&quot; % PUBLIC_URL)
+        print(&quot; Auth       : %s&quot; % (&quot;NONE (open)&quot; if NO_AUTH else &quot;Bearer &quot; + API_KEY))
+        print(&quot; Model      : %s   (%s)&quot; % (MODEL_ID, stem))
+        print(&quot; Backend    : llama.cpp / %s&quot; % BACKEND_USED)
+        print(&quot; Device     : %s&quot; % (st.get(&quot;device&quot;) or BACKEND_USED))
+        print(&quot; Speed      : ~%.1f tokens/sec, %d ctx&quot; % (st.get(&quot;tokens_per_sec&quot;) or 0, CTX))
+        print(&quot;=&quot; * 66)
+        print(&quot;Paste the Public URL (without /v1) into the CorX chat Settings,&quot;)
+        print(&quot;and set the model to  %s&quot; % MODEL_ID)
+        print(&quot;&quot;)
+        print(&quot;The runner is DETACHED (pid %d). It keeps serving after this cell&quot; % _proc.pid)
+        print(&quot;finishes, after the kernel restarts, and restarts llama-server or&quot;)
+        print(&quot;the tunnel by itself. Follow it with:  tail -f %s&quot; % LOG_PATH)
+        print(&quot;The current URL is always in:  %s&quot; % URL_PATH)
+        break
+    time.sleep(3)
 else:
-    print(&quot;\n[cell] done — the server runs in the background. STATE[\&quot;url\&quot;] holds &quot;
-          &quot;the current tunnel URL if cloudflared restarts.&quot;)
+    print(&quot;[runner] still not live. Check the log: %s&quot; % LOG_PATH)
 </code></pre>
       </div>
 
