@@ -599,7 +599,26 @@ function scrollDown(force = false) {
   els.thread.scrollTop = els.thread.scrollHeight;
 }
 function syncJumpBtn() {
-  if (els.jumpBtn) els.jumpBtn.hidden = stickToBottom || !running;
+  // Only offer "jump to latest" when there is somewhere to jump TO. Tying it to
+  // `running` alone meant a run that left the flag set showed the button for
+  // ever with nothing below; tying it to the actual scroll position cannot lie.
+  if (els.jumpBtn) els.jumpBtn.hidden = stickToBottom || atBottom();
+}
+
+/* A one-off note under the composer. Used when a send is refused, so the
+   refusal is visible instead of the message just seeming to vanish. */
+let composerNoteTimer = null;
+function flashComposer(msg) {
+  const note = els.composerNote;
+  if (!note) return;
+  clearTimeout(composerNoteTimer);
+  if (note.dataset.original === undefined) note.dataset.original = note.textContent;
+  note.textContent = msg;
+  note.classList.add('is-warning');
+  composerNoteTimer = setTimeout(() => {
+    note.textContent = note.dataset.original || '';
+    note.classList.remove('is-warning');
+  }, 3200);
 }
 function watchScroll() {
   if (!els.thread) return;
@@ -1548,7 +1567,16 @@ async function streamOnce(conv, bubble, agent = null) {
      per animation frame, and hold the reader's scroll position across the
      swap whenever they have scrolled away. */
   let paintQueued = false;
+  let rafId = 0;
+  // `painting` closes the door when the stream ends. A queued animation frame
+  // that fires AFTER streamOnce returns re-renders the bubble from `acc` — and
+  // when acc holds only a <think> block, or the caller has since written an
+  // answer, an error, or a "ran out of steps" note, that stale frame stomps it
+  // back to the typing spinner. That is the UI fighting itself: the reply is
+  // there for a moment and then replaced by the loading dots.
+  let painting = true;
   const repaint = () => {
+    if (!painting) return;
     paintQueued = false;
     const { reasoning, answer } = splitThinking(acc);
     if (reasoning) paintReasoning(bubble, reasoning);
@@ -1569,9 +1597,9 @@ async function streamOnce(conv, bubble, agent = null) {
     }
   };
   const paint = () => {
-    if (paintQueued) return;
+    if (paintQueued || !painting) return;
     paintQueued = true;
-    requestAnimationFrame(repaint);
+    rafId = requestAnimationFrame(repaint);
   };
 
   /* Watchdog on silence, not on total length: a big model can legitimately
@@ -1652,8 +1680,12 @@ async function streamOnce(conv, bubble, agent = null) {
   } finally {
     clearTimeout(watchdog);
     clearTimeout(waitStart); stopWaitNotice();
+    if (paintQueued) repaint();       // flush the last frame-pending repaint
+    // Nothing may repaint this bubble after the stream ends — from here the
+    // caller owns what it says.
+    painting = false;
+    cancelAnimationFrame(rafId);
   }
-  if (paintQueued) repaint();   // flush the last frame-pending repaint
   if (firstByteAt) {
     const genSecs = (Date.now() - firstByteAt) / 1000;
     const approxTokens = Math.round(acc.length / 4);
@@ -1674,7 +1706,14 @@ async function streamOnce(conv, bubble, agent = null) {
    now: it has web_search in every message and decides when to reach for it. */
 
 async function send(text, opts = {}) {
-  if (running || !text.trim()) return;
+  if (!text.trim()) return;
+  // Refusing to send while a reply is in flight is correct, but doing it in
+  // silence is not: the text stayed in the box, nothing moved, and the message
+  // looked like it had been swallowed. Say so, and keep what was typed.
+  if (running) {
+    flashComposer('Still answering — press Stop first, or wait for it to finish.');
+    return;
+  }
   const conv = activeConv() || newConversation();
   if (!opts.silent) {
     if (conv.title === 'New chat') { conv.title = text.slice(0, 46) + (text.length > 46 ? '…' : ''); paintConversations(); }
@@ -1694,14 +1733,22 @@ async function send(text, opts = {}) {
   scrollDown(true);
   conv.run = { active: true };
   saveDb();
-  setRunning(true);
-  let bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
+
   const eff = EFFORT[conv.effort] || EFFORT.medium;
   let nudgedTools = false;
+  let nudgedEmpty = false;
+  let bubble = null;
 
   const runStartedAt = Date.now();
   const seenCalls = new Map();   // identical tool calls, to catch a real loop
+  // setRunning and the first addRow must be INSIDE the try. They were above it,
+  // so anything that threw here left `running` stuck true for the rest of the
+  // session — and every later send() hit its `if (running) return` guard and
+  // silently did nothing. That is the bug where messages seemed to vanish until
+  // you reloaded the page.
   try {
+    setRunning(true);
+    bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
     for (let round = 0; round < eff.rounds; round += 1) {
       // A long agent run is expected; an endless one is not. Stop cleanly at
       // the budget instead of spinning until the user gives up.
@@ -1713,7 +1760,7 @@ async function send(text, opts = {}) {
       setProgress(round + 1, eff.rounds, runStartedAt);
       const reply = await streamOnce(conv, bubble);
       const calls = parseToolCalls(reply);
-      const { answer } = splitThinking(reply);
+      const { reasoning, answer } = splitThinking(reply);
       if (answer) {
         bubble.innerHTML = renderMarkdown(answer);
       } else if (calls.length) {
@@ -1722,12 +1769,38 @@ async function send(text, opts = {}) {
         // visible record. Leaving the "typing…" spinner here would just sit
         // frozen forever, so drop it rather than fake an answer.
         bubble.remove();
+      } else if (reasoning) {
+        // It thought and then said nothing. On a reasoning model that usually
+        // means the token budget went entirely into <think>. Showing
+        // "(empty response)" threw that away; ask for the answer instead, and
+        // if it still will not give one, show the thinking rather than nothing.
+        bubble.innerHTML = '<p class="typing"><span></span><span></span><span></span></p>';
+        paintReasoning(bubble, reasoning);
       } else {
-        bubble.innerHTML = '<p>(empty response)</p>';
+        bubble.innerHTML = '<p><em>The model returned nothing at all. That is usually the '
+          + 'token budget being spent before it answered — try again, or raise Effort.</em></p>';
       }
 
       const assistantMsg = { role: 'assistant', content: reply };
       conv.messages.push(assistantMsg);
+
+      if (!calls.length && !answer && reasoning && !nudgedEmpty && round < eff.rounds - 1) {
+        nudgedEmpty = true;
+        conv.messages.push({
+          role: 'user', synthetic: true,
+          content: 'You wrote your reasoning but never gave a reply. Give the answer now, '
+            + 'in plain text, with no <think> block.'
+        });
+        bubble.remove();
+        bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
+        continue;
+      }
+      if (!calls.length && !answer && reasoning) {
+        // Out of retries: the thinking is the only thing it produced, so show it.
+        bubble.innerHTML = '<p><em>It reasoned but never wrote a reply — the thinking is '
+          + 'above. Ask again, or raise Effort so it has room to answer.</em></p>';
+      }
+
       if (!calls.length) {
         // The model has no native tool-calling, so nothing forces it to
         // actually call web_search when it should — it can just say "I
@@ -1786,10 +1859,15 @@ async function send(text, opts = {}) {
       bubble = addRow('assistant', '<p class="typing"><span></span><span></span><span></span></p>', leadRow());
     }
   } catch (err) {
+    // `bubble` is null if the very first addRow threw, and detached if a tool
+    // round removed it — so re-home it rather than dereferencing blindly.
+    if (!bubble || !bubble.isConnected) {
+      bubble = addRow('assistant', '', leadRow());
+    }
     if (err.name === 'AbortError') {
       bubble.innerHTML = bubble.innerHTML.includes('typing') ? '<p><em>Stopped.</em></p>' : bubble.innerHTML + '<p><em>Stopped.</em></p>';
     } else {
-      bubble.closest('.msg').classList.add('msg-error');
+      bubble.closest('.msg')?.classList.add('msg-error');
       const p = providerOf();
       const help = db.provider === 'corx'
         ? 'The model server may be offline, or its address may have changed — open <strong>Settings</strong> to update the endpoint, or the <a href="/chat/documentation/">set-up guide</a>.'
@@ -1799,6 +1877,17 @@ async function send(text, opts = {}) {
       checkHealth();
     }
   } finally {
+    // THE LOADING-SCREEN BUG. Every tool round ends by opening a fresh "typing"
+    // bubble for the next one. When that round was the last the loop allowed,
+    // the loop exited and left that spinner on screen for ever — no text, no
+    // error, nothing to click. On Low effort, where the round budget is small
+    // and the model likes tools, this happened constantly. A run may never end
+    // with a spinner still turning.
+    if (bubble && bubble.isConnected && bubble.innerHTML.includes('class="typing"')) {
+      const secs = Math.round((Date.now() - runStartedAt) / 1000);
+      bubble.innerHTML = `<p><em>Ran out of steps after ${secs}s — it was still working `
+        + `when the ${eff.label} budget ran out. Say “continue”, or raise Effort.</em></p>`;
+    }
     clearProgress();
     conv.run = null; conv.updated = Date.now();
     saveDb(); paintConversations();
@@ -2074,7 +2163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fieldEndpoint: $('#field-endpoint'), fieldKey: $('#field-key'), fieldModel: $('#field-model'),
     keyLink: $('#key-link'), keyNote: $('#key-note'), modelList: $('#model-list'),
     msMark: $('#ms-mark'), msName: $('#ms-name'), modelSwitch: $('#model-switch'),
-    jumpBtn: $('#jump-latest'),
+    jumpBtn: $('#jump-latest'), composerNote: $('.composer-note'),
     personaBtn: $('#persona-btn'),
     personaList: $('#persona-list'), personaName: $('#persona-name'),
     personaBrief: $('#persona-brief'), personaAdd: $('#persona-add'),
@@ -2111,7 +2200,14 @@ document.addEventListener('DOMContentLoaded', () => {
   els.stop.addEventListener('click', () => { sandbox.stopJs(); abort?.abort(); });
   function submit() {
     const text = els.input.value.trim();
-    if (!text || running) return;
+    if (!text) return;
+    // This guard is the one that actually swallowed messages: it returned
+    // before send() was ever reached, so nothing was added, nothing was drawn,
+    // and the typed text just sat there looking ignored. Say why.
+    if (running) {
+      flashComposer('Still answering — press Stop first, or wait for it to finish.');
+      return;
+    }
     els.input.value = ''; els.input.style.height = 'auto';
     send(text);
   }
