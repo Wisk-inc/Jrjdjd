@@ -30,9 +30,9 @@
 [[headers]]
   for = "/assets/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800, must-revalidate"
+    Cache-Control = "no-cache"
 
 [[headers]]
   for = "/assets/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800, must-revalidate"
+    Cache-Control = "no-cache"
