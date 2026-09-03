@@ -198,7 +198,10 @@
 .send-btn svg, .stop-btn svg { width: 18px; height: 18px; }
 .stop-btn { background: transparent; border: 1px solid var(--line-strong); color: var(--ink); }
 .stop-btn:hover { border-color: var(--ink); }
-.composer-note { margin-top: 9px; text-align: center; font-size: .76rem; color: var(--faint); }
+.composer-note { margin-top: 9px; text-align: center; font-size: .76rem; color: var(--faint);
+  transition: color var(--fast) var(--ease); }
+/* A refused send has to be visible, not silent. */
+.composer-note.is-warning { color: var(--ink-strong); font-weight: 600; }
 
 /* ── settings dialog ───────────────────────────────────────────────────── */
 .sheet[hidden] { display: none; }
@@ -220,12 +223,22 @@
 .sheet-card p { margin-top: 6px; font-size: .86rem; color: var(--muted); }
 .field { margin-top: 18px; }
 .field label { display: block; font-size: .8rem; font-weight: 600; color: var(--ink-strong); margin-bottom: 6px; }
-.field input {
+/* textarea and select belong here as much as input does. Only `input` was
+   styled, so the Personality box — a <textarea> — kept the browser default and
+   rendered as a glaring white block on a dark page. Style the whole family. */
+.field input,
+.field textarea,
+.field select {
   width: 100%; font: inherit; font-size: .92rem; color: var(--ink);
   border: 1px solid var(--line-strong); border-radius: 10px;
   background: var(--paper); padding: 10px 12px;
 }
-.field input:focus { outline: none; border-color: var(--espresso); }
+.field textarea { resize: vertical; min-height: 76px; line-height: 1.5; }
+.field input::placeholder,
+.field textarea::placeholder { color: var(--faint); }
+.field input:focus,
+.field textarea:focus,
+.field select:focus { outline: none; border-color: var(--espresso); }
 .field small { display: block; margin-top: 6px; font-size: .76rem; color: var(--faint); }
 .sheet-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
 
