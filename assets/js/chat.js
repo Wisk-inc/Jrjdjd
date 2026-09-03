@@ -1645,15 +1645,12 @@ async function streamOnce(conv, bubble, agent = null) {
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    if (!firstByteAt) {
-      firstByteAt = Date.now();
-      clearTimeout(waitStart); stopWaitNotice();
-      // Time to first token is prefill — the model reading the prompt.
-      // Reported so a slow run can be attributed to the server rather
-      // than guessed at.
-      termLine('sys', `first token after ${((firstByteAt - startedAt) / 1000).toFixed(1)}s (prefill)`);
-    }
-    armWatchdog(STALL_TIMEOUT_MS);   // it's alive; only silence should kill it
+    // Any bytes at all — including the server's keep-alive ":" comments while
+    // it prefills — prove the connection is alive, so the stall watchdog
+    // resets here. But a ping is not a token: the "still waiting" notice and
+    // the prefill timing below only count real content, or a heartbeat would
+    // quietly report the model as having answered.
+    armWatchdog(STALL_TIMEOUT_MS);
     buffer += decoder.decode(value, { stream: true });
     const frames = buffer.split('\n\n');
     buffer = frames.pop() || '';
@@ -1667,7 +1664,17 @@ async function streamOnce(conv, bubble, agent = null) {
         const delta = req.kind === 'anthropic'
           ? (evt?.type === 'content_block_delta' ? evt?.delta?.text : '')
           : evt?.choices?.[0]?.delta?.content;
-        if (delta) { acc += delta; paint(); }
+        if (delta) {
+          if (!firstByteAt) {
+            firstByteAt = Date.now();
+            clearTimeout(waitStart); stopWaitNotice();
+            // Time to first token is prefill — the model reading the prompt.
+            // Reported so a slow run can be attributed to the server rather
+            // than guessed at.
+            termLine('sys', `first token after ${((firstByteAt - startedAt) / 1000).toFixed(1)}s (prefill)`);
+          }
+          acc += delta; paint();
+        }
       }
     }
   }

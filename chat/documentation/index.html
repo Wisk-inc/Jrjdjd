@@ -1027,6 +1027,7 @@ import os
 
 os.environ.setdefault(&quot;CUDA_VISIBLE_DEVICES&quot;, &quot;0&quot;)
 
+import asyncio
 import subprocess
 import sys
 import json
@@ -2270,32 +2271,82 @@ async def chat_completions(request: Request):
         finally:
             _bump(-1)
 
+    # THE &quot;LOADS BUT NEVER STREAMS&quot; BUG.
+    #
+    # A Cloudflare quick tunnel buffers a response body unless it is told very
+    # plainly not to. With only a content-type set, the edge holds every token
+    # and hands the browser the whole reply at once, minutes later — which
+    # looks exactly like &quot;it loads forever and then appears in one lump&quot;.
+    #
+    # Three things are needed, and all three matter:
+    #   * the headers below (no-cache, no-transform, X-Accel-Buffering: no),
+    #   * some bytes IMMEDIATELY, so the proxy commits to streaming instead of
+    #     waiting to see how big the body is,
+    #   * bytes at least every few seconds while the model prefills, or the
+    #     idle connection gets buffered or dropped anyway.
+    #
+    # &quot;:&quot; lines are SSE comments. The browser&#x27;s parser ignores them, so they
+    # cost nothing but keep the pipe demonstrably alive.
     async def relay():
+        q = asyncio.Queue()
+        got_content = asyncio.Event()
+
+        async def pump():
+            try:
+                async with _client.stream(
+                        &quot;POST&quot;, f&quot;{LLAMA}/v1/chat/completions&quot;, json=body,
+                        headers={&quot;Accept&quot;: &quot;text/event-stream&quot;,
+                                 &quot;Accept-Encoding&quot;: &quot;identity&quot;}) as r:
+                    if r.status_code != 200:
+                        detail = (await r.aread()).decode(&quot;utf-8&quot;, &quot;replace&quot;)[:400]
+                        await q.put(_err_chunk(
+                            f&quot;\n[llama.cpp returned {r.status_code}: {detail}]&quot;))
+                        await q.put(b&quot;data: [DONE]\n\n&quot;)
+                        return
+                    # llama.cpp already emits the exact chunk shape the chat
+                    # parses, [DONE] included, so pass the bytes straight through.
+                    async for chunk in r.aiter_bytes():
+                        got_content.set()
+                        await q.put(chunk)
+            except Exception as e:
+                # Swallowing this was why a failure looked like a hang: the
+                # browser got a 200 with an empty body and waited for ever.
+                tail = &quot;&quot;.join(_LOG_TAIL[-6:]).strip().replace(&quot;\n&quot;, &quot; &quot;)[:300]
+                await q.put(_err_chunk(f&quot;\n[Generation failed on the server: &quot;
+                                       f&quot;{type(e).__name__}: {e}. &quot;
+                                       f&quot;Last server log: {tail}]&quot;))
+                await q.put(b&quot;data: [DONE]\n\n&quot;)
+            finally:
+                await q.put(None)
+
+        task = asyncio.create_task(pump())
+        yield b&quot;: open\n\n&quot;          # flush the headers past the proxy at once
         try:
-            async with _client.stream(
-                    &quot;POST&quot;, f&quot;{LLAMA}/v1/chat/completions&quot;, json=body,
-                    headers={&quot;Accept&quot;: &quot;text/event-stream&quot;,
-                             &quot;Accept-Encoding&quot;: &quot;identity&quot;}) as r:
-                if r.status_code != 200:
-                    detail = (await r.aread()).decode(&quot;utf-8&quot;, &quot;replace&quot;)[:400]
-                    yield _err_chunk(f&quot;\n[llama.cpp returned {r.status_code}: {detail}]&quot;)
-                    yield b&quot;data: [DONE]\n\n&quot;
-                    return
-                # llama.cpp already emits the exact chunk shape the chat parses,
-                # [DONE] included, so pass the bytes straight through.
-                async for chunk in r.aiter_bytes():
-                    yield chunk
-        except Exception as e:
-            # Swallowing this was why a failure looked like a hang: the browser
-            # got a 200 with an empty body and waited for tokens forever.
-            tail = &quot;&quot;.join(_LOG_TAIL[-6:]).strip().replace(&quot;\n&quot;, &quot; &quot;)[:300]
-            yield _err_chunk(f&quot;\n[Generation failed on the server: &quot;
-                             f&quot;{type(e).__name__}: {e}. Last server log: {tail}]&quot;)
-            yield b&quot;data: [DONE]\n\n&quot;
+            while True:
+                try:
+                    item = await asyncio.wait_for(q.get(), timeout=5)
+                except asyncio.TimeoutError:
+                    # Only while prefilling. Once real tokens are flowing their
+                    # own arrival keeps the pipe warm, and silence there is a
+                    # genuine stall the client should be allowed to time out on.
+                    if not got_content.is_set():
+                        yield b&quot;: ping\n\n&quot;
+                    continue
+                if item is None:
+                    break
+                yield item
         finally:
+            task.cancel()
             _bump(-1)
 
-    return StreamingResponse(relay(), media_type=&quot;text/event-stream&quot;)
+    return StreamingResponse(
+        relay(),
+        media_type=&quot;text/event-stream&quot;,
+        headers={
+            &quot;Cache-Control&quot;: &quot;no-cache, no-store, no-transform&quot;,
+            &quot;X-Accel-Buffering&quot;: &quot;no&quot;,     # nginx and friends
+            &quot;Connection&quot;: &quot;keep-alive&quot;,
+        })
 
 
 _server_ready = threading.Event()
