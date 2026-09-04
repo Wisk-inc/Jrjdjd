@@ -896,8 +896,34 @@ while True:
         <pre class="server-code"><code id="heretic-code">&quot;&quot;&quot;
 ================================================================
  CorX3.8-27B &quot;HERETIC&quot; — uncensored API server
- Build 12 — molab (marimo cloud notebook), RTX PRO 6000 Blackwell
+ Build 14 — molab (marimo cloud notebook), RTX PRO 6000 Blackwell
  CorX Labs / Nathan
+
+ ---- why it was slow, and what changed ----
+
+ * PRECISION = &quot;auto&quot; means &quot;the largest variant that fits&quot;. On a
+   92 GB card that is F16 — and F16 is the SLOWEST thing you can
+   run, not the best. Generating a token reads every weight of a
+   dense model, so speed is bandwidth-bound: at ~1.8 TB/s, 54 GB
+   of F16 weights caps you around 33 tok/s, while 22 GB of Q6_K
+   caps around 82. More VRAM does not mean run the biggest file.
+   The default is now &quot;fast&quot;, which picks the smallest variant
+   whose quality still holds (Q6_K first, then Q5_K_M, Q8_0 ...),
+   roughly 2.5x faster than F16 for a difference you cannot see on
+   a 27B. &quot;auto&quot; and &quot;full&quot; still do what they always did.
+
+ * The tuning flags were one all-or-nothing list, so an older
+   llama.cpp rejecting a single flag dropped the run to stock
+   settings — losing the batch sizes too. They are tiers now, and
+   it steps down one at a time.
+
+ * Added: quantised KV cache (-ctk/-ctv q8_0, the other bandwidth
+   cost after the weights, and it grows with conversation length),
+   and single-GPU pinning so the multi-GPU scheduling path is
+   skipped entirely.
+
+ * It now says out loud when it is NOT on CUDA. Vulkan works but
+   is materially slower on an NVIDIA card, and that was invisible.
 
  ---- what build 11 got wrong ----
 
@@ -1058,14 +1084,39 @@ LLAMA_PORT = 8081      # llama-server, localhost only
 CTX = 16384
 MAX_NEW_TOKENS_CAP = 8192
 
-# Which GGUF to pull.
-#   &quot;auto&quot;  — largest variant that fits this card. Correct default in a
-#             notebook: a 27B at F16 is ~54 GB, which neither the disk nor
-#             most cards will take, and spilling to system RAM is the exact
-#             &quot;did not respond within 25s&quot; failure.
-#   &quot;full&quot;  — F16/BF16, nothing quantised.
+# Which GGUF to pull. THIS IS THE SINGLE BIGGEST SPEED LEVER, so it is worth
+# understanding rather than guessing at.
+#
+# Generating a token means reading EVERY weight of a dense model, so generation
+# speed is bandwidth-bound, not compute-bound. On this card (~1.8 TB/s GDDR7)
+# the ceiling is roughly bandwidth / model-size:
+#
+#     F16    54 GB  -&gt;  ~33 tok/s ceiling   (~23 realistic)
+#     Q8_0   29 GB  -&gt;  ~62 tok/s           (~43)
+#     Q6_K   22 GB  -&gt;  ~82 tok/s           (~57)
+#     Q4_K_M 16 GB  -&gt; ~112 tok/s           (~79)
+#
+# So &quot;more VRAM&quot; does NOT mean &quot;run the biggest file&quot; — on a 92 GB card the
+# biggest file is simply the slowest one. F16 is ~2.5x slower than Q6_K for a
+# quality difference you cannot see on a 27B: Q8_0 is effectively lossless and
+# Q6_K is very close to it.
+#
+#   &quot;fast&quot; — best speed for near-identical quality. THE DEFAULT, and what you
+#            want unless you have a specific reason otherwise.
+#   &quot;auto&quot; — largest variant that fits VRAM and disk. Maximum quality, slowest.
+#   &quot;full&quot; — F16/BF16, nothing quantised. Slowest of all.
 #   &quot;q8_0&quot; / &quot;q6_k&quot; / &quot;q4_k_m&quot; — force one by name.
-PRECISION = &quot;auto&quot;
+PRECISION = &quot;fast&quot;
+
+# Preference order for &quot;fast&quot;: near-lossless first, then progressively smaller.
+# F16/BF16 sit at the end because they are only worth taking when a repo ships
+# nothing else.
+FAST_ORDER = [&quot;q6_k&quot;, &quot;q5_k_m&quot;, &quot;q8_0&quot;, &quot;q5_k_s&quot;, &quot;q4_k_m&quot;,
+              &quot;q4_k_s&quot;, &quot;q5_0&quot;, &quot;q4_0&quot;, &quot;q3_k_m&quot;, &quot;bf16&quot;, &quot;f16&quot;, &quot;fp16&quot;, &quot;f32&quot;]
+
+# Memory bandwidth in GB/s, used only to print an honest expected ceiling.
+# Roughly right for a Blackwell workstation card; adjust if yours differs.
+GPU_BANDWIDTH_GBS = 1800
 
 REQUIRE_GPU = True     # refuse to serve a CPU-bound 27B. Leave this True.
 
@@ -1997,7 +2048,43 @@ def choose_variant(variants):
         print(f&quot;[warn] no F16/BF16 in this repo; taking the largest: {scored[0][2]}&quot;)
         return scored[0][2], scored[0][3]
 
-    if PRECISION == &quot;auto&quot;:
+    if PRECISION == &quot;fast&quot;:
+        # Speed is bandwidth / model-size, so the fastest usable variant is the
+        # SMALLEST one whose quality still holds up — the opposite of what
+        # &quot;auto&quot; does. Walk the preference order, not the size order.
+        by_tag = {}
+        for rank, t, stem, files in scored:
+            by_tag.setdefault(t, (stem, files))
+        for t in FAST_ORDER:
+            if t not in by_tag:
+                continue
+            stem, files = by_tag[t]
+            if NEEDS_GB[t] &gt; VRAM_GB:
+                continue
+            gb = variant_gb(files)
+            if gb and gb + MIN_FREE_GB &gt; FREE_GB:
+                print(f&quot;[model]   skipping {stem}: {gb:.1f} GB on disk vs &quot;
+                      f&quot;{FREE_GB:.1f} GB free&quot;)
+                continue
+            if gb:
+                ceil = GPU_BANDWIDTH_GBS / gb
+                print(f&quot;[model] fast → {stem} ({t.upper()}, {gb:.1f} GB) — expect &quot;
+                      f&quot;roughly {ceil * 0.7:.0f} tok/s &quot;
+                      f&quot;({ceil:.0f} is the bandwidth ceiling for this size).&quot;)
+                big = by_tag.get(&quot;f16&quot;) or by_tag.get(&quot;bf16&quot;)
+                if big and t not in (&quot;f16&quot;, &quot;bf16&quot;, &quot;f32&quot;, &quot;fp16&quot;):
+                    bg = variant_gb(big[1])
+                    if bg and bg &gt; gb:
+                        print(f&quot;[model]   (F16 would be {bg:.1f} GB and about &quot;
+                              f&quot;{bg / gb:.1f}x slower for no visible quality gain. &quot;
+                              f&quot;PRECISION = \&quot;auto\&quot; if you want it anyway.)&quot;)
+            else:
+                print(f&quot;[model] fast → {stem} ({t.upper()})&quot;)
+            return stem, files
+        print(&quot;[warn] nothing in the fast list fits; falling back to the largest &quot;
+              &quot;that does.&quot;)
+
+    if PRECISION in (&quot;auto&quot;, &quot;fast&quot;):
         # Two constraints, not one. With 96 GB of VRAM the card is no longer the
         # binding limit — a notebook&#x27;s disk is. Checking only VRAM would pick
         # F16, then fail at the download.
@@ -2177,8 +2264,29 @@ def note_line(line):
 # are the two that matter most for prefill. Not every llama.cpp build accepts
 # every spelling, so if the server rejects them we retry with the plain set
 # rather than refusing to run.
-FAST_FLAGS = [&quot;-fa&quot;, &quot;-b&quot;, &quot;4096&quot;, &quot;-ub&quot;, &quot;2048&quot;,
-              &quot;-t&quot;, str(os.cpu_count() or 8), &quot;--no-warmup&quot;]
+# Tiers, not one all-or-nothing list. An older llama.cpp that rejects a single
+# flag used to drop us all the way to stock settings, losing the batch tuning
+# too. Try the most aggressive set first and step down one tier at a time.
+#
+#   -fa              flash attention: large prefill win, and required for the
+#                    quantised KV cache below.
+#   -ctk/-ctv q8_0   quantise the KV cache. Halves the memory it reads per
+#                    token, which is the other bandwidth cost after the weights,
+#                    and matters more the longer the conversation gets.
+#   -b / -ub         bigger batch and micro-batch: this is what actually feeds
+#                    a card this wide during prefill. The default 512 leaves
+#                    most of it idle.
+#   --split-mode none / --main-gpu 0
+#                    one GPU: skip the multi-GPU scheduling path entirely.
+FLAG_TIERS = [
+    [&quot;-fa&quot;, &quot;-ctk&quot;, &quot;q8_0&quot;, &quot;-ctv&quot;, &quot;q8_0&quot;, &quot;-b&quot;, &quot;4096&quot;, &quot;-ub&quot;, &quot;2048&quot;,
+     &quot;--split-mode&quot;, &quot;none&quot;, &quot;--main-gpu&quot;, &quot;0&quot;,
+     &quot;-t&quot;, str(os.cpu_count() or 8), &quot;--no-warmup&quot;],
+    [&quot;-fa&quot;, &quot;-b&quot;, &quot;4096&quot;, &quot;-ub&quot;, &quot;2048&quot;,
+     &quot;-t&quot;, str(os.cpu_count() or 8), &quot;--no-warmup&quot;],
+    [&quot;-b&quot;, &quot;2048&quot;, &quot;-ub&quot;, &quot;1024&quot;, &quot;-t&quot;, str(os.cpu_count() or 8)],
+    [],
+]
 
 
 def llama_cmd(extra):
@@ -2214,22 +2322,30 @@ def llama_healthy():
 
 
 def start_llama():
-    # Try the fast flags first; fall back if this build will not take them.
-    for extra in (FAST_FLAGS, []):
+    # Step down the tiers until one starts; never give up tuning wholesale
+    # because a single flag was not recognised.
+    for extra in FLAG_TIERS:
         p = spawn_llama(extra)
         start = time.time()
         while time.time() - start &lt; LOAD_TIMEOUT:
             if p.poll() is not None:
                 bad = &quot;&quot;.join(_LOG_TAIL[-6:]).lower()
-                if extra and (&quot;unrecognized&quot; in bad or &quot;invalid&quot; in bad or &quot;usage&quot; in bad):
-                    say(&quot;[llama] this build rejected the tuning flags — retrying plain.&quot;)
+                if extra and (&quot;unrecognized&quot; in bad or &quot;invalid&quot; in bad
+                              or &quot;usage&quot; in bad or &quot;unknown argument&quot; in bad):
+                    say(&quot;[llama] this build rejected one of those flags — &quot;
+                        &quot;stepping down a tier.&quot;)
                     break
                 say(&quot;[llama] exited with %s. Last lines:&quot; % p.returncode)
                 for l in _LOG_TAIL[-12:]:
                     say(&quot;        &quot; + l.rstrip())
                 break
             if llama_healthy():
-                say(&quot;[llama] ready (%s)&quot; % (&quot;tuned&quot; if extra else &quot;default flags&quot;))
+                say(&quot;[llama] ready — flags: %s&quot; % (&quot; &quot;.join(extra) if extra else &quot;stock&quot;))
+                if DEVICE_INFO[&quot;device&quot;] and &quot;cuda&quot; not in str(DEVICE_INFO[&quot;device&quot;]).lower():
+                    say(&quot;[warn] NOT running on CUDA (%s). Vulkan works but is &quot;
+                        &quot;materially slower than CUDA on an NVIDIA card; set &quot;
+                        &quot;BACKEND = \&quot;cuda\&quot; and re-run if you want the fast path.&quot;
+                        % DEVICE_INFO[&quot;device&quot;])
                 return p
             time.sleep(2)
         try:
