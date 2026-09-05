@@ -93,7 +93,7 @@
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Large language model",
       "operatingSystem": "Cross-platform",
-      "description": "Anthropic's model for complex agentic coding and enterprise work, and the default recommendation for most workloads. Adaptive thinking is on by default and steered by an effort parameter rather than a token budget.",
+      "description": "Anthropic's model for complex agentic coding and enterprise work, and the default recommendation for most workloads. Adaptive thinking is on by default and steered by an effort parameter rather than a token budget. Anthropic published no SWE-bench figure for it, leading instead on Frontier-Bench and CursorBench.",
       "author": {
         "@type": "Organization",
         "name": "Anthropic"
@@ -104,7 +104,19 @@
         "price": "5.0",
         "priceCurrency": "USD",
         "description": "USD per million input tokens"
-      }
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Terminal-Bench 2.1",
+          "value": 89.1
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Frontier-Bench v0.1",
+          "value": 43.3
+        }
+      ]
     }
   ]
 }
@@ -147,7 +159,7 @@
       </div>
     </div>
     <div style="margin-top:20px"><div class="tag-row"><span class="tag">Proprietary</span><span class="tag">Reasoning</span><span class="tag">Vision</span><span class="tag">Tool calling</span><span class="tag">1M context</span></div></div>
-    <p class="lede" style="margin-top:20px">Anthropic&#x27;s model for complex agentic coding and enterprise work, and the default recommendation for most workloads. Adaptive thinking is on by default and steered by an effort parameter rather than a token budget.</p>
+    <p class="lede" style="margin-top:20px">Anthropic&#x27;s model for complex agentic coding and enterprise work, and the default recommendation for most workloads. Adaptive thinking is on by default and steered by an effort parameter rather than a token budget. Anthropic published no SWE-bench figure for it, leading instead on Frontier-Bench and CursorBench.</p>
   </div>
 
   <div class="shell"><hr class="rule"></div>
@@ -181,10 +193,20 @@
         <p>Figures published by Anthropic or taken from a public leaderboard. Row last
           checked 2026-09.</p>
       </div>
-      
+      <div class="bm-sc-wrap">
+  <table class="bm-scorecard">
+    <caption class="visually-hidden">Claude Opus 5 by capability category, with its rank among models reporting the same tests.</caption>
+    <thead><tr><th scope="col">Category</th><th scope="col">Score</th>
+      <th scope="col">Rank</th></tr></thead>
+    <tbody><tr><th scope="row"><span class="g">Reasoning</span><span class="t">Frontier-Bench v0.1</span></th><td class="bm-sc-val">43.3%</td><td class="bm-sc-who">Only model reporting these</td></tr><tr><th scope="row"><span class="g">Maths</span><span class="t">Competition mathematics, graded on the final answer</span></th><td class="bm-sc-none">Not reported</td><td class="bm-sc-none">&mdash;</td></tr><tr><th scope="row"><span class="g">Coding</span><span class="t">Terminal-Bench 2.1</span></th><td class="bm-sc-val">89.1%</td><td class="bm-sc-who">Only model reporting these</td></tr><tr><th scope="row"><span class="g">Knowledge</span><span class="t">Breadth of factual recall under exam conditions</span></th><td class="bm-sc-none">Not reported</td><td class="bm-sc-none">&mdash;</td></tr><tr><th scope="row"><span class="g">Multimodal</span><span class="t">Reading charts, diagrams and photographs</span></th><td class="bm-sc-none">Not reported</td><td class="bm-sc-none">&mdash;</td></tr><tr><th scope="row"><span class="g">Instruction following</span><span class="t">Obeying an exact, checkable format</span></th><td class="bm-sc-none">Not reported</td><td class="bm-sc-none">&mdash;</td></tr><tr><th scope="row"><span class="g">Human preference</span><span class="t">Which answer people pick, blind</span></th><td class="bm-sc-none">Not reported</td><td class="bm-sc-none">&mdash;</td></tr></tbody>
+  </table>
+</div>
+<p class="bm-sc-note">A category averages every benchmark in it that Claude Opus 5 reports. The rank counts
+  only models that report the <strong>same</strong> tests, so it never compares an average over
+  three benchmarks against an average over one.</p>
       <h3 style="font-family:var(--sans);font-size:.74rem;font-weight:600;letter-spacing:.11em;
                  text-transform:uppercase;color:var(--faint);margin:36px 0 14px">Every reported test</h3>
-      <div class="bm-empty"><strong>No published benchmark scores yet</strong>Its maker has not published benchmark figures for this model, and nothing has been estimated in their place.</div>
+      <div class="bm-compare-wrap"><table class="bm-compare"><tbody><tr><th scope="row"><a href="/benchmarks/tests/mmlu_pro/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">MMLU-Pro</a><span class="hint">Knowledge</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/gpqa/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">GPQA Diamond</a><span class="hint">Reasoning</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/aime/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">AIME 2025</a><span class="hint">Maths</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/math/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">MATH-500</a><span class="hint">Maths</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/swe/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">SWE-bench Verified</a><span class="hint">Coding</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/swe_pro/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">SWE-bench Pro</a><span class="hint">Coding</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/tbench21/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Terminal-Bench 2.1</a><span class="hint">Coding</span></th><td><span class="bm-bar"><span class="val">89.1%<span class="bm-src" title="Measured by Terminal-Bench leaderboard, not by the model’s maker">Independent</span></span><span class="track"><span class="fill" style="width:89.1%"></span></span></span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">1 of 1 models report this</td></tr><tr><th scope="row"><a href="/benchmarks/tests/frontier/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Frontier-Bench v0.1</a><span class="hint">Reasoning</span></th><td><span class="bm-bar"><span class="val">43.3%</span><span class="track"><span class="fill" style="width:43.3%"></span></span></span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">1 of 1 models report this</td></tr><tr><th scope="row"><a href="/benchmarks/tests/tbench/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Terminal-Bench 4.0</a><span class="hint">Coding</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/lcb/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">LiveCodeBench</a><span class="hint">Coding</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/humaneval/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">HumanEval</a><span class="hint">Coding</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/mmmu/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">MMMU</a><span class="hint">Multimodal</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/ifeval/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">IFEval</a><span class="hint">Instruction following</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/arena/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">LMArena Elo</a><span class="hint">Human preference</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr></tbody></table></div>
       <div style="margin-top:22px"><div class="bm-provenance" id="method-note">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
   <div>
@@ -195,6 +217,10 @@
       the model, which means they were produced under that lab's own choice of prompt,
       scaffold and number of attempts — so treat them as a starting point for a shortlist,
       not as a settled ranking.</p>
+    <p>A score someone other than the model's maker measured is marked
+      <span class="bm-src">Independent</span> and names its measurer. Those are the stronger
+      numbers on this page — an outside harness has no reason to flatter anyone — and there are
+      not many of them.</p>
     <p>Where a figure has not been published, the cell reads
       <span class="bm-nil">Not reported</span> rather than an estimate. Nothing here is
       inferred, interpolated or guessed. Each model records the month its row was last

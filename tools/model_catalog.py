@@ -99,6 +99,14 @@ BENCHMARKS = [
      "blurb": "A harder, contamination-resistant successor to SWE-bench Verified, drawn from "
               "commercial and copyleft repositories that were never public training data.",
      "url": "https://scale.com/leaderboard/swe_bench_pro_public"},
+    {"key": "tbench21", "name": "Terminal-Bench 2.1", "unit": "pct", "group": "Coding",
+     "blurb": "The 2.1 revision of the terminal agent benchmark. Scores on it are not "
+              "comparable with Terminal-Bench 4.0 — the task set changed.",
+     "url": "https://www.tbench.ai/"},
+    {"key": "frontier", "name": "Frontier-Bench v0.1", "unit": "pct", "group": "Reasoning",
+     "blurb": "Novel problems built to resist memorisation, scored on whether the model gets "
+              "anywhere at all. Absolute numbers are low by design.",
+     "url": "https://www.anthropic.com/news/claude-opus-5"},
     {"key": "tbench", "name": "Terminal-Bench 4.0", "unit": "pct", "group": "Coding",
      "blurb": "End-to-end tasks in a real terminal — install, build, debug, run — scored on "
               "whether the machine ends up in the required state.",
@@ -951,8 +959,11 @@ MODELS = [
       api_id="claude-opus-5",
       desc="Anthropic's model for complex agentic coding and enterprise work, and the default "
            "recommendation for most workloads. Adaptive thinking is on by default and steered "
-           "by an effort parameter rather than a token budget.",
-      b={}, verified="2026-09"),
+           "by an effort parameter rather than a token budget. Anthropic published no SWE-bench "
+           "figure for it, leading instead on Frontier-Bench and CursorBench.",
+      b={"tbench21": 89.1, "frontier": 43.3},
+      bsrc={"tbench21": "Terminal-Bench leaderboard"},
+      verified="2026-09"),
     M("claude-sonnet-5", "Claude Sonnet 5", "anthropic", rel="2026-06", ctx=1000000, out=128000,
       inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=2.0, pout=10.0, pcache=0.20, reason=True, tools=True, cut="2026-01",
@@ -1429,6 +1440,9 @@ def validate():
         for k in m.get("b", {}):
             if k not in BENCH_BY_KEY:
                 errors.append("%s: unknown benchmark %r" % (s, k))
+        for k in m.get("bsrc", {}):
+            if k not in m.get("b", {}):
+                errors.append("%s: source given for %r but no score" % (s, k))
         for k, v in m.get("b", {}).items():
             if BENCH_BY_KEY[k]["unit"] == "pct" and not (0 <= v <= 100):
                 errors.append("%s: %s=%r out of range" % (s, k, v))

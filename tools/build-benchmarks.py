@@ -655,7 +655,9 @@ def build_model(m):
             '<td>%s</td><td style="min-width:0;color:var(--muted);font-size:.85rem">%s</td></tr>'
             % ('<a href="%s" style="color:inherit;text-decoration:underline;text-underline-offset:3px">%s</a>'
                % (test_url(b["key"]), esc(b["name"])),
-               esc(b["group"]), bench_cell(b["key"], v), esc(_rank_note(m, b["key"], v)))
+               esc(b["group"]),
+               bench_cell(b["key"], v, source=m.get("bsrc", {}).get(b["key"])),
+               esc(_rank_note(m, b["key"], v)))
             for b, v in scored)
         bench_html = ('<div class="bm-compare-wrap"><table class="bm-compare">'
                       '<tbody>%s</tbody></table></div>' % bench_rows)
@@ -970,8 +972,10 @@ def compare_columns(models, drop_buttons=False):
             continue
         known = [v for v in vals if v is not None]
         best = max(known) if len(known) > 1 and len(set(known)) > 1 else None
-        cells = "".join('<td>%s</td>' % bench_cell(b["key"], v, best is not None and v == best)
-                        for v in vals)
+        cells = "".join(
+            '<td>%s</td>' % bench_cell(b["key"], v, best is not None and v == best,
+                                       source=m.get("bsrc", {}).get(b["key"]))
+            for m, v in zip(models, vals))
         bench_rows.append(
             '<tr><th scope="row"><a href="%s" style="color:inherit;text-decoration:underline;'
             'text-underline-offset:3px">%s</a><span class="hint">%s</span></th>%s</tr>'
@@ -1766,6 +1770,18 @@ TEST_NOTES = {
         "It measures an entire agent, not a model. Retrieval, retries and test execution are "
         "all part of the harness, and two labs reporting the same number may be running very "
         "different scaffolds. It is also Python-only, on twelve repositories."),
+    "tbench21": (
+        "The 2.1 task set of Terminal-Bench. It is the version most third-party runs used "
+        "through 2026, which makes it the one place several frontier models can be compared "
+        "on a harness nobody selling a model controls.",
+        "Do not read it against Terminal-Bench 4.0. The task set changed between versions, so "
+        "a 2.1 score and a 4.0 score are different measurements that happen to share a name."),
+    "frontier": (
+        "Frontier-Bench is built from problems designed to resist memorisation, and scored on "
+        "whether a model makes progress at all. Absolute numbers are low by design — the "
+        "interesting figure is the ratio between models, not the percentage.",
+        "It is new, and reported by the lab that leads on it. Very few models have a score, "
+        "so there is almost no field to be measured against."),
     "swe_pro": (
         "SWE-bench Pro is the benchmark to read when a model has no SWE-bench Verified figure. "
         "Its tasks come from commercial and copyleft repositories that were never in public "
