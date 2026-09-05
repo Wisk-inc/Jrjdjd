@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Phi-4 — Specs, Pricing and Benchmarks</title>
+<meta name="description" content="Phi-4 by Microsoft: 16K context, $0.070 per million input tokens, open weights. Published benchmark scores, full specification and side-by-side comparisons.">
+<link rel="canonical" href="https://corx-labs.com/benchmarks/models/phi-4/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/phi-4/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/models/phi-4/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/benchmarks/models/phi-4/">
+<meta property="og:title" content="Phi-4 — Specs, Pricing and Benchmarks">
+<meta property="og:description" content="Phi-4 by Microsoft: 16K context, $0.070 per million input tokens, open weights. Published benchmark scores, full specification and side-by-side comparisons.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-model.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Phi-4 — Specs, Pricing and Benchmarks">
+<meta name="twitter:description" content="Phi-4 by Microsoft: 16K context, $0.070 per million input tokens, open weights. Published benchmark scores, full specification and side-by-side comparisons.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-model.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/benchmarks.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/benchmarks/models/phi-4/#webpage",
+      "url": "https://corx-labs.com/benchmarks/models/phi-4/",
+      "name": "Phi-4 — specs, price and benchmarks",
+      "isPartOf": {
+        "@id": "https://corx-labs.com/#website"
+      },
+      "inLanguage": "en",
+      "dateModified": "2026-09-04",
+      "breadcrumb": {
+        "@id": "https://corx-labs.com/benchmarks/models/phi-4/#webpage#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://corx-labs.com/benchmarks/models/phi-4/#model"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/benchmarks/models/phi-4/#webpage#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://corx-labs.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Benchmarks",
+          "item": "https://corx-labs.com/benchmarks/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Phi-4"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://corx-labs.com/benchmarks/models/phi-4/#model",
+      "name": "Phi-4",
+      "url": "https://corx-labs.com/benchmarks/models/phi-4/",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Large language model",
+      "operatingSystem": "Cross-platform",
+      "description": "14B trained largely on synthetic curriculum data, and unusually strong at maths for its size.",
+      "author": {
+        "@type": "Organization",
+        "name": "Microsoft"
+      },
+      "license": "MIT",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.07",
+        "priceCurrency": "USD",
+        "description": "USD per million input tokens"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "MMLU-Pro",
+          "value": 70.4
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "GPQA Diamond",
+          "value": 56.1
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "HumanEval",
+          "value": 82.6
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary"><a href="/chat/">Chat</a><a href="/documentation/">Documentation</a><a href="/models/">Our Products</a><a href="/benchmarks/" aria-current="page">Benchmarks</a><a href="/blog/">Blog</a><a href="/developers/">Developers</a><a href="/about/">About Us</a><a href="/contact/">Contact</a></nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/chat/">Open the chat</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul><li><a href="/chat/">Chat</a></li><li><a href="/documentation/">Documentation</a></li><li><a href="/models/">Our Products</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><a href="/blog/">Blog</a></li><li><a href="/developers/">Developers</a></li><li><a href="/about/">About Us</a></li><li><a href="/contact/">Contact</a></li></ul>
+      <a class="btn btn-primary" href="/chat/">Open the chat</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><a href="/benchmarks/#companies">Microsoft</a></li><li><span aria-current="page">Phi-4</span></li></ol></nav>
+    <div class="bm-model-head">
+      <span class="logo-tile is-lg"><img class="logo-mark" src="/assets/img/logos/microsoft.svg" width="34" height="34" alt="" aria-hidden="true" decoding="async"></span>
+      <div>
+        <h1>Phi-4</h1>
+        <span class="maker">by <a href="/benchmarks/companies/microsoft/">Microsoft</a> &middot; United States</span>
+      </div>
+    </div>
+    <div style="margin-top:20px"><div class="tag-row"><span class="tag tag-live">Open weights</span><span class="tag">16K context</span></div></div>
+    <p class="lede" style="margin-top:20px">14B trained largely on synthetic curriculum data, and unusually strong at maths for its size.</p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <section class="section-tight" aria-labelledby="spec-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:26px">
+        <p class="eyebrow">Specification</p>
+        <h2 id="spec-title">The numbers</h2>
+      </div>
+      <dl class="bm-keyfacts"><div><dt>Maker</dt><dd><a href="/benchmarks/companies/microsoft/">Microsoft</a></dd></div><div><dt>Released</dt><dd>2024-12</dd></div><div><dt>Parameters</dt><dd>14B</dd></div><div><dt>Architecture</dt><dd>Dense transformer</dd></div><div><dt>Context window</dt><dd>16,384 tokens</dd></div><div><dt>Max output</dt><dd>4,096 tokens</dd></div><div><dt>Input</dt><dd>Text</dd></div><div><dt>Output</dt><dd>Text</dd></div><div><dt>Reasoning</dt><dd>No</dd></div><div><dt>Tool calling</dt><dd>No</dd></div><div><dt>Knowledge cutoff</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Licence</dt><dd>MIT</dd></div><div><dt>Weights</dt><dd>Downloadable</dd></div></dl>
+      
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="price-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <p class="eyebrow">Cost</p>
+        <h2 id="price-title">Price per million tokens</h2>
+      </div>
+      <dl class="bm-keyfacts"><div><dt>Input</dt><dd>$0.070 <small style="font-weight:400;color:var(--faint)">/ M tokens</small></dd></div><div><dt>Output</dt><dd>$0.140 <small style="font-weight:400;color:var(--faint)">/ M tokens</small></dd></div><div><dt>Blended 3:1</dt><dd>$0.088</dd></div></dl><p style="margin-top:14px;font-size:.9rem;color:var(--muted)">This model has open weights, so there is no first-party price. The figures above are a representative third-party hosting rate — you can also run it yourself for the cost of the hardware.</p>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="bench-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <p class="eyebrow">Published scores</p>
+        <h2 id="bench-title">Benchmarks</h2>
+        <p>Figures published by Microsoft or taken from a public leaderboard. Row last
+          checked 2026-08.</p>
+      </div>
+      <div class="bm-compare-wrap"><table class="bm-compare"><tbody><tr><th scope="row"><a href="/benchmarks/tests/mmlu_pro/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">MMLU-Pro</a><span class="hint">Knowledge</span></th><td><span class="bm-bar"><span class="val">70.4%</span><span class="track"><span class="fill" style="width:70.4%"></span></span></span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">Rank 23 of 77 models reporting</td></tr><tr><th scope="row"><a href="/benchmarks/tests/gpqa/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">GPQA Diamond</a><span class="hint">Reasoning</span></th><td><span class="bm-bar"><span class="val">56.1%</span><span class="track"><span class="fill" style="width:56.1%"></span></span></span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">Rank 62 of 83 models reporting</td></tr><tr><th scope="row"><a href="/benchmarks/tests/aime/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">AIME 2025</a><span class="hint">Maths</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/math/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">MATH-500</a><span class="hint">Maths</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/swe/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">SWE-bench Verified</a><span class="hint">Coding</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/lcb/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">LiveCodeBench</a><span class="hint">Coding</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/humaneval/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">HumanEval</a><span class="hint">Coding</span></th><td><span class="bm-bar"><span class="val">82.6%</span><span class="track"><span class="fill" style="width:82.6%"></span></span></span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">Rank 24 of 46 models reporting</td></tr><tr><th scope="row"><a href="/benchmarks/tests/mmmu/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">MMMU</a><span class="hint">Multimodal</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/ifeval/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">IFEval</a><span class="hint">Instruction following</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr><tr><th scope="row"><a href="/benchmarks/tests/arena/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">LMArena Elo</a><span class="hint">Human preference</span></th><td><span class="bm-nil">Not reported</span></td><td style="min-width:0;color:var(--muted);font-size:.85rem">No figure published</td></tr></tbody></table></div>
+      <div style="margin-top:22px"><div class="bm-provenance" id="method-note">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+  <div>
+    <h2>Where these numbers come from</h2>
+    <p>Every score on this page is a <strong>published</strong> figure, taken from the model's
+      own card, system card, technical report or release post, or from a public leaderboard.
+      CorX Labs did not run these evaluations. Most are self-reported by the lab that built
+      the model, which means they were produced under that lab's own choice of prompt,
+      scaffold and number of attempts — so treat them as a starting point for a shortlist,
+      not as a settled ranking.</p>
+    <p>Where a figure has not been published, the cell reads
+      <span class="bm-nil">Not reported</span> rather than an estimate. Nothing here is
+      inferred, interpolated or guessed. Each model records the month its row was last
+      checked. <a href="/benchmarks/#method">Full method and caveats</a>.</p>
+  </div>
+</div></div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="vs-title">
+    <div class="shell">
+      <div class="section-head"><p class="eyebrow">Head to head</p>
+        <h2 id="vs-title">Phi-4 compared</h2></div>
+      <div class="bm-vs-grid"><a class="bm-vs" href="/benchmarks/compare/phi-4-vs-gemma-3-12b/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs Gemma 3 12B</span><span class="s">Google DeepMind</span></span></a><a class="bm-vs" href="/benchmarks/compare/phi-4-vs-qwen3-14b/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/alibaba.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs Qwen3-14B</span><span class="s">Alibaba Qwen</span></span></a></div>
+      <div class="btn-row" style="margin-top:20px">
+        <a class="btn btn-ghost" href="/benchmarks/compare/?m=phi-4">Compare with something else <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </section>
+  <section class="section-tight" aria-labelledby="sib-title">
+    <div class="shell">
+      <div class="section-head"><p class="eyebrow">Same maker</p>
+        <h2 id="sib-title">Other models from Microsoft</h2></div>
+      <div class="bm-table-wrap">
+  <table class="bm-table" id="bm-siblings">
+    <caption class="visually-hidden">AI models with context window, price per million tokens and published benchmark scores. Sortable by any column.</caption>
+    <thead><tr><th aria-sort="none" data-sort="name" data-kind="text" scope="col"><button type="button"><span class="lbl">Model</span></button></th><th aria-sort="none" data-sort="company" data-kind="text" scope="col"><button type="button"><span class="lbl">Maker</span></button></th><th class="bm-num" aria-sort="none" data-sort="ctx" data-kind="num" scope="col"><button type="button"><span class="lbl">Context</span></button></th><th class="bm-num" aria-sort="none" data-sort="pin" data-kind="num" scope="col"><button type="button"><span class="lbl">In / M</span></button></th><th class="bm-num" aria-sort="none" data-sort="pout" data-kind="num" scope="col"><button type="button"><span class="lbl">Out / M</span></button></th><th class="bm-num" aria-sort="none" data-sort="mmlu_pro" data-kind="num" scope="col"><button type="button"><span class="lbl">MMLU-Pro</span></button></th><th class="bm-num" aria-sort="none" data-sort="gpqa" data-kind="num" scope="col"><button type="button"><span class="lbl">GPQA</span></button></th><th class="bm-num" aria-sort="none" data-sort="aime" data-kind="num" scope="col"><button type="button"><span class="lbl">AIME</span></button></th><th class="bm-num" aria-sort="none" data-sort="swe" data-kind="num" scope="col"><button type="button"><span class="lbl">SWE-bench</span></button></th><th aria-sort="none" data-sort="lic" data-kind="text" scope="col"><button type="button"><span class="lbl">Licence</span></button></th></tr></thead>
+    <tbody>
+<tr data-slug="phi-4-reasoning-plus" data-name="phi-4-reasoning-plus" data-company="microsoft" data-company-name="microsoft" data-open="1" data-reason="1" data-vision="0" data-ctx="32768" data-pin="0.07" data-pout="0.35" data-lic="mit" data-rel="2025-04" data-mmlu_pro="" data-gpqa="69.3" data-aime="78.0" data-swe="" data-arena=""><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/microsoft.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/phi-4-reasoning-plus/">Phi-4-reasoning-plus</a><span class="maker">Microsoft</span></span></span></td><td><a href="/benchmarks/companies/microsoft/">Microsoft</a></td><td class="bm-num" title="32,768 tokens">33K</td><td class="bm-num">$0.070</td><td class="bm-num">$0.35</td><td class="bm-num"><span class="bm-nil">—</span></td><td class="bm-num">69.3%</td><td class="bm-num">78%</td><td class="bm-num"><span class="bm-nil">—</span></td><td><span class="bm-badge is-open">MIT</span></td></tr>
+<tr data-slug="phi-4-multimodal" data-name="phi-4-multimodal" data-company="microsoft" data-company-name="microsoft" data-open="1" data-reason="0" data-vision="1" data-ctx="131072" data-pin="0.05" data-pout="0.1" data-lic="mit" data-rel="2025-02" data-mmlu_pro="" data-gpqa="" data-aime="" data-swe="" data-arena=""><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/microsoft.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/phi-4-multimodal/">Phi-4-multimodal</a><span class="maker">Microsoft</span></span></span></td><td><a href="/benchmarks/companies/microsoft/">Microsoft</a></td><td class="bm-num" title="131,072 tokens">131K</td><td class="bm-num">$0.05</td><td class="bm-num">$0.10</td><td class="bm-num"><span class="bm-nil">—</span></td><td class="bm-num"><span class="bm-nil">—</span></td><td class="bm-num"><span class="bm-nil">—</span></td><td class="bm-num"><span class="bm-nil">—</span></td><td><span class="bm-badge is-open">MIT</span></td></tr>
+<tr data-slug="phi-3-5-moe" data-name="phi-3.5-moe" data-company="microsoft" data-company-name="microsoft" data-open="1" data-reason="0" data-vision="0" data-ctx="131072" data-pin="0.08" data-pout="0.16" data-lic="mit" data-rel="2024-08" data-mmlu_pro="54.0" data-gpqa="" data-aime="" data-swe="" data-arena=""><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/microsoft.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/phi-3-5-moe/">Phi-3.5-MoE</a><span class="maker">Microsoft</span></span></span></td><td><a href="/benchmarks/companies/microsoft/">Microsoft</a></td><td class="bm-num" title="131,072 tokens">131K</td><td class="bm-num">$0.08</td><td class="bm-num">$0.16</td><td class="bm-num">54%</td><td class="bm-num"><span class="bm-nil">—</span></td><td class="bm-num"><span class="bm-nil">—</span></td><td class="bm-num"><span class="bm-nil">—</span></td><td><span class="bm-badge is-open">MIT</span></td></tr>
+    </tbody>
+  </table>
+</div>
+    </div>
+  </section>
+  <section class="section-tight">
+    <div class="shell">
+      <div class="btn-row"><a class="btn btn-ghost" href="https://huggingface.co/microsoft/phi-4" rel="noopener" target="_blank">Weights on Hugging Face <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a><a class="btn btn-ghost" href="https://microsoft.com" rel="noopener" target="_blank">Microsoft <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Benchmarks">
+        <h4>Benchmarks</h4>
+        <ul>
+          <li><a href="/benchmarks/">All models</a></li>
+          <li><a href="/benchmarks/compare/">Compare models</a></li>
+          <li><a href="/benchmarks/#companies">By company</a></li>
+          <li><a href="/benchmarks/#tests">The tests</a></li>
+          <li><a href="/benchmarks/#method">Method &amp; sources</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/chat/">Chat</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

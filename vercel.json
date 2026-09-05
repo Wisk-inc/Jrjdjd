@@ -47,6 +47,56 @@
       "source": "/assistant",
       "destination": "/chat/",
       "permanent": true
+    },
+    {
+      "source": "/benchmark",
+      "destination": "/benchmarks/",
+      "permanent": true
+    },
+    {
+      "source": "/benchmarks",
+      "destination": "/benchmarks/",
+      "permanent": true
+    },
+    {
+      "source": "/leaderboard",
+      "destination": "/benchmarks/",
+      "permanent": true
+    },
+    {
+      "source": "/leaderboards",
+      "destination": "/benchmarks/",
+      "permanent": true
+    },
+    {
+      "source": "/compare",
+      "destination": "/benchmarks/compare/",
+      "permanent": true
+    },
+    {
+      "source": "/vs",
+      "destination": "/benchmarks/compare/",
+      "permanent": true
+    },
+    {
+      "source": "/models/compare",
+      "destination": "/benchmarks/compare/",
+      "permanent": true
+    },
+    {
+      "source": "/model-comparison",
+      "destination": "/benchmarks/compare/",
+      "permanent": true
+    },
+    {
+      "source": "/llm-benchmarks",
+      "destination": "/benchmarks/",
+      "permanent": true
+    },
+    {
+      "source": "/ai-models",
+      "destination": "/benchmarks/",
+      "permanent": true
     }
   ],
   "headers": [
@@ -81,6 +131,15 @@
     },
     {
       "source": "/assets/(js|css)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/assets/data/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

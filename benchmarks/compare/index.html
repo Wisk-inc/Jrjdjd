@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Compare AI Models Side by Side — Specs, Price and Benchmarks</title>
+<meta name="description" content="Choose up to four of 153 AI models and compare context window, price per million tokens, licence and published benchmark scores in a single table.">
+<link rel="canonical" href="https://corx-labs.com/benchmarks/compare/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/compare/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/benchmarks/compare/">
+<meta property="og:title" content="Compare AI Models Side by Side — Specs, Price and Benchmarks">
+<meta property="og:description" content="Choose up to four of 153 AI models and compare context window, price per million tokens, licence and published benchmark scores in a single table.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-compare.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Compare AI Models Side by Side — Specs, Price and Benchmarks">
+<meta name="twitter:description" content="Choose up to four of 153 AI models and compare context window, price per million tokens, licence and published benchmark scores in a single table.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-compare.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/benchmarks.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/benchmarks/compare/#webpage",
+      "url": "https://corx-labs.com/benchmarks/compare/",
+      "name": "Compare AI models side by side",
+      "isPartOf": {
+        "@id": "https://corx-labs.com/#website"
+      },
+      "inLanguage": "en",
+      "dateModified": "2026-09-04",
+      "breadcrumb": {
+        "@id": "https://corx-labs.com/benchmarks/compare/#webpage#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/benchmarks/compare/#webpage#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://corx-labs.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Benchmarks",
+          "item": "https://corx-labs.com/benchmarks/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Compare"
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary"><a href="/chat/">Chat</a><a href="/documentation/">Documentation</a><a href="/models/">Our Products</a><a href="/benchmarks/" aria-current="page">Benchmarks</a><a href="/blog/">Blog</a><a href="/developers/">Developers</a><a href="/about/">About Us</a><a href="/contact/">Contact</a></nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/chat/">Open the chat</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul><li><a href="/chat/">Chat</a></li><li><a href="/documentation/">Documentation</a></li><li><a href="/models/">Our Products</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><a href="/blog/">Blog</a></li><li><a href="/developers/">Developers</a></li><li><a href="/about/">About Us</a></li><li><a href="/contact/">Contact</a></li></ul>
+      <a class="btn btn-primary" href="/chat/">Open the chat</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><span aria-current="page">Compare</span></li></ol></nav>
+    <p class="eyebrow" style="margin-bottom:18px">Compare</p>
+    <h1>Put any models side by side.</h1>
+    <p class="lede">Choose up to four of the 153 models in the index and see specification,
+      price and every published benchmark in one table.</p>
+  </div>
+
+  <section class="section-tight" style="padding-top:0">
+    <div class="shell">
+      <div class="bm-toolbar" style="margin-bottom:16px">
+        <div class="bm-picker" id="bm-picker">
+          <button type="button" class="btn btn-primary" id="bm-add" aria-haspopup="listbox"
+                  aria-expanded="false" aria-controls="bm-picker-panel">Add a model</button>
+          <div class="bm-picker-panel" id="bm-picker-panel" hidden role="listbox"
+               aria-label="Choose a model">
+            <input type="search" id="bm-picker-q" placeholder="Search models&hellip;"
+                   aria-label="Search models" autocomplete="off">
+            <div id="bm-picker-list"></div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-ghost" id="bm-reset">Start over</button>
+        <button type="button" class="btn btn-ghost" id="bm-copy"
+                data-label="Copy link">Copy link</button>
+      </div>
+
+      <div id="bm-compare-root" aria-live="polite">
+        <noscript>
+          <div class="bm-provenance" style="border-left-color:var(--espresso)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div>
+              <h2>This tool needs JavaScript</h2>
+              <p>The pre-built comparisons below work without it, and every model has its own
+                page with the same specification and benchmark tables.</p>
+            </div>
+          </div>
+        </noscript>
+      </div>
+
+      <div style="margin-top:26px"><div class="bm-provenance" id="method-note">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+  <div>
+    <h2>Where these numbers come from</h2>
+    <p>Every score on this page is a <strong>published</strong> figure, taken from the model's
+      own card, system card, technical report or release post, or from a public leaderboard.
+      CorX Labs did not run these evaluations. Most are self-reported by the lab that built
+      the model, which means they were produced under that lab's own choice of prompt,
+      scaffold and number of attempts — so treat them as a starting point for a shortlist,
+      not as a settled ranking.</p>
+    <p>Where a figure has not been published, the cell reads
+      <span class="bm-nil">Not reported</span> rather than an estimate. Nothing here is
+      inferred, interpolated or guessed. Each model records the month its row was last
+      checked. <a href="/benchmarks/#method">Full method and caveats</a>.</p>
+  </div>
+</div></div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="popular-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="eyebrow">Ready made</p>
+        <h2 id="popular-title">Popular comparisons</h2>
+        <p>Each of these is a full static page — no JavaScript needed.</p>
+      </div>
+      <div class="bm-vs-grid"><a class="bm-vs" href="/benchmarks/compare/gpt-5-vs-claude-opus-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">GPT-5 vs Claude Opus 4.5</span><span class="s">OpenAI &middot; Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/gpt-5-vs-gemini-3-pro/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">GPT-5 vs Gemini 3 Pro</span><span class="s">OpenAI &middot; Google DeepMind</span></span></a><a class="bm-vs" href="/benchmarks/compare/claude-opus-4-5-vs-gemini-3-pro/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Claude Opus 4.5 vs Gemini 3 Pro</span><span class="s">Anthropic &middot; Google DeepMind</span></span></a><a class="bm-vs" href="/benchmarks/compare/claude-sonnet-4-5-vs-gpt-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Claude Sonnet 4.5 vs GPT-5</span><span class="s">Anthropic &middot; OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/claude-sonnet-4-5-vs-gemini-2-5-pro/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Claude Sonnet 4.5 vs Gemini 2.5 Pro</span><span class="s">Anthropic &middot; Google DeepMind</span></span></a><a class="bm-vs" href="/benchmarks/compare/claude-sonnet-4-5-vs-claude-opus-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Claude Sonnet 4.5 vs Claude Opus 4.5</span><span class="s">Anthropic &middot; Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/claude-sonnet-4-5-vs-claude-haiku-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Claude Sonnet 4.5 vs Claude Haiku 4.5</span><span class="s">Anthropic &middot; Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/gpt-5-vs-gpt-5-mini/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">GPT-5 vs GPT-5 mini</span><span class="s">OpenAI &middot; OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/gpt-5-mini-vs-claude-haiku-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">GPT-5 mini vs Claude Haiku 4.5</span><span class="s">OpenAI &middot; Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/gemini-2-5-pro-vs-gemini-3-pro/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Gemini 2.5 Pro vs Gemini 3 Pro</span><span class="s">Google DeepMind &middot; Google DeepMind</span></span></a><a class="bm-vs" href="/benchmarks/compare/gemini-2-5-flash-vs-gpt-5-mini/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Gemini 2.5 Flash vs GPT-5 mini</span><span class="s">Google DeepMind &middot; OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/grok-4-vs-gpt-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/xai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Grok 4 vs GPT-5</span><span class="s">xAI &middot; OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/grok-4-vs-claude-opus-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/xai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Grok 4 vs Claude Opus 4.5</span><span class="s">xAI &middot; Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/deepseek-v3-2-vs-gpt-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">DeepSeek-V3.2 vs GPT-5</span><span class="s">DeepSeek &middot; OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/deepseek-v3-2-vs-claude-sonnet-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">DeepSeek-V3.2 vs Claude Sonnet 4.5</span><span class="s">DeepSeek &middot; Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/deepseek-r1-vs-gpt-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">DeepSeek-R1 vs GPT-5</span><span class="s">DeepSeek &middot; OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/deepseek-r1-vs-deepseek-v3-2/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">DeepSeek-R1 vs DeepSeek-V3.2</span><span class="s">DeepSeek &middot; DeepSeek</span></span></a><a class="bm-vs" href="/benchmarks/compare/kimi-k2-thinking-vs-claude-opus-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/moonshot.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">Kimi K2 Thinking vs Claude Opus 4.5</span><span class="s">Moonshot AI &middot; Anthropic</span></span></a></div>
+      <div class="btn-row" style="margin-top:22px">
+        <a class="btn btn-ghost" href="/benchmarks/">Browse all 153 models <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Benchmarks">
+        <h4>Benchmarks</h4>
+        <ul>
+          <li><a href="/benchmarks/">All models</a></li>
+          <li><a href="/benchmarks/compare/">Compare models</a></li>
+          <li><a href="/benchmarks/#companies">By company</a></li>
+          <li><a href="/benchmarks/#tests">The tests</a></li>
+          <li><a href="/benchmarks/#method">Method &amp; sources</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/chat/">Chat</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/benchmarks.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+/* ==========================================================================
+   CorX Labs — /benchmarks/
+   Model comparison. Loaded on top of main.css, which owns every token used
+   here; nothing in this file redefines a colour, only arranges them.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Company marks
+   The SVGs carry their own prefers-color-scheme rules (see tools/logos.py),
+   so nothing here needs to recolour them — only size and seat them.
+   -------------------------------------------------------------------------- */
+.logo-mark {
+  display: block;
+  flex: none;
+  object-fit: contain;
+}
+
+.logo-tile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  width: 40px;
+  height: 40px;
+}
+.logo-tile.is-lg { width: 62px; height: 62px; border-radius: 16px; }
+.logo-tile.is-sm { width: 30px; height: 30px; border-radius: 9px; }
+
+/* --------------------------------------------------------------------------
+   2. Provenance — where the numbers come from
+   Deliberately prominent rather than a footnote: the whole page is worthless
+   if a reader assumes CorX Labs ran these evaluations itself.
+   -------------------------------------------------------------------------- */
+.bm-provenance {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--espresso);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  background: var(--paper-raised);
+  padding: 20px 24px;
+}
+.bm-provenance svg { width: 20px; height: 20px; color: var(--espresso); margin-top: 2px; }
+.bm-provenance h2,
+.bm-provenance h3 {
+  font-family: var(--sans);
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  margin-bottom: 8px;
+}
+.bm-provenance p { color: var(--muted); font-size: .92rem; }
+.bm-provenance p + p { margin-top: .7em; }
+.bm-provenance a { color: var(--ink-strong); text-decoration: underline; text-underline-offset: 3px; }
+
+/* --------------------------------------------------------------------------
+   3. Toolbar — search, filters, sort
+   -------------------------------------------------------------------------- */
+.bm-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.bm-search {
+  position: relative;
+  flex: 1 1 260px;
+  min-width: 0;
+}
+.bm-search svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  translate: 0 -50%;
+  width: 15px; height: 15px;
+  color: var(--faint);
+  pointer-events: none;
+}
+.bm-search input {
+  width: 100%;
+  padding: 11px 14px 11px 38px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--paper-raised);
+  color: var(--ink-strong);
+  font-size: .9rem;
+}
+.bm-search input::placeholder { color: var(--faint); }
+.bm-search input:focus-visible { outline: 2px solid var(--espresso); outline-offset: 1px; }
+
+.bm-select {
+  appearance: none;
+  padding: 11px 34px 11px 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--paper-raised)
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236d6357' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 12px center / 14px;
+  color: var(--ink-strong);
+  font-size: .87rem;
+  cursor: pointer;
+  max-width: 100%;
+}
+
+/* Filter chips. Real checkboxes underneath, so they are keyboard-reachable
+   and announce their state without any ARIA bookkeeping. */
+.bm-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.bm-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--paper-raised);
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease),
+              background var(--fast) var(--ease);
+}
+.bm-chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+}
+.bm-chip:hover { border-color: var(--ink); color: var(--ink-strong); }
+.bm-chip:has(input:checked) {
+  background: var(--ink-strong);
+  border-color: var(--ink-strong);
+  color: var(--paper-raised);
+}
+.bm-chip:has(input:focus-visible) { outline: 2px solid var(--espresso); outline-offset: 2px; }
+
+.bm-result-count {
+  font-size: .82rem;
+  color: var(--faint);
+  margin-bottom: 14px;
+}
+.bm-result-count strong { color: var(--ink-strong); font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   4. Leaderboard table
+   -------------------------------------------------------------------------- */
+.bm-table-wrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+}
+
+.bm-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 940px;
+  font-size: .875rem;
+}
+.bm-table th,
+.bm-table td {
+  padding: 11px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.bm-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--paper-sunk);
+  font-size: .69rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 550;
+  white-space: nowrap;
+}
+.bm-table tbody tr { transition: background var(--fast) var(--ease); }
+.bm-table tbody tr:hover { background: var(--glow); }
+.bm-table tbody tr:last-child td { border-bottom: 0; }
+
+/* The model cell: mark, name, maker. The one column that must never wrap
+   awkwardly, so it gets its own grid. */
+.bm-model-cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.bm-model-cell .names { min-width: 0; }
+.bm-model-cell .name {
+  display: block;
+  font-weight: 550;
+  color: var(--ink-strong);
+  letter-spacing: -.01em;
+  line-height: 1.3;
+}
+.bm-model-cell a.name:hover { text-decoration: underline; text-underline-offset: 3px; }
+.bm-model-cell .maker {
+  display: block;
+  font-size: .755rem;
+  color: var(--faint);
+  line-height: 1.4;
+}
+
+/* Numerics line up only if the digits are the same width. */
+.bm-num { text-align: right !important; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bm-table td.bm-num { color: var(--ink); }
+.bm-nil { color: var(--faint); }
+
+/* Sortable headers. `aria-sort` on the <th> is the source of truth; the
+   caret is drawn from it so the two can never disagree. */
+.bm-table th[aria-sort] { cursor: pointer; user-select: none; }
+.bm-table th[aria-sort] .lbl { display: inline-flex; align-items: center; gap: 5px; }
+.bm-table th[aria-sort] .lbl::after {
+  content: "";
+  width: 0; height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-bottom: 5px solid currentColor;
+  opacity: 0;
+  transition: opacity var(--fast) var(--ease), rotate var(--fast) var(--ease);
+}
+.bm-table th[aria-sort]:hover { color: var(--ink-strong); }
+.bm-table th[aria-sort]:hover .lbl::after { opacity: .35; }
+.bm-table th[aria-sort="ascending"],
+.bm-table th[aria-sort="descending"] { color: var(--ink-strong); }
+.bm-table th[aria-sort="ascending"] .lbl::after { opacity: 1; }
+.bm-table th[aria-sort="descending"] .lbl::after { opacity: 1; rotate: 180deg; }
+.bm-table th[aria-sort] button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+}
+.bm-table th button:focus-visible { outline: 2px solid var(--espresso); outline-offset: 3px; }
+
+/* Compare checkbox column */
+.bm-pick { width: 44px; }
+.bm-pick input {
+  width: 16px; height: 16px;
+  accent-color: var(--espresso);
+  cursor: pointer;
+  margin: 0;
+}
+.bm-table tbody tr:has(.bm-pick input:checked) { background: var(--glow); }
+
+.bm-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-size: .68rem;
+  font-weight: 550;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.bm-badge.is-open { color: var(--espresso); border-color: var(--line-strong); }
+
+.bm-empty { padding: 46px 22px; text-align: center; color: var(--muted); }
+.bm-empty strong { display: block; color: var(--ink-strong); margin-bottom: 6px; }
+
+/* --------------------------------------------------------------------------
+   5. Compare tray — appears once rows are picked
+   -------------------------------------------------------------------------- */
+.bm-tray {
+  position: sticky;
+  bottom: 16px;
+  z-index: 40;
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 12px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
+  box-shadow: var(--glass-shadow);
+}
+.bm-tray[hidden] { display: none !important; }
+.bm-tray .count { font-size: .85rem; color: var(--muted); margin-right: auto; }
+.bm-tray .count strong { color: var(--ink-strong); font-weight: 600; }
+.bm-tray .picked { display: flex; flex-wrap: wrap; gap: 6px; }
+.bm-tray .picked span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  font-size: .76rem;
+  color: var(--ink-strong);
+}
+
+/* --------------------------------------------------------------------------
+   6. Compare layout
+   The row label column is sticky so it stays readable while the model
+   columns scroll sideways — the single most important affordance here.
+   -------------------------------------------------------------------------- */
+.bm-compare-wrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+}
+.bm-compare {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: .885rem;
+}
+.bm-compare th,
+.bm-compare td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.bm-compare tr:last-child > * { border-bottom: 0; }
+
+/* Row label */
+.bm-compare th[scope="row"] {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 190px;
+  min-width: 170px;
+  background: var(--paper-sunk);
+  font-size: .755rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 550;
+  border-right: 1px solid var(--line);
+}
+.bm-compare th[scope="row"] .hint {
+  display: block;
+  margin-top: 5px;
+  font-size: .7rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--faint);
+  opacity: .85;
+  font-weight: 400;
+  line-height: 1.45;
+}
+.bm-compare td { min-width: 190px; color: var(--ink); }
+.bm-compare td.is-nil { color: var(--faint); }
+
+/* Column head: the model card at the top of each column */
+.bm-compare thead th[scope="col"] {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--paper-sunk);
+  border-bottom: 1px solid var(--line-strong);
+  vertical-align: bottom;
+  min-width: 210px;
+}
+.bm-compare thead th[scope="row"],
+.bm-compare thead th.bm-corner {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  background: var(--paper-sunk);
+  border-right: 1px solid var(--line);
+}
+
+/* main.css uppercases and letter-spaces every `thead th`, which is right for a
+   data table and wrong for a column that is a model's name. Reset it here. */
+.bm-compare thead th[scope="col"] {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: inherit;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.bm-colhead { display: grid; gap: 9px; }
+.bm-colhead .top { display: flex; align-items: center; gap: 10px; }
+.bm-colhead .top > span { min-width: 0; }
+.bm-colhead .title {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.28rem;
+  line-height: 1.15;
+  color: var(--ink-strong);
+  letter-spacing: -.015em;
+}
+.bm-colhead a.title:hover { text-decoration: underline; text-underline-offset: 3px; }
+.bm-colhead .maker {
+  display: block;
+  font-size: .74rem;
+  color: var(--faint);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.bm-colhead .drop {
+  align-self: start;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--muted);
+  border-radius: var(--r-pill);
+  padding: 3px 10px;
+  font-size: .7rem;
+  cursor: pointer;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 500;
+}
+.bm-colhead .drop:hover { color: var(--ink-strong); border-color: var(--line-strong); }
+
+/* A cell that wins its row */
+.bm-best { color: var(--ink-strong) !important; font-weight: 600; }
+.bm-best-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 7px;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: var(--espresso);
+  color: var(--paper-raised);
+  font-size: .63rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   7. Benchmark bars
+   -------------------------------------------------------------------------- */
+.bm-bar {
+  display: grid;
+  gap: 6px;
+  min-width: 150px;
+}
+.bm-bar .val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--ink-strong);
+  font-size: .95rem;
+}
+.bm-bar .val small { font-size: .72em; font-weight: 400; color: var(--faint); margin-left: 2px; }
+.bm-bar .track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.bm-bar .fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--espresso);
+  opacity: .42;
+}
+.bm-bar.is-best .fill { opacity: 1; }
+.bm-bar .track + .note { font-size: .72rem; color: var(--faint); }
+
+/* --------------------------------------------------------------------------
+   8. Model page
+   -------------------------------------------------------------------------- */
+.bm-model-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.bm-model-head h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); margin: 0; }
+.bm-model-head .maker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .84rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.bm-model-head .maker a { color: var(--ink-strong); text-decoration: underline; text-underline-offset: 3px; }
+
+.bm-keyfacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+  overflow: hidden;
+  margin: 0;
+}
+.bm-keyfacts > div {
+  padding: 16px 18px;
+  box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line);
+}
+.bm-keyfacts dt {
+  font-size: .69rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+.bm-keyfacts dd {
+  margin: 0;
+  font-size: .96rem;
+  font-weight: 550;
+  color: var(--ink-strong);
+  font-variant-numeric: tabular-nums;
+}
+.bm-keyfacts dd.is-nil { color: var(--faint); font-weight: 400; }
+
+/* Cross-links to the head-to-heads that exist for this model */
+.bm-vs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 10px; }
+.bm-vs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+  transition: border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.bm-vs:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.bm-vs .txt { min-width: 0; }
+.bm-vs .n { display: block; font-size: .87rem; font-weight: 550; color: var(--ink-strong); line-height: 1.3; }
+.bm-vs .s { display: block; font-size: .73rem; color: var(--faint); }
+
+/* --------------------------------------------------------------------------
+   9. Company grid
+   -------------------------------------------------------------------------- */
+.bm-company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(212px, 1fr)); gap: 10px; }
+.bm-company {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+  transition: border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.bm-company:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.bm-company .n { display: block; font-size: .89rem; font-weight: 550; color: var(--ink-strong); line-height: 1.3; }
+.bm-company .s { display: block; font-size: .73rem; color: var(--faint); }
+
+/* --------------------------------------------------------------------------
+   10. Picker — add a model to the comparison
+   -------------------------------------------------------------------------- */
+.bm-picker { position: relative; }
+.bm-picker-panel {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 8px);
+  left: 0;
+  width: min(380px, calc(100vw - 40px));
+  max-height: 340px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+  box-shadow: 0 2px 6px rgba(33,26,19,.08), 0 24px 48px -20px rgba(33,26,19,.36);
+  padding: 6px;
+}
+.bm-picker-panel[hidden] { display: none !important; }
+.bm-picker-panel input[type="search"] {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  font-size: .87rem;
+}
+.bm-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+.bm-opt:hover,
+.bm-opt[aria-selected="true"] { background: var(--glow); }
+.bm-opt .n { font-size: .87rem; font-weight: 500; color: var(--ink-strong); line-height: 1.3; }
+.bm-opt .s { font-size: .72rem; color: var(--faint); }
+.bm-opt[disabled] { opacity: .42; cursor: not-allowed; }
+.bm-picker-none { padding: 18px 12px; text-align: center; font-size: .84rem; color: var(--faint); }
+
+/* --------------------------------------------------------------------------
+   11. Verdict / summary blocks on a head-to-head
+   -------------------------------------------------------------------------- */
+.bm-verdict { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.bm-verdict > div {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+  padding: 20px 22px;
+}
+.bm-verdict h3 {
+  font-family: var(--sans);
+  font-size: .74rem;
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 12px;
+}
+.bm-verdict p { font-size: .93rem; color: var(--muted); }
+.bm-verdict strong { color: var(--ink-strong); font-weight: 600; }
+.bm-verdict .headline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  line-height: 1.15;
+  color: var(--ink-strong);
+  margin-bottom: 10px;
+  letter-spacing: -.015em;
+}
+
+/* --------------------------------------------------------------------------
+   12. Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .bm-compare th[scope="row"] { width: 150px; min-width: 138px; font-size: .71rem; }
+  .bm-compare td { min-width: 168px; }
+  .bm-compare thead th[scope="col"] { min-width: 190px; }
+  .bm-colhead .title { font-size: 1.12rem; }
+}
+
+@media (max-width: 620px) {
+  .bm-provenance { grid-template-columns: 1fr; gap: 12px; padding: 18px 20px; }
+  .bm-toolbar { gap: 8px; }
+  .bm-search { flex-basis: 100%; }
+  .bm-select { flex: 1 1 auto; }
+  .bm-tray { border-radius: var(--r-md); padding: 12px 14px; }
+  .bm-tray .btn { flex: 1 1 100%; }
+  .bm-model-head { gap: 14px; }
+  .bm-compare th[scope="row"] { width: 124px; min-width: 116px; }
+  .bm-compare td { min-width: 152px; }
+  .bm-compare thead th[scope="col"] { min-width: 176px; }
+  .bm-compare th, .bm-compare td { padding: 11px 12px; }
+}
+
+/* Below this the sticky row label eats the screen; drop it and let the label
+   ride above each value instead. */
+@media (max-width: 430px) {
+  .bm-compare th[scope="row"] { position: static; width: auto; min-width: 0; }
+}
+
+@media print {
+  .bm-toolbar, .bm-tray, .bm-picker, .bm-colhead .drop { display: none !important; }
+  .bm-table-wrap, .bm-compare-wrap { overflow: visible; }
+  .bm-table, .bm-compare { min-width: 0; }
+}

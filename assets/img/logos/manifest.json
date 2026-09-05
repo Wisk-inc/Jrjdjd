@@ -1,0 +1,289 @@
+{
+ "01ai": {
+  "icon": "zeroone-color",
+  "mixed": true,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "ai21": {
+  "icon": "ai21",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "alibaba": {
+  "icon": "qwen-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "allenai": {
+  "icon": "ai2-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "amazon": {
+  "icon": "aws-color",
+  "mixed": true,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "anthropic": {
+  "icon": "claude-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "apple": {
+  "icon": "apple",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "baidu": {
+  "icon": "baidu-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "bytedance": {
+  "icon": "bytedance-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "cohere": {
+  "icon": "cohere-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "corx": {
+  "mono": true,
+  "source": "CorX Labs",
+  "viewBox": "0 0 24 24"
+ },
+ "databricks": {
+  "icon": "databricks",
+  "mixed": false,
+  "mono": true,
+  "source": "simple-icons (CC0-1.0)",
+  "viewBox": "0 0 24 24"
+ },
+ "deepseek": {
+  "icon": "deepseek-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "google": {
+  "icon": "gemini-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "ibm": {
+  "icon": "ibm",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "inception": {
+  "icon": "inception",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "inclusion": {
+  "icon": "antgroup-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "lgai": {
+  "icon": "lg-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "liquid": {
+  "icon": "liquid",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "meta": {
+  "icon": "meta-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "microsoft": {
+  "icon": "microsoft-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "minimax": {
+  "icon": "minimax-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "mistral": {
+  "icon": "mistral-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "moonshot": {
+  "icon": "moonshot",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "naver": {
+  "icon": "naver",
+  "mixed": false,
+  "mono": true,
+  "source": "simple-icons (CC0-1.0)",
+  "viewBox": "0 0 24 24"
+ },
+ "nous": {
+  "icon": "nousresearch",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "nvidia": {
+  "icon": "nvidia-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "openai": {
+  "icon": "openai",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "openbmb": {
+  "mono": true,
+  "monogram": "BM",
+  "source": "monogram",
+  "viewBox": "0 0 24 24"
+ },
+ "perplexity": {
+  "icon": "perplexity-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "rednote": {
+  "icon": "xiaohongshu",
+  "mixed": false,
+  "mono": true,
+  "source": "simple-icons (CC0-1.0)",
+  "viewBox": "0 0 24 24"
+ },
+ "reka": {
+  "mono": true,
+  "monogram": "Rk",
+  "source": "monogram",
+  "viewBox": "0 0 24 24"
+ },
+ "salesforce": {
+  "mono": true,
+  "monogram": "SF",
+  "source": "monogram",
+  "viewBox": "0 0 24 24"
+ },
+ "sarvam": {
+  "mono": true,
+  "monogram": "Sv",
+  "source": "monogram",
+  "viewBox": "0 0 24 24"
+ },
+ "snowflake": {
+  "icon": "snowflake-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "stepfun": {
+  "icon": "stepfun-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "tencent": {
+  "icon": "hunyuan-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "tii": {
+  "icon": "tii-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "upstage": {
+  "icon": "upstage-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "writer": {
+  "mono": true,
+  "monogram": "Wr",
+  "source": "monogram",
+  "viewBox": "0 0 24 24"
+ },
+ "xai": {
+  "icon": "xai",
+  "mixed": false,
+  "mono": true,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ },
+ "zai": {
+  "icon": "zhipu-color",
+  "mixed": false,
+  "mono": false,
+  "source": "@lobehub/icons-static-svg (MIT)",
+  "viewBox": "0 0 24 24"
+ }
+}
