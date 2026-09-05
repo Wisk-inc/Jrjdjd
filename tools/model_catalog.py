@@ -684,6 +684,16 @@ MODELS = [
       verified="2026-08"),
 
     # -------------------------------------------------------------- Moonshot
+    # Named Kimi K3, not "Kimi 3" — Moonshot kept the K.
+    M("kimi-k3", "Kimi K3", "moonshot", rel="2026-07", arch="MoE", params="2.8T",
+      active="104B", ctx=1048576, out=1048576, inp=["text", "image"], outp=["text"],
+      lic="Kimi K3 License", open=True, hosted_price=True, pin=3.0, pout=15.0, pcache=0.30,
+      reason=True, tools=True, hf="moonshotai/Kimi-K3",
+      desc="At 2.8 trillion parameters the largest open-weight model yet published — a "
+           "multimodal mixture of experts routing 16 of 896 experts plus two shared ones per "
+           "token, for 104B active. Weights released under a bespoke licence: open weights, "
+           "not OSI open source.",
+      b={}, verified="2026-09"),
     M("kimi-k2-thinking", "Kimi K2 Thinking", "moonshot", rel="2025-11", arch="MoE",
       params="1T", active="32B", ctx=262144, out=131072, inp=["text"], outp=["text"],
       lic="Modified MIT", open=True, hosted_price=True, pin=0.60, pout=2.50,
@@ -701,6 +711,15 @@ MODELS = [
       verified="2026-08"),
 
     # ------------------------------------------------------------------ Z.ai
+    M("glm-5-3", "GLM-5.3", "zai", rel="2026-08", arch="MoE", params="753B", active="39B",
+      ctx=1000000, inp=["text", "image"], outp=["text"], lic="GLM-5.3 License", open=True,
+      hosted_price=True, pin=1.40, pout=4.40, pcache=0.26, reason=True, tools=True,
+      hf="zai-org/GLM-5.3",
+      desc="Z.ai's flagship: 256 routed experts plus one shared, top-8 routing, about 39B "
+           "active per token across a million-token window. Open weights under an MIT-style "
+           "licence with one condition — a model-as-a-service operator above $10B revenue "
+           "needs a Z.ai security review first.",
+      b={}, verified="2026-09"),
     M("glm-4-6", "GLM-4.6", "zai", rel="2025-09", arch="MoE", params="357B", active="32B",
       ctx=204800, out=131072, inp=["text"], outp=["text"], lic="MIT", open=True,
       hosted_price=True, pin=0.60, pout=2.20, reason=True, tools=True, hf="zai-org/GLM-4.6",
@@ -911,55 +930,60 @@ MODELS = [
       b={"humaneval": 90.0},
       verified="2026-08"),
 
-    # ------------------------------------- Newest frontier, specs unpublished
+    # ------------------------------------------------- Anthropic Claude 5 line
     #
-    # These ship as API model IDs before a full model card exists. Everything
-    # not yet published is left empty rather than guessed, and the pages mark
-    # them provisional.
-    M("claude-opus-5", "Claude Opus 5", "anthropic", rel="2026", lic="Proprietary", open=False,
-      api_id="claude-opus-5", reason=True, tools=True, inp=["text", "image"], outp=["text"],
-      provisional=True,
-      desc="The current head of the Claude line. Available by API ID; a full specification "
-           "and benchmark card had not been published when this catalogue was last checked.",
+    # Specifications and pricing from Anthropic's own model pages on
+    # platform.claude.com, September 2026. Every current Claude model takes
+    # text and images and returns text, and every one supports tool use.
+    # Cache-read prices are the published per-model figures, not the 10% rule
+    # of thumb — Fable 5.1 and Mythos 5.1 read at 2.5% of input instead.
+    M("claude-opus-5", "Claude Opus 5", "anthropic", rel="2026-07", ctx=1000000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=5.0, pout=25.0, pcache=0.50, reason=True, tools=True, cut="2026-05",
+      api_id="claude-opus-5",
+      desc="Anthropic's model for complex agentic coding and enterprise work, and the default "
+           "recommendation for most workloads. Adaptive thinking is on by default and steered "
+           "by an effort parameter rather than a token budget.",
       b={}, verified="2026-09"),
-    M("claude-sonnet-5", "Claude Sonnet 5", "anthropic", rel="2026", lic="Proprietary", open=False,
-      api_id="claude-sonnet-5", reason=True, tools=True, inp=["text", "image"], outp=["text"],
-      provisional=True,
-      desc="The mid-tier Claude 5. Available by API ID; specifications not yet published.",
+    M("claude-sonnet-5", "Claude Sonnet 5", "anthropic", rel="2026-06", ctx=1000000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=2.0, pout=10.0, pcache=0.20, reason=True, tools=True, cut="2026-01",
+      api_id="claude-sonnet-5",
+      desc="The speed-and-intelligence tier of the Claude 5 family, and a drop-in upgrade from "
+           "Sonnet 4.6. A million-token window at a fifth of Opus 5's price.",
       b={}, verified="2026-09"),
-    M("claude-fable-5", "Claude Fable 5", "anthropic", rel="2026", lic="Proprietary",
-      open=False, api_id="claude-fable-5", reason=True, tools=True,
-      inp=["text", "image"], outp=["text"], provisional=True,
-      desc="A Claude 5 variant available by API ID. Specifications not yet published.",
+    M("claude-fable-5-1", "Claude Fable 5.1", "anthropic", rel="2026-09", ctx=1000000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=10.0, pout=50.0, pcache=0.25, reason=True, tools=True, cut="2026-06",
+      api_id="claude-fable-5-1",
+      desc="Anthropic's model for demanding reasoning and long-horizon agentic work — the one "
+           "to reach for when Opus 5 at high effort still falls short. Thinking is always on "
+           "and its raw chain of thought is never returned. Cache reads cost a quarter of what "
+           "Fable 5 charged.",
       b={}, verified="2026-09"),
-    M("claude-fable-5-1", "Claude Fable 5.1", "anthropic", rel="2026", lic="Proprietary",
-      open=False, api_id="claude-fable-5-1", reason=True, tools=True,
-      inp=["text", "image"], outp=["text"], provisional=True,
-      desc="The point release of Claude Fable 5, available by API ID. Specifications not "
-           "yet published.",
+    M("claude-fable-5", "Claude Fable 5", "anthropic", rel="2026-06", ctx=1000000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=10.0, pout=50.0, pcache=1.0, reason=True, tools=True, cut="2026-01",
+      api_id="claude-fable-5",
+      desc="The first Fable model, now legacy and superseded by Fable 5.1 at the same input and "
+           "output price. It introduced safety classifiers that decline requests with a "
+           "refusal stop reason rather than an error, and server-side fallback to another model.",
       b={}, verified="2026-09"),
-    M("claude-mythos-5", "Claude Mythos 5", "anthropic", rel="2026", lic="Proprietary",
-      open=False, api_id="claude-mythos-5", reason=True, tools=True,
-      inp=["text", "image"], outp=["text"], provisional=True,
-      desc="A Claude 5 variant available by API ID. Specifications not yet published.",
+    M("claude-mythos-5-1", "Claude Mythos 5.1", "anthropic", rel="2026-09", ctx=1000000,
+      out=128000, inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=10.0, pout=50.0, pcache=0.25, reason=True, tools=True, cut="2026-06",
+      api_id="claude-mythos-5-1", access="Invitation only — Project Glasswing",
+      desc="Claude Fable 5.1's capabilities, specifications and pricing, offered by invitation "
+           "only through Project Glasswing. Not generally available: access runs through "
+           "Anthropic, AWS or Google Cloud account teams.",
       b={}, verified="2026-09"),
-    M("claude-mythos-5-1", "Claude Mythos 5.1", "anthropic", rel="2026", lic="Proprietary",
-      open=False, api_id="claude-mythos-5-1", reason=True, tools=True,
-      inp=["text", "image"], outp=["text"], provisional=True,
-      desc="The point release of Claude Mythos 5, available by API ID. Specifications not "
-           "yet published.",
-      b={}, verified="2026-09"),
-
-    # Announced but not documented. Both labs have published open weights for
-    # every previous generation, but neither the licence nor the architecture
-    # of these is stated anywhere yet, so neither is recorded here.
-    M("glm-5-3", "GLM-5.3", "zai", rel="2026", api_id="glm-5.3", provisional=True,
-      desc="The successor to GLM-4.6. No model card, licence or benchmark figures had been "
-           "published when this catalogue was last checked.",
-      b={}, verified="2026-09"),
-    M("kimi-3", "Kimi 3", "moonshot", rel="2026", api_id="kimi-3", provisional=True,
-      desc="The successor to the Kimi K2 line. No model card, licence or benchmark figures "
-           "had been published when this catalogue was last checked.",
+    M("claude-mythos-5", "Claude Mythos 5", "anthropic", rel="2026-06", ctx=1000000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=10.0, pout=50.0, pcache=1.0, reason=True, tools=True, cut="2026-01",
+      api_id="claude-mythos-5", access="Invitation only — Project Glasswing",
+      desc="Claude Fable 5's capabilities without its safety classifiers, released alongside it "
+           "for defensive cybersecurity work under Project Glasswing. Same specifications and "
+           "pricing as Fable 5; access is approved case by case.",
       b={}, verified="2026-09"),
 
     # ----------------------------------------------- Earlier OpenAI / Google
@@ -1342,10 +1366,20 @@ COMPARISONS = [
     ("claude-mythos-5", "claude-fable-5"),
     ("claude-mythos-5-1", "claude-fable-5-1"),
     ("claude-mythos-5", "claude-opus-5"),
+    ("claude-opus-5", "gpt-5"),
+    ("claude-opus-5", "gemini-3-pro"),
+    ("claude-sonnet-5", "gpt-5-mini"),
+    ("claude-fable-5-1", "claude-fable-5"),
+    ("claude-fable-5-1", "gemini-3-pro"),
+    ("claude-mythos-5-1", "claude-mythos-5"),
+    ("glm-5-3", "kimi-k3"),
+    ("glm-5-3", "claude-opus-5"),
+    ("kimi-k3", "claude-opus-5"),
+    ("kimi-k3", "deepseek-v3-2"),
     ("glm-5-3", "glm-4-6"),
     ("glm-5-3", "deepseek-v3-2"),
-    ("kimi-3", "kimi-k2-thinking"),
-    ("kimi-3", "glm-5-3"),
+    ("kimi-k3", "kimi-k2-thinking"),
+    ("kimi-k3", "glm-5-3"),
     ("llama-3-1-70b", "llama-3-3-70b"),
     ("qwen3-14b", "gemma-3-12b"),
     ("qwen3-8b", "llama-3-1-8b"),

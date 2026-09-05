@@ -308,6 +308,8 @@
       ['Tool calling', null, function (m) { return m.tools ? 'Yes' : ('tools' in m ? 'No' : null); }],
       ['Knowledge cutoff', null, function (m) { return m.cut || null; }],
       ['Licence', null, function (m) { return m.licence || null; }],
+      ['Availability', 'Whether anyone can call it, or access is approved case by case',
+        function (m) { return m.access || null; }],
       ['Open weights', 'Can you download and run it yourself',
         function (m) { return ('open' in m) ? (m.open ? 'Yes' : 'No') : null; }]
     ];

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>GLM-5.3 — Specs, Pricing and Benchmarks</title>
-<meta name="description" content="GLM-5.3 by Z.ai (Zhipu): proprietary. Published benchmark scores, full specification and side-by-side comparisons.">
+<meta name="description" content="GLM-5.3 by Z.ai (Zhipu): 1M context, $1.40 per million input tokens, open weights. Published benchmark scores, full specification and side-by-side comparisons.">
 <link rel="canonical" href="https://corx-labs.com/benchmarks/models/glm-5-3/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -20,13 +20,13 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/benchmarks/models/glm-5-3/">
 <meta property="og:title" content="GLM-5.3 — Specs, Pricing and Benchmarks">
-<meta property="og:description" content="GLM-5.3 by Z.ai (Zhipu): proprietary. Published benchmark scores, full specification and side-by-side comparisons.">
+<meta property="og:description" content="GLM-5.3 by Z.ai (Zhipu): 1M context, $1.40 per million input tokens, open weights. Published benchmark scores, full specification and side-by-side comparisons.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-model.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="GLM-5.3 — Specs, Pricing and Benchmarks">
-<meta name="twitter:description" content="GLM-5.3 by Z.ai (Zhipu): proprietary. Published benchmark scores, full specification and side-by-side comparisons.">
+<meta name="twitter:description" content="GLM-5.3 by Z.ai (Zhipu): 1M context, $1.40 per million input tokens, open weights. Published benchmark scores, full specification and side-by-side comparisons.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-model.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -93,10 +93,17 @@
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Large language model",
       "operatingSystem": "Cross-platform",
-      "description": "The successor to GLM-4.6. No model card, licence or benchmark figures had been published when this catalogue was last checked.",
+      "description": "Z.ai's flagship: 256 routed experts plus one shared, top-8 routing, about 39B active per token across a million-token window. Open weights under an MIT-style licence with one condition — a model-as-a-service operator above $10B revenue needs a Z.ai security review first.",
       "author": {
         "@type": "Organization",
         "name": "Z.ai (Zhipu)"
+      },
+      "license": "GLM-5.3 License",
+      "offers": {
+        "@type": "Offer",
+        "price": "1.4",
+        "priceCurrency": "USD",
+        "description": "USD per million input tokens"
       }
     }
   ]
@@ -139,8 +146,8 @@
         <span class="maker">by <a href="/benchmarks/companies/zai/">Z.ai (Zhipu)</a> &middot; China</span>
       </div>
     </div>
-    <div style="margin-top:20px"><div class="tag-row"><span class="tag">Specs pending</span></div></div>
-    <p class="lede" style="margin-top:20px">The successor to GLM-4.6. No model card, licence or benchmark figures had been published when this catalogue was last checked.</p>
+    <div style="margin-top:20px"><div class="tag-row"><span class="tag tag-live">Open weights</span><span class="tag">Reasoning</span><span class="tag">Vision</span><span class="tag">Tool calling</span><span class="tag">Mixture of experts</span><span class="tag">1M context</span></div></div>
+    <p class="lede" style="margin-top:20px">Z.ai&#x27;s flagship: 256 routed experts plus one shared, top-8 routing, about 39B active per token across a million-token window. Open weights under an MIT-style licence with one condition — a model-as-a-service operator above $10B revenue needs a Z.ai security review first.</p>
   </div>
 
   <div class="shell"><hr class="rule"></div>
@@ -151,8 +158,8 @@
         <p class="eyebrow">Specification</p>
         <h2 id="spec-title">The numbers</h2>
       </div>
-      <dl class="bm-keyfacts"><div><dt>Maker</dt><dd><a href="/benchmarks/companies/zai/">Z.ai (Zhipu)</a></dd></div><div><dt>Released</dt><dd>2026</dd></div><div><dt>Parameters</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Architecture</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Context window</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Max output</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Input</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Output</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Reasoning</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Tool calling</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Knowledge cutoff</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Licence</dt><dd>Not stated</dd></div><div><dt>Weights</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div></dl>
-      <p style="margin-top:16px;font-size:.88rem;color:var(--muted)">API model ID: <code>glm-5.3</code></p>
+      <dl class="bm-keyfacts"><div><dt>Maker</dt><dd><a href="/benchmarks/companies/zai/">Z.ai (Zhipu)</a></dd></div><div><dt>Released</dt><dd>2026-08</dd></div><div><dt>Parameters</dt><dd>753B total / 39B active</dd></div><div><dt>Architecture</dt><dd>MoE</dd></div><div><dt>Context window</dt><dd>1,000,000 tokens</dd></div><div><dt>Max output</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Input</dt><dd>Text, Image</dd></div><div><dt>Output</dt><dd>Text</dd></div><div><dt>Reasoning</dt><dd>Yes</dd></div><div><dt>Tool calling</dt><dd>Yes</dd></div><div><dt>Knowledge cutoff</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Licence</dt><dd>GLM-5.3 License</dd></div><div><dt>Availability</dt><dd class="is-nil"><span class="bm-nil">Not reported</span></dd></div><div><dt>Weights</dt><dd>Downloadable</dd></div></dl>
+      
     </div>
   </section>
 
@@ -162,7 +169,7 @@
         <p class="eyebrow">Cost</p>
         <h2 id="price-title">Price per million tokens</h2>
       </div>
-      <p>No public API price. This model is not offered on a public per-token API.</p>
+      <dl class="bm-keyfacts"><div><dt>Input</dt><dd>$1.40 <small style="font-weight:400;color:var(--faint)">/ M tokens</small></dd></div><div><dt>Output</dt><dd>$4.40 <small style="font-weight:400;color:var(--faint)">/ M tokens</small></dd></div><div><dt>Cached input</dt><dd>$0.26</dd></div><div><dt>Blended 3:1</dt><dd>$2.15</dd></div></dl><p style="margin-top:14px;font-size:.9rem;color:var(--muted)">This model has open weights, so there is no first-party price. The figures above are a representative third-party hosting rate — you can also run it yourself for the cost of the hardware.</p>
     </div>
   </section>
 
@@ -177,7 +184,7 @@
       
       <h3 style="font-family:var(--sans);font-size:.74rem;font-weight:600;letter-spacing:.11em;
                  text-transform:uppercase;color:var(--faint);margin:36px 0 14px">Every reported test</h3>
-      <div class="bm-empty"><strong>No published benchmark scores yet</strong>This model is available by API ID, but its maker has not published a benchmark card. Nothing has been estimated in its place.</div>
+      <div class="bm-empty"><strong>No published benchmark scores yet</strong>Its maker has not published benchmark figures for this model, and nothing has been estimated in their place.</div>
       <div style="margin-top:22px"><div class="bm-provenance" id="method-note">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
   <div>
@@ -201,7 +208,7 @@
     <div class="shell">
       <div class="section-head"><p class="eyebrow">Head to head</p>
         <h2 id="vs-title">GLM-5.3 compared</h2></div>
-      <div class="bm-vs-grid"><a class="bm-vs" href="/benchmarks/compare/glm-5-3-vs-glm-4-6/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/zai.ce26153c.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs GLM-4.6</span><span class="s">Z.ai (Zhipu)</span></span></a><a class="bm-vs" href="/benchmarks/compare/glm-5-3-vs-deepseek-v3-2/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.6419fe10.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs DeepSeek-V3.2</span><span class="s">DeepSeek</span></span></a><a class="bm-vs" href="/benchmarks/compare/kimi-3-vs-glm-5-3/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/moonshot.8f156bd1.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs Kimi 3</span><span class="s">Moonshot AI</span></span></a></div>
+      <div class="bm-vs-grid"><a class="bm-vs" href="/benchmarks/compare/glm-5-3-vs-kimi-k3/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/moonshot.8f156bd1.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs Kimi K3</span><span class="s">Moonshot AI</span></span></a><a class="bm-vs" href="/benchmarks/compare/glm-5-3-vs-claude-opus-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.d2893e17.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs Claude Opus 5</span><span class="s">Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/glm-5-3-vs-glm-4-6/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/zai.ce26153c.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs GLM-4.6</span><span class="s">Z.ai (Zhipu)</span></span></a><a class="bm-vs" href="/benchmarks/compare/glm-5-3-vs-deepseek-v3-2/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.6419fe10.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs DeepSeek-V3.2</span><span class="s">DeepSeek</span></span></a><a class="bm-vs" href="/benchmarks/compare/kimi-k3-vs-glm-5-3/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/moonshot.8f156bd1.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">vs Kimi K3</span><span class="s">Moonshot AI</span></span></a></div>
       <div class="btn-row" style="margin-top:20px">
         <a class="btn btn-ghost" href="/benchmarks/compare/?m=glm-5-3">Compare with something else <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
@@ -227,7 +234,7 @@
   </section>
   <section class="section-tight">
     <div class="shell">
-      <div class="btn-row"><a class="btn btn-ghost" href="https://z.ai" rel="noopener" target="_blank">Z.ai (Zhipu) <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
+      <div class="btn-row"><a class="btn btn-ghost" href="https://huggingface.co/zai-org/GLM-5.3" rel="noopener" target="_blank">Weights on Hugging Face <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a><a class="btn btn-ghost" href="https://z.ai" rel="noopener" target="_blank">Z.ai (Zhipu) <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
     </div>
   </section>
 
