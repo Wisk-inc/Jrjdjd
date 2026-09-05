@@ -60,12 +60,12 @@
     },
     {
       "source": "/leaderboard",
-      "destination": "/benchmarks/",
+      "destination": "/benchmarks/leaderboard/",
       "permanent": true
     },
     {
       "source": "/leaderboards",
-      "destination": "/benchmarks/",
+      "destination": "/benchmarks/leaderboard/",
       "permanent": true
     },
     {
@@ -96,6 +96,21 @@
     {
       "source": "/ai-models",
       "destination": "/benchmarks/",
+      "permanent": true
+    },
+    {
+      "source": "/rankings",
+      "destination": "/benchmarks/leaderboard/",
+      "permanent": true
+    },
+    {
+      "source": "/top-models",
+      "destination": "/benchmarks/leaderboard/",
+      "permanent": true
+    },
+    {
+      "source": "/best-ai-model",
+      "destination": "/benchmarks/leaderboard/",
       "permanent": true
     }
   ],

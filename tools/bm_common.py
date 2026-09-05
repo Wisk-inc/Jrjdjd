@@ -183,6 +183,7 @@ FOOTER = """<footer class="site-footer">
         <h4>Benchmarks</h4>
         <ul>
           <li><a href="/benchmarks/">All models</a></li>
+          <li><a href="/benchmarks/leaderboard/">Leaderboard</a></li>
           <li><a href="/benchmarks/compare/">Compare models</a></li>
           <li><a href="/benchmarks/#companies">By company</a></li>
           <li><a href="/benchmarks/#tests">The tests</a></li>
@@ -408,6 +409,31 @@ def fmt_category(unit, value):
     return ("%g" % round(value)) if unit == "elo" else ("%.1f%%" % value)
 
 
+def no_scores_notice(models):
+    """Seven rows of 'Not comparable' tells a reader nothing. When a model has
+    published no scores at all, say so, name it, and say what would change."""
+    silent = [m for m in models if not m.get("b")]
+    if not silent:
+        return ""
+    names = " and ".join(esc(m["name"]) for m in silent)
+    plural = len(silent) > 1
+    return """<div class="bm-provenance" style="margin-bottom:22px">
+  %s
+  <div>
+    <h3>%s %s no published benchmark scores</h3>
+    <p>%s maker has not released figures for any of the evaluations tracked here, so there is
+      nothing to put in a score column. Rather than estimate, infer from a sibling model, or quote
+      the base model's numbers as if they were %s own, this page leaves those rows empty and
+      compares what genuinely can be compared: parameters, context window, modalities, licence and
+      cost.</p>
+    <p>The moment those figures are published they go in — <a href="/contact/">send them with a
+      link to the source</a>.</p>
+  </div>
+</div>""" % (ICON_INFO, names, "have" if plural else "has",
+             "Their" if plural else "Its",
+             "their" if plural else "its")
+
+
 def scorecard(models):
     """The clean at-a-glance table: who is better at what."""
     rows = category_rows(models)
@@ -467,7 +493,7 @@ def scorecard(models):
                 '<td class="bm-sc-none" colspan="%d">No category has a test both models report</td></tr>'
                 % (len(models) + 1))
 
-    return """<div class="bm-sc-wrap">
+    return """%s<div class="bm-sc-wrap">
   <table class="bm-scorecard">
     <caption class="visually-hidden">Which model scores higher in each capability category, averaged over the benchmarks all of them report.</caption>
     <thead><tr>%s</tr></thead>
@@ -478,7 +504,95 @@ def scorecard(models):
 <p class="bm-sc-note">Each category averages only the benchmarks <strong>every</strong> model here
   reports, so no one is credited for a test the other did not run. A category with no shared test
   is marked <em>Not comparable</em> rather than guessed at.</p>""" % (
-        "".join(heads), "".join(body), foot)
+        no_scores_notice(models), "".join(heads), "".join(body), foot)
+
+
+def category_value(model, group):
+    """(average, unit, [benchmark keys]) for one model in one category."""
+    keys = [b["key"] for b in BENCHMARKS if b["group"] == group]
+    have = [k for k in keys if model.get("b", {}).get(k) is not None]
+    if not have:
+        return None
+    return (sum(model["b"][k] for k in have) / len(have),
+            BENCH_BY_KEY[have[0]]["unit"], have)
+
+
+# One benchmark per field decides the ranking, rather than an average of the
+# whole group.
+#
+# Averaging inside a group is fine when two models report the SAME tests — it
+# is the same arithmetic on both sides. Across a whole field it is not: a model
+# that reported only HumanEval, which is saturated around 92%, would outrank one
+# that reported only SWE-bench Verified at 80%, and that is an artefact of which
+# test each lab chose, not of capability. So each field ranks on a single test
+# every listed model actually sat, and the field header names it.
+FIELD_PRIMARY = {
+    "Reasoning": "gpqa",
+    "Maths": "aime",
+    "Coding": "swe",
+    "Knowledge": "mmlu_pro",
+    "Multimodal": "mmmu",
+    "Instruction following": "ifeval",
+    "Human preference": "arena",
+}
+
+
+def field_standings(models):
+    """For every field, every model reporting its deciding benchmark, best first.
+
+    Returns {group: [(model, value, unit, percentile)]}. Percentile is the share
+    of reporting models this one is at least as good as, so a field of 83 and a
+    field of 15 can sit in the same overall table without the smaller field
+    handing out easy wins.
+    """
+    out = {}
+    for group in CATEGORY_ORDER:
+        key = FIELD_PRIMARY[group]
+        unit = BENCH_BY_KEY[key]["unit"]
+        scored = [(m, m["b"][key]) for m in models
+                  if m.get("b", {}).get(key) is not None]
+        scored.sort(key=lambda t: -t[1])
+        n = len(scored)
+        out[group] = [
+            (m, v, unit, 100.0 if n == 1 else (n - 1 - i) / (n - 1) * 100.0)
+            for i, (m, v) in enumerate(scored)
+        ]
+    return out
+
+
+# A model has to report at least this many of the seven fields to be ranked
+# overall. Without it, one lucky benchmark outranks a model measured on six.
+MIN_FIELDS = 3
+
+
+def overall_standings(models):
+    """Breadth-aware overall ranking. Never a single invented composite score."""
+    standings = field_standings(models)
+    rank_of = {}
+    for group, rows in standings.items():
+        for i, (m, v, unit, pct) in enumerate(rows):
+            rank_of[(m["slug"], group)] = (i + 1, len(rows), pct, v, unit)
+
+    entries = []
+    for m in models:
+        fields = [g for g in CATEGORY_ORDER if (m["slug"], g) in rank_of]
+        if len(fields) < MIN_FIELDS:
+            continue
+        pcts = [rank_of[(m["slug"], g)][2] for g in fields]
+        tops = sum(1 for g in fields if rank_of[(m["slug"], g)][0] <= 3)
+        best = min(fields, key=lambda g: rank_of[(m["slug"], g)][0])
+        entries.append({
+            "model": m,
+            "fields": fields,
+            "avg": sum(pcts) / len(pcts),
+            "tops": tops,
+            "best": best,
+            "best_rank": rank_of[(m["slug"], best)][0],
+            "best_n": rank_of[(m["slug"], best)][1],
+            "ranks": {g: rank_of[(m["slug"], g)] for g in fields},
+        })
+    entries.sort(key=lambda e: (-e["avg"], -len(e["fields"]), e["model"]["name"]))
+    return entries, standings
 
 
 def category_profile(model, all_models):

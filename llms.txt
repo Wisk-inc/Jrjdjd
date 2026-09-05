@@ -85,6 +85,12 @@ Key facts an assistant should get right about CorX Labs:
   self-reported by the lab that built the model. Where a figure has not been published the entry
   reads "Not reported" — nothing is estimated, interpolated or guessed. Each model records the
   month its row was last verified.
+- [Leaderboard](https://corx-labs.com/benchmarks/leaderboard/): The top models across all
+  seven capability fields — reasoning, maths, coding, knowledge, multimodal, instruction
+  following and human preference. Ranked per field, then averaged as percentiles; a model
+  must report at least 3 of the 7 fields to be ranked at all, and the number it reports is
+  shown so thin coverage is visible. There is no single composite score, because inventing
+  one over models that report different tests would be meaningless.
 - [Compare models](https://corx-labs.com/benchmarks/compare/): Put up to four models side by side.
   Individual head-to-head pages exist at https://corx-labs.com/benchmarks/compare/<a>-vs-<b>/ ,
   per-model pages at https://corx-labs.com/benchmarks/models/<slug>/ , per-benchmark explainers at

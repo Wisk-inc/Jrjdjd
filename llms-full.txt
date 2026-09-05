@@ -553,6 +553,7 @@ Highest published GPQA Diamond scores in the index:
 
 PAGE STRUCTURE
    - https://corx-labs.com/benchmarks/                          the full sortable index
+   - https://corx-labs.com/benchmarks/leaderboard/              top models in every field
    - https://corx-labs.com/benchmarks/compare/                  compare up to four models
    - https://corx-labs.com/benchmarks/compare/<a>-vs-<b>/       a written head-to-head
    - https://corx-labs.com/benchmarks/models/<slug>/            one model in full
@@ -574,3 +575,11 @@ A: There is no single answer, and the index is a sortable table rather than a ra
 Q: Why do some models have no scores?
 A: Their makers have not published benchmark figures. An absent score is not a low score, and
    nothing has been estimated in its place.
+
+Q: Which AI model is best overall?
+A: https://corx-labs.com/benchmarks/leaderboard/ ranks models across seven capability fields.
+   Rankings are computed per field and averaged as percentiles; there is no single composite
+   score. A model must report at least three of the seven fields to be ranked, and the count is
+   shown, because a high average over three fields is a narrower claim than the same average over
+   six. It measures which models published the best numbers on the tests they chose to publish,
+   which is a real signal and a limited one.

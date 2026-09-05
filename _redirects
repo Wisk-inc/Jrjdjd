@@ -43,8 +43,11 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 
 /benchmark           /benchmarks/           301
 /benchmarks          /benchmarks/           301
-/leaderboard         /benchmarks/           301
-/leaderboards        /benchmarks/           301
+/leaderboard         /benchmarks/leaderboard/ 301
+/leaderboards        /benchmarks/leaderboard/ 301
+/rankings            /benchmarks/leaderboard/ 301
+/top-models          /benchmarks/leaderboard/ 301
+/best-ai-model       /benchmarks/leaderboard/ 301
 /compare             /benchmarks/compare/   301
 /vs                  /benchmarks/compare/   301
 /models/compare      /benchmarks/compare/   301
