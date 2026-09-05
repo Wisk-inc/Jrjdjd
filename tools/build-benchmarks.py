@@ -31,9 +31,11 @@ sys.path.insert(0, HERE)
 from bm_common import (  # noqa: E402
     BENCHMARKS, BENCH_BY_KEY, BY_SLUG, COMPANIES, ICON_ARROW, ICON_EXTERNAL,
     ICON_INFO, ICON_SEARCH, PROVENANCE, ROOT, SITE, bench_cell, blended_cost,
-    company_url, compare_url, crumb_ld, crumbs, esc, fmt_price, fmt_score,
+    category_profile, category_rows, company_url, compare_url, crumb_ld, crumbs,
+    esc, fmt_category,
+    fmt_price, fmt_score,
     fmt_tokens, logo_img, logo_tile, model_url, modality_label, page,
-    score_pct, test_url,
+    score_pct, scorecard, test_url,
 )
 from model_catalog import COMPARISONS, MODELS, validate  # noqa: E402
 
@@ -760,6 +762,9 @@ def build_model(m):
         <p>Figures published by %(coname)s or taken from a public leaderboard. Row last
           checked %(verified)s.</p>
       </div>
+      %(profile)s
+      <h3 style="font-family:var(--sans);font-size:.74rem;font-weight:600;letter-spacing:.11em;
+                 text-transform:uppercase;color:var(--faint);margin:36px 0 14px">Every reported test</h3>
       %(bench)s
       <div style="margin-top:22px">%(provenance)s</div>
     </div>
@@ -782,6 +787,7 @@ def build_model(m):
                    'API model ID: <code>%s</code></p>' % esc(m["api_id"]))
                   if m.get("api_id") else "",
         "price": price_block, "bench": bench_html,
+        "profile": category_profile(m, MODELS) if m.get("b") else "",
         "verified": esc(m.get("verified", "recently")),
         "provenance": PROVENANCE, "vs": vs_section, "siblings": sib_html,
         "links": "".join(links),
@@ -1147,6 +1153,18 @@ def build_comparison(a_slug, b_slug):
     </div>
   </section>
 
+  <section class="section-tight" style="padding-top:0" aria-labelledby="score-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <p class="eyebrow">Scorecard</p>
+        <h2 id="score-title">Which is better at what</h2>
+        <p>Maths, coding, reasoning and the rest — one line each, averaged over the benchmarks
+          both models actually report.</p>
+      </div>
+      %(scorecard)s
+    </div>
+  </section>
+
   <section class="section-tight" style="padding-top:0" aria-labelledby="table-title">
     <div class="shell">
       <div class="section-head" style="margin-bottom:22px">
@@ -1177,6 +1195,7 @@ def build_comparison(a_slug, b_slug):
         "bh": esc(bh), "bt": bt, "ph": esc(ph), "pt": pt,
         "notes": "".join("<li>%s</li>" % n for n in notes),
         "table": compare_columns([a, b]),
+        "scorecard": scorecard([a, b]),
         "provenance": PROVENANCE, "faq": faq_html,
         "sa": esc(a_slug), "sb": esc(b_slug), "arrow": ICON_ARROW,
         "related": ("""

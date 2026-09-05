@@ -350,6 +350,185 @@ PROVENANCE = """<div class="bm-provenance" id="method-note">
 </div>""" % ICON_INFO
 
 
+# ---------------------------------------------------------------------------
+# Category scorecard
+#
+# The row-by-row table answers "what does each one score"; this answers "which
+# one is better at maths", which is the question people actually arrive with.
+#
+# Averaging inside a category is safe because every benchmark in a group shares
+# a unit — Coding is three percentages, Human preference is one Elo — so no
+# value is ever rescaled or mixed with a different scale to produce it.
+# ---------------------------------------------------------------------------
+CATEGORY_ORDER = ["Reasoning", "Maths", "Coding", "Knowledge", "Multimodal",
+                  "Instruction following", "Human preference"]
+
+CATEGORY_BLURB = {
+    "Reasoning": "Multi-step logic on problems that cannot be looked up",
+    "Maths": "Competition mathematics, graded on the final answer",
+    "Coding": "Writing and repairing real code",
+    "Knowledge": "Breadth of factual recall under exam conditions",
+    "Multimodal": "Reading charts, diagrams and photographs",
+    "Instruction following": "Obeying an exact, checkable format",
+    "Human preference": "Which answer people pick, blind",
+}
+
+
+def category_rows(models):
+    """Per-category comparison across only the tests every model reported.
+
+    A category is scored on the intersection, not the union: comparing one
+    model's three coding benchmarks against another's one would flatter
+    whichever happened to publish the easier set.
+    """
+    rows = []
+    for group in CATEGORY_ORDER:
+        keys = [b["key"] for b in BENCHMARKS if b["group"] == group]
+        shared = [k for k in keys
+                  if all(m.get("b", {}).get(k) is not None for m in models)]
+        if not shared:
+            reported = [k for k in keys
+                        if any(m.get("b", {}).get(k) is not None for m in models)]
+            rows.append({"group": group, "shared": [], "values": [None] * len(models),
+                         "best": None, "unit": None, "partial": bool(reported)})
+            continue
+        unit = BENCH_BY_KEY[shared[0]]["unit"]
+        values = [sum(m["b"][k] for k in shared) / len(shared) for m in models]
+        spread = max(values) - min(values)
+        best = max(values) if len(models) > 1 and spread > 0.05 else None
+        rows.append({"group": group, "shared": shared, "values": values,
+                     "best": best, "unit": unit, "partial": False,
+                     "spread": spread})
+    return rows
+
+
+def fmt_category(unit, value):
+    if value is None:
+        return None
+    return ("%g" % round(value)) if unit == "elo" else ("%.1f%%" % value)
+
+
+def scorecard(models):
+    """The clean at-a-glance table: who is better at what."""
+    rows = category_rows(models)
+    scored = [r for r in rows if r["best"] is not None]
+    wins = [0] * len(models)
+    for r in scored:
+        wins[r["values"].index(r["best"])] += 1
+
+    heads = ['<th scope="col">Category</th>']
+    for m in models:
+        heads.append('<th scope="col" class="bm-sc-model"><span>%s<span class="n">%s</span></span></th>'
+                     % (logo_img(m["company"], "", 18), esc(m["name"])))
+    heads.append('<th scope="col">Better at this</th>')
+
+    body = []
+    for r in rows:
+        label = ('<th scope="row"><span class="g">%s</span><span class="t">%s</span></th>'
+                 % (esc(r["group"]),
+                    esc(", ".join(BENCH_BY_KEY[k]["name"] for k in r["shared"]))
+                    if r["shared"] else
+                    ("Only one model reports this" if r["partial"] else "Neither model reports this")))
+        if not r["shared"]:
+            body.append("<tr>%s%s<td class=\"bm-sc-none\">Not comparable</td></tr>"
+                        % (label, '<td class="bm-sc-none">&mdash;</td>' * len(models)))
+            continue
+        cells = ""
+        for v in r["values"]:
+            win = r["best"] is not None and v == r["best"]
+            cells += ('<td class="bm-sc-val%s">%s%s</td>'
+                      % (" is-win" if win else "", esc(fmt_category(r["unit"], v)),
+                         '<i class="bm-sc-tick" aria-hidden="true"></i>' if win else ""))
+        if r["best"] is None:
+            verdict = '<td class="bm-sc-who is-tie">Tied</td>'
+        else:
+            leader = models[r["values"].index(r["best"])]
+            gap = r["spread"]
+            verdict = ('<td class="bm-sc-who"><strong>%s</strong>'
+                       '<span class="d">+%s</span></td>'
+                       % (esc(leader["name"]),
+                          ("%g" % round(gap)) if r["unit"] == "elo" else ("%.1f" % gap)))
+        body.append("<tr>%s%s%s</tr>" % (label, cells, verdict))
+
+    if scored:
+        top = max(wins)
+        leaders = [models[i]["name"] for i, w in enumerate(wins) if w == top and top > 0]
+        overall = (esc(leaders[0]) if len(leaders) == 1
+                   else "Split &mdash; " + esc(" and ".join(leaders)))
+        foot = ('<tr><th scope="row"><span class="g">Categories won</span>'
+                '<span class="t">Out of %d comparable</span></th>%s'
+                '<td class="bm-sc-who"><strong>%s</strong></td></tr>'
+                % (len(scored),
+                   "".join('<td class="bm-sc-val%s">%d</td>'
+                           % (" is-win" if w == top and top > 0 else "", w) for w in wins),
+                   overall))
+    else:
+        foot = ('<tr><th scope="row"><span class="g">Categories won</span></th>'
+                '<td class="bm-sc-none" colspan="%d">No category has a test both models report</td></tr>'
+                % (len(models) + 1))
+
+    return """<div class="bm-sc-wrap">
+  <table class="bm-scorecard">
+    <caption class="visually-hidden">Which model scores higher in each capability category, averaged over the benchmarks all of them report.</caption>
+    <thead><tr>%s</tr></thead>
+    <tbody>%s</tbody>
+    <tfoot>%s</tfoot>
+  </table>
+</div>
+<p class="bm-sc-note">Each category averages only the benchmarks <strong>every</strong> model here
+  reports, so no one is credited for a test the other did not run. A category with no shared test
+  is marked <em>Not comparable</em> rather than guessed at.</p>""" % (
+        "".join(heads), "".join(body), foot)
+
+
+def category_profile(model, all_models):
+    """The same clean shape for a single model: score per category, and where
+    that sits among every model reporting the same tests."""
+    rows = []
+    for group in CATEGORY_ORDER:
+        keys = [b["key"] for b in BENCHMARKS if b["group"] == group]
+        have = [k for k in keys if model.get("b", {}).get(k) is not None]
+        if not have:
+            rows.append('<tr><th scope="row"><span class="g">%s</span>'
+                        '<span class="t">%s</span></th>'
+                        '<td class="bm-sc-none">Not reported</td>'
+                        '<td class="bm-sc-none">&mdash;</td></tr>'
+                        % (esc(group), esc(CATEGORY_BLURB[group])))
+            continue
+        unit = BENCH_BY_KEY[have[0]]["unit"]
+        value = sum(model["b"][k] for k in have) / len(have)
+
+        peers = []
+        for other in all_models:
+            got = [k for k in have if other.get("b", {}).get(k) is not None]
+            if len(got) == len(have):
+                peers.append(sum(other["b"][k] for k in have) / len(have))
+        peers.sort(reverse=True)
+        rank = peers.index(value) + 1 if value in peers else None
+        place = ("%d of %d reporting the same tests" % (rank, len(peers))
+                 if rank and len(peers) > 1 else "Only model reporting these")
+        rows.append('<tr><th scope="row"><span class="g">%s</span>'
+                    '<span class="t">%s</span></th>'
+                    '<td class="bm-sc-val%s">%s</td>'
+                    '<td class="bm-sc-who">%s</td></tr>'
+                    % (esc(group), esc(", ".join(BENCH_BY_KEY[k]["name"] for k in have)),
+                       " is-win" if rank == 1 and len(peers) > 1 else "",
+                       esc(fmt_category(unit, value)), esc(place)))
+
+    return """<div class="bm-sc-wrap">
+  <table class="bm-scorecard">
+    <caption class="visually-hidden">%s by capability category, with its rank among models reporting the same tests.</caption>
+    <thead><tr><th scope="col">Category</th><th scope="col">Score</th>
+      <th scope="col">Rank</th></tr></thead>
+    <tbody>%s</tbody>
+  </table>
+</div>
+<p class="bm-sc-note">A category averages every benchmark in it that %s reports. The rank counts
+  only models that report the <strong>same</strong> tests, so it never compares an average over
+  three benchmarks against an average over one.</p>""" % (
+        esc(model["name"]), "".join(rows), esc(model["name"]))
+
+
 def bench_cell(key, value, best=False, note=None):
     """A score with its bar. `best` marks the leader in a compared row."""
     if value is None:
