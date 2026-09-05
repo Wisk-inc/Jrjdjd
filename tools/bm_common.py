@@ -343,6 +343,10 @@ PROVENANCE = """<div class="bm-provenance" id="method-note">
       the model, which means they were produced under that lab's own choice of prompt,
       scaffold and number of attempts — so treat them as a starting point for a shortlist,
       not as a settled ranking.</p>
+    <p>A score someone other than the model's maker measured is marked
+      <span class="bm-src">Independent</span> and names its measurer. Those are the stronger
+      numbers on this page — an outside harness has no reason to flatter anyone — and there are
+      not many of them.</p>
     <p>Where a figure has not been published, the cell reads
       <span class="bm-nil">Not reported</span> rather than an estimate. Nothing here is
       inferred, interpolated or guessed. Each model records the month its row was last
@@ -643,15 +647,24 @@ def category_profile(model, all_models):
         esc(model["name"]), "".join(rows), esc(model["name"]))
 
 
-def bench_cell(key, value, best=False, note=None):
-    """A score with its bar. `best` marks the leader in a compared row."""
+def bench_cell(key, value, best=False, note=None, source=None):
+    """A score with its bar. `best` marks the leader in a compared row.
+
+    `source` names an independent measurer. Most scores in this index are the
+    model maker's own; one that someone else ran is a stronger fact, not a
+    weaker one, so it is labelled rather than silently mixed in.
+    """
     if value is None:
         return '<span class="bm-nil">Not reported</span>'
     pct = score_pct(key, value) * 100
+    tag = ""
+    if source:
+        tag = ('<span class="bm-src" title="Measured by %s, not by the model\u2019s maker">'
+               'Independent</span>' % esc(source))
     return (
-        '<span class="bm-bar%s"><span class="val">%s%s</span>'
+        '<span class="bm-bar%s"><span class="val">%s%s%s</span>'
         '<span class="track"><span class="fill" style="width:%.1f%%"></span></span>%s</span>'
         % (" is-best" if best else "", fmt_score(key, value),
-           '<span class="bm-best-tag">Best</span>' if best else "",
+           '<span class="bm-best-tag">Best</span>' if best else "", tag,
            pct, ('<span class="note">%s</span>' % esc(note)) if note else "")
     )

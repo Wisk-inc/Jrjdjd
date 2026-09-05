@@ -71,6 +71,22 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/tests/swe_pro/"/>
   </url>
   <url>
+    <loc>https://corx-labs.com/benchmarks/tests/tbench21/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/tbench21/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/tests/tbench21/"/>
+  </url>
+  <url>
+    <loc>https://corx-labs.com/benchmarks/tests/frontier/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/frontier/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/tests/frontier/"/>
+  </url>
+  <url>
     <loc>https://corx-labs.com/benchmarks/tests/tbench/</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
