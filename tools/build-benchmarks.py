@@ -607,6 +607,7 @@ def build_model(m):
         ("Tool calling", "Yes" if m.get("tools") else ("No" if "tools" in m else None)),
         ("Knowledge cutoff", m.get("cut")),
         ("Licence", licence_of(m)),
+        ("Availability", m.get("access")),
         ("Weights", ("Downloadable" if is_open(m) else "Not released")
                     if "open" in m else None),
     ]
@@ -877,6 +878,8 @@ SPEC_ROWS = [
     ("Tool calling", None, lambda m: "Yes" if m.get("tools") else ("No" if "tools" in m else None)),
     ("Knowledge cutoff", None, lambda m: m.get("cut")),
     ("Licence", None, lambda m: licence_of(m)),
+    ("Availability", "Whether anyone can call it, or access is approved case by case",
+     lambda m: m.get("access")),
     ("Open weights", "Can you download and run it yourself",
      lambda m: ("Yes" if is_open(m) else "No") if "open" in m else None),
 ]
