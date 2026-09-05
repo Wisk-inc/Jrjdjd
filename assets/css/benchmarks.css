@@ -450,6 +450,138 @@
 }
 
 /* --------------------------------------------------------------------------
+   6b. Category scorecard
+   The at-a-glance answer: who is better at maths, coding, reasoning. Kept
+   deliberately plain — no bars, no glass — because its whole job is to be
+   read in three seconds.
+   -------------------------------------------------------------------------- */
+.bm-sc-wrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+}
+
+.bm-scorecard {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 620px;
+  font-size: .9rem;
+}
+.bm-scorecard th,
+.bm-scorecard td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.bm-scorecard tfoot tr > * { border-bottom: 0; }
+
+.bm-scorecard thead th {
+  background: var(--paper-sunk);
+  font-size: .69rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 550;
+  white-space: nowrap;
+}
+.bm-scorecard thead th.bm-sc-model {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: .84rem;
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+.bm-scorecard thead th.bm-sc-model > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Row label: category, then the tests that produced the number. */
+.bm-scorecard tbody th[scope="row"],
+.bm-scorecard tfoot th[scope="row"] {
+  background: var(--paper-raised);
+  font-weight: 400;
+  min-width: 178px;
+}
+.bm-scorecard th[scope="row"] .g {
+  display: block;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+  letter-spacing: -.01em;
+}
+.bm-scorecard th[scope="row"] .t {
+  display: block;
+  margin-top: 3px;
+  font-size: .73rem;
+  color: var(--faint);
+  line-height: 1.4;
+}
+
+.bm-sc-val {
+  font-variant-numeric: tabular-nums;
+  font-size: 1rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.bm-sc-val.is-win { color: var(--ink-strong); font-weight: 650; }
+.bm-sc-tick {
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: var(--espresso);
+  vertical-align: 1px;
+}
+.bm-sc-none { color: var(--faint); font-size: .87rem; white-space: nowrap; }
+
+.bm-sc-who { color: var(--ink-strong); font-size: .87rem; }
+.bm-sc-who strong { font-weight: 600; }
+.bm-sc-who .d {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--paper-sunk);
+  font-size: .72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+.bm-sc-who.is-tie { color: var(--faint); }
+
+.bm-scorecard tfoot th[scope="row"],
+.bm-scorecard tfoot td {
+  background: var(--paper-sunk);
+  border-top: 1px solid var(--line-strong);
+}
+
+.bm-sc-title {
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  margin-bottom: 18px;
+}
+
+.bm-sc-note {
+  margin-top: 14px;
+  font-size: .84rem;
+  color: var(--muted);
+  max-width: 74ch;
+}
+.bm-sc-note strong { color: var(--ink-strong); font-weight: 600; }
+
+@media (max-width: 620px) {
+  .bm-scorecard { min-width: 540px; font-size: .855rem; }
+  .bm-scorecard th, .bm-scorecard td { padding: 12px 12px; }
+  .bm-scorecard tbody th[scope="row"],
+  .bm-scorecard tfoot th[scope="row"] { min-width: 150px; }
+}
+
+/* --------------------------------------------------------------------------
    7. Benchmark bars
    -------------------------------------------------------------------------- */
 .bm-bar {

@@ -329,6 +329,117 @@
         + (scorePct(bench, v) * 100).toFixed(1) + '%"></span></span></span>';
     }
 
+    /* ---- category scorecard ----
+       Mirrors tools/bm_common.py: a category averages only the benchmarks
+       EVERY compared model reports, so nobody is credited for a test the
+       others did not run. Units are consistent within a group, so the
+       average never mixes a percentage with an Elo. */
+    var CATEGORY_ORDER = ['Reasoning', 'Maths', 'Coding', 'Knowledge', 'Multimodal',
+      'Instruction following', 'Human preference'];
+
+    function fmtCategory(unit, v) {
+      if (v === null || v === undefined) return null;
+      return unit === 'elo' ? String(Math.round(v)) : v.toFixed(1) + '%';
+    }
+
+    function categoryRows(models) {
+      return CATEGORY_ORDER.map(function (group) {
+        var keys = DATA.benchmarks.filter(function (b) { return b.group === group; });
+        var shared = keys.filter(function (b) {
+          return models.every(function (m) {
+            var v = (m.b || {})[b.key];
+            return v !== null && v !== undefined;
+          });
+        });
+        if (!shared.length) {
+          var partial = keys.some(function (b) {
+            return models.some(function (m) {
+              var v = (m.b || {})[b.key];
+              return v !== null && v !== undefined;
+            });
+          });
+          return { group: group, shared: [], values: models.map(function () { return null; }),
+                   best: null, unit: null, partial: partial };
+        }
+        var values = models.map(function (m) {
+          return shared.reduce(function (t, b) { return t + m.b[b.key]; }, 0) / shared.length;
+        });
+        var spread = Math.max.apply(null, values) - Math.min.apply(null, values);
+        return {
+          group: group, shared: shared, values: values, unit: shared[0].unit,
+          best: (models.length > 1 && spread > 0.05) ? Math.max.apply(null, values) : null,
+          spread: spread, partial: false
+        };
+      });
+    }
+
+    function scorecard(models) {
+      var rows = categoryRows(models);
+      var scored = rows.filter(function (r) { return r.best !== null; });
+      var wins = models.map(function () { return 0; });
+      scored.forEach(function (r) { wins[r.values.indexOf(r.best)]++; });
+
+      var head = '<th scope="col">Category</th>' + models.map(function (m) {
+        return '<th scope="col" class="bm-sc-model"><span><img class="logo-mark" src="'
+          + DATA.companies[m.company].logo + '" width="18" height="18" alt="" aria-hidden="true" '
+          + 'decoding="async"><span class="n">' + esc(m.name) + '</span></span></th>';
+      }).join('') + '<th scope="col">Better at this</th>';
+
+      var body = rows.map(function (r) {
+        var label = '<th scope="row"><span class="g">' + esc(r.group) + '</span><span class="t">'
+          + esc(r.shared.length ? r.shared.map(function (b) { return b.name; }).join(', ')
+              : (r.partial ? 'Only one model reports this' : 'Neither model reports this'))
+          + '</span></th>';
+        if (!r.shared.length) {
+          return '<tr>' + label
+            + models.map(function () { return '<td class="bm-sc-none">&mdash;</td>'; }).join('')
+            + '<td class="bm-sc-none">Not comparable</td></tr>';
+        }
+        var cells = r.values.map(function (v) {
+          var win = r.best !== null && v === r.best;
+          return '<td class="bm-sc-val' + (win ? ' is-win' : '') + '">'
+            + esc(fmtCategory(r.unit, v))
+            + (win ? '<i class="bm-sc-tick" aria-hidden="true"></i>' : '') + '</td>';
+        }).join('');
+        var verdict = r.best === null
+          ? '<td class="bm-sc-who is-tie">Tied</td>'
+          : '<td class="bm-sc-who"><strong>' + esc(models[r.values.indexOf(r.best)].name)
+            + '</strong><span class="d">+'
+            + (r.unit === 'elo' ? Math.round(r.spread) : r.spread.toFixed(1)) + '</span></td>';
+        return '<tr>' + label + cells + verdict + '</tr>';
+      }).join('');
+
+      var foot;
+      if (scored.length) {
+        var top = Math.max.apply(null, wins);
+        var leaders = models.filter(function (m, i) { return wins[i] === top && top > 0; });
+        foot = '<tr><th scope="row"><span class="g">Categories won</span><span class="t">Out of '
+          + scored.length + ' comparable</span></th>'
+          + wins.map(function (w) {
+              return '<td class="bm-sc-val' + (w === top && top > 0 ? ' is-win' : '') + '">'
+                + w + '</td>';
+            }).join('')
+          + '<td class="bm-sc-who"><strong>'
+          + (leaders.length === 1 ? esc(leaders[0].name)
+              : 'Split &mdash; ' + leaders.map(function (m) { return esc(m.name); }).join(' and '))
+          + '</strong></td></tr>';
+      } else {
+        foot = '<tr><th scope="row"><span class="g">Categories won</span></th>'
+          + '<td class="bm-sc-none" colspan="' + (models.length + 1)
+          + '">No category has a test every model here reports</td></tr>';
+      }
+
+      return '<div class="bm-sc-wrap"><table class="bm-scorecard">'
+        + '<caption class="visually-hidden">Which model scores higher in each capability '
+        + 'category, averaged over the benchmarks all of them report.</caption>'
+        + '<thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody>'
+        + '<tfoot>' + foot + '</tfoot></table></div>'
+        + '<p class="bm-sc-note">Each category averages only the benchmarks <strong>every</strong> '
+        + 'model here reports, so no one is credited for a test the others did not run. '
+        + 'A category with no shared test is marked <em>Not comparable</em> rather than '
+        + 'guessed at.</p>';
+    }
+
     function render() {
       if (!chosen.length) {
         root.innerHTML = '<div class="bm-empty" style="border:1px dashed var(--line-strong);'
@@ -341,7 +452,14 @@
       var models = chosen.map(bySlug).filter(Boolean);
       if (!models.length) { root.innerHTML = ''; return; }
 
-      var html = '<div class="bm-compare-wrap"><table class="bm-compare"><thead><tr>'
+      var html = '';
+      if (models.length > 1) {
+        html += '<h2 class="bm-sc-title">Which is better at what</h2>'
+          + scorecard(models)
+          + '<h2 class="bm-sc-title" style="margin-top:38px">Row by row</h2>';
+      }
+
+      html += '<div class="bm-compare-wrap"><table class="bm-compare"><thead><tr>'
         + '<th class="bm-corner"><span class="visually-hidden">Attribute</span></th>'
         + models.map(colHead).join('') + '</tr></thead><tbody>';
 
