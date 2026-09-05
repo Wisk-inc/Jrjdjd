@@ -95,6 +95,14 @@ BENCHMARKS = [
      "blurb": "500 human-validated GitHub issues from real Python repositories. The model "
               "must produce a patch that makes the project's own tests pass.",
      "url": "https://openai.com/index/introducing-swe-bench-verified/"},
+    {"key": "swe_pro", "name": "SWE-bench Pro", "unit": "pct", "group": "Coding",
+     "blurb": "A harder, contamination-resistant successor to SWE-bench Verified, drawn from "
+              "commercial and copyleft repositories that were never public training data.",
+     "url": "https://scale.com/leaderboard/swe_bench_pro_public"},
+    {"key": "tbench", "name": "Terminal-Bench 4.0", "unit": "pct", "group": "Coding",
+     "blurb": "End-to-end tasks in a real terminal — install, build, debug, run — scored on "
+              "whether the machine ends up in the required state.",
+     "url": "https://www.tbench.ai/"},
     {"key": "lcb", "name": "LiveCodeBench", "unit": "pct", "group": "Coding",
      "blurb": "Competitive-programming problems collected after each model's training "
               "cutoff, so contamination cannot inflate the score.",
@@ -960,7 +968,7 @@ MODELS = [
            "to reach for when Opus 5 at high effort still falls short. Thinking is always on "
            "and its raw chain of thought is never returned. Cache reads cost a quarter of what "
            "Fable 5 charged.",
-      b={}, verified="2026-09"),
+      b={"swe_pro": 81.2, "tbench": 55.8}, verified="2026-09"),
     M("claude-fable-5", "Claude Fable 5", "anthropic", rel="2026-06", ctx=1000000, out=128000,
       inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=10.0, pout=50.0, pcache=1.0, reason=True, tools=True, cut="2026-01",
@@ -968,15 +976,17 @@ MODELS = [
       desc="The first Fable model, now legacy and superseded by Fable 5.1 at the same input and "
            "output price. It introduced safety classifiers that decline requests with a "
            "refusal stop reason rather than an error, and server-side fallback to another model.",
-      b={}, verified="2026-09"),
+      b={"tbench": 42.0}, verified="2026-09"),
     M("claude-mythos-5-1", "Claude Mythos 5.1", "anthropic", rel="2026-09", ctx=1000000,
       out=128000, inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=10.0, pout=50.0, pcache=0.25, reason=True, tools=True, cut="2026-06",
       api_id="claude-mythos-5-1", access="Invitation only — Project Glasswing",
       desc="Claude Fable 5.1's capabilities, specifications and pricing, offered by invitation "
            "only through Project Glasswing. Not generally available: access runs through "
-           "Anthropic, AWS or Google Cloud account teams.",
-      b={}, verified="2026-09"),
+           "Anthropic, AWS or Google Cloud account teams. It scores 60.9% on Terminal-Bench 4.0 "
+           "against Fable 5.1's 55.8% on the same weights — Anthropic attributes the entire gap "
+           "to Fable's safety classifiers intervening.",
+      b={"tbench": 60.9}, verified="2026-09"),
     M("claude-mythos-5", "Claude Mythos 5", "anthropic", rel="2026-06", ctx=1000000, out=128000,
       inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=10.0, pout=50.0, pcache=1.0, reason=True, tools=True, cut="2026-01",

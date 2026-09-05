@@ -683,9 +683,21 @@
 }
 .bm-field-list li:first-child .v { color: var(--espresso); }
 
+.bm-field-note {
+  margin: 0;
+  padding: 14px 22px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--paper-sunk);
+  font-size: .78rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.bm-field-note a { color: var(--ink-strong); text-decoration: underline; text-underline-offset: 2px; }
+
 @media (max-width: 620px) {
   .bm-field-grid { grid-template-columns: 1fr; }
   .bm-field-list li { padding: 11px 16px; }
+  .bm-field-note { padding: 13px 16px 15px; }
   .bm-field-head { padding: 18px 16px 14px; }
 }
 
