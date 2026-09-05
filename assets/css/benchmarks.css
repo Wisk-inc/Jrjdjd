@@ -215,6 +215,22 @@
   line-height: 1.4;
 }
 
+/* A model that is not a language model says so under its name, so an empty
+   row of text benchmarks reads as "different kind of model", not "bad score". */
+.bm-kind {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--paper-sunk);
+  font-size: .66rem;
+  font-weight: 550;
+  letter-spacing: .04em;
+  color: var(--espresso);
+  white-space: nowrap;
+}
+
 /* Numerics line up only if the digits are the same width. */
 .bm-num { text-align: right !important; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .bm-table td.bm-num { color: var(--ink); }

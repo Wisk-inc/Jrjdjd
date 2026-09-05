@@ -1655,6 +1655,14 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/models/corx3-8-27b/"/>
   </url>
   <url>
+    <loc>https://corx-labs.com/benchmarks/models/tristream-svs/</loc>
+    <lastmod>2026-09-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/tristream-svs/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/models/tristream-svs/"/>
+  </url>
+  <url>
     <loc>https://corx-labs.com/benchmarks/models/corx1-5/</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>

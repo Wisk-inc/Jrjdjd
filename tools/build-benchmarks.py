@@ -181,9 +181,11 @@ def leaderboard_rows(models, checkbox=True):
         cells = [
             '<td><span class="bm-model-cell">%s<span class="names">'
             '<a class="name" href="%s">%s</a>'
-            '<span class="maker">%s</span></span></span></td>'
+            '<span class="maker">%s%s</span></span></span></td>'
             % (logo_tile(m["company"], co["name"], 19, "is-sm"), model_url(m["slug"]),
-               esc(m["name"]), esc(co["name"])),
+               esc(m["name"]), esc(co["name"]),
+               ('<span class="bm-kind">%s</span>' % esc(m["kind"]))
+               if m.get("kind") else ""),
             '<td><a href="%s">%s</a></td>' % (company_url(m["company"]), esc(co["name"])),
             '<td class="bm-num"%s>%s</td>' % (
                 (' title="%s tokens"' % format(m["ctx"], ",")) if m.get("ctx") else "",
@@ -1732,7 +1734,165 @@ TEST_NOTES = {
 # ===========================================================================
 # Company pages
 # ===========================================================================
+def model_product_cards(models):
+    """Models as things that were made, rather than rows of scores.
+
+    Used on the CorX Labs page, where a benchmark table is the wrong shape:
+    every score column would be empty, which reads as a bad result instead of
+    an absent one.
+    """
+    cards = []
+    for m in models:
+        facts = [
+            ("Parameters", params_label(m)),
+            ("Type", m.get("kind", "Language model")),
+            ("Architecture", arch_label(m)),
+            ("Context", ("%s tokens" % format(m["ctx"], ",")) if m.get("ctx") else None),
+            ("Input", modality_label(m.get("inp"))),
+            ("Output", modality_label(m.get("outp"))),
+            ("Licence", licence_of(m)),
+            ("Weights", "Downloadable" if is_open(m) else "Not released"),
+        ]
+        facts_html = "".join(
+            '<div><dt>%s</dt><dd%s>%s</dd></div>'
+            % (esc(label), "" if value else ' class="is-nil"', nil(value))
+            for label, value in facts if value or label in ("Parameters", "Type"))
+
+        links = ['<a class="btn btn-primary btn-sm" href="%s">Model card %s</a>'
+                 % (m["local"], ICON_ARROW)] if m.get("local") else []
+        links.append('<a class="btn btn-ghost btn-sm" href="%s">Index entry %s</a>'
+                     % (model_url(m["slug"]), ICON_ARROW))
+        if m.get("hf"):
+            links.append('<a class="btn btn-ghost btn-sm" href="https://huggingface.co/%s" '
+                         'rel="noopener" target="_blank">Hugging Face %s</a>'
+                         % (esc(m["hf"]), ICON_EXTERNAL))
+
+        cards.append(
+            '<article class="card model-card"><div>%s<h3 style="margin-top:14px">%s</h3>'
+            '<p class="lede" style="margin-top:12px">%s</p></div>'
+            '<dl class="bm-keyfacts">%s</dl>'
+            '<div class="btn-row">%s</div></article>'
+            % (tag_row(m), esc(m["name"]), esc(m.get("desc", "")), facts_html, "".join(links)))
+    return "".join(cards)
+
+
+def build_corx_company(cid, meta):
+    """CorX Labs gets its own shape. It is the lab whose site this is, its
+    models have no published scores, and a table of empty score columns would
+    be both useless and misleading."""
+    url = SITE + company_url(cid)
+    models = sorted((m for m in MODELS if m["company"] == cid),
+                    key=lambda m: m.get("rel") or "", reverse=True)
+
+    body = """
+  <div class="shell page-head">
+    %(crumbs)s
+    <div class="bm-model-head">
+      %(logo)s
+      <div>
+        <h1>%(name)s</h1>
+        <span class="maker">%(country)s &middot; <a href="/">corx-labs.com</a></span>
+      </div>
+    </div>
+    <div class="answer-box">
+      <p><strong>CorX Labs</strong> is an independent AI research lab in Jamaica, and the lab that
+        publishes this index. It has released %(n)d models, all with open weights: a 27B Jamaican
+        Patois assistant, a singing voice synthesis model, and a small language model trained from
+        random weights. All %(n)d are listed below.</p>
+    </div>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <section class="section-tight" aria-labelledby="made-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:26px">
+        <p class="eyebrow">Released</p>
+        <h2 id="made-title">The models we made</h2>
+        <p>Each one, what it is and what it is built from. Full model cards live in
+          <a href="/models/" style="text-decoration:underline;text-underline-offset:3px">Our
+          Products</a>.</p>
+      </div>
+      %(cards)s
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="scores-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <p class="eyebrow">Benchmarks</p>
+        <h2 id="scores-title">Why there are no scores here</h2>
+      </div>
+      <div class="bm-provenance">
+        %(info)s
+        <div>
+          <h3>CorX Labs has not published benchmark figures</h3>
+          <p>Every other lab in this index is listed with the numbers it published. CorX Labs has
+            not run these evaluations on its own models, so it has no numbers to list — and it is
+            not going to quote Qwen3.8-27B's scores as CorX3.8-27B's, estimate from model size, or
+            put a figure in a column it did not measure. An index that made an exception for the
+            lab that runs it would be worth nothing.</p>
+          <p>The specification rows are real and comparable, so the models can still be put
+            side by side with anything else here on parameters, context, modalities, licence and
+            cost. When the evaluations are run, the scores go in like everyone else's.</p>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:22px">
+        <a class="btn btn-primary" href="/benchmarks/compare/?m=%(slugs)s">Compare our models %(arrow)s</a>
+        <a class="btn btn-ghost" href="/benchmarks/">All %(total)d models in the index</a>
+        <a class="btn btn-ghost" href="/models/">Our Products %(arrow)s</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="spec-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <p class="eyebrow">In the index</p>
+        <h2 id="spec-title">How they sit in the table</h2>
+        <p>The same row every other model gets, so nothing about ours is presented differently.</p>
+      </div>
+      %(table)s
+    </div>
+  </section>
+""" % {
+        "crumbs": crumbs([("/", "Home"), ("/benchmarks/", "Benchmarks"),
+                          ("/benchmarks/#companies", "Makers"), (None, meta["name"])]),
+        "logo": logo_tile(cid, meta["name"], 34, "is-lg", lazy=False),
+        "name": esc(meta["name"]), "country": esc(meta["country"]),
+        "n": len(models), "cards": model_product_cards(models),
+        "info": ICON_INFO, "arrow": ICON_ARROW, "total": len(MODELS),
+        "slugs": esc(",".join(m["slug"] for m in models)),
+        "table": leaderboard_table(models, checkbox=False, table_id="bm-company-models"),
+    }
+
+    page_id = url + "#webpage"
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "CollectionPage", "@id": page_id, "url": url,
+         "name": "CorX Labs models — every model built by the lab",
+         "isPartOf": {"@id": SITE + "/#website"}, "inLanguage": "en",
+         "dateModified": UPDATED, "breadcrumb": {"@id": page_id + "#breadcrumb"},
+         "about": {"@id": SITE + "/#organization"}},
+        crumb_ld([("/", "Home"), ("/benchmarks/", "Benchmarks"), (None, meta["name"])], page_id),
+        {"@type": "ItemList", "@id": url + "#list", "numberOfItems": len(models),
+         "itemListElement": [
+             {"@type": "ListItem", "position": i,
+              "item": {"@type": "SoftwareApplication", "name": m["name"],
+                       "url": SITE + (m.get("local") or model_url(m["slug"])),
+                       "description": m.get("desc", "")}}
+             for i, m in enumerate(models, start=1)]},
+    ]}
+
+    write(company_url(cid), page(
+        "CorX Labs Models — Every Model Built by the Lab",
+        "Every model CorX Labs has released: %s. Parameters, architecture, licence and where to "
+        "download each one." % ", ".join(m["name"] for m in models),
+        url, body, jsonld=ld, og_image="og-models.jpg"))
+
+
 def build_company(cid, meta):
+    if cid == "corx":
+        return build_corx_company(cid, meta)
     url = SITE + company_url(cid)
     models = sorted((m for m in MODELS if m["company"] == cid),
                     key=lambda m: m.get("rel") or "", reverse=True)
