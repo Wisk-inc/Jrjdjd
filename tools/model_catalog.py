@@ -1215,6 +1215,21 @@ MODELS = [
            "fine-tuned from Qwen3.8-27B and fully merged.",
       b={},
       verified="2026-08"),
+    # Not a language model, so the text benchmarks below do not apply to it and
+    # its row is deliberately empty rather than padded. `kind` keeps the index
+    # honest about that instead of letting it read as a weak LLM.
+    M("tristream-svs", "TriStream-SVS", "corx", rel="2026", params="321.8M",
+      kind="Singing voice synthesis",
+      arch="3 parallel encoders + late fusion trunk, rectified flow decoder",
+      inp=["text", "audio"], outp=["audio"], lic="Apache 2.0", open=True,
+      hosted_price=False, reason=False, tools=False,
+      hf="Sigmandndnns/TriStream-SVS-300M", local="/models/tristream-svs/",
+      desc="A singing voice synthesis model that builds the source-filter theory of the human "
+           "voice into its architecture as a hard constraint — pitch, timbre and breath texture "
+           "run as three parallel encoder streams, combined only in a late fusion trunk. "
+           "Generates at 24 kHz through rectified flow matching in roughly 32 sampling steps.",
+      b={},
+      verified="2026-09"),
     M("corx1-5", "CorX1.5", "corx", rel="2026-02", params="157.8M", ctx=1024, out=1024,
       inp=["text"], outp=["text"], lic="Apache 2.0", open=True, hosted_price=False,
       reason=False, tools=False, hf="Sigmandndnns/CorX1.5-160M", local="/models/corx1-5/",
