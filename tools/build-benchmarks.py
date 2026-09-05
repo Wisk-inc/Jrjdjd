@@ -31,11 +31,12 @@ sys.path.insert(0, HERE)
 from bm_common import (  # noqa: E402
     BENCHMARKS, BENCH_BY_KEY, BY_SLUG, COMPANIES, ICON_ARROW, ICON_EXTERNAL,
     ICON_INFO, ICON_SEARCH, PROVENANCE, ROOT, SITE, bench_cell, blended_cost,
-    category_profile, category_rows, company_url, compare_url, crumb_ld, crumbs,
-    esc, fmt_category,
+    CATEGORY_BLURB, CATEGORY_ORDER, FIELD_PRIMARY, MIN_FIELDS, category_profile,
+    category_rows,
+    company_url, compare_url, crumb_ld, crumbs, esc, fmt_category,
     fmt_price, fmt_score,
     fmt_tokens, logo_img, logo_tile, model_url, modality_label, page,
-    score_pct, scorecard, test_url,
+    overall_standings, score_pct, scorecard, test_url,
 )
 from model_catalog import COMPARISONS, MODELS, validate  # noqa: E402
 
@@ -325,7 +326,8 @@ def build_hub():
     </div>
 
     <div class="btn-row" style="margin-top:26px">
-      <a class="btn btn-primary" href="/benchmarks/compare/">Open the comparison tool %(arrow)s</a>
+      <a class="btn btn-primary" href="/benchmarks/leaderboard/">See the leaderboard %(arrow)s</a>
+      <a class="btn btn-ghost" href="/benchmarks/compare/">Compare models</a>
       <a class="btn btn-ghost" href="#tests">What the tests measure</a>
     </div>
   </div>
@@ -1331,6 +1333,227 @@ def build_compare_tool():
 
 
 # ===========================================================================
+# Leaderboard — top models across every field
+# ===========================================================================
+def build_leaderboard():
+    url = SITE + "/benchmarks/leaderboard/"
+    entries, standings = overall_standings(MODELS)
+    top = entries[:40]
+
+    # --- overall table ---
+    rows = []
+    for i, e in enumerate(top, start=1):
+        m = e["model"]
+        co = COMPANIES[m["company"]]
+        medal = ' class="bm-lb-podium"' if i <= 3 else ""
+        rows.append(
+            '<tr%s><td class="bm-num bm-lb-rank">%d</td>'
+            '<td><span class="bm-model-cell">%s<span class="names">'
+            '<a class="name" href="%s">%s</a><span class="maker">%s</span></span></span></td>'
+            '<td class="bm-num">%d<span class="bm-lb-of"> / %d</span></td>'
+            '<td class="bm-num"><strong>%.0f</strong></td>'
+            '<td class="bm-num">%s</td>'
+            '<td>%s <span class="bm-lb-of">#%d of %d</span></td></tr>'
+            % (medal, i, logo_tile(m["company"], "", 19, "is-sm"), model_url(m["slug"]),
+               esc(m["name"]), esc(co["name"]),
+               len(e["fields"]), len(CATEGORY_ORDER), e["avg"],
+               e["tops"] if e["tops"] else '<span class="bm-nil">0</span>',
+               esc(e["best"]), e["best_rank"], e["best_n"]))
+
+    overall_table = """<div class="bm-table-wrap">
+  <table class="bm-table bm-leaderboard-table">
+    <caption class="visually-hidden">AI models ranked by average percentile across the capability fields they report.</caption>
+    <thead><tr>
+      <th class="bm-num" scope="col">#</th>
+      <th scope="col">Model</th>
+      <th class="bm-num" scope="col">Fields</th>
+      <th class="bm-num" scope="col">Avg. percentile</th>
+      <th class="bm-num" scope="col">Top-3 finishes</th>
+      <th scope="col">Strongest field</th>
+    </tr></thead>
+    <tbody>%s</tbody>
+  </table>
+</div>""" % "".join(rows)
+
+    # --- per-field podiums ---
+    blocks = []
+    for group in CATEGORY_ORDER:
+        rank = standings[group]
+        if not rank:
+            continue
+        primary = BENCH_BY_KEY[FIELD_PRIMARY[group]]
+        items = "".join(
+            '<li><span class="p">%d</span>%s<span class="txt">'
+            '<a class="n" href="%s">%s</a><span class="s">%s</span></span>'
+            '<span class="v">%s</span></li>'
+            % (i, logo_tile(m["company"], "", 18, "is-sm"), model_url(m["slug"]),
+               esc(m["name"]), esc(COMPANIES[m["company"]]["name"]),
+               esc(fmt_category(unit, v)))
+            for i, (m, v, unit, pct) in enumerate(rank[:5], start=1))
+        blocks.append(
+            '<div class="bm-field"><div class="bm-field-head"><h3>%s</h3>'
+            '<p>%s</p><p class="tests">Ranked on <a href="%s">%s</a> '
+            '&middot; %d models reporting</p></div>'
+            '<ol class="bm-field-list">%s</ol></div>'
+            % (esc(group), esc(CATEGORY_BLURB[group]), test_url(primary["key"]),
+               esc(primary["name"]), len(rank), items))
+
+    faqs = [
+        ("How is this leaderboard ranked?",
+         "Each field is decided by one benchmark, named in that field's header, and every model "
+         "listed in it reported that same benchmark. Models are ranked within the field and given "
+         "a percentile — the share of the field they are at least as good as. A model's overall "
+         "position is the average of its percentiles across the fields it reports. Percentiles "
+         "rather than raw ranks, because a field with 83 reporting models and one with 15 would "
+         "otherwise reward the same achievement very differently."),
+        ("Why does each field use only one benchmark?",
+         "Because averaging a whole group would rank on which test a lab chose rather than on "
+         "capability. HumanEval is saturated near 92% while SWE-bench Verified sits around 80% for "
+         "the same class of model, so a model that published only the easy one would float to the "
+         "top of Coding. One deciding benchmark per field means every model in a list sat the same "
+         "test. The other benchmarks in each group are still shown on model pages and in "
+         "side-by-side comparisons."),
+        ("Why do some well-known models not appear?",
+         "A model has to report at least %d of the seven fields to be ranked. Below that, one "
+         "strong benchmark would outrank a model measured across six, which would make the table "
+         "misleading. Models under the threshold still have their own pages and still appear in "
+         "the per-field lists below." % MIN_FIELDS),
+        ("Is this a measure of which model is best?",
+         "No. It is a measure of which models published the best numbers on the tests they chose "
+         "to publish. That is a real signal and a limited one — a lab can decline to report a "
+         "benchmark it does badly on, and no one here re-ran anything. Read the per-field lists "
+         "before the overall table; they are closer to the truth."),
+        ("What are the seven fields?",
+         "Reasoning, Maths, Coding, Knowledge, Multimodal, Instruction following and Human "
+         "preference. Each groups the benchmarks that measure the same thing, and a model's field "
+         "score averages the ones it reports in that group."),
+    ]
+    faq_html = "".join(
+        '<details><summary>%s<span class="plus" aria-hidden="true">+</span></summary>'
+        '<div class="faq-body"><p>%s</p></div></details>' % (esc(q), esc(a))
+        for q, a in faqs)
+
+    leader = top[0] if top else None
+    body = """
+  <div class="shell page-head">
+    %(crumbs)s
+    <p class="eyebrow" style="margin-bottom:18px">Leaderboard</p>
+    <h1>The top models, field by field.</h1>
+    <p class="lede">One ranking across reasoning, maths, coding, knowledge, multimodal,
+      instruction following and human preference — built from published figures, and honest about
+      what that can and cannot tell you.</p>
+
+    <div class="answer-box">
+      <p>Across the %(nfields)d capability fields tracked here, <strong>%(leader)s</strong> holds the
+        highest average percentile among models reporting at least %(minf)d fields. Rankings are
+        computed per field and then averaged, never rolled into a single invented score. %(nranked)d
+        of the %(total)d models in the index clear the reporting threshold.</p>
+    </div>
+
+    <div class="btn-row" style="margin-top:24px">
+      <a class="btn btn-primary" href="#fields">Jump to the field leaders %(arrow)s</a>
+      <a class="btn btn-ghost" href="/benchmarks/">Browse all %(total)d models</a>
+    </div>
+  </div>
+
+  <div class="shell">%(provenance)s</div>
+
+  <section class="section-tight" aria-labelledby="overall-title">
+    <div class="shell">
+      <div class="section-head" style="max-width:760px">
+        <p class="eyebrow">Overall</p>
+        <h2 id="overall-title">Best across every field</h2>
+        <p>Ranked by average percentile across the fields each model reports. <strong>Fields</strong>
+          shows how many of the %(nfields)d it reports at all — a high average over three fields is a
+          narrower claim than the same average over six, and the column is there so you can see
+          which you are looking at.</p>
+      </div>
+      %(overall)s
+      <p class="bm-sc-note">Showing the top %(ntop)d of %(nranked)d ranked models. A model needs at
+        least %(minf)d of %(nfields)d fields to be ranked at all.</p>
+    </div>
+  </section>
+
+  <section class="section-tight" id="fields" aria-labelledby="fields-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="eyebrow">Field leaders</p>
+        <h2 id="fields-title">Who leads what</h2>
+        <p>The top five in each field, with the score that put them there. These lists are the more
+          reliable half of this page — no averaging across fields, no threshold, just the published
+          numbers in order.</p>
+      </div>
+      <div class="bm-field-grid">%(fields)s</div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="lb-faq-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="eyebrow">Method</p>
+        <h2 id="lb-faq-title">How to read this</h2>
+      </div>
+      <div class="faq">%(faq)s</div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band">
+        <p class="eyebrow is-plain" style="justify-content:center">Compare</p>
+        <h2 class="mt-s">A ranking is not a decision.</h2>
+        <p>Pick the two or three models this page put in front of you and read them column by
+          column — price, context, licence and every benchmark side by side.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/benchmarks/compare/">Open the comparison tool</a>
+          <a class="btn btn-ghost" href="/benchmarks/">All %(total)d models</a>
+        </div>
+      </div>
+    </div>
+  </section>
+""" % {
+        "crumbs": crumbs([("/", "Home"), ("/benchmarks/", "Benchmarks"), (None, "Leaderboard")]),
+        "nfields": len(CATEGORY_ORDER), "minf": MIN_FIELDS,
+        "leader": esc(leader["model"]["name"]) if leader else "no model",
+        "nranked": len(entries), "total": len(MODELS), "ntop": len(top),
+        "arrow": ICON_ARROW, "provenance": PROVENANCE,
+        "overall": overall_table, "fields": "".join(blocks), "faq": faq_html,
+    }
+
+    page_id = url + "#webpage"
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "CollectionPage", "@id": page_id, "url": url,
+         "name": "AI model leaderboard — top models in every field",
+         "description": "AI models ranked across reasoning, maths, coding, knowledge, multimodal, "
+                        "instruction following and human preference, from published benchmark "
+                        "figures.",
+         "isPartOf": {"@id": SITE + "/#website"}, "inLanguage": "en",
+         "dateModified": UPDATED, "breadcrumb": {"@id": page_id + "#breadcrumb"},
+         "mainEntity": {"@id": url + "#list"}},
+        crumb_ld([("/", "Home"), ("/benchmarks/", "Benchmarks"), (None, "Leaderboard")], page_id),
+        {"@type": "ItemList", "@id": url + "#list",
+         "name": "Top AI models across every capability field",
+         "numberOfItems": len(top),
+         "itemListOrder": "https://schema.org/ItemListOrderDescending",
+         "itemListElement": [
+             {"@type": "ListItem", "position": i,
+              "item": {"@type": "SoftwareApplication", "name": e["model"]["name"],
+                       "url": SITE + model_url(e["model"]["slug"])}}
+             for i, e in enumerate(top, start=1)]},
+        {"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
+            {"@type": "Question", "name": q,
+             "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]},
+    ]}
+
+    write("/benchmarks/leaderboard/", page(
+        "AI Model Leaderboard — Top Models in Every Field",
+        "Which AI models lead at reasoning, maths, coding, knowledge, multimodal, instruction "
+        "following and human preference. Ranked from published benchmark figures across %d models "
+        "from %d labs." % (len(MODELS), len(COMPANIES)),
+        url, body, jsonld=ld))
+
+
+# ===========================================================================
 # Benchmark (test) pages
 # ===========================================================================
 def build_test(b):
@@ -1619,6 +1842,7 @@ def export_json():
 # ===========================================================================
 def sitemap_urls():
     urls = [("/benchmarks/", "0.9", "weekly"),
+            ("/benchmarks/leaderboard/", "0.9", "weekly"),
             ("/benchmarks/compare/", "0.8", "weekly")]
     urls += [(test_url(b["key"]), "0.6", "monthly") for b in BENCHMARKS]
     urls += [(company_url(c), "0.6", "monthly") for c in COMPANIES]
@@ -1656,6 +1880,7 @@ def main():
 
     build_hub()
     build_compare_tool()
+    build_leaderboard()
     for m in MODELS:
         build_model(m)
     for a, b in COMPARISONS:
@@ -1668,9 +1893,10 @@ def main():
     json_path, json_size = export_json()
     write_sitemap_fragment()
 
-    pages = 2 + len(MODELS) + len(COMPARISONS) + len(BENCHMARKS) + len(COMPANIES)
+    pages = 3 + len(MODELS) + len(COMPARISONS) + len(BENCHMARKS) + len(COMPANIES)
     print("Built %d pages:" % pages)
     print("  1   hub                /benchmarks/")
+    print("  1   leaderboard        /benchmarks/leaderboard/")
     print("  1   compare tool       /benchmarks/compare/")
     print("  %-3d model pages       /benchmarks/models/<slug>/" % len(MODELS))
     print("  %-3d head-to-heads     /benchmarks/compare/<a>-vs-<b>/" % len(COMPARISONS))
