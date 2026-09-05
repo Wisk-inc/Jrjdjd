@@ -927,10 +927,39 @@ MODELS = [
       provisional=True,
       desc="The mid-tier Claude 5. Available by API ID; specifications not yet published.",
       b={}, verified="2026-09"),
+    M("claude-fable-5", "Claude Fable 5", "anthropic", rel="2026", lic="Proprietary",
+      open=False, api_id="claude-fable-5", reason=True, tools=True,
+      inp=["text", "image"], outp=["text"], provisional=True,
+      desc="A Claude 5 variant available by API ID. Specifications not yet published.",
+      b={}, verified="2026-09"),
     M("claude-fable-5-1", "Claude Fable 5.1", "anthropic", rel="2026", lic="Proprietary",
       open=False, api_id="claude-fable-5-1", reason=True, tools=True,
       inp=["text", "image"], outp=["text"], provisional=True,
+      desc="The point release of Claude Fable 5, available by API ID. Specifications not "
+           "yet published.",
+      b={}, verified="2026-09"),
+    M("claude-mythos-5", "Claude Mythos 5", "anthropic", rel="2026", lic="Proprietary",
+      open=False, api_id="claude-mythos-5", reason=True, tools=True,
+      inp=["text", "image"], outp=["text"], provisional=True,
       desc="A Claude 5 variant available by API ID. Specifications not yet published.",
+      b={}, verified="2026-09"),
+    M("claude-mythos-5-1", "Claude Mythos 5.1", "anthropic", rel="2026", lic="Proprietary",
+      open=False, api_id="claude-mythos-5-1", reason=True, tools=True,
+      inp=["text", "image"], outp=["text"], provisional=True,
+      desc="The point release of Claude Mythos 5, available by API ID. Specifications not "
+           "yet published.",
+      b={}, verified="2026-09"),
+
+    # Announced but not documented. Both labs have published open weights for
+    # every previous generation, but neither the licence nor the architecture
+    # of these is stated anywhere yet, so neither is recorded here.
+    M("glm-5-3", "GLM-5.3", "zai", rel="2026", api_id="glm-5.3", provisional=True,
+      desc="The successor to GLM-4.6. No model card, licence or benchmark figures had been "
+           "published when this catalogue was last checked.",
+      b={}, verified="2026-09"),
+    M("kimi-3", "Kimi 3", "moonshot", rel="2026", api_id="kimi-3", provisional=True,
+      desc="The successor to the Kimi K2 line. No model card, licence or benchmark figures "
+           "had been published when this catalogue was last checked.",
       b={}, verified="2026-09"),
 
     # ----------------------------------------------- Earlier OpenAI / Google
@@ -1308,6 +1337,15 @@ COMPARISONS = [
     ("claude-opus-5", "claude-opus-4-5"),
     ("claude-sonnet-5", "claude-sonnet-4-5"),
     ("claude-fable-5-1", "claude-opus-5"),
+    ("claude-fable-5", "claude-fable-5-1"),
+    ("claude-mythos-5", "claude-mythos-5-1"),
+    ("claude-mythos-5", "claude-fable-5"),
+    ("claude-mythos-5-1", "claude-fable-5-1"),
+    ("claude-mythos-5", "claude-opus-5"),
+    ("glm-5-3", "glm-4-6"),
+    ("glm-5-3", "deepseek-v3-2"),
+    ("kimi-3", "kimi-k2-thinking"),
+    ("kimi-3", "glm-5-3"),
     ("llama-3-1-70b", "llama-3-3-70b"),
     ("qwen3-14b", "gemma-3-12b"),
     ("qwen3-8b", "llama-3-1-8b"),

@@ -309,7 +309,7 @@
       ['Knowledge cutoff', null, function (m) { return m.cut || null; }],
       ['Licence', null, function (m) { return m.licence || null; }],
       ['Open weights', 'Can you download and run it yourself',
-        function (m) { return m.open ? 'Yes' : 'No'; }]
+        function (m) { return ('open' in m) ? (m.open ? 'Yes' : 'No') : null; }]
     ];
 
     var PRICE = [
