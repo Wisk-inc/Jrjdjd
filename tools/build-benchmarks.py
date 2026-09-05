@@ -1087,6 +1087,16 @@ def verdict(a, b):
         notes.append("<strong>%s is a reasoning model</strong> and the other is not, which "
                      "usually means better maths and multi-step logic in exchange for higher "
                      "latency and more billed output tokens." % r["name"])
+    if bool(a.get("access")) != bool(b.get("access")):
+        gated = a if a.get("access") else b
+        openly = b if gated is a else a
+        notes.append("<strong>%s is not generally available.</strong> Access is %s. %s can be "
+                     "called by anyone with an API key, and on identical specifications that is "
+                     "the difference that decides it."
+                     % (esc(gated["name"]),
+                        esc(gated["access"][0].lower() + gated["access"][1:]),
+                        esc(openly["name"])))
+
     va, vb = "image" in (a.get("inp") or []), "image" in (b.get("inp") or [])
     if a.get("inp") and b.get("inp") and va != vb:
         v = a if va else b
@@ -1417,13 +1427,48 @@ def build_leaderboard():
                esc(m["name"]), esc(COMPANIES[m["company"]]["name"]),
                esc(fmt_category(unit, v)))
             for i, (m, v, unit, pct) in enumerate(rank[:5], start=1))
+        # A model can be strong in a field and still not report the benchmark
+        # the field is ranked on. Leaving it out silently reads as absence of
+        # ability, so name the best of them and say what they did report.
+        others = [b for b in BENCHMARKS
+                  if b["group"] == group and b["key"] != primary["key"]]
+        elsewhere = []
+        for m in MODELS:
+            if m.get("b", {}).get(primary["key"]) is not None:
+                continue
+            got = [(b, m["b"][b["key"]]) for b in others
+                   if m.get("b", {}).get(b["key"]) is not None]
+            if got:
+                best = max(got, key=lambda t: t[1])
+                elsewhere.append((m, best[0], best[1]))
+        # Newest first, NOT by score. Sorting these by raw value would rank a
+        # saturated HumanEval result above a SWE-bench Pro one and quietly
+        # reintroduce the cross-benchmark comparison this whole page avoids.
+        elsewhere.sort(key=lambda t: t[0].get("rel") or "", reverse=True)
+
+        note = ""
+        if elsewhere:
+            shown = elsewhere[:3]
+            note = ('<p class="bm-field-note"><strong>Also in this field, on a different '
+                    'test:</strong> %s. %s published no %s figure, so there is no like-for-like '
+                    'way to place %s in the list above — these are not ranked against it or '
+                    'against each other.</p>'
+                    % ("; ".join(
+                        '<a href="%s">%s</a> reports %s on %s'
+                        % (model_url(m["slug"]), esc(m["name"]),
+                           esc(fmt_score(b["key"], v)), esc(b["name"]))
+                        for m, b, v in shown),
+                       "Its maker" if len(shown) == 1 else "Their makers",
+                       esc(primary["name"]),
+                       "it" if len(shown) == 1 else "them"))
+
         blocks.append(
             '<div class="bm-field"><div class="bm-field-head"><h3>%s</h3>'
             '<p>%s</p><p class="tests">Ranked on <a href="%s">%s</a> '
             '&middot; %d models reporting</p></div>'
-            '<ol class="bm-field-list">%s</ol></div>'
+            '<ol class="bm-field-list">%s</ol>%s</div>'
             % (esc(group), esc(CATEGORY_BLURB[group]), test_url(primary["key"]),
-               esc(primary["name"]), len(rank), items))
+               esc(primary["name"]), len(rank), items, note))
 
     faqs = [
         ("How is this leaderboard ranked?",
@@ -1721,6 +1766,20 @@ TEST_NOTES = {
         "It measures an entire agent, not a model. Retrieval, retries and test execution are "
         "all part of the harness, and two labs reporting the same number may be running very "
         "different scaffolds. It is also Python-only, on twelve repositories."),
+    "swe_pro": (
+        "SWE-bench Pro is the benchmark to read when a model has no SWE-bench Verified figure. "
+        "Its tasks come from commercial and copyleft repositories that were never in public "
+        "training data, so a score cannot come from having seen the fix.",
+        "Far fewer models report it, so the field is thin and a high score has less company to "
+        "be measured against. It is also still an agent benchmark, which means the harness "
+        "around the model moves the number as much as the model does."),
+    "tbench": (
+        "Terminal-Bench scores whether the machine ended up in the required state after a real "
+        "session — install, build, debug, run. It is the closest thing here to watching a model "
+        "actually do the job, rather than produce a patch someone else applies.",
+        "The environment is doing a lot of the work, so results move with the scaffold, the "
+        "timeout and the tool set. Two labs reporting Terminal-Bench may not be running "
+        "comparable harnesses at all."),
     "lcb": (
         "LiveCodeBench collects competitive-programming problems published after each "
         "model's training cutoff, so a high score cannot come from having memorised the "
