@@ -21,6 +21,7 @@ does not.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -200,12 +201,25 @@ def main():
     args = ap.parse_args()
 
     os.makedirs(OUT_DIR, exist_ok=True)
+    # A logo at a stable path cannot be corrected once a browser has it: the
+    # response is immutable for a year, so a fix reaches nobody who already
+    # loaded the old one. Content-hashed filenames mean a changed mark is a
+    # changed URL, which no cache has seen — and lets the files stay immutable,
+    # which is what you actually want for an asset that never changes in place.
+    for stale in os.listdir(OUT_DIR):
+        if stale.endswith(".svg"):
+            os.remove(os.path.join(OUT_DIR, stale))
+
     manifest = {}
 
     def write(cid, view_box, body):
-        with open(os.path.join(OUT_DIR, cid + ".svg"), "w") as f:
-            f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="%s">%s</svg>'
-                    % (view_box, body))
+        svg = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="%s">%s</svg>'
+               % (view_box, body))
+        digest = hashlib.sha1(svg.encode("utf-8")).hexdigest()[:8]
+        name = "%s.%s.svg" % (cid, digest)
+        with open(os.path.join(OUT_DIR, name), "w") as f:
+            f.write(svg)
+        return name
 
     for cid in COMPANIES:
         if cid == "corx":
@@ -214,14 +228,15 @@ def main():
             # the other monochrome marks take.
             style = ("<style>svg{fill:#3d3025}"
                      "@media(prefers-color-scheme:dark){svg{fill:#d8c9b6}}</style>")
-            write(cid, view_box, style + to_ink(body))
-            manifest[cid] = {"viewBox": view_box, "mono": True, "source": "CorX Labs"}
+            name = write(cid, view_box, style + to_ink(body))
+            manifest[cid] = {"file": name, "viewBox": view_box, "mono": True,
+                             "source": "CorX Labs"}
             continue
 
         if cid not in SOURCES:
             text = MONOGRAMS.get(cid, COMPANIES[cid]["name"][:2].capitalize())
-            write(cid, "0 0 24 24", monogram_svg(text))
-            manifest[cid] = {"viewBox": "0 0 24 24", "mono": True,
+            name = write(cid, "0 0 24 24", monogram_svg(text))
+            manifest[cid] = {"file": name, "viewBox": "0 0 24 24", "mono": True,
                              "monogram": text, "source": "monogram"}
             continue
 
@@ -244,8 +259,9 @@ def main():
             out = MIXED_STYLE + body
         else:
             out = body
-        write(cid, view_box, out)
-        manifest[cid] = {"viewBox": view_box, "mono": mono, "source": src, "icon": name,
+        out_name = write(cid, view_box, out)
+        manifest[cid] = {"file": out_name, "viewBox": view_box, "mono": mono,
+                         "source": src, "icon": name,
                          "mixed": (not mono) and "currentColor" in body}
 
     with open(os.path.join(OUT_DIR, "manifest.json"), "w") as f:

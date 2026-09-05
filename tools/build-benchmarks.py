@@ -35,7 +35,7 @@ from bm_common import (  # noqa: E402
     category_rows,
     company_url, compare_url, crumb_ld, crumbs, esc, fmt_category,
     fmt_price, fmt_score,
-    fmt_tokens, logo_img, logo_tile, model_url, modality_label, page,
+    fmt_tokens, logo_img, logo_tile, logo_url, model_url, modality_label, page,
     overall_standings, score_pct, scorecard, test_url,
 )
 from model_catalog import COMPARISONS, MODELS, validate  # noqa: E402
@@ -1973,7 +1973,7 @@ def export_json():
         "updated": UPDATED,
         "site": SITE,
         "companies": {cid: {"name": meta["name"], "country": meta["country"],
-                            "site": meta["site"], "logo": "/assets/img/logos/%s.svg" % cid,
+                            "site": meta["site"], "logo": logo_url(cid),
                             "url": company_url(cid)}
                       for cid, meta in COMPANIES.items()},
         "benchmarks": [{"key": b["key"], "name": b["name"], "unit": b["unit"],
