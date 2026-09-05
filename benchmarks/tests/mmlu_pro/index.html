@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>MMLU-Pro — What It Measures and Which AI Models Lead</title>
+<meta name="description" content="MMLU-Pro: 12,000 reasoning-heavy multiple-choice questions across 14 academic subjects, with ten options instead of four. The harder successor to MMLU. Published scores for 77 models, ranked, with what the benchmark does and does not tell you.">
+<link rel="canonical" href="https://corx-labs.com/benchmarks/tests/mmlu_pro/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/mmlu_pro/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/tests/mmlu_pro/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/benchmarks/tests/mmlu_pro/">
+<meta property="og:title" content="MMLU-Pro — What It Measures and Which AI Models Lead">
+<meta property="og:description" content="MMLU-Pro: 12,000 reasoning-heavy multiple-choice questions across 14 academic subjects, with ten options instead of four. The harder successor to MMLU. Published scores for 77 models, ranked, with what the benchmark does and does not tell you.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-benchmarks.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MMLU-Pro — What It Measures and Which AI Models Lead">
+<meta name="twitter:description" content="MMLU-Pro: 12,000 reasoning-heavy multiple-choice questions across 14 academic subjects, with ten options instead of four. The harder successor to MMLU. Published scores for 77 models, ranked, with what the benchmark does and does not tell you.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-benchmarks.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/benchmarks.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/benchmarks/tests/mmlu_pro/#webpage",
+      "url": "https://corx-labs.com/benchmarks/tests/mmlu_pro/",
+      "name": "MMLU-Pro — what it measures and which models lead",
+      "isPartOf": {
+        "@id": "https://corx-labs.com/#website"
+      },
+      "inLanguage": "en",
+      "dateModified": "2026-09-04",
+      "breadcrumb": {
+        "@id": "https://corx-labs.com/benchmarks/tests/mmlu_pro/#webpage#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://corx-labs.com/benchmarks/tests/mmlu_pro/#term"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/benchmarks/tests/mmlu_pro/#webpage#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://corx-labs.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Benchmarks",
+          "item": "https://corx-labs.com/benchmarks/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "MMLU-Pro"
+        }
+      ]
+    },
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://corx-labs.com/benchmarks/tests/mmlu_pro/#term",
+      "name": "MMLU-Pro",
+      "description": "12,000 reasoning-heavy multiple-choice questions across 14 academic subjects, with ten options instead of four. The harder successor to MMLU.",
+      "url": "https://corx-labs.com/benchmarks/tests/mmlu_pro/",
+      "inDefinedTermSet": {
+        "@type": "DefinedTermSet",
+        "name": "AI model evaluation benchmarks"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary"><a href="/chat/">Chat</a><a href="/documentation/">Documentation</a><a href="/models/">Our Products</a><a href="/benchmarks/" aria-current="page">Benchmarks</a><a href="/blog/">Blog</a><a href="/developers/">Developers</a><a href="/about/">About Us</a><a href="/contact/">Contact</a></nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/chat/">Open the chat</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul><li><a href="/chat/">Chat</a></li><li><a href="/documentation/">Documentation</a></li><li><a href="/models/">Our Products</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><a href="/blog/">Blog</a></li><li><a href="/developers/">Developers</a></li><li><a href="/about/">About Us</a></li><li><a href="/contact/">Contact</a></li></ul>
+      <a class="btn btn-primary" href="/chat/">Open the chat</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><a href="/benchmarks/#tests">Tests</a></li><li><span aria-current="page">MMLU-Pro</span></li></ol></nav>
+    <p class="eyebrow" style="margin-bottom:18px">Knowledge</p>
+    <h1>MMLU-Pro</h1>
+    <p class="lede">12,000 reasoning-heavy multiple-choice questions across 14 academic subjects, with ten options instead of four. The harder successor to MMLU.</p>
+    <div class="answer-box">
+      <p><strong>MMLU-Pro</strong> is scored as a percentage of questions answered correctly. 77 of the 153 models in this
+        index report a score for it. The highest published figure here is
+        <strong>85%</strong>, from DeepSeek-V3.2.</p>
+    </div>
+    <div class="btn-row" style="margin-top:22px">
+      <a class="btn btn-ghost" href="https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro" rel="noopener" target="_blank">The benchmark itself <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      <a class="btn btn-ghost" href="/benchmarks/">All models <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <section class="section-tight" aria-labelledby="rank-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <p class="eyebrow">Reported scores</p>
+        <h2 id="rank-title">Top 20 on MMLU-Pro</h2>
+        <p>Ordered by the figure each maker published. Models that have not reported this
+          benchmark are not listed — an absent score is not a low score.</p>
+      </div>
+      <div class="bm-table-wrap">
+        <table class="bm-table" style="min-width:520px">
+          <caption class="visually-hidden">Models ranked by published MMLU-Pro score</caption>
+          <thead><tr><th class="bm-num" scope="col">#</th><th scope="col">Model</th>
+            <th scope="col">Published score</th></tr></thead>
+          <tbody><tr><td class="bm-num" style="width:56px;color:var(--faint)">1</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/deepseek-v3-2/">DeepSeek-V3.2</a><span class="maker">DeepSeek</span></span></span></td><td style="min-width:190px"><span class="bm-bar is-best"><span class="val">85%<span class="bm-best-tag">Best</span></span><span class="track"><span class="fill" style="width:85.0%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">2</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/deepseek-v3-1/">DeepSeek-V3.1</a><span class="maker">DeepSeek</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">84.8%</span><span class="track"><span class="fill" style="width:84.8%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">3</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/deepseek-r1/">DeepSeek-R1</a><span class="maker">DeepSeek</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">84%</span><span class="track"><span class="fill" style="width:84.0%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">4</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/moonshot.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/kimi-k2/">Kimi K2 Instruct</a><span class="maker">Moonshot AI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">81.1%</span><span class="track"><span class="fill" style="width:81.1%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">5</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/gpt-oss-120b/">gpt-oss-120b</a><span class="maker">OpenAI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">80.9%</span><span class="track"><span class="fill" style="width:80.9%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">6</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/gpt-4-1/">GPT-4.1</a><span class="maker">OpenAI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">80.5%</span><span class="track"><span class="fill" style="width:80.5%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">7</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/meta.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/llama-4-maverick/">Llama 4 Maverick</a><span class="maker">Meta AI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">80.5%</span><span class="track"><span class="fill" style="width:80.5%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">8</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/amazon.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/nova-premier/">Amazon Nova Premier</a><span class="maker">Amazon</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">80%</span><span class="track"><span class="fill" style="width:80.0%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">9</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/claude-3-5-sonnet/">Claude 3.5 Sonnet</a><span class="maker">Anthropic</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">78%</span><span class="track"><span class="fill" style="width:78.0%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">10</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/gemini-2-0-flash/">Gemini 2.0 Flash</a><span class="maker">Google DeepMind</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">77.6%</span><span class="track"><span class="fill" style="width:77.6%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">11</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/mistral.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/mistral-medium-3/">Mistral Medium 3</a><span class="maker">Mistral AI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">76%</span><span class="track"><span class="fill" style="width:76.0%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">12</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/deepseek.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/deepseek-v3/">DeepSeek-V3</a><span class="maker">DeepSeek</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">75.9%</span><span class="track"><span class="fill" style="width:75.9%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">13</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/gemini-1-5-pro/">Gemini 1.5 Pro</a><span class="maker">Google DeepMind</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">75.8%</span><span class="track"><span class="fill" style="width:75.8%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">14</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/xai.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/grok-2/">Grok 2</a><span class="maker">xAI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">75.5%</span><span class="track"><span class="fill" style="width:75.5%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">15</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/amazon.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/nova-pro/">Amazon Nova Pro</a><span class="maker">Amazon</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">75.5%</span><span class="track"><span class="fill" style="width:75.5%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">16</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/gpt-4o/">GPT-4o</a><span class="maker">OpenAI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">74.7%</span><span class="track"><span class="fill" style="width:74.7%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">17</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/meta.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/llama-4-scout/">Llama 4 Scout</a><span class="maker">Meta AI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">74.3%</span><span class="track"><span class="fill" style="width:74.3%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">18</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/baidu.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/ernie-4-5-300b/">ERNIE 4.5 300B-A47B</a><span class="maker">Baidu</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">74%</span><span class="track"><span class="fill" style="width:74.0%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">19</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/meta.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/llama-3-1-405b/">Llama 3.1 405B</a><span class="maker">Meta AI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">73.3%</span><span class="track"><span class="fill" style="width:73.3%"></span></span></span></td></tr><tr><td class="bm-num" style="width:56px;color:var(--faint)">20</td><td><span class="bm-model-cell"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="19" height="19" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="names"><a class="name" href="/benchmarks/models/gpt-oss-20b/">gpt-oss-20b</a><span class="maker">OpenAI</span></span></span></td><td style="min-width:190px"><span class="bm-bar"><span class="val">73.2%</span><span class="track"><span class="fill" style="width:73.2%"></span></span></span></td></tr></tbody>
+        </table>
+      </div>
+      <div style="margin-top:24px"><div class="bm-provenance" id="method-note">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+  <div>
+    <h2>Where these numbers come from</h2>
+    <p>Every score on this page is a <strong>published</strong> figure, taken from the model's
+      own card, system card, technical report or release post, or from a public leaderboard.
+      CorX Labs did not run these evaluations. Most are self-reported by the lab that built
+      the model, which means they were produced under that lab's own choice of prompt,
+      scaffold and number of attempts — so treat them as a starting point for a shortlist,
+      not as a settled ranking.</p>
+    <p>Where a figure has not been published, the cell reads
+      <span class="bm-nil">Not reported</span> rather than an estimate. Nothing here is
+      inferred, interpolated or guessed. Each model records the month its row was last
+      checked. <a href="/benchmarks/#method">Full method and caveats</a>.</p>
+  </div>
+</div></div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="doc-layout"><div></div><div class="prose">
+        <h2 style="font-family:var(--serif)">How to read this score</h2>
+        <p>A high MMLU-Pro score means the model carries a lot of factual knowledge and can reason over it under multiple-choice conditions. The ten-option format makes lucky guessing worth 10% rather than 25%, so the spread between models is wider and more meaningful than on the original MMLU.</p>
+        <h3>Where it is weak</h3>
+        <p>It is still multiple choice, which is nothing like the open-ended work most people give a model. A model can pick the right option and still be unable to explain it, and the format rewards recall over judgement.</p>
+      </div></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Benchmarks">
+        <h4>Benchmarks</h4>
+        <ul>
+          <li><a href="/benchmarks/">All models</a></li>
+          <li><a href="/benchmarks/compare/">Compare models</a></li>
+          <li><a href="/benchmarks/#companies">By company</a></li>
+          <li><a href="/benchmarks/#tests">The tests</a></li>
+          <li><a href="/benchmarks/#method">Method &amp; sources</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/chat/">Chat</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

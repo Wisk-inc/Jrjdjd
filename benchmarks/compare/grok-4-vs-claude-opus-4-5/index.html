@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Grok 4 vs Claude Opus 4.5 — Benchmarks, Price and Specs Compared</title>
+<meta name="description" content="Grok 4 or Claude Opus 4.5? Compare context window, price per million tokens, licence and published scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified, side by side.">
+<link rel="canonical" href="https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/">
+<meta property="og:title" content="Grok 4 vs Claude Opus 4.5 — Benchmarks, Price and Specs Compared">
+<meta property="og:description" content="Grok 4 or Claude Opus 4.5? Compare context window, price per million tokens, licence and published scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified, side by side.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-compare.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Grok 4 vs Claude Opus 4.5 — Benchmarks, Price and Specs Compared">
+<meta name="twitter:description" content="Grok 4 or Claude Opus 4.5? Compare context window, price per million tokens, licence and published scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified, side by side.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-compare.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/benchmarks.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/#webpage",
+      "url": "https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/",
+      "name": "Grok 4 vs Claude Opus 4.5 — benchmarks, price and specs compared",
+      "isPartOf": {
+        "@id": "https://corx-labs.com/#website"
+      },
+      "inLanguage": "en",
+      "dateModified": "2026-09-04",
+      "breadcrumb": {
+        "@id": "https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/#webpage#breadcrumb"
+      },
+      "about": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Grok 4",
+          "url": "https://corx-labs.com/benchmarks/models/grok-4/"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Claude Opus 4.5",
+          "url": "https://corx-labs.com/benchmarks/models/claude-opus-4-5/"
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/#webpage#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://corx-labs.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Benchmarks",
+          "item": "https://corx-labs.com/benchmarks/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Compare",
+          "item": "https://corx-labs.com/benchmarks/compare/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Grok 4 vs Claude Opus 4.5"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Grok 4 better than Claude Opus 4.5?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Claude Opus 4.5 wins 2 of the 3 benchmarks both models report, Grok 4 wins 1, consistently. The average gap across shared tests is 3.8 points."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which is cheaper, Grok 4 or Claude Opus 4.5?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On a 3:1 input-to-output mix, Grok 4 costs $6.00 per million tokens against $10.00 for Claude Opus 4.5 — about 1.7&times; less. Remember that a reasoning model bills its thinking as output, so cost per answer can diverge much further than cost per token."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Grok 4 and Claude Opus 4.5?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Grok 4 takes 256K tokens of context against 200K — 1.3&times; more room for long documents or a large codebase."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary"><a href="/chat/">Chat</a><a href="/documentation/">Documentation</a><a href="/models/">Our Products</a><a href="/benchmarks/" aria-current="page">Benchmarks</a><a href="/blog/">Blog</a><a href="/developers/">Developers</a><a href="/about/">About Us</a><a href="/contact/">Contact</a></nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/chat/">Open the chat</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul><li><a href="/chat/">Chat</a></li><li><a href="/documentation/">Documentation</a></li><li><a href="/models/">Our Products</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><a href="/blog/">Blog</a></li><li><a href="/developers/">Developers</a></li><li><a href="/about/">About Us</a></li><li><a href="/contact/">Contact</a></li></ul>
+      <a class="btn btn-primary" href="/chat/">Open the chat</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/benchmarks/">Benchmarks</a></li><li><a href="/benchmarks/compare/">Compare</a></li><li><span aria-current="page">Grok 4 vs Claude Opus 4.5</span></li></ol></nav>
+    <p class="eyebrow" style="margin-bottom:18px">Head to head</p>
+    <h1>Grok 4 vs Claude Opus 4.5</h1>
+    <p class="lede">Grok 4 from xAI against Claude Opus 4.5 from Anthropic — specification, price and
+      every benchmark both makers have published, in one table.</p>
+  </div>
+
+  <section class="section-tight" style="padding-top:0">
+    <div class="shell">
+      <div class="bm-verdict">
+        <div>
+          <h3>Benchmarks</h3>
+          <p class="headline">Claude Opus 4.5 leads</p>
+          <p>Claude Opus 4.5 wins 2 of the 3 benchmarks both models report, Grok 4 wins 1, consistently. The average gap across shared tests is 3.8 points.</p>
+        </div>
+        <div>
+          <h3>Price</h3>
+          <p class="headline">Grok 4 is cheaper</p>
+          <p>On a 3:1 input-to-output mix, Grok 4 costs $6.00 per million tokens against $10.00 for Claude Opus 4.5 — about 1.7&times; less. Remember that a reasoning model bills its thinking as output, so cost per answer can diverge much further than cost per token.</p>
+        </div>
+        <div>
+          <h3>What actually differs</h3>
+          <ul class="fact-list" style="margin-top:2px"><li><strong>Grok 4 takes 256K tokens</strong> of context against 200K — 1.3&times; more room for long documents or a large codebase.</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" style="padding-top:0" aria-labelledby="table-title">
+    <div class="shell">
+      <div class="section-head" style="margin-bottom:22px">
+        <p class="eyebrow">Side by side</p>
+        <h2 id="table-title">Grok 4 and Claude Opus 4.5, row by row</h2>
+      </div>
+      <div class="bm-compare-wrap"><table class="bm-compare"><thead><tr><th class="bm-corner"><span class="visually-hidden">Attribute</span></th><th scope="col"><span class="bm-colhead"><span class="top"><span class="logo-tile"><img class="logo-mark" src="/assets/img/logos/xai.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span><a class="title" href="/benchmarks/models/grok-4/">Grok 4</a><span class="maker">xAI</span></span></span></span></th><th scope="col"><span class="bm-colhead"><span class="top"><span class="logo-tile"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span><a class="title" href="/benchmarks/models/claude-opus-4-5/">Claude Opus 4.5</a><span class="maker">Anthropic</span></span></span></span></th></tr></thead><tbody><tr><th scope="row" style="background:var(--paper-sunk);color:var(--espresso);font-weight:600">Specification</th><td style="background:var(--paper-sunk)"></td><td style="background:var(--paper-sunk)"></td></tr><tr><th scope="row">Maker<span class="hint">Who built it</span></th><td>xAI</td><td>Anthropic</td></tr><tr><th scope="row">Released</th><td>2025-07</td><td>2025-11</td></tr><tr><th scope="row">Context window<span class="hint">How much can go in at once</span></th><td>256,000 tokens</td><td>200,000 tokens</td></tr><tr><th scope="row">Max output</th><td>64,000 tokens</td><td>64,000 tokens</td></tr><tr><th scope="row">Input</th><td>Text, Image</td><td>Text, Image</td></tr><tr><th scope="row">Reasoning<span class="hint">Spends extra tokens thinking before it answers</span></th><td>Yes</td><td>Yes</td></tr><tr><th scope="row">Tool calling</th><td>Yes</td><td>Yes</td></tr><tr><th scope="row">Knowledge cutoff</th><td class="is-nil"><span class="bm-nil">Not reported</span></td><td>2025-03</td></tr><tr><th scope="row">Licence</th><td>Proprietary</td><td>Proprietary</td></tr><tr><th scope="row">Open weights<span class="hint">Can you download and run it yourself</span></th><td>No</td><td>No</td></tr><tr><th scope="row" style="background:var(--paper-sunk);color:var(--espresso);font-weight:600">Price</th><td style="background:var(--paper-sunk)"></td><td style="background:var(--paper-sunk)"></td></tr><tr><th scope="row">Input price<span class="hint">USD per million tokens in</span></th><td>$3.00</td><td>$5.00</td></tr><tr><th scope="row">Output price<span class="hint">USD per million tokens out</span></th><td>$15.00</td><td>$25.00</td></tr><tr><th scope="row">Cached input</th><td>$0.75</td><td>$0.50</td></tr><tr><th scope="row">Blended 3:1<span class="hint">A 3-in-to-1-out million-token mix — a fairer single number than input price alone</span></th><td class="bm-best">$6.00<span class="bm-best-tag">Cheapest</span></td><td>$10.00</td></tr><tr><th scope="row" style="background:var(--paper-sunk);color:var(--espresso);font-weight:600">Published benchmarks</th><td style="background:var(--paper-sunk)"></td><td style="background:var(--paper-sunk)"></td></tr><tr><th scope="row"><a href="/benchmarks/tests/gpqa/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">GPQA Diamond</a><span class="hint">198 graduate-level physics, chemistry and biology questions written to be Google-proof. PhD holders in the matching field score about 65%.</span></th><td><span class="bm-bar is-best"><span class="val">87.5%<span class="bm-best-tag">Best</span></span><span class="track"><span class="fill" style="width:87.5%"></span></span></span></td><td><span class="bm-bar"><span class="val">87%</span><span class="track"><span class="fill" style="width:87.0%"></span></span></span></td></tr><tr><th scope="row"><a href="/benchmarks/tests/aime/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">AIME 2025</a><span class="hint">The American Invitational Mathematics Examination — 15 problems, integer answers, no partial credit. A standard test of multi-step maths reasoning.</span></th><td><span class="bm-bar"><span class="val">94%</span><span class="track"><span class="fill" style="width:94.0%"></span></span></span></td><td><span class="bm-bar is-best"><span class="val">96%<span class="bm-best-tag">Best</span></span><span class="track"><span class="fill" style="width:96.0%"></span></span></span></td></tr><tr><th scope="row"><a href="/benchmarks/tests/swe/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">SWE-bench Verified</a><span class="hint">500 human-validated GitHub issues from real Python repositories. The model must produce a patch that makes the project&#x27;s own tests pass.</span></th><td><span class="bm-bar"><span class="val">72%</span><span class="track"><span class="fill" style="width:72.0%"></span></span></span></td><td><span class="bm-bar is-best"><span class="val">80.9%<span class="bm-best-tag">Best</span></span><span class="track"><span class="fill" style="width:80.9%"></span></span></span></td></tr><tr><th scope="row"><a href="/benchmarks/tests/mmmu/" style="color:inherit;text-decoration:underline;text-underline-offset:3px">MMMU</a><span class="hint">College-level questions that require reading charts, diagrams, tables and photographs alongside the text.</span></th><td><span class="bm-nil">Not reported</span></td><td><span class="bm-bar"><span class="val">82%</span><span class="track"><span class="fill" style="width:82.0%"></span></span></span></td></tr><tr><th scope="row">Links</th><td style="font-size:.86rem"><a href="/benchmarks/models/grok-4/" style="text-decoration:underline;text-underline-offset:3px">Full page</a></td><td style="font-size:.86rem"><a href="/benchmarks/models/claude-opus-4-5/" style="text-decoration:underline;text-underline-offset:3px">Full page</a></td></tr><tr><th scope="row">Row verified</th><td style="font-size:.86rem;color:var(--muted)">2026-08</td><td style="font-size:.86rem;color:var(--muted)">2026-08</td></tr></tbody></table></div>
+      <div style="margin-top:24px"><div class="bm-provenance" id="method-note">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+  <div>
+    <h2>Where these numbers come from</h2>
+    <p>Every score on this page is a <strong>published</strong> figure, taken from the model's
+      own card, system card, technical report or release post, or from a public leaderboard.
+      CorX Labs did not run these evaluations. Most are self-reported by the lab that built
+      the model, which means they were produced under that lab's own choice of prompt,
+      scaffold and number of attempts — so treat them as a starting point for a shortlist,
+      not as a settled ranking.</p>
+    <p>Where a figure has not been published, the cell reads
+      <span class="bm-nil">Not reported</span> rather than an estimate. Nothing here is
+      inferred, interpolated or guessed. Each model records the month its row was last
+      checked. <a href="/benchmarks/#method">Full method and caveats</a>.</p>
+  </div>
+</div></div>
+      <div class="btn-row" style="margin-top:22px">
+        <a class="btn btn-primary" href="/benchmarks/compare/?m=grok-4,claude-opus-4-5">Add a third model <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost" href="/benchmarks/">Back to all models</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="faq-title">
+    <div class="shell">
+      <div class="section-head"><p class="eyebrow">Questions</p>
+        <h2 id="faq-title">Grok 4 or Claude Opus 4.5?</h2></div>
+      <div class="faq"><details><summary>Is Grok 4 better than Claude Opus 4.5?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Claude Opus 4.5 wins 2 of the 3 benchmarks both models report, Grok 4 wins 1, consistently. The average gap across shared tests is 3.8 points.</p></div></details><details><summary>Which is cheaper, Grok 4 or Claude Opus 4.5?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>On a 3:1 input-to-output mix, Grok 4 costs $6.00 per million tokens against $10.00 for Claude Opus 4.5 — about 1.7&amp;times; less. Remember that a reasoning model bills its thinking as output, so cost per answer can diverge much further than cost per token.</p></div></details><details><summary>What is the difference between Grok 4 and Claude Opus 4.5?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Grok 4 takes 256K tokens of context against 200K — 1.3&amp;times; more room for long documents or a large codebase.</p></div></details></div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-labelledby="rel-title">
+    <div class="shell">
+      <div class="section-head"><p class="eyebrow">Related</p>
+        <h2 id="rel-title">Other comparisons</h2></div>
+      <div class="bm-vs-grid"><a class="bm-vs" href="/benchmarks/compare/grok-4-vs-gpt-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">grok-4 vs gpt-5</span><span class="s">OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/gpt-5-vs-claude-opus-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/openai.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">gpt-5 vs claude-opus-4-5</span><span class="s">OpenAI</span></span></a><a class="bm-vs" href="/benchmarks/compare/claude-opus-4-5-vs-gemini-3-pro/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/google.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">claude-opus-4-5 vs gemini-3-pro</span><span class="s">Google DeepMind</span></span></a><a class="bm-vs" href="/benchmarks/compare/claude-sonnet-4-5-vs-claude-opus-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/anthropic.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">claude-sonnet-4-5 vs claude-opus-4-5</span><span class="s">Anthropic</span></span></a><a class="bm-vs" href="/benchmarks/compare/kimi-k2-thinking-vs-claude-opus-4-5/"><span class="logo-tile is-sm"><img class="logo-mark" src="/assets/img/logos/moonshot.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></span><span class="txt"><span class="n">kimi-k2-thinking vs claude-opus-4-5</span><span class="s">Moonshot AI</span></span></a></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Benchmarks">
+        <h4>Benchmarks</h4>
+        <ul>
+          <li><a href="/benchmarks/">All models</a></li>
+          <li><a href="/benchmarks/compare/">Compare models</a></li>
+          <li><a href="/benchmarks/#companies">By company</a></li>
+          <li><a href="/benchmarks/#tests">The tests</a></li>
+          <li><a href="/benchmarks/#method">Method &amp; sources</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/chat/">Chat</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

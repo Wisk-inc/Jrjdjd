@@ -337,6 +337,9 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
   font-size: .875rem;
   font-weight: 450;
   color: var(--muted);
+  /* Two-word labels would otherwise break across two lines and stand taller
+     than their neighbours, which reads as a broken nav rather than a tight one. */
+  white-space: nowrap;
   border-radius: var(--r-pill);
   transition: color var(--fast) var(--ease), background var(--fast) var(--ease);
 }
@@ -1173,6 +1176,24 @@ figcaption {
   }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; }
+}
+
+/* Eight primary links need more room than seven did. Between full width and
+   the mobile breakpoint the masthead button goes first and the nav tightens,
+   because the alternative is the nav wrapping under the brand and dragging
+   the whole page sideways. */
+@media (max-width: 1180px) {
+  .masthead-actions .btn { display: none; }
+  .masthead-inner { gap: 14px; }
+}
+
+@media (max-width: 1080px) {
+  .nav a { padding: 8px 9px; font-size: .825rem; }
+}
+
+@media (max-width: 940px) {
+  .nav { gap: 0; }
+  .nav a { padding: 7px 7px; font-size: .8rem; }
 }
 
 @media (max-width: 860px) {

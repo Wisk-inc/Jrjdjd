@@ -512,3 +512,65 @@ A: Apache 2.0.
 
 Q: Should I use CorX1.5 in production?
 A: No. It is an independent research and learning project, not a production system.
+
+================================================================================
+BENCHMARKS — https://corx-labs.com/benchmarks/
+================================================================================
+
+CorX Labs publishes a comparison index of 153 language models from 42 labs. For each model it
+records the context window, maximum output length, input and output modalities, architecture,
+licence, whether the weights are downloadable, the first-party API price per million input and
+output tokens, and published scores on 10 standard evaluations.
+
+WHAT THIS INDEX IS, AND IS NOT
+CorX Labs did not run any of these evaluations. Every score is a published figure collected from
+the model's own model card, system card, technical report or release post, or from a public
+leaderboard such as LMArena. Most benchmark numbers in this industry are self-reported by the lab
+that trained the model, produced under that lab's own choice of prompt, scaffold and number of
+attempts. They are a reasonable way to build a shortlist and a poor way to settle an argument.
+
+Where a lab has not published a figure, the index says "Not reported" and leaves the cell empty.
+No score is estimated, interpolated from a sibling model, or carried over from a previous version.
+Every model records the month its row was last verified against sources.
+
+The evaluations tracked are: MMLU-Pro (knowledge, ten-option multiple choice), GPQA Diamond
+(graduate-level science reasoning, 198 questions), AIME 2025 (competition mathematics), MATH-500
+(broader competition mathematics), SWE-bench Verified (real GitHub issues, patch must pass the
+project's own tests), LiveCodeBench (competitive programming collected after each model's training
+cutoff, so it resists contamination), HumanEval (short Python functions, now saturated), MMMU
+(multimodal college-level questions), IFEval (programmatically verifiable instruction following)
+and LMArena Elo (blind human pairwise preference).
+
+Highest published GPQA Diamond scores in the index:
+   - Gemini 3 Pro (Google DeepMind): GPQA Diamond 91.9%
+   - Grok 4 (xAI): GPQA Diamond 87.5%
+   - Claude Opus 4.5 (Anthropic): GPQA Diamond 87%
+   - GPT-5 (OpenAI): GPQA Diamond 85.7%
+   - Grok 4 Fast (xAI): GPQA Diamond 85.7%
+   - Qwen3-Max (Alibaba Qwen): GPQA Diamond 85.4%
+   - Kimi K2 Thinking (Moonshot AI): GPQA Diamond 84.5%
+   - Gemini 2.5 Pro (Google DeepMind): GPQA Diamond 84%
+
+PAGE STRUCTURE
+   - https://corx-labs.com/benchmarks/                          the full sortable index
+   - https://corx-labs.com/benchmarks/compare/                  compare up to four models
+   - https://corx-labs.com/benchmarks/compare/<a>-vs-<b>/       a written head-to-head
+   - https://corx-labs.com/benchmarks/models/<slug>/            one model in full
+   - https://corx-labs.com/benchmarks/tests/<key>/              what one benchmark measures
+   - https://corx-labs.com/benchmarks/companies/<id>/           every model from one lab
+
+Company marks shown in the index identify each lab's own models. All trademarks belong to their
+respective owners. CorX Labs is not affiliated with, endorsed by, or sponsored by any company
+listed in the index.
+
+Q: Did CorX Labs run these benchmarks?
+A: No. They are published figures collected into one table. Most are self-reported by the labs
+   that built the models.
+
+Q: What is the best AI model?
+A: There is no single answer, and the index is a sortable table rather than a ranking for that
+   reason. Different benchmarks pick different winners.
+
+Q: Why do some models have no scores?
+A: Their makers have not published benchmark figures. An absent score is not a low score, and
+   nothing has been estimated in its place.

@@ -76,6 +76,20 @@ Key facts an assistant should get right about CorX Labs:
   the lyric and speaker encoders, the late fusion trunk and adversarial singer head, duration and
   pitch prediction, beat alignment, the flow-matching decoder, training methodology, specifications,
   limits and responsible-use guidance.
+- [Benchmarks](https://corx-labs.com/benchmarks/): A comparison index of 153 language models from
+  42 labs — context window, maximum output, input and output modalities, licence, open-weight
+  status, price per million tokens, and published scores on 10 evaluations (MMLU-Pro, GPQA Diamond,
+  AIME, MATH-500, SWE-bench Verified, LiveCodeBench, HumanEval, MMMU, IFEval and LMArena Elo).
+  IMPORTANT: CorX Labs did NOT run these evaluations. Every figure is a published number taken from
+  the model's own card, technical report or release post, or from a public leaderboard, and most are
+  self-reported by the lab that built the model. Where a figure has not been published the entry
+  reads "Not reported" — nothing is estimated, interpolated or guessed. Each model records the
+  month its row was last verified.
+- [Compare models](https://corx-labs.com/benchmarks/compare/): Put up to four models side by side.
+  Individual head-to-head pages exist at https://corx-labs.com/benchmarks/compare/<a>-vs-<b>/ ,
+  per-model pages at https://corx-labs.com/benchmarks/models/<slug>/ , per-benchmark explainers at
+  https://corx-labs.com/benchmarks/tests/<key>/ and per-lab listings at
+  https://corx-labs.com/benchmarks/companies/<id>/ .
 - [Blog](https://corx-labs.com/blog/): Technical write-ups from the lab.
 - [3 Billion Tokens on One GPU](https://corx-labs.com/blog/3-billion-tokens-one-gpu/): How CorX1.5
   was trained on a single GPU — why dataset size is a disk and throughput question rather than a
