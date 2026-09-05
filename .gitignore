@@ -1,0 +1,10 @@
+# Python bytecode from the tools/ generators
+__pycache__/
+*.py[cod]
+
+# Fonts fetched on demand by tools/extract-corx-mark.py — not part of the site
+tools/cormorant.ttf
+
+# Editor and OS noise
+.DS_Store
+*.swp

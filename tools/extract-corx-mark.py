@@ -20,8 +20,8 @@ import urllib.request
 
 FONT_URL = ("https://raw.githubusercontent.com/google/fonts/main/ofl/"
             "cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf")
-WEIGHT = 500          # matches .mark in assets/css/main.css
-CAP_FRACTION = 0.62   # how much of the 24x24 box the C fills, matching logo.png
+WEIGHT = 700          # optically matched to the other marks at 19-22px
+CAP_FRACTION = 0.86   # the C fills its box like every other logo in the set
 
 
 def main():
