@@ -94,8 +94,9 @@ def tag_row(m):
     tags = []
     if m.get("provisional"):
         tags.append('<span class="tag">Specs pending</span>')
-    tags.append('<span class="tag%s">%s</span>' % (
-        " tag-live" if is_open(m) else "", "Open weights" if is_open(m) else "Proprietary"))
+    if "open" in m:
+        tags.append('<span class="tag%s">%s</span>' % (
+            " tag-live" if is_open(m) else "", "Open weights" if is_open(m) else "Proprietary"))
     if m.get("reason"):
         tags.append('<span class="tag">Reasoning</span>')
     if "image" in (m.get("inp") or []):
@@ -606,7 +607,8 @@ def build_model(m):
         ("Tool calling", "Yes" if m.get("tools") else ("No" if "tools" in m else None)),
         ("Knowledge cutoff", m.get("cut")),
         ("Licence", licence_of(m)),
-        ("Weights", "Downloadable" if is_open(m) else "Not released"),
+        ("Weights", ("Downloadable" if is_open(m) else "Not released")
+                    if "open" in m else None),
     ]
     facts_html = "".join(
         '<div><dt>%s</dt><dd%s>%s</dd></div>'
@@ -876,7 +878,7 @@ SPEC_ROWS = [
     ("Knowledge cutoff", None, lambda m: m.get("cut")),
     ("Licence", None, lambda m: licence_of(m)),
     ("Open weights", "Can you download and run it yourself",
-     lambda m: "Yes" if is_open(m) else "No"),
+     lambda m: ("Yes" if is_open(m) else "No") if "open" in m else None),
 ]
 
 PRICE_ROWS = [
@@ -1065,7 +1067,7 @@ def verdict(a, b):
 
     # Practical
     notes = []
-    if is_open(a) != is_open(b):
+    if "open" in a and "open" in b and is_open(a) != is_open(b):
         opener = a if is_open(a) else b
         notes.append("<strong>%s has open weights</strong> under %s, so it can run on your "
                      "own hardware with no per-token cost and no dependency on an API staying "
@@ -1077,20 +1079,40 @@ def verdict(a, b):
                      "more room for long documents or a large codebase."
                      % (big["name"], fmt_tokens(big["ctx"]), fmt_tokens(small["ctx"]),
                         big["ctx"] / small["ctx"]))
-    if bool(a.get("reason")) != bool(b.get("reason")):
+    if "reason" in a and "reason" in b and bool(a["reason"]) != bool(b["reason"]):
         r = a if a.get("reason") else b
         notes.append("<strong>%s is a reasoning model</strong> and the other is not, which "
                      "usually means better maths and multi-step logic in exchange for higher "
                      "latency and more billed output tokens." % r["name"])
     va, vb = "image" in (a.get("inp") or []), "image" in (b.get("inp") or [])
-    if va != vb:
+    if a.get("inp") and b.get("inp") and va != vb:
         v = a if va else b
         notes.append("<strong>Only %s reads images.</strong> If your input includes "
                      "screenshots, charts or documents, that decides it." % v["name"])
     if not notes:
-        notes.append("These two are closely matched on the specification side — same broad "
-                     "capabilities, same licensing posture. The decision comes down to the "
-                     "benchmark rows and the price.")
+        # "Closely matched" is only true when the specifications are known and
+        # agree. When neither has been published, finding no differences means
+        # there is nothing to find — a very different statement.
+        known = [m for m in (a, b)
+                 if m.get("ctx") or m.get("pin") is not None or m.get("b")]
+        if not known:
+            notes.append("<strong>Neither specification has been published yet.</strong> Both "
+                         "are available by API ID, and until their makers release model cards "
+                         "there is nothing here to compare beyond the names. This page fills in "
+                         "as figures appear.")
+        elif len(known) == 1:
+            documented = known[0]
+            pending = b if documented is a else a
+            notes.append("<strong>%s has no published specification yet.</strong> Every filled "
+                         "row below is %s's; the empty ones are not a weakness in %s, they are "
+                         "figures its maker has not released. There is no like-for-like "
+                         "comparison to make until that card appears."
+                         % (esc(pending["name"]), esc(documented["name"]),
+                            esc(pending["name"])))
+        else:
+            notes.append("These two are closely matched on the specification side — same broad "
+                         "capabilities, same licensing posture. The decision comes down to the "
+                         "benchmark rows and the price.")
 
     return ((bench_head, bench_txt), (price_head, price_txt), notes)
 
@@ -1751,7 +1773,8 @@ def model_product_cards(models):
             ("Input", modality_label(m.get("inp"))),
             ("Output", modality_label(m.get("outp"))),
             ("Licence", licence_of(m)),
-            ("Weights", "Downloadable" if is_open(m) else "Not released"),
+            ("Weights", ("Downloadable" if is_open(m) else "Not released")
+                        if "open" in m else None),
         ]
         facts_html = "".join(
             '<div><dt>%s</dt><dd%s>%s</dd></div>'
