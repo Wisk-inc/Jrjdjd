@@ -24,14 +24,21 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 LOGO_DIR = os.path.join(ROOT, "assets", "img", "logos")
-LOGO_URL = "/assets/img/logos/%s.svg"
+LOGO_DIR_URL = "/assets/img/logos/"
 
 with open(os.path.join(LOGO_DIR, "manifest.json")) as _f:
     MANIFEST = json.load(_f)
 
 
 def logo_url(company_id):
-    return LOGO_URL % company_id
+    """The content-hashed URL for a company's mark.
+
+    The filename carries a hash of the file's own bytes, so correcting a logo
+    produces a URL no cache has seen. Without that, the previous mark stays on
+    screen for as long as its immutable Cache-Control says — a year — no matter
+    how many times the site is redeployed.
+    """
+    return LOGO_DIR_URL + MANIFEST[company_id]["file"]
 
 
 def has_real_mark(company_id):

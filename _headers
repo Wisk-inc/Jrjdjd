@@ -21,11 +21,6 @@
 /assets/img/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Logos live at a stable path and can be corrected, so they must not be
-# pinned for a year the way the fingerprint-stable icons are.
-/assets/img/logos/*
-  Cache-Control: public, max-age=86400, must-revalidate
-
 /favicon.ico
   Cache-Control: public, max-age=604800
 

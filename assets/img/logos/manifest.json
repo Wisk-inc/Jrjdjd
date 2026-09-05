@@ -1,5 +1,6 @@
 {
  "01ai": {
+  "file": "01ai.8be5e588.svg",
   "icon": "zeroone-color",
   "mixed": true,
   "mono": false,
@@ -7,6 +8,7 @@
   "viewBox": "0 0 24 24"
  },
  "ai21": {
+  "file": "ai21.22dd6061.svg",
   "icon": "ai21",
   "mixed": false,
   "mono": true,
@@ -14,6 +16,7 @@
   "viewBox": "0 0 24 24"
  },
  "alibaba": {
+  "file": "alibaba.141488d8.svg",
   "icon": "qwen-color",
   "mixed": false,
   "mono": false,
@@ -21,6 +24,7 @@
   "viewBox": "0 0 24 24"
  },
  "allenai": {
+  "file": "allenai.0cdb031e.svg",
   "icon": "ai2-color",
   "mixed": false,
   "mono": false,
@@ -28,6 +32,7 @@
   "viewBox": "0 0 24 24"
  },
  "amazon": {
+  "file": "amazon.a6b91510.svg",
   "icon": "aws-color",
   "mixed": true,
   "mono": false,
@@ -35,6 +40,7 @@
   "viewBox": "0 0 24 24"
  },
  "anthropic": {
+  "file": "anthropic.d2893e17.svg",
   "icon": "claude-color",
   "mixed": false,
   "mono": false,
@@ -42,6 +48,7 @@
   "viewBox": "0 0 24 24"
  },
  "apple": {
+  "file": "apple.51fe95e1.svg",
   "icon": "apple",
   "mixed": false,
   "mono": true,
@@ -49,6 +56,7 @@
   "viewBox": "0 0 24 24"
  },
  "baidu": {
+  "file": "baidu.d5d7f646.svg",
   "icon": "baidu-color",
   "mixed": false,
   "mono": false,
@@ -56,6 +64,7 @@
   "viewBox": "0 0 24 24"
  },
  "bytedance": {
+  "file": "bytedance.caf1d8f8.svg",
   "icon": "bytedance-color",
   "mixed": false,
   "mono": false,
@@ -63,6 +72,7 @@
   "viewBox": "0 0 24 24"
  },
  "cohere": {
+  "file": "cohere.b93d3f16.svg",
   "icon": "cohere-color",
   "mixed": false,
   "mono": false,
@@ -70,11 +80,13 @@
   "viewBox": "0 0 24 24"
  },
  "corx": {
+  "file": "corx.4c986e8d.svg",
   "mono": true,
   "source": "CorX Labs",
   "viewBox": "0 0 24 24"
  },
  "databricks": {
+  "file": "databricks.3419bae5.svg",
   "icon": "databricks",
   "mixed": false,
   "mono": true,
@@ -82,6 +94,7 @@
   "viewBox": "0 0 24 24"
  },
  "deepseek": {
+  "file": "deepseek.6419fe10.svg",
   "icon": "deepseek-color",
   "mixed": false,
   "mono": false,
@@ -89,6 +102,7 @@
   "viewBox": "0 0 24 24"
  },
  "google": {
+  "file": "google.06f1e43a.svg",
   "icon": "gemini-color",
   "mixed": false,
   "mono": false,
@@ -96,6 +110,7 @@
   "viewBox": "0 0 24 24"
  },
  "ibm": {
+  "file": "ibm.397dfd74.svg",
   "icon": "ibm",
   "mixed": false,
   "mono": true,
@@ -103,6 +118,7 @@
   "viewBox": "0 0 24 24"
  },
  "inception": {
+  "file": "inception.30262f73.svg",
   "icon": "inception",
   "mixed": false,
   "mono": true,
@@ -110,6 +126,7 @@
   "viewBox": "0 0 24 24"
  },
  "inclusion": {
+  "file": "inclusion.86ca170e.svg",
   "icon": "antgroup-color",
   "mixed": false,
   "mono": false,
@@ -117,6 +134,7 @@
   "viewBox": "0 0 24 24"
  },
  "lgai": {
+  "file": "lgai.6e98e71a.svg",
   "icon": "lg-color",
   "mixed": false,
   "mono": false,
@@ -124,6 +142,7 @@
   "viewBox": "0 0 24 24"
  },
  "liquid": {
+  "file": "liquid.e0634751.svg",
   "icon": "liquid",
   "mixed": false,
   "mono": true,
@@ -131,6 +150,7 @@
   "viewBox": "0 0 24 24"
  },
  "meta": {
+  "file": "meta.cd2d4f61.svg",
   "icon": "meta-color",
   "mixed": false,
   "mono": false,
@@ -138,6 +158,7 @@
   "viewBox": "0 0 24 24"
  },
  "microsoft": {
+  "file": "microsoft.bf69876a.svg",
   "icon": "microsoft-color",
   "mixed": false,
   "mono": false,
@@ -145,6 +166,7 @@
   "viewBox": "0 0 24 24"
  },
  "minimax": {
+  "file": "minimax.874db5b9.svg",
   "icon": "minimax-color",
   "mixed": false,
   "mono": false,
@@ -152,6 +174,7 @@
   "viewBox": "0 0 24 24"
  },
  "mistral": {
+  "file": "mistral.38c4d3f5.svg",
   "icon": "mistral-color",
   "mixed": false,
   "mono": false,
@@ -159,6 +182,7 @@
   "viewBox": "0 0 24 24"
  },
  "moonshot": {
+  "file": "moonshot.8f156bd1.svg",
   "icon": "moonshot",
   "mixed": false,
   "mono": true,
@@ -166,6 +190,7 @@
   "viewBox": "0 0 24 24"
  },
  "naver": {
+  "file": "naver.be16818e.svg",
   "icon": "naver",
   "mixed": false,
   "mono": true,
@@ -173,6 +198,7 @@
   "viewBox": "0 0 24 24"
  },
  "nous": {
+  "file": "nous.5165cde1.svg",
   "icon": "nousresearch",
   "mixed": false,
   "mono": true,
@@ -180,6 +206,7 @@
   "viewBox": "0 0 24 24"
  },
  "nvidia": {
+  "file": "nvidia.a408afb2.svg",
   "icon": "nvidia-color",
   "mixed": false,
   "mono": false,
@@ -187,6 +214,7 @@
   "viewBox": "0 0 24 24"
  },
  "openai": {
+  "file": "openai.8bcdd467.svg",
   "icon": "openai",
   "mixed": false,
   "mono": true,
@@ -194,12 +222,14 @@
   "viewBox": "0 0 24 24"
  },
  "openbmb": {
+  "file": "openbmb.16765ded.svg",
   "mono": true,
   "monogram": "BM",
   "source": "monogram",
   "viewBox": "0 0 24 24"
  },
  "perplexity": {
+  "file": "perplexity.bc5afed5.svg",
   "icon": "perplexity-color",
   "mixed": false,
   "mono": false,
@@ -207,6 +237,7 @@
   "viewBox": "0 0 24 24"
  },
  "rednote": {
+  "file": "rednote.123e796d.svg",
   "icon": "xiaohongshu",
   "mixed": false,
   "mono": true,
@@ -214,24 +245,28 @@
   "viewBox": "0 0 24 24"
  },
  "reka": {
+  "file": "reka.ef964648.svg",
   "mono": true,
   "monogram": "Rk",
   "source": "monogram",
   "viewBox": "0 0 24 24"
  },
  "salesforce": {
+  "file": "salesforce.da8017ed.svg",
   "mono": true,
   "monogram": "SF",
   "source": "monogram",
   "viewBox": "0 0 24 24"
  },
  "sarvam": {
+  "file": "sarvam.4cc8e7ac.svg",
   "mono": true,
   "monogram": "Sv",
   "source": "monogram",
   "viewBox": "0 0 24 24"
  },
  "snowflake": {
+  "file": "snowflake.fe6d4a5b.svg",
   "icon": "snowflake-color",
   "mixed": false,
   "mono": false,
@@ -239,6 +274,7 @@
   "viewBox": "0 0 24 24"
  },
  "stepfun": {
+  "file": "stepfun.70bf95cd.svg",
   "icon": "stepfun-color",
   "mixed": false,
   "mono": false,
@@ -246,6 +282,7 @@
   "viewBox": "0 0 24 24"
  },
  "tencent": {
+  "file": "tencent.c74c6b8e.svg",
   "icon": "hunyuan-color",
   "mixed": false,
   "mono": false,
@@ -253,6 +290,7 @@
   "viewBox": "0 0 24 24"
  },
  "tii": {
+  "file": "tii.a600fea4.svg",
   "icon": "tii-color",
   "mixed": false,
   "mono": false,
@@ -260,6 +298,7 @@
   "viewBox": "0 0 24 24"
  },
  "upstage": {
+  "file": "upstage.7815cd05.svg",
   "icon": "upstage-color",
   "mixed": false,
   "mono": false,
@@ -267,12 +306,14 @@
   "viewBox": "0 0 24 24"
  },
  "writer": {
+  "file": "writer.0d3b2109.svg",
   "mono": true,
   "monogram": "Wr",
   "source": "monogram",
   "viewBox": "0 0 24 24"
  },
  "xai": {
+  "file": "xai.b8865539.svg",
   "icon": "xai",
   "mixed": false,
   "mono": true,
@@ -280,6 +321,7 @@
   "viewBox": "0 0 24 24"
  },
  "zai": {
+  "file": "zai.ce26153c.svg",
   "icon": "zhipu-color",
   "mixed": false,
   "mono": false,
