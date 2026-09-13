@@ -38,6 +38,42 @@ function staleBuild(info) {
     : '';
 }
 
+/* --- remembering the endpoint ----------------------------------------------
+   A quick-tunnel address is single use: cloudflared mints a new hostname every
+   time it starts and the previous one stops resolving. Restoring one from a
+   previous session and connecting to it on sight is therefore wrong most of the
+   time — it fails, or worse, opening it lands on a Cloudflare error page, which
+   reads like a broken server rather than an expired address. So the address is
+   stored with the time it last worked, and anything older is offered rather
+   than used. */
+const ENDPOINT_FRESH_MS = 6 * 60 * 60 * 1000;
+
+function saveEndpoint(url) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify({ url: url, at: Date.now() }));
+  } catch (e) { /* private window */ }
+}
+
+function loadEndpoint() {
+  let raw;
+  try {
+    raw = localStorage.getItem(KEY);
+  } catch (e) {
+    return null;                       // private window
+  }
+  if (!raw) return null;
+  // Entries written before this carried a bare URL and no timestamp; an
+  // undated address is exactly the kind that has had time to expire.
+  if (raw[0] !== '{') return { url: raw, aged: true };
+  try {
+    const saved = JSON.parse(raw);
+    if (!saved || !saved.url) return null;
+    return { url: saved.url, aged: !(Date.now() - (saved.at || 0) < ENDPOINT_FRESH_MS) };
+  } catch (e) {
+    return null;
+  }
+}
+
 const els = {};
 let mode = 'convert';
 let connected = false;
@@ -251,7 +287,7 @@ async function connect(quiet) {
     if (els.open) els.open.hidden = true;
 
     connected = true;
-    try { localStorage.setItem(KEY, url); } catch (e) { /* private window */ }
+    saveEndpoint(url);
     setStatus('ready', (info.device || '').toUpperCase() || 'Ready');
     // The three steps are a one-off per machine. Once the server answers, get
     // them out of the way and leave the panel on the part that gets used.
@@ -406,19 +442,33 @@ function setMode(next) {
 /* --- open / close ---------------------------------------------------------- */
 function open() {
   els.sheet.hidden = false;
+  let aged = false;
   if (!els.endpoint.value) {
-    try {
-      const saved = localStorage.getItem(KEY);
-      if (saved) els.endpoint.value = saved;
-    } catch (e) { /* private window */ }
+    const saved = loadEndpoint();
+    if (saved) {
+      els.endpoint.value = saved.url;
+      aged = saved.aged;
+    }
   }
 
   // Warm the clipboard copy so pressing the button is a straight write.
   fetchServer().catch(() => { /* reported at press time, not before */ });
 
   const returning = !!els.endpoint.value;
-  if (els.setup && returning) els.setup.open = false;
-  if (returning && !connected) connect(true);
+  if (els.setup && returning && !aged) els.setup.open = false;
+
+  if (aged) {
+    // Do not auto-connect to an address that is almost certainly dead. Opening
+    // it just produces a Cloudflare error page, which reads like the server
+    // broke rather than like the address expired.
+    setStatus('idle', 'Address may be stale');
+    setMsg('That address is from an earlier session. Quick-tunnel addresses are single '
+      + 'use — the cell prints a new one every time it starts, and the old one stops '
+      + 'resolving, which is what a Cloudflare error page means. Paste the newest URL '
+      + 'from the cell output, or press Connect to try this one anyway.', 'warn');
+  } else if (returning && !connected) {
+    connect(true);
+  }
 
   // A first-timer belongs on step 1; someone with a server saved belongs on
   // the URL box, ready to paste the address this session's tunnel printed.
