@@ -146,6 +146,8 @@ STATE = {
     "detail": "",         # why, or why not
     "files": [],
     "tried": [],
+    "ckpt_keys": [],      # first weight names, when a checkpoint was opened
+    "model": None,
     "device": DEVICE,
     "tunnel": None,
 }
@@ -218,27 +220,207 @@ def to_wav_bytes(wav, sr=None):
 # ---------------------------------------------------------------------------
 # Binding to whatever the repo actually exposes
 #
-# The model card was not readable from the machine that wrote this script, so
-# nothing here assumes a function signature. It downloads the repo, inspects it,
-# and binds to the most capable entry point present — preferring one that lets
-# the three streams be driven separately, because that is what makes the voice
-# and the performance come from different clips rather than from a generic
+# The model card is not readable from the machine that wrote this script, so
+# nothing here assumes a function signature. It downloads the repo, walks the
+# whole tree and binds to the most capable entry point present, preferring one
+# that lets the three streams be driven separately, because that is what makes
+# the voice and the performance come from different clips rather than a generic
 # any-to-any conversion.
+#
+# This repo turned out to be weights-first: a config.json that is NOT a
+# transformers config (no model_type) and plain PyTorch checkpoints. So the
+# checkpoint is itself a load path, not merely a file to hand to something
+# else — and the search has to include subdirectories, because that is where
+# the repo keeps everything that is not a weight file.
 # ---------------------------------------------------------------------------
 STREAM_CALLS  = ["convert_streams", "transplant", "convert_voice", "voice_convert"]
 CONVERT_CALLS = ["convert", "inference", "infer", "synthesize", "generate", "__call__"]
 
+CKPT_EXT = (".pt", ".pth", ".ckpt", ".bin", ".safetensors")
+# Checkpoints named "best" beat "last": same training run, better validation.
+CKPT_RANK = ("best", "final", "last", "ema", "g_", "model")
+CLASS_HINTS = ("tristream", "svs", "singer", "sing", "synth", "voice",
+               "generator", "model", "net")
+
+
+def walk_repo(root):
+    """Every file in the snapshot, relative to it.
+
+    listdir() was the original bug: it sees only the top level, so a repo that
+    keeps its code in a subdirectory looks like a repo with no code at all.
+    """
+    out = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in (".git", ".cache", "__pycache__")]
+        for f in filenames:
+            out.append(os.path.relpath(os.path.join(dirpath, f), root))
+    return sorted(out)
+
+
+def add_import_roots(root, files):
+    """Put every directory that holds Python on sys.path.
+
+    This matters twice over. It lets a module inside a subdirectory be imported
+    at all, and it lets pickle resolve the module path recorded inside a saved
+    nn.Module — unpickling fails with ModuleNotFoundError unless the defining
+    module is importable under the exact name it had when it was saved.
+    """
+    roots = {root}
+    for rel in files:
+        if rel.endswith(".py"):
+            d = os.path.dirname(os.path.join(root, rel))
+            roots.add(d)
+            # A package's parent is what makes "pkg.module" resolve.
+            if os.path.exists(os.path.join(d, "__init__.py")):
+                roots.add(os.path.dirname(d))
+    for d in sorted(roots, key=len):
+        if d and d not in sys.path:
+            sys.path.insert(0, d)
+    return sorted(roots)
+
+
+def import_file(path, root):
+    """Import one .py by location, without guessing a package name.
+
+    Running the repo's Python is the same trust you extend by running its
+    weights; there is no way to load a model like this without it.
+    """
+    import importlib.util
+    name = os.path.splitext(os.path.relpath(path, root))[0].replace(os.sep, "_")
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError("no loader for %s" % path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def load_checkpoint(path):
+    """torch.load with the trust decision made explicitly.
+
+    torch 2.6 flipped weights_only to True, which refuses any checkpoint holding
+    more than tensors. These files predate that and may hold a pickled module,
+    so the flag has to come off deliberately rather than by accident.
+    """
+    try:
+        return torch.load(path, map_location="cpu", weights_only=False)
+    except TypeError:
+        return torch.load(path, map_location="cpu")
+
+
+def find_state_dict(blob):
+    """Pull the weights out of whatever shape the checkpoint was saved in."""
+    if hasattr(blob, "state_dict") and callable(getattr(blob, "state_dict")):
+        return None, "(already a module)"
+    if not isinstance(blob, dict):
+        return None, None
+
+    def looks_like_weights(d):
+        vals = [v for v in list(d.values())[:12]]
+        return bool(vals) and all(isinstance(v, torch.Tensor) for v in vals)
+
+    for key in ("state_dict", "model_state_dict", "model", "generator", "net",
+                "module", "weights", "params", "g"):
+        v = blob.get(key)
+        if isinstance(v, dict) and looks_like_weights(v):
+            return v, key
+        if hasattr(v, "state_dict"):
+            return v, key
+    if looks_like_weights(blob):
+        return blob, "(top level)"
+    return None, None
+
+
+def strip_prefix(sd):
+    """DataParallel and Lightning both leave a prefix on every key."""
+    for pre in ("module.", "model.", "_orig_mod."):
+        if sd and all(k.startswith(pre) for k in sd):
+            return {k[len(pre):]: v for k, v in sd.items()}
+    return sd
+
+
+def candidate_classes(mods):
+    """nn.Module subclasses defined in the repo's own modules, best guess first."""
+    found = []
+    for mod in mods:
+        for attr in dir(mod):
+            obj = getattr(mod, attr, None)
+            if not isinstance(obj, type) or not issubclass(obj, torch.nn.Module):
+                continue
+            if obj.__module__ != mod.__name__:      # imported from torch, not defined here
+                continue
+            score = sum(2 for h in CLASS_HINTS if h in attr.lower())
+            found.append((score, attr, obj))
+    found.sort(key=lambda t: -t[0])
+    return found
+
+
+def construct(cls, cfg):
+    """Try the constructor shapes a config-driven model usually takes."""
+    for args, kwargs in ((( ), cfg if isinstance(cfg, dict) else {}),
+                         ((cfg,), {}),
+                         (( ), {})):
+        try:
+            return cls(*args, **kwargs), ("%s(**config)" % cls.__name__ if kwargs
+                                          else "%s(config)" % cls.__name__ if args
+                                          else "%s()" % cls.__name__)
+        except Exception:
+            continue
+    return None, None
+
+
 def bind_model():
     from huggingface_hub import snapshot_download
     local = snapshot_download(repo_id=REPO_ID, local_dir=os.path.join(WORKDIR, "model"))
-    STATE["files"] = sorted(os.listdir(local))
-    log("repo files:", STATE["files"])
-    sys.path.insert(0, local)
+
+    files = walk_repo(local)
+    STATE["files"] = files
+    log("repo files (%d):" % len(files))
+    for f in files[:60]:
+        log("   ", f)
+
+    roots = add_import_roots(local, files)
+    log("import roots:", roots)
+
+    cfg = {}
+    cfg_path = os.path.join(local, "config.json")
+    if os.path.exists(cfg_path):
+        try:
+            with open(cfg_path) as fh:
+                cfg = json.load(fh)
+            log("config keys:", sorted(cfg)[:30])
+        except Exception as e:
+            STATE["tried"].append("config.json: %s" % str(e)[:120])
 
     obj = None
 
-    # (a) transformers remote code, if the repo ships a config for it
-    if any(f == "config.json" for f in STATE["files"]):
+    # (a) torch.hub, if the repo ships a hubconf anywhere in the tree
+    for rel in files:
+        if os.path.basename(rel) != "hubconf.py":
+            continue
+        hub_dir = os.path.dirname(os.path.join(local, rel)) or local
+        try:
+            hub = import_file(os.path.join(local, rel), local)
+            entries = [a for a in dir(hub)
+                       if not a.startswith("_") and callable(getattr(hub, a))]
+            log("hubconf entry points:", entries)
+            for entry in entries:
+                try:
+                    obj = torch.hub.load(hub_dir, entry, source="local", pretrained=True)
+                    STATE["detail"] = "loaded via torch.hub %s()" % entry
+                    break
+                except Exception as e:
+                    STATE["tried"].append("hub.%s: %s" % (entry, str(e)[:120]))
+        except Exception as e:
+            STATE["tried"].append("hubconf: %s" % str(e)[:140])
+        if obj is not None:
+            break
+
+    # (b) transformers — only when the config is actually a transformers config.
+    #     Trying it without a model_type key just buries the real error under a
+    #     guaranteed failure, which is exactly what happened the first time.
+    if obj is None and cfg.get("model_type"):
         for loader in ("AutoModel", "AutoModelForSpeechSeq2Seq"):
             try:
                 import transformers
@@ -249,47 +431,139 @@ def bind_model():
                 break
             except Exception as e:
                 STATE["tried"].append("%s: %s" % (loader, str(e)[:160]))
+    elif obj is None and os.path.exists(cfg_path):
+        STATE["tried"].append("transformers: skipped, config.json has no model_type "
+                              "(it is the model's own config, not a transformers one)")
 
-    # (b) a module in the repo that builds the model itself
+    # (c) a module anywhere in the repo that builds the model itself
+    repo_mods = []
     if obj is None:
-        for mod_name in ("inference", "infer", "tristream", "modeling_tristream",
-                         "model", "svs", "pipeline"):
-            if not any(f == mod_name + ".py" for f in STATE["files"]):
+        for rel in files:
+            if not rel.endswith(".py") or os.path.basename(rel) == "hubconf.py":
                 continue
             try:
-                import importlib
-                mod = importlib.import_module(mod_name)
-                for factory in ("load_model", "from_pretrained", "build", "Pipeline",
-                                "TriStreamSVS", "TriStream", "Model"):
-                    fn = getattr(mod, factory, None)
-                    if fn is None:
-                        continue
+                repo_mods.append(import_file(os.path.join(local, rel), local))
+            except Exception as e:
+                STATE["tried"].append("import %s: %s" % (rel, str(e)[:120]))
+        log("imported %d repo module(s)" % len(repo_mods))
+
+        for mod in repo_mods:
+            for factory in ("load_model", "load_pretrained", "from_pretrained",
+                            "build_model", "build", "get_model", "load"):
+                fn = getattr(mod, factory, None)
+                if fn is None:
+                    continue
+                # A bare class constructor is not a loader. Calling TriStreamSVS()
+                # succeeds and hands back a randomly initialised network, which
+                # would then report ready and synthesise noise — far worse than
+                # failing. Classes are only tried with the repo path, which at
+                # least implies they read something; weights that come in through
+                # a checkpoint are checked tensor by tensor further down.
+                arg_sets = ((local,),) if isinstance(fn, type) else ((local,), ())
+                for args in arg_sets:
                     try:
-                        obj = fn(local) if callable(fn) else None
-                    except TypeError:
-                        try:
-                            obj = fn()
-                        except Exception as e:
-                            STATE["tried"].append("%s.%s: %s" % (mod_name, factory, str(e)[:120]))
-                            continue
+                        made = fn(*args)
                     except Exception as e:
-                        STATE["tried"].append("%s.%s: %s" % (mod_name, factory, str(e)[:120]))
+                        STATE["tried"].append("%s.%s: %s"
+                                              % (mod.__name__, factory, str(e)[:120]))
                         continue
-                    if obj is not None:
-                        STATE["detail"] = "loaded via %s.%s()" % (mod_name, factory)
+                    if made is not None:
+                        obj = made
+                        STATE["detail"] = "loaded via %s.%s()" % (mod.__name__, factory)
                         break
                 if obj is not None:
                     break
+            if obj is not None:
+                break
+
+    # (d) the checkpoint itself. For a weights-first repo this is the real path,
+    #     and the original script never opened these files at all.
+    ckpts = [f for f in files if f.lower().endswith(CKPT_EXT)]
+    ckpts.sort(key=lambda f: next((i for i, k in enumerate(CKPT_RANK)
+                                   if k in os.path.basename(f).lower()), len(CKPT_RANK)))
+    if obj is None and ckpts:
+        for rel in ckpts:
+            path = os.path.join(local, rel)
+            try:
+                blob = load_checkpoint(path)
+            except ModuleNotFoundError as e:
+                # The single most useful diagnostic there is: the pickle names
+                # the exact module the repo expects to be importable.
+                STATE["tried"].append(
+                    "%s: needs the module '%s', which is not in this repo — the "
+                    "architecture code lives somewhere else" % (rel, e.name))
+                continue
             except Exception as e:
-                STATE["tried"].append("import %s: %s" % (mod_name, str(e)[:160]))
+                STATE["tried"].append("%s: %s" % (rel, str(e)[:160]))
+                continue
+
+            if isinstance(blob, torch.nn.Module):
+                obj = blob
+                STATE["detail"] = "loaded the pickled module out of %s" % rel
+                break
+
+            sd, where = find_state_dict(blob)
+            if isinstance(blob, dict):
+                log("%s top-level keys: %s" % (rel, sorted(blob)[:20]))
+                # Checkpoints often carry the config the model was built with.
+                for ck in ("config", "hyper_parameters", "hparams", "args", "cfg"):
+                    if isinstance(blob.get(ck), dict) and not cfg:
+                        cfg = blob[ck]
+                        log("using config from the checkpoint's '%s' key" % ck)
+            if sd is None:
+                STATE["tried"].append("%s: no state_dict inside (keys: %s)"
+                                      % (rel, sorted(blob)[:12] if isinstance(blob, dict)
+                                         else type(blob).__name__))
+                continue
+            if hasattr(sd, "state_dict"):
+                obj = sd
+                STATE["detail"] = "loaded the pickled module from %s['%s']" % (rel, where)
+                break
+
+            sd = strip_prefix(sd)
+            STATE["ckpt_keys"] = list(sd)[:12]
+            log("%s: %d weight tensors under '%s'" % (rel, len(sd), where))
+
+            classes = candidate_classes(repo_mods)
+            if not classes:
+                STATE["tried"].append(
+                    "%s: %d weight tensors, but this repo ships no architecture "
+                    "code to load them into" % (rel, len(sd)))
+                continue
+            for _, name, cls in classes[:6]:
+                made, how = construct(cls, cfg)
+                if made is None:
+                    STATE["tried"].append("%s(): could not construct from config" % name)
+                    continue
+                try:
+                    missing, unexpected = made.load_state_dict(sd, strict=False)
+                except Exception as e:
+                    STATE["tried"].append("%s.load_state_dict: %s" % (name, str(e)[:120]))
+                    continue
+                matched = len(sd) - len(unexpected)
+                # A class that accepts a handful of keys is the wrong class; a
+                # real match takes nearly all of them.
+                if matched >= max(8, int(0.6 * len(sd))):
+                    obj = made
+                    STATE["detail"] = ("built %s from config and loaded %d/%d tensors "
+                                       "from %s (%d missing)"
+                                       % (how, matched, len(sd), rel, len(missing)))
+                    break
+                STATE["tried"].append("%s: only %d/%d tensors matched"
+                                      % (name, matched, len(sd)))
+            if obj is not None:
+                break
 
     if obj is None:
         STATE["ready"] = False
-        STATE["detail"] = ("Could not construct the model from this repo. "
-                           "Files present: %s. Attempts: %s"
-                           % (", ".join(STATE["files"]), " | ".join(STATE["tried"]) or "none"))
+        STATE["detail"] = summarise_failure(files, ckpts)
         log("!! " + STATE["detail"])
         return
+
+    try:
+        obj = obj.to(DEVICE).eval()
+    except Exception as e:
+        STATE["tried"].append("to(%s): %s" % (DEVICE, str(e)[:120]))
 
     # Which call do we have? Stream-level beats whole-clip conversion.
     for name in STREAM_CALLS:
@@ -304,15 +578,42 @@ def bind_model():
 
     if STATE["binding"] is None:
         STATE["ready"] = False
-        methods = [m for m in dir(obj) if not m.startswith("_")][:40]
-        STATE["detail"] = ("Model built, but no recognised inference method. "
-                           "Public methods: %s" % ", ".join(methods))
+        methods = [m for m in dir(obj) if not m.startswith("_")
+                   and callable(getattr(obj, m, None))][:40]
+        STATE["detail"] = ("Built %s, but none of its methods are a recognised "
+                           "inference call. Public methods: %s"
+                           % (type(obj).__name__, ", ".join(methods)))
         log("!! " + STATE["detail"])
         return
 
     STATE["model"] = obj
     STATE["ready"] = True
     log("bound to %s.%s — %s" % (type(obj).__name__, STATE["binding"][1], STATE["detail"]))
+
+
+def summarise_failure(files, ckpts):
+    """Say what is actually in the repo, so the next step is obvious.
+
+    A failure here is nearly always one of two things: the architecture code is
+    not in the repo, or it is there under a shape this script did not try. The
+    difference is visible in the file list, so print it rather than a verdict.
+    """
+    py = [f for f in files if f.endswith(".py")]
+    lines = ["Could not construct the model from this repo."]
+    if not py:
+        lines.append(
+            "It contains weights (%s) but no Python at all, so there is no "
+            "architecture to load them into. TriStream cannot be rebuilt from a "
+            "checkpoint alone — the repo needs to ship its model code, or you "
+            "need it from wherever it was trained."
+            % (", ".join(os.path.basename(c) for c in ckpts) or "none found"))
+    else:
+        lines.append("Python found: %s." % ", ".join(py))
+    lines.append("Files: %s." % ", ".join(files[:25]))
+    if STATE["ckpt_keys"]:
+        lines.append("First weight names: %s." % ", ".join(STATE["ckpt_keys"]))
+    lines.append("Attempts: %s" % (" | ".join(STATE["tried"]) or "none"))
+    return " ".join(lines)
 
 
 # ---------------------------------------------------------------------------

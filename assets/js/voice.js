@@ -28,6 +28,7 @@ let mode = 'convert';
 let connected = false;
 let busy = false;
 let lastUrl = null;
+let lastHealth = null;
 
 function setMsg(text, kind) {
   if (!els.msg) return;
@@ -196,12 +197,22 @@ async function connect(quiet) {
     const info = await res.json();
 
     if (!info.ok) {
+      // The tunnel works and the server answered — the model just did not bind.
+      // /health carries the repo's file list and every attempt made, which is
+      // what actually identifies the problem, so keep it copyable rather than
+      // truncating it into the message line.
       connected = false;
+      lastHealth = info;
+      if (els.diag) els.diag.hidden = false;
       setStatus('error', 'Model not ready');
-      setMsg(info.detail || 'The server is up but the model did not load.', 'warn');
+      setMsg((info.detail || 'The server is up but the model did not load.')
+        + ' The server reached it and the tunnel is fine — this is the weights '
+        + 'failing to load, not the connection.', 'warn');
       setupPending(true);
       return false;
     }
+    lastHealth = info;
+    if (els.diag) els.diag.hidden = true;
 
     connected = true;
     try { localStorage.setItem(KEY, url); } catch (e) { /* private window */ }
@@ -371,6 +382,13 @@ function init() {
     download: $('#voice-download'), note: $('#voice-out-note'), msg: $('#voice-msg'),
     setup: $('#voice-setup'), setupHint: $('#voice-setup-hint'),
     copy: $('#voice-copy'), copyCmd: $('#voice-copy-cmd'), cmd: $('#voice-cmd'),
+    diag: $('#voice-diag'),
+  });
+
+  els.diag?.addEventListener('click', async () => {
+    if (!lastHealth) return;
+    const ok = await toClipboard(JSON.stringify(lastHealth, null, 2));
+    flash(els.diag, ok ? 'Copied' : 'Blocked');
   });
 
   els.copy?.addEventListener('click', copyServer);
