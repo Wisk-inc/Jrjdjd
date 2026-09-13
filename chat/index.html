@@ -157,6 +157,9 @@
         <button class="icon-btn" type="button" id="new-chat-top" aria-label="New chat" title="New chat — a fresh conversation and a clean slate">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
         </button>
+        <button class="icon-btn" type="button" id="voice-btn" aria-label="Voice studio" title="Voice studio — clone a voice with TriStream-SVS">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/></svg>
+        </button>
         <button class="icon-btn" type="button" id="github-btn" aria-label="Connect GitHub" title="Connect GitHub — read repos, commit, push, PRs">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48l-.01-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85l-.01 2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
         </button>
@@ -390,6 +393,117 @@
   </div>
 </div>
 
+<!-- Voice studio — TriStream-SVS -->
+<div class="sheet" id="voice-sheet" hidden>
+  <div class="sheet-card sheet-wide" role="dialog" aria-modal="true" aria-labelledby="voice-title">
+    <h2 id="voice-title">Voice studio</h2>
+    <p>Runs <a href="/models/tristream-svs/" target="_blank" rel="noopener">TriStream-SVS</a> on
+      your own GPU. Give it a voice to clone and a performance to sing, and it returns the
+      performance in that voice.</p>
+
+    <div class="field">
+      <label for="voice-endpoint">Server URL</label>
+      <input id="voice-endpoint" type="url" spellcheck="false" autocomplete="off"
+             placeholder="https://something.trycloudflare.com">
+      <small>From the TriStream cell in the
+        <a href="/chat/documentation/#tristream" target="_blank" rel="noopener">set-up guide</a>.
+        Nothing is uploaded until you press Generate.</small>
+    </div>
+    <div class="sheet-actions" style="margin-top:-4px">
+      <span class="status" id="voice-status" data-state="idle" role="status">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="status-label">Not connected</span>
+      </span>
+      <span class="spacer"></span>
+      <button class="btn btn-ghost btn-sm" type="button" id="voice-connect">Connect</button>
+    </div>
+
+    <hr class="rule" style="margin:18px 0">
+
+    <div class="voice-modes" role="tablist" aria-label="Mode">
+      <button class="voice-mode is-on" type="button" role="tab" aria-selected="true"
+              data-mode="convert">Sing a performance</button>
+      <button class="voice-mode" type="button" role="tab" aria-selected="false"
+              data-mode="generate">Sing lyrics</button>
+    </div>
+
+    <div class="voice-grid">
+      <div class="voice-slot">
+        <span class="voice-slot-tag">Filter stream &middot; identity</span>
+        <h3>The voice to clone</h3>
+        <p>A clean clip of the singer you want it to sound like. The speaker encoder takes a
+          voice fingerprint from this and nothing else.</p>
+        <label class="btn btn-ghost btn-sm" for="voice-ref">Choose audio</label>
+        <input id="voice-ref" type="file" accept="audio/*" hidden>
+        <span class="voice-file" id="voice-ref-name">No file chosen</span>
+        <audio class="voice-preview" id="voice-ref-audio" controls hidden></audio>
+      </div>
+
+      <div class="voice-slot" data-for="convert">
+        <span class="voice-slot-tag">Source &middot; residual streams</span>
+        <h3>The performance</h3>
+        <p>The melody, timing and delivery to reproduce. Only its pitch contour and texture are
+          used — the source stream cannot carry timbre, so this singer's voice does not come
+          across with it.</p>
+        <label class="btn btn-ghost btn-sm" for="voice-perf">Choose audio</label>
+        <input id="voice-perf" type="file" accept="audio/*" hidden>
+        <span class="voice-file" id="voice-perf-name">No file chosen</span>
+        <audio class="voice-preview" id="voice-perf-audio" controls hidden></audio>
+      </div>
+
+      <div class="voice-slot" data-for="generate" hidden>
+        <span class="voice-slot-tag">Lyric encoder</span>
+        <h3>The lyrics</h3>
+        <p>What it should sing. The duration and pitch predictors invent the timing and melody
+          from these unless you add a melody guide.</p>
+        <textarea id="voice-lyrics" rows="4" placeholder="One line per phrase&#10;the way you want it sung"></textarea>
+        <label class="btn btn-ghost btn-sm" for="voice-melody" style="margin-top:10px">Melody guide (optional)</label>
+        <input id="voice-melody" type="file" accept="audio/*" hidden>
+        <span class="voice-file" id="voice-melody-name">No file chosen</span>
+      </div>
+    </div>
+
+    <details class="voice-adv">
+      <summary>Advanced</summary>
+      <div class="voice-adv-body">
+        <div class="field">
+          <label for="voice-residual">Breath and consonant texture from</label>
+          <select id="voice-residual">
+            <option value="performance" selected>The performance — keeps its articulation</option>
+            <option value="voice">The cloned voice — keeps its breathiness</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="voice-pitch">Pitch shift <span id="voice-pitch-val">0</span> semitones</label>
+          <input id="voice-pitch" type="range" min="-12" max="12" step="1" value="0">
+        </div>
+        <div class="field">
+          <label for="voice-steps">Sampling steps <span id="voice-steps-val">32</span></label>
+          <input id="voice-steps" type="range" min="8" max="64" step="4" value="32">
+          <small>The flow-matching decoder&rsquo;s step count. Fewer is faster and rougher.</small>
+        </div>
+      </div>
+    </details>
+
+    <div class="voice-out" id="voice-out" hidden>
+      <audio id="voice-audio" controls></audio>
+      <div class="voice-out-row">
+        <span class="voice-out-note" id="voice-out-note"></span>
+        <span class="spacer"></span>
+        <a class="btn btn-ghost btn-sm" id="voice-download" download="tristream.wav">Download WAV</a>
+      </div>
+    </div>
+
+    <p class="voice-msg" id="voice-msg" hidden></p>
+
+    <div class="sheet-actions">
+      <button class="btn btn-ghost btn-sm" type="button" id="voice-close">Close</button>
+      <span class="spacer"></span>
+      <button class="btn btn-primary btn-sm" type="button" id="voice-go">Generate</button>
+    </div>
+  </div>
+</div>
+
 <!-- Profile -->
 <div class="sheet" id="profile-sheet" hidden>
   <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="profile-title">
@@ -442,6 +556,7 @@
 </div>
 
 <script src="/assets/js/main.js" defer></script>
+<script type="module" src="/assets/js/voice.js"></script>
 <script type="module" src="/assets/js/chat.js"></script>
 </body>
 </html>

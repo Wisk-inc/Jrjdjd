@@ -762,3 +762,151 @@
 #persona-brief { width: 100%; font: inherit; font-size: .92rem; color: var(--ink); resize: vertical;
   border: 1px solid var(--line-strong); border-radius: 10px; background: var(--paper); padding: 10px 12px; }
 #persona-brief:focus { outline: none; border-color: var(--espresso); }
+
+/* ==========================================================================
+   Voice studio — TriStream-SVS
+   Two clips in, one performance out. The slot tags name the encoder stream
+   each input feeds, because that mapping is the whole reason the panel works
+   the way it does.
+   ========================================================================== */
+.voice-modes {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper-sunk);
+}
+.voice-mode {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: none;
+  font-size: .84rem;
+  font-weight: 550;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.voice-mode:hover { color: var(--ink-strong); }
+.voice-mode.is-on { background: var(--ink-strong); color: var(--paper-raised); }
+.voice-mode:focus-visible { outline: 2px solid var(--espresso); outline-offset: 2px; }
+
+/* The two clips are the idea of this panel, so they sit side by side wherever
+   there is room rather than reading as two unrelated steps. This sheet is
+   wider than the others for that reason. */
+/* .sheet-card sets `width: min(480px, 100%)`, and a max-width cannot raise a
+   width — so the width has to be restated here, not just the maximum. */
+#voice-sheet .sheet-card { width: min(720px, 100%); max-width: 720px; }
+
+.voice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 12px;
+}
+.voice-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+}
+.voice-slot[hidden] { display: none !important; }
+.voice-slot-tag {
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--espresso);
+}
+.voice-slot h3 {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: .98rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--ink-strong);
+}
+.voice-slot p { margin: 0; font-size: .83rem; line-height: 1.55; color: var(--muted); }
+.voice-slot textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink-strong);
+  font: inherit;
+  font-size: .88rem;
+  resize: vertical;
+}
+.voice-slot textarea:focus-visible { outline: 2px solid var(--espresso); outline-offset: 1px; }
+
+.voice-file {
+  font-size: .76rem;
+  color: var(--faint);
+  overflow-wrap: anywhere;
+}
+.voice-preview { width: 100%; height: 34px; margin-top: 2px; }
+
+.voice-adv { margin-top: 14px; }
+.voice-adv > summary {
+  cursor: pointer;
+  font-size: .84rem;
+  font-weight: 550;
+  color: var(--muted);
+  padding: 8px 0;
+}
+.voice-adv > summary:hover { color: var(--ink-strong); }
+.voice-adv-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 4px 16px;
+  padding-top: 6px;
+}
+.voice-adv-body input[type="range"] { width: 100%; accent-color: var(--espresso); }
+
+.voice-out {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+}
+.voice-out[hidden] { display: none !important; }
+.voice-out audio { width: 100%; }
+.voice-out-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.voice-out-note { font-size: .76rem; color: var(--faint); overflow-wrap: anywhere; }
+
+.voice-msg {
+  margin-top: 14px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--line-strong);
+  border-radius: 0 10px 10px 0;
+  background: var(--paper-sunk);
+  font-size: .84rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.voice-msg[hidden] { display: none !important; }
+.voice-msg[data-kind="warn"] { border-left-color: var(--espresso); color: var(--ink); }
+.voice-msg[data-kind="ok"] { border-left-color: var(--espresso); }
+
+@media (max-width: 560px) {
+  .voice-grid { grid-template-columns: 1fr; }
+  .voice-mode { font-size: .79rem; padding: 9px 8px; }
+  .voice-slot { padding: 14px 15px; }
+}
