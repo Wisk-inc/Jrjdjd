@@ -23,6 +23,21 @@ const $ = (sel) => document.querySelector(sel);
 const KEY = 'corx.voice.endpoint';
 const MAX_BYTES = 40 * 1024 * 1024;
 
+/* Kept in step with BUILD in chat/tristream-server.py. A server running an
+   older copy of the script looks identical to one running the current copy
+   until it behaves differently, and working that out from symptoms costs a
+   round trip every time. /health reports its build, so say so directly. */
+const SERVER_BUILD = 5;
+
+function staleBuild(info) {
+  const got = Number(info && info.build) || 0;
+  return got < SERVER_BUILD
+    ? 'That server is running build ' + (got || 'older than 5') + ' of the script; this page '
+      + 'expects build ' + SERVER_BUILD + '. Press “Copy server code” above and re-run it — '
+      + 'fixes since then will not be in the copy you have.'
+    : '';
+}
+
 const els = {};
 let mode = 'convert';
 let connected = false;
@@ -66,7 +81,11 @@ let serverFetch = null;
 function fetchServer() {
   if (serverSrc) return Promise.resolve(serverSrc);
   if (!serverFetch) {
-    serverFetch = fetch(SERVER_URL, { credentials: 'omit' })
+    // cache: 'no-store' on purpose. This file changes when a bug is fixed, and
+    // a browser handing back yesterday's copy means running yesterday's bugs —
+    // which has already happened once, and is indistinguishable from the fix
+    // not working.
+    serverFetch = fetch(SERVER_URL, { credentials: 'omit', cache: 'no-store' })
       .then((r) => {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.text();
@@ -220,9 +239,10 @@ async function connect(quiet) {
       lastHealth = info;
       if (els.diag) els.diag.hidden = false;
       setStatus('error', 'Model not ready');
-      setMsg((info.detail || 'The server is up but the model did not load.')
+      const stale = staleBuild(info);
+      setMsg(stale || ((info.detail || 'The server is up but the model did not load.')
         + ' The server reached it and the tunnel is fine — this is the weights '
-        + 'failing to load, not the connection.', 'warn');
+        + 'failing to load, not the connection.'), 'warn');
       setupPending(true);
       return false;
     }
@@ -239,8 +259,10 @@ async function connect(quiet) {
     const path = info.mode === 'streams'
       ? 'driving the three streams separately'
       : 'using the repo’s own conversion call';
+    const stale = staleBuild(info);
     setMsg('Connected to ' + (info.model || 'TriStream') + ' on '
-      + (info.device || '?') + ', ' + path + '.', 'ok');
+      + (info.device || '?') + ', ' + path + '.' + (stale ? ' ' + stale : ''),
+      stale ? 'warn' : 'ok');
     return true;
   } catch (err) {
     connected = false;

@@ -2853,13 +2853,17 @@ else:
       </ol>
 
       <p style="margin-bottom:14px;font-size:.9rem">Press <strong>Copy</strong> for the whole
-        script &mdash; all 1188 lines, not just what is on screen. If you would rather not paste it
+        script &mdash; all 1282 lines, not just what is on screen. If you would rather not paste it
         by hand, the same file is at
         <code>curl -O https://corx-labs.com/chat/tristream-server.py</code>.</p>
       <div class="code-wrap">
         <button class="code-copy" type="button" id="copy-tristream">Copy</button>
         <pre class="server-code"><code id="tristream-code"># =============================================================================
-# TriStream-SVS server — Build 1
+# TriStream-SVS server — build 5
+#
+# The build number is printed at startup and reported by /health. If a log does
+# not say "build 5", the copy running is an older one — re-copy from
+# https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
 # Cloudflare quick tunnel, so the voice studio in the CorX chat can reach it.
@@ -2906,6 +2910,11 @@ import subprocess
 import sys
 import time
 
+# Bumped whenever this file changes. Printed at startup and reported by /health,
+# so a log or a screenshot says which version is actually running — guessing
+# that from behaviour wastes a round every time.
+BUILD        = 5
+
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 PORT         = 811
 SAMPLE_RATE  = 24000          # TriStream decodes mel at 24 kHz
@@ -2930,7 +2939,7 @@ def sh(cmd, **kw):
 # 1. Dependencies
 # -----------------------------------------------------------------------------
 print("=" * 72)
-print("TriStream-SVS server — installing dependencies")
+print("TriStream-SVS server — build %d — installing dependencies" % BUILD)
 print("=" * 72)
 
 sh("pip -q install --upgrade pip")
@@ -2973,6 +2982,52 @@ def port_free(port):
         return False
     finally:
         s.close()
+
+
+def pids_on_port(port):
+    """Who is listening on this port, using /proc alone.
+
+    lsof and fuser are both absent from most notebook images, so relying on
+    them means the port never actually gets cleared and the failure looks
+    identical to not having tried. /proc/net/tcp gives the socket inode of
+    every listener; /proc/&lt;pid&gt;/fd maps inodes back to processes.
+    """
+    inodes = set()
+    for proto in ("tcp", "tcp6"):
+        try:
+            rows = open("/proc/net/" + proto).read().splitlines()[1:]
+        except OSError:
+            continue
+        for row in rows:
+            f = row.split()
+            if len(f) &lt; 10 or f[3] != "0A":        # 0A is TCP_LISTEN
+                continue
+            try:
+                if int(f[1].rsplit(":", 1)[1], 16) == port:
+                    inodes.add(f[9])
+            except (IndexError, ValueError):
+                continue
+    if not inodes:
+        return []
+
+    found = []
+    for entry in os.listdir("/proc"):
+        if not entry.isdigit():
+            continue
+        fd_dir = "/proc/%s/fd" % entry
+        try:
+            names = os.listdir(fd_dir)
+        except OSError:
+            continue                                # gone, or not ours to read
+        for fd in names:
+            try:
+                target = os.readlink(os.path.join(fd_dir, fd))
+            except OSError:
+                continue
+            if target.startswith("socket:[") and target[8:-1] in inodes:
+                found.append(int(entry))
+                break
+    return found
 
 
 def is_our_runner(pid):
@@ -3029,8 +3084,38 @@ def stop_previous():
 
     if port_free(PORT):
         return
-    # No pid file — something else is on the port. fuser is the portable-enough
-    # way to clear it without adding a dependency.
+
+    # No usable pid file — servers started by an earlier version of this script
+    # never wrote one. Find the holder through /proc instead, and only kill it
+    # if it is one of ours.
+    holders = pids_on_port(PORT)
+    for pid in holders:
+        if pid == os.getpid() or not is_our_runner(pid):
+            print("port %d is held by pid %d, which is not this server — "
+                  "leaving it alone" % (PORT, pid))
+            continue
+        for sig in (signal.SIGTERM, signal.SIGKILL):
+            try:
+                os.killpg(os.getpgid(pid), sig)
+            except Exception:
+                try:
+                    os.kill(pid, sig)
+                except Exception:
+                    break
+            print("stopped an older server holding port %d (pid %d)" % (PORT, pid))
+            for _ in range(20):
+                if port_free(PORT):
+                    return
+                time.sleep(0.25)
+
+    if holders:
+        # /proc answered, and what it found is not ours. fuser -k would kill it
+        # regardless of whose it is, so stop here and let the caller move to a
+        # different port instead of taking down somebody else&#x27;s service.
+        return
+
+    # Only when /proc told us nothing — a restricted container — is a blind
+    # kill the lesser evil, and even then only because nothing else can.
     subprocess.run("fuser -k %d/tcp" % PORT, shell=True, capture_output=True)
     for _ in range(20):
         if port_free(PORT):
@@ -3049,6 +3134,7 @@ if not port_free(PORT):
     print("port %d was busy and would not clear — using %d instead" % (811, PORT))
 
 json.dump({
+    "build": BUILD,
     "repo_id": REPO_ID, "port": PORT, "sample_rate": SAMPLE_RATE,
     "steps": STEPS, "no_auth": NO_AUTH, "workdir": WORKDIR,
     "url_path": URL_PATH,
@@ -3066,6 +3152,7 @@ RUNNER_SRC = r&#x27;&#x27;&#x27;
 import io, json, os, re, subprocess, sys, threading, time, traceback
 
 CFG = json.load(open(sys.argv[1]))
+BUILD       = CFG.get("build", 0)
 REPO_ID     = CFG["repo_id"]
 PORT        = CFG["port"]
 SAMPLE_RATE = CFG["sample_rate"]
@@ -3842,6 +3929,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"],
 def health():
     return {
         "ok": bool(STATE["ready"]),
+        "build": BUILD,
         "model": REPO_ID,
         "device": STATE["device"],
         "gpu": GPU_NAME,
@@ -4007,7 +4095,13 @@ print("\nStarting the server in its own session (it outlives this cell)…")
 if os.path.exists(URL_PATH):
     os.remove(URL_PATH)
 
-_log = open(LOG_PATH, "a")
+# Truncated, not appended. An accumulating log replays every previous run&#x27;s
+# errors on every read, and a stale [Errno 98] from three runs ago is
+# indistinguishable from a live one.
+_log = open(LOG_PATH, "w")
+_log.write("TriStream-SVS build %d — started %s — port %d\n"
+           % (BUILD, time.strftime("%Y-%m-%d %H:%M:%S"), PORT))
+_log.flush()
 _proc = subprocess.Popen(
     [sys.executable, "-u", RUNNER_PATH, CFG_PATH],
     stdout=_log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
