@@ -142,6 +142,7 @@ if DEVICE == "cuda":
 
 STATE = {
     "ready": False,
+    "loading": True,      # the API serves while this is true
     "binding": None,      # which entry point we bound to
     "detail": "",         # why, or why not
     "files": [],
@@ -279,11 +280,29 @@ def add_import_roots(root, files):
     return sorted(roots)
 
 
+# Files that are programs rather than model definitions. Importing one runs it:
+# a training script parses argv and calls sys.exit(), a setup.py builds a
+# package, a test file may assert its way out. None of them define the model.
+SKIP_PY = ("setup.py", "__main__.py", "conftest.py", "train.py", "training.py",
+           "preprocess.py", "app.py", "demo.py", "gradio_app.py", "webui.py")
+SKIP_DIRS = ("tests", "test", "scripts", "examples", "notebooks", "data")
+
+
+def worth_importing(rel):
+    base = os.path.basename(rel)
+    if base in SKIP_PY or base.startswith("test_"):
+        return False
+    parts = os.path.dirname(rel).split(os.sep)
+    return not any(p in SKIP_DIRS for p in parts)
+
+
 def import_file(path, root):
     """Import one .py by location, without guessing a package name.
 
     Running the repo's Python is the same trust you extend by running its
-    weights; there is no way to load a model like this without it.
+    weights; there is no way to load a model like this without it. What is not
+    acceptable is letting it end the process — argv is blanked so a stray
+    argparse cannot exit, and SystemExit is turned back into a plain error.
     """
     import importlib.util
     name = os.path.splitext(os.path.relpath(path, root))[0].replace(os.sep, "_")
@@ -291,8 +310,20 @@ def import_file(path, root):
     if spec is None or spec.loader is None:
         raise ImportError("no loader for %s" % path)
     mod = importlib.util.module_from_spec(spec)
+    saved_argv = sys.argv
+    sys.argv = [os.path.basename(path)]
     sys.modules[name] = mod
-    spec.loader.exec_module(mod)
+    try:
+        spec.loader.exec_module(mod)
+    except SystemExit as e:
+        sys.modules.pop(name, None)
+        raise ImportError("the file called sys.exit(%s) on import — it is a "
+                          "script, not a model definition" % e.code)
+    except BaseException:
+        sys.modules.pop(name, None)
+        raise
+    finally:
+        sys.argv = saved_argv
     return mod
 
 
@@ -441,10 +472,16 @@ def bind_model():
         for rel in files:
             if not rel.endswith(".py") or os.path.basename(rel) == "hubconf.py":
                 continue
+            if not worth_importing(rel):
+                STATE["tried"].append("skipped %s (a script, not a model definition)" % rel)
+                continue
             try:
                 repo_mods.append(import_file(os.path.join(local, rel), local))
-            except Exception as e:
-                STATE["tried"].append("import %s: %s" % (rel, str(e)[:120]))
+            except KeyboardInterrupt:
+                raise
+            except BaseException as e:
+                STATE["tried"].append("import %s: %s: %s"
+                                      % (rel, type(e).__name__, str(e)[:120]))
         log("imported %d repo module(s)" % len(repo_mods))
 
         for mod in repo_mods:
@@ -766,9 +803,11 @@ def health():
         "device": STATE["device"],
         "gpu": GPU_NAME,
         "sample_rate": SAMPLE_RATE,
+        "loading": bool(STATE["loading"]),
         "binding": STATE["binding"][1] if STATE["binding"] else None,
         "mode": STATE["binding"][0] if STATE["binding"] else None,
-        "detail": STATE["detail"],
+        "detail": STATE["detail"] or ("Still loading — downloading weights and "
+                                      "importing the repo." if STATE["loading"] else ""),
         "files": STATE["files"],
         "tried": STATE["tried"],
         "modes": ["convert", "generate"],
@@ -776,8 +815,11 @@ def health():
 
 
 def _guard():
+    if STATE["loading"]:
+        raise HTTPException(status_code=503, detail="Still loading — the weights are "
+                                                    "downloading or the repo is importing.")
     if not STATE["ready"]:
-        raise HTTPException(status_code=503, detail=STATE["detail"] or "Model still loading.")
+        raise HTTPException(status_code=503, detail=STATE["detail"] or "Model did not load.")
 
 
 @app.post("/v1/voice/convert")
@@ -852,12 +894,38 @@ def start_tunnel():
 
 threading.Thread(target=start_tunnel, daemon=True).start()
 
-try:
-    bind_model()
-except Exception as e:
-    STATE["ready"] = False
-    STATE["detail"] = "Load failed: %s" % e
-    traceback.print_exc()
+
+def load_in_background():
+    """Load the model without the API depending on it finishing, or succeeding.
+
+    This used to run inline, before uvicorn.run(). Loading a model means
+    importing the repo's own Python, and a repo script that calls sys.exit()
+    — argparse does exactly that when a training script is missing an argument
+    — raises SystemExit, which is a BaseException and walks straight through
+    `except Exception`. The process died, the tunnel stayed up with nothing
+    behind it, and the browser got a Cloudflare 502 carrying no CORS headers,
+    which surfaces as a bare "Failed to fetch" with nothing to diagnose.
+
+    So: serve first, load second, and catch everything. A failed or slow load
+    is now something /health can describe instead of a server that vanished.
+    """
+    try:
+        bind_model()
+    except KeyboardInterrupt:
+        raise
+    except BaseException as e:
+        STATE["ready"] = False
+        STATE["detail"] = "Load failed: %s: %s" % (type(e).__name__, e)
+        traceback.print_exc()
+    finally:
+        STATE["loading"] = False
+        if STATE["ready"]:
+            log("model ready")
+        else:
+            log("!! model not ready — /health has the detail")
+
+
+threading.Thread(target=load_in_background, daemon=True).start()
 
 import uvicorn
 uvicorn.run(app, host="0.0.0.0", port=PORT, log_level="info")
