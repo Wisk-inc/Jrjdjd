@@ -2853,16 +2853,16 @@ else:
       </ol>
 
       <p style="margin-bottom:14px;font-size:.9rem">Press <strong>Copy</strong> for the whole
-        script &mdash; all 1282 lines, not just what is on screen. If you would rather not paste it
+        script &mdash; all 1351 lines, not just what is on screen. If you would rather not paste it
         by hand, the same file is at
         <code>curl -O https://corx-labs.com/chat/tristream-server.py</code>.</p>
       <div class="code-wrap">
         <button class="code-copy" type="button" id="copy-tristream">Copy</button>
         <pre class="server-code"><code id="tristream-code"># =============================================================================
-# TriStream-SVS server — build 5
+# TriStream-SVS server — build 6
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 5", the copy running is an older one — re-copy from
+# not say "build 6", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -2913,9 +2913,19 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 5
+BUILD        = 6
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
+
+# The repo publishes weights without code, so the class that defines the network
+# has to come from somewhere else — the training script it was trained with is
+# the obvious source, since the checkpoint records who trained it. Point this at
+# a .py file (a local path or an https URL) that defines the model class, or
+# drop the file at &lt;workdir&gt;/model_def.py and leave this empty. Whatever class
+# it defines is constructed from config.json and checked tensor by tensor
+# against the checkpoint before it is used.
+MODEL_DEF    = ""
+
 PORT         = 811
 SAMPLE_RATE  = 24000          # TriStream decodes mel at 24 kHz
 STEPS        = 32             # rectified-flow sampling steps; the card says ~32
@@ -3134,7 +3144,7 @@ if not port_free(PORT):
     print("port %d was busy and would not clear — using %d instead" % (811, PORT))
 
 json.dump({
-    "build": BUILD,
+    "build": BUILD, "model_def": MODEL_DEF,
     "repo_id": REPO_ID, "port": PORT, "sample_rate": SAMPLE_RATE,
     "steps": STEPS, "no_auth": NO_AUTH, "workdir": WORKDIR,
     "url_path": URL_PATH,
@@ -3153,6 +3163,7 @@ import io, json, os, re, subprocess, sys, threading, time, traceback
 
 CFG = json.load(open(sys.argv[1]))
 BUILD       = CFG.get("build", 0)
+MODEL_DEF   = CFG.get("model_def", "")
 REPO_ID     = CFG["repo_id"]
 PORT        = CFG["port"]
 SAMPLE_RATE = CFG["sample_rate"]
@@ -3169,6 +3180,13 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 DTYPE  = torch.float16 if DEVICE == "cuda" else torch.float32
 
 GPU_NAME = ""
+if DEVICE == "cpu":
+    # Worth saying loudly. A 322M-parameter flow-matching decoder on CPU is not
+    # slow, it is unusable — and "no GPU here" is easy to miss when the runtime
+    # simply never had one attached.
+    print("!! No CUDA device visible — running on CPU. torch %s. This model will "
+          "not synthesise at a usable speed this way; the runtime needs a GPU "
+          "attached." % torch.__version__, flush=True)
 if DEVICE == "cuda":
     GPU_NAME = torch.cuda.get_device_name(0)
     cap = torch.cuda.get_device_capability(0)
@@ -3446,6 +3464,44 @@ def construct(cls, cfg):
     return None, None
 
 
+def load_model_def():
+    """Import a model definition supplied from outside the repo.
+
+    This repo publishes parameters without a network, so the class has to come
+    from wherever the model was trained. Accepts a local path or an https URL,
+    and falls back to &lt;workdir&gt;/model_def.py so a file can simply be dropped in.
+    Whatever it defines is still checked against the checkpoint tensor by tensor
+    before anything uses it — supplying a definition is not a promise that it is
+    the right one.
+    """
+    src = MODEL_DEF or os.path.join(WORKDIR, "model_def.py")
+    if src.startswith(("http://", "https://")):
+        dest = os.path.join(WORKDIR, "model_def.py")
+        try:
+            import urllib.request
+            urllib.request.urlretrieve(src, dest)
+            log("fetched the model definition from", src)
+            src = dest
+        except Exception as e:
+            STATE["tried"].append("model definition %s: %s" % (src, str(e)[:140]))
+            return []
+    if not os.path.exists(src):
+        return []
+    try:
+        mod = import_file(src, os.path.dirname(src) or ".")
+    except KeyboardInterrupt:
+        raise
+    except BaseException as e:
+        STATE["tried"].append("model definition %s: %s: %s"
+                              % (src, type(e).__name__, str(e)[:160]))
+        return []
+    names = [n for _, n, _ in candidate_classes([mod])]
+    log("model definition %s defines: %s" % (src, ", ".join(names) or "no nn.Module subclass"))
+    STATE["tried"].append("model definition %s imported (classes: %s)"
+                          % (src, ", ".join(names) or "none"))
+    return [mod]
+
+
 def describe_arch(sd, cfg, blob, rel):
     """Write down everything needed to rebuild the missing model class.
 
@@ -3578,8 +3634,10 @@ def bind_model():
         STATE["tried"].append("transformers: skipped, config.json has no model_type "
                               "(it is the model&#x27;s own config, not a transformers one)")
 
-    # (c) a module anywhere in the repo that builds the model itself
-    repo_mods = []
+    # (c) a module that builds the model — supplied by the user first, since a
+    #     definition someone went and fetched beats anything guessed from the
+    #     repo, then anything the repo itself ships.
+    repo_mods = load_model_def()
     if obj is None:
         for rel in files:
             if not rel.endswith(".py") or os.path.basename(rel) == "hubconf.py":
@@ -3766,9 +3824,20 @@ def summarise_failure(files, ckpts):
             "load them into. A checkpoint cannot be run on its own: it is the "
             "parameters, not the network. The full parameter tree is at "
             "/architecture and in the log, which is what a matching model "
-            "definition has to be written against."
+            "definition has to be written against. If you have the training "
+            "script this came from, that script already contains the class — "
+            "set MODEL_DEF at the top of this file to its path or URL, or drop "
+            "it at %s, and it will be constructed from config.json and checked "
+            "against the checkpoint."
             % (a["tensors"], format(a["parameters"], ","),
-               len(a["top_level_modules"]), ", ".join(list(a["top_level_modules"])[:8])))
+               len(a["top_level_modules"]), ", ".join(list(a["top_level_modules"])[:8]),
+               os.path.join(WORKDIR, "model_def.py")))
+        meta = a.get("checkpoint_meta") or {}
+        if meta.get("developer") or meta.get("name"):
+            lines.append("The checkpoint says it was trained by %s as \"%s\"%s."
+                         % (meta.get("developer", "someone"),
+                            meta.get("name", "this model"),
+                            ", step %s" % meta["step"] if meta.get("step") else ""))
     elif not py:
         lines.append(
             "It contains weights (%s) but no Python at all, so there is no "

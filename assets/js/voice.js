@@ -27,12 +27,12 @@ const MAX_BYTES = 40 * 1024 * 1024;
    older copy of the script looks identical to one running the current copy
    until it behaves differently, and working that out from symptoms costs a
    round trip every time. /health reports its build, so say so directly. */
-const SERVER_BUILD = 5;
+const SERVER_BUILD = 6;
 
 function staleBuild(info) {
   const got = Number(info && info.build) || 0;
   return got < SERVER_BUILD
-    ? 'That server is running build ' + (got || 'older than 5') + ' of the script; this page '
+    ? 'That server is running build ' + (got || 'older than 6') + ' of the script; this page '
       + 'expects build ' + SERVER_BUILD + '. Press “Copy server code” above and re-run it — '
       + 'fixes since then will not be in the copy you have.'
     : '';
@@ -260,9 +260,16 @@ async function connect(quiet) {
       ? 'driving the three streams separately'
       : 'using the repo’s own conversion call';
     const stale = staleBuild(info);
+    // A CPU fallback connects and then takes minutes per clip. Saying "cuda"
+    // vs "cpu" in the status pill is too quiet for something that decides
+    // whether this is usable at all.
+    const onCpu = (info.device || '').toLowerCase() === 'cpu'
+      ? ' It is running on CPU, not a GPU — synthesis will be far too slow to be'
+        + ' usable. Check the runtime actually has a GPU attached.'
+      : '';
     setMsg('Connected to ' + (info.model || 'TriStream') + ' on '
-      + (info.device || '?') + ', ' + path + '.' + (stale ? ' ' + stale : ''),
-      stale ? 'warn' : 'ok');
+      + (info.device || '?') + ', ' + path + '.' + (stale ? ' ' + stale : '') + onCpu,
+      (stale || onCpu) ? 'warn' : 'ok');
     return true;
   } catch (err) {
     connected = false;
