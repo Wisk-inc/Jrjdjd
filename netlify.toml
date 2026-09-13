@@ -32,6 +32,14 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# The voice studio fetches this to put on the clipboard, and people open it
+# directly. Declared as text so nosniff cannot stop it rendering in a tab.
+[[headers]]
+  for = "/chat/tristream-server.py"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "no-cache"
+
 [[headers]]
   for = "/assets/css/*"
   [headers.values]
