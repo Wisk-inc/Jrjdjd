@@ -196,6 +196,21 @@ async function connect(quiet) {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const info = await res.json();
 
+    if (info.loading) {
+      // The server now answers while the model is still loading, so this is a
+      // normal state on a first run, not a failure.
+      connected = false;
+      lastHealth = info;
+      // Clear anything left over from a previous failure — a stale diagnostics
+      // button here would describe a problem that is no longer the problem.
+      if (els.diag) els.diag.hidden = true;
+      if (els.open) els.open.hidden = true;
+      setStatus('checking', 'Loading…');
+      setMsg('The server is up and still loading — first run downloads PyTorch and the '
+        + 'weights, which takes a few minutes. Press Connect again in a moment.', '');
+      return false;
+    }
+
     if (!info.ok) {
       // The tunnel works and the server answered — the model just did not bind.
       // /health carries the repo's file list and every attempt made, which is
@@ -213,6 +228,7 @@ async function connect(quiet) {
     }
     lastHealth = info;
     if (els.diag) els.diag.hidden = true;
+    if (els.open) els.open.hidden = true;
 
     connected = true;
     try { localStorage.setItem(KEY, url); } catch (e) { /* private window */ }
@@ -229,8 +245,23 @@ async function connect(quiet) {
   } catch (err) {
     connected = false;
     setStatus('error', 'Unreachable');
-    setMsg('Could not reach that URL. Quick-tunnel addresses change every time the cell is '
-      + 'restarted, so check the latest one. (' + err.message + ')', 'warn');
+    // "Failed to fetch" covers three different situations and the browser will
+    // not say which, so name them instead of repeating the generic message.
+    // The useful move is opening the URL in a tab: a Cloudflare error page means
+    // the tunnel is up but nothing is listening behind it.
+    const aborted = err.name === 'AbortError';
+    setMsg(aborted
+      ? 'That URL did not answer within 12 seconds. If the server is mid-load it will '
+        + 'answer shortly — try Connect again.'
+      : 'No answer from that URL. Three things do this: the address is from a previous '
+        + 'run (quick-tunnel addresses change on every restart), the cell has stopped, or '
+        + 'the server crashed while loading and the tunnel is still up with nothing behind '
+        + 'it. Open ' + url + '/health in a new tab — a Cloudflare error page means the '
+        + 'server is gone, so check the cell’s output. (' + err.message + ')', 'warn');
+    if (els.open) {
+      els.open.href = url + '/health';
+      els.open.hidden = false;
+    }
     setupPending(true);
     return false;
   }
@@ -382,7 +413,7 @@ function init() {
     download: $('#voice-download'), note: $('#voice-out-note'), msg: $('#voice-msg'),
     setup: $('#voice-setup'), setupHint: $('#voice-setup-hint'),
     copy: $('#voice-copy'), copyCmd: $('#voice-copy-cmd'), cmd: $('#voice-cmd'),
-    diag: $('#voice-diag'),
+    diag: $('#voice-diag'), open: $('#voice-open'),
   });
 
   els.diag?.addEventListener('click', async () => {
