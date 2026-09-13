@@ -49,6 +49,98 @@ function cleanEndpoint(value) {
   return v;
 }
 
+/* --- copying the server code ------------------------------------------------
+   The script is a real file at /chat/tristream-server.py rather than 600 lines
+   inlined into this page, so the chat does not carry 24KB it almost never uses.
+
+   It is fetched when the panel opens, not when the button is pressed: a
+   clipboard write has to happen while the click still counts as a user
+   gesture, and awaiting a network round trip inside the handler can outlive
+   that and fail with NotAllowedError. Prefetching makes the common press a
+   straight write. */
+const SERVER_URL = '/chat/tristream-server.py';
+let serverSrc = null;
+let serverFetch = null;
+
+function fetchServer() {
+  if (serverSrc) return Promise.resolve(serverSrc);
+  if (!serverFetch) {
+    serverFetch = fetch(SERVER_URL, { credentials: 'omit' })
+      .then((r) => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then((t) => {
+        // A misrouted request can hand back the SPA shell with a 200. Anything
+        // that is not the script is worse than useless on a clipboard.
+        if (!t || t.length < 2000 || t.lastIndexOf('# TriStream-SVS server', 400) === -1) {
+          throw new Error('unexpected file contents');
+        }
+        serverSrc = t;
+        return t;
+      })
+      .catch((e) => { serverFetch = null; throw e; });
+  }
+  return serverFetch;
+}
+
+/* Clipboard first, then a hidden textarea: the modern API is refused outright
+   in a few settings where execCommand still works, and a copy button that
+   silently does nothing is the worst outcome here. */
+async function toClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (e) { /* fall through */ }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:-9999px;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+function flash(btn, label) {
+  if (!btn) return;
+  if (btn.dataset.idle === undefined) btn.dataset.idle = btn.textContent;
+  btn.textContent = label;
+  clearTimeout(Number(btn.dataset.timer));
+  btn.dataset.timer = String(setTimeout(() => { btn.textContent = btn.dataset.idle; }, 2200));
+}
+
+async function copyServer() {
+  const btn = els.copy;
+  flash(btn, 'Copying…');
+  let src;
+  try {
+    src = await fetchServer();
+  } catch (err) {
+    flash(btn, 'Copy server code');
+    setMsg('Could not load the script (' + err.message + '). Open it with “View it first” and '
+      + 'copy it from there, or get it from the set-up guide.', 'warn');
+    return;
+  }
+  if (await toClipboard(src)) {
+    // The file ends with a newline; counting the split parts would claim one
+    // line more than the script actually has.
+    const lines = src.replace(/\n$/, '').split('\n').length;
+    flash(btn, 'Copied ' + lines + ' lines');
+    setMsg('On the clipboard. Paste it into a file called tristream-server.py on the machine with '
+      + 'the GPU, or into one notebook cell.', 'ok');
+  } else {
+    flash(btn, 'Copy server code');
+    setMsg('This browser blocked the clipboard. Open the script with “View it first” and copy it '
+      + 'from the tab.', 'warn');
+  }
+}
+
 /* --- file slots ------------------------------------------------------------
    Each slot previews what was picked. Object URLs are revoked on replacement:
    a few of these per session is nothing, but a panel someone leaves open while
@@ -107,12 +199,16 @@ async function connect(quiet) {
       connected = false;
       setStatus('error', 'Model not ready');
       setMsg(info.detail || 'The server is up but the model did not load.', 'warn');
+      setupPending(true);
       return false;
     }
 
     connected = true;
     try { localStorage.setItem(KEY, url); } catch (e) { /* private window */ }
     setStatus('ready', (info.device || '').toUpperCase() || 'Ready');
+    // The three steps are a one-off per machine. Once the server answers, get
+    // them out of the way and leave the panel on the part that gets used.
+    setupDone(info.gpu || info.device);
     const path = info.mode === 'streams'
       ? 'driving the three streams separately'
       : 'using the repo’s own conversion call';
@@ -124,6 +220,7 @@ async function connect(quiet) {
     setStatus('error', 'Unreachable');
     setMsg('Could not reach that URL. Quick-tunnel addresses change every time the cell is '
       + 'restarted, so check the latest one. (' + err.message + ')', 'warn');
+    setupPending(true);
     return false;
   }
 }
@@ -203,6 +300,25 @@ async function generate() {
   }
 }
 
+/* --- set-up tutorial -------------------------------------------------------- */
+function setupDone(where) {
+  if (!els.setup) return;
+  els.setup.open = false;
+  els.setup.dataset.state = 'done';
+  if (els.setupHint) {
+    els.setupHint.textContent = where ? 'server running on ' + where : 'server running';
+  }
+}
+
+/* `expand` only when something failed. Resetting the label while someone edits
+   the URL should not make the panel jump open under their cursor. */
+function setupPending(expand) {
+  if (!els.setup) return;
+  els.setup.dataset.state = '';
+  if (els.setupHint) els.setupHint.textContent = 'three steps, once per machine';
+  if (expand) els.setup.open = true;
+}
+
 /* --- mode ------------------------------------------------------------------ */
 function setMode(next) {
   mode = next;
@@ -225,8 +341,18 @@ function open() {
       if (saved) els.endpoint.value = saved;
     } catch (e) { /* private window */ }
   }
-  if (els.endpoint.value && !connected) connect(true);
-  els.endpoint.focus();
+
+  // Warm the clipboard copy so pressing the button is a straight write.
+  fetchServer().catch(() => { /* reported at press time, not before */ });
+
+  const returning = !!els.endpoint.value;
+  if (els.setup && returning) els.setup.open = false;
+  if (returning && !connected) connect(true);
+
+  // A first-timer belongs on step 1; someone with a server saved belongs on
+  // the URL box, ready to paste the address this session's tunnel printed.
+  if (returning) els.endpoint.focus();
+  else els.copy?.focus();
 }
 
 function close() { els.sheet.hidden = true; }
@@ -243,6 +369,14 @@ function init() {
     pitch: $('#voice-pitch'), steps: $('#voice-steps'), go: $('#voice-go'),
     closeBtn: $('#voice-close'), out: $('#voice-out'), audio: $('#voice-audio'),
     download: $('#voice-download'), note: $('#voice-out-note'), msg: $('#voice-msg'),
+    setup: $('#voice-setup'), setupHint: $('#voice-setup-hint'),
+    copy: $('#voice-copy'), copyCmd: $('#voice-copy-cmd'), cmd: $('#voice-cmd'),
+  });
+
+  els.copy?.addEventListener('click', copyServer);
+  els.copyCmd?.addEventListener('click', async () => {
+    const ok = await toClipboard(els.cmd.textContent.trim());
+    flash(els.copyCmd, ok ? 'Copied' : 'Blocked');
   });
 
   wireSlot(els.ref, $('#voice-ref-name'), $('#voice-ref-audio'));
@@ -263,6 +397,7 @@ function init() {
   els.endpoint?.addEventListener('input', () => {
     connected = false;
     setStatus('idle', 'Not connected');
+    setupPending();
   });
 
   document.querySelectorAll('.voice-mode').forEach((b) => {

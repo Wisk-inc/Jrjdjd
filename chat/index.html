@@ -401,13 +401,61 @@
       your own GPU. Give it a voice to clone and a performance to sing, and it returns the
       performance in that voice.</p>
 
+    <details class="voice-setup" id="voice-setup" open>
+      <summary><span class="vs-sum">Set up the server</span><span class="vs-hint" id="voice-setup-hint">three steps, once per machine</span></summary>
+
+      <ol class="vs-steps">
+        <li>
+          <div class="vs-body">
+            <h3>Copy the server code</h3>
+            <p>One file. It installs its own dependencies, downloads the TriStream weights and
+              opens a Cloudflare tunnel. You need a machine with an NVIDIA GPU — your own, or a
+              notebook runtime.</p>
+            <div class="vs-row">
+              <button class="btn btn-primary btn-sm" type="button" id="voice-copy">Copy server code</button>
+              <a class="vs-link" id="voice-view" href="/chat/tristream-server.py" target="_blank" rel="noopener">View it first</a>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div class="vs-body">
+            <h3>Run it</h3>
+            <p>Save it as <code>tristream-server.py</code> and run the command below. In a Colab or
+              molab notebook, paste it into one cell and run that instead — the same file works
+              either way.</p>
+            <div class="vs-cmd">
+              <code id="voice-cmd">python3 tristream-server.py</code>
+              <button class="vs-copy" type="button" id="voice-copy-cmd"
+                      aria-label="Copy the run command">Copy</button>
+            </div>
+            <p class="vs-note">First run takes a few minutes — it is downloading PyTorch and the
+              weights. On Blackwell cards (RTX PRO 6000, RTX 50-series) it installs the CUDA 12.8
+              build, the first one with <code>sm_120</code> kernels.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="vs-body">
+            <h3>Paste the URL it prints</h3>
+            <p>It finishes by printing a <code>https://&hellip;.trycloudflare.com</code> address.
+              Put that in the box below and press Connect. Stuck? The
+              <a href="/chat/documentation/#tristream" target="_blank" rel="noopener">set-up
+              guide</a> has the same code with the whole thing explained.</p>
+          </div>
+        </li>
+      </ol>
+    </details>
+
+    <!-- Deliberately outside the collapsing tutorial: the quick-tunnel address
+         is new on every restart, so pasting a URL is the recurring job here,
+         not a step you finish once. -->
     <div class="field">
       <label for="voice-endpoint">Server URL</label>
       <input id="voice-endpoint" type="url" spellcheck="false" autocomplete="off"
              placeholder="https://something.trycloudflare.com">
-      <small>From the TriStream cell in the
-        <a href="/chat/documentation/#tristream" target="_blank" rel="noopener">set-up guide</a>.
-        Nothing is uploaded until you press Generate.</small>
+      <small>Nothing leaves your browser until you press Generate. The tunnel is public and
+        keyless — anyone holding that address can use your GPU, so do not post it.</small>
     </div>
     <div class="sheet-actions" style="margin-top:-4px">
       <span class="status" id="voice-status" data-state="idle" role="status">

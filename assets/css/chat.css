@@ -802,6 +802,127 @@
    width — so the width has to be restated here, not just the maximum. */
 #voice-sheet .sheet-card { width: min(720px, 100%); max-width: 720px; }
 
+/* --- set-up tutorial -------------------------------------------------------
+   Open the first time, and closed by the script once a connection succeeds:
+   the three steps are a one-off per machine, and someone who has already run
+   the server should land on the two clips, not on install instructions. */
+.voice-setup {
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+}
+.voice-setup > summary {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  list-style: none;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+}
+.voice-setup > summary::-webkit-details-marker { display: none; }
+/* The triangle is drawn rather than inherited so it can rotate with the state. */
+.voice-setup > summary::before {
+  content: "";
+  flex: none;
+  width: 0; height: 0;
+  align-self: center;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform .15s ease;
+}
+.voice-setup[open] > summary::before { transform: rotate(90deg); }
+.voice-setup > summary:focus-visible { outline: 2px solid var(--espresso); outline-offset: -2px; }
+.vs-hint { font-size: .76rem; font-weight: 400; color: var(--muted); }
+.voice-setup[data-state="done"] .vs-hint { color: var(--espresso); }
+/* On a phone the title and the hint fight over one line and the title wraps
+   mid-phrase. Give the hint its own line instead, aligned under the title. */
+@media (max-width: 520px) {
+  .voice-setup > summary { flex-wrap: wrap; row-gap: 2px; }
+  .vs-hint { flex-basis: 100%; padding-left: 15px; }
+}
+
+.vs-steps {
+  margin: 0;
+  padding: 2px 16px 4px;
+  list-style: none;
+  counter-reset: vs;
+}
+.vs-steps > li {
+  counter-increment: vs;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 12px;
+  padding: 0 0 18px;
+}
+.vs-steps > li:last-child { padding-bottom: 14px; }
+.vs-steps > li::before {
+  content: counter(vs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--ink-strong);
+  color: var(--paper-raised);
+  font-size: .76rem;
+  font-weight: 600;
+}
+.vs-body { min-width: 0; }
+.vs-body h3 {
+  margin: 3px 0 5px;
+  font-family: var(--sans);
+  font-size: .95rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--ink-strong);
+}
+.vs-body p { margin: 0 0 10px; font-size: .83rem; line-height: 1.55; color: var(--muted); }
+.vs-body .field { margin-bottom: 10px; }
+.vs-note { font-size: .78rem !important; }
+.vs-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.vs-link { font-size: .8rem; color: var(--muted); }
+.vs-link:hover { color: var(--ink-strong); }
+
+/* The command sits in a copyable row for the same reason the code block does:
+   retyping a filename is a silly way to get a confusing error. */
+.vs-cmd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 8px 10px 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+}
+.vs-cmd code {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: var(--ink-strong);
+}
+.vs-copy {
+  flex: none;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper-raised);
+  color: var(--muted);
+  font: inherit;
+  font-size: .74rem;
+  cursor: pointer;
+}
+.vs-copy:hover { color: var(--ink-strong); border-color: var(--ink); }
+.vs-copy:focus-visible { outline: 2px solid var(--espresso); outline-offset: 1px; }
+
 .voice-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));

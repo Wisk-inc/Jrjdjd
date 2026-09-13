@@ -24,6 +24,12 @@
 /favicon.ico
   Cache-Control: public, max-age=604800
 
+# The voice studio fetches this to put on the clipboard, and people open it
+# directly. Declared as text so nosniff cannot stop it rendering in a tab.
+/chat/tristream-server.py
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: no-cache
+
 # Crawler-facing files should never be served stale for long.
 /sitemap.xml
   Cache-Control: public, max-age=3600
