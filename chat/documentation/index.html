@@ -2853,7 +2853,7 @@ else:
       </ol>
 
       <p style="margin-bottom:14px;font-size:.9rem">Press <strong>Copy</strong> for the whole
-        script &mdash; all 981 lines, not just what is on screen. If you would rather not paste it
+        script &mdash; all 1188 lines, not just what is on screen. If you would rather not paste it
         by hand, the same file is at
         <code>curl -O https://corx-labs.com/chat/tristream-server.py</code>.</p>
       <div class="code-wrap">
@@ -2918,6 +2918,7 @@ RUNNER_PATH = os.path.join(WORKDIR, "runner.py")
 CFG_PATH    = os.path.join(WORKDIR, "config.json")
 LOG_PATH    = os.path.join(WORKDIR, "server.log")
 URL_PATH    = os.path.join(WORKDIR, "tunnel-url.txt")
+PID_PATH    = os.path.join(WORKDIR, "server.pid")
 
 
 def sh(cmd, **kw):
@@ -2949,7 +2950,103 @@ if subprocess.run("which cloudflared", shell=True, capture_output=True).returnco
        "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 "
        "&amp;&amp; chmod +x /usr/local/bin/cloudflared")
 
-import json  # noqa: E402
+import json    # noqa: E402
+import signal  # noqa: E402
+import socket  # noqa: E402
+
+
+# -----------------------------------------------------------------------------
+# 1b. Clear the port
+#
+# The server is launched detached on purpose, so it survives the notebook kernel
+# dying. The cost of that is that re-running this cell collides with the copy
+# still holding the port: uvicorn fails with [Errno 98] and exits, leaving a
+# fresh tunnel pointing at nothing. So the old instance is stopped first.
+# -----------------------------------------------------------------------------
+def port_free(port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        s.bind(("0.0.0.0", port))
+        return True
+    except OSError:
+        return False
+    finally:
+        s.close()
+
+
+def is_our_runner(pid):
+    """Confirm the pid is still our server before signalling it.
+
+    Pids get recycled. A stale pid file plus an unlucky wrap-around would mean
+    killing somebody else&#x27;s process, so check what is actually running there.
+    """
+    try:
+        with open("/proc/%d/cmdline" % pid, "rb") as fh:
+            return b"runner.py" in fh.read()
+    except Exception:
+        return False      # no /proc, or it is already gone — do not signal
+
+
+def stop_previous():
+    """Stop the instance from a previous run, by pid file then by port."""
+    if os.path.exists(PID_PATH):
+        try:
+            old = int(open(PID_PATH).read().strip())
+        except Exception:
+            old = 0
+        try:
+            if old &gt; 0 and old != os.getpid() and is_our_runner(old):
+                for sig in (signal.SIGTERM, signal.SIGKILL):
+                    try:
+                        # start_new_session made it a process group leader, so
+                        # this takes its cloudflared child with it.
+                        os.killpg(os.getpgid(old), sig)
+                        print("stopped the previous server (pid %d)" % old)
+                    except ProcessLookupError:
+                        break
+                    except Exception:
+                        try:
+                            os.kill(old, sig)
+                        except Exception:
+                            break
+                    freed = False
+                    for _ in range(20):
+                        if port_free(PORT):
+                            freed = True
+                            break
+                        time.sleep(0.25)
+                    if freed:
+                        return
+        finally:
+            # Always, including on the early return above: a pid file left
+            # behind points at a process that no longer exists, and eventually
+            # at an unrelated one that does.
+            try:
+                os.remove(PID_PATH)
+            except OSError:
+                pass
+
+    if port_free(PORT):
+        return
+    # No pid file — something else is on the port. fuser is the portable-enough
+    # way to clear it without adding a dependency.
+    subprocess.run("fuser -k %d/tcp" % PORT, shell=True, capture_output=True)
+    for _ in range(20):
+        if port_free(PORT):
+            return
+        time.sleep(0.25)
+
+
+stop_previous()
+if not port_free(PORT):
+    # Still occupied by something that is not ours. The tunnel URL is printed
+    # either way, so the port number does not need to be memorable.
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(("0.0.0.0", 0))
+    PORT = s.getsockname()[1]
+    s.close()
+    print("port %d was busy and would not clear — using %d instead" % (811, PORT))
 
 json.dump({
     "repo_id": REPO_ID, "port": PORT, "sample_rate": SAMPLE_RATE,
@@ -3008,6 +3105,7 @@ STATE = {
     "files": [],
     "tried": [],
     "ckpt_keys": [],      # first weight names, when a checkpoint was opened
+    "arch": None,         # the parameter tree, when weights load but code is absent
     "model": None,
     "device": DEVICE,
     "tunnel": None,
@@ -3261,6 +3359,73 @@ def construct(cls, cfg):
     return None, None
 
 
+def describe_arch(sd, cfg, blob, rel):
+    """Write down everything needed to rebuild the missing model class.
+
+    A state_dict is a complete description of a network&#x27;s parameter tree: every
+    submodule path and every tensor shape. Together with the config and the
+    checkpoint&#x27;s own metadata that is enough to write a matching nn.Module —
+    which is the only way forward for a repo that ships weights without code.
+    Guessing the architecture instead would load some tensors, skip others, and
+    synthesise noise while reporting success.
+    """
+    groups = {}
+    for k, v in sd.items():
+        top = k.split(".")[0]
+        g = groups.setdefault(top, {"count": 0, "params": 0, "sample": []})
+        g["count"] += 1
+        try:
+            g["params"] += int(v.numel())
+        except Exception:
+            pass
+        if len(g["sample"]) &lt; 6:
+            g["sample"].append("%s %s" % (k, tuple(getattr(v, "shape", ()))))
+
+    meta = {}
+    if isinstance(blob, dict):
+        for k, v in blob.items():
+            if k == "model" or isinstance(v, dict) and len(v) &gt; 50:
+                continue
+            if isinstance(v, (str, int, float, bool)) or v is None:
+                meta[k] = v
+            elif isinstance(v, dict):
+                meta[k] = {kk: vv for kk, vv in list(v.items())[:40]
+                           if isinstance(vv, (str, int, float, bool)) or vv is None}
+
+    STATE["arch"] = {
+        "checkpoint": rel,
+        "tensors": len(sd),
+        "parameters": sum(g["params"] for g in groups.values()),
+        "config": cfg,
+        "checkpoint_meta": meta,
+        "top_level_modules": {k: {"tensors": g["count"], "parameters": g["params"],
+                                  "sample": g["sample"]}
+                              for k, g in sorted(groups.items())},
+        "all_keys": ["%s %s" % (k, tuple(getattr(v, "shape", ()))) for k, v in sd.items()],
+    }
+
+    path = os.path.join(WORKDIR, "architecture.json")
+    try:
+        with open(path, "w") as fh:
+            json.dump(STATE["arch"], fh, indent=2, default=str)
+    except Exception as e:
+        log("could not write %s: %s" % (path, e))
+
+    log("")
+    log("=" * 72)
+    log("  This repo has weights but no model code.")
+    log("  %d tensors, %s parameters, %d top-level modules:"
+        % (len(sd), format(STATE["arch"]["parameters"], ","), len(groups)))
+    for name, g in sorted(groups.items(), key=lambda kv: -kv[1]["params"]):
+        log("     %-24s %4d tensors  %s params" % (name, g["count"], format(g["params"], ",")))
+    log("")
+    log("  The full parameter tree is in %s" % path)
+    log("  and at &lt;tunnel-url&gt;/architecture. That is what a matching nn.Module")
+    log("  has to be written against — the shapes name every layer.")
+    log("=" * 72)
+    log("")
+
+
 def bind_model():
     from huggingface_hub import snapshot_download
     local = snapshot_download(repo_id=REPO_ID, local_dir=os.path.join(WORKDIR, "model"))
@@ -3423,9 +3588,18 @@ def bind_model():
 
             classes = candidate_classes(repo_mods)
             if not classes:
+                # The weights are here and readable; the class to put them in is
+                # not. That is recoverable — a state_dict names every submodule
+                # and every shape — so write down the blueprint rather than only
+                # the complaint. Nothing can be reconstructed from a sentence
+                # saying it failed.
+                # Only the first, which is the best-ranked checkpoint — letting
+                # the later one overwrite it would describe the worse weights.
+                if STATE["arch"] is None:
+                    describe_arch(sd, cfg, blob, rel)
                 STATE["tried"].append(
                     "%s: %d weight tensors, but this repo ships no architecture "
-                    "code to load them into" % (rel, len(sd)))
+                    "code to load them into — see /architecture" % (rel, len(sd)))
                 continue
             for _, name, cls in classes[:6]:
                 made, how = construct(cls, cfg)
@@ -3497,12 +3671,21 @@ def summarise_failure(files, ckpts):
     """
     py = [f for f in files if f.endswith(".py")]
     lines = ["Could not construct the model from this repo."]
-    if not py:
+    if not py and STATE["arch"]:
+        a = STATE["arch"]
+        lines.append(
+            "The weights read fine — %d tensors, %s parameters, in %d top-level "
+            "modules (%s) — but the repo ships no Python, so there is no class to "
+            "load them into. A checkpoint cannot be run on its own: it is the "
+            "parameters, not the network. The full parameter tree is at "
+            "/architecture and in the log, which is what a matching model "
+            "definition has to be written against."
+            % (a["tensors"], format(a["parameters"], ","),
+               len(a["top_level_modules"]), ", ".join(list(a["top_level_modules"])[:8])))
+    elif not py:
         lines.append(
             "It contains weights (%s) but no Python at all, so there is no "
-            "architecture to load them into. TriStream cannot be rebuilt from a "
-            "checkpoint alone — the repo needs to ship its model code, or you "
-            "need it from wherever it was trained."
+            "architecture to load them into."
             % (", ".join(os.path.basename(c) for c in ckpts) or "none found"))
     else:
         lines.append("Python found: %s." % ", ".join(py))
@@ -3671,7 +3854,30 @@ def health():
         "files": STATE["files"],
         "tried": STATE["tried"],
         "modes": ["convert", "generate"],
+        # A summary only — the full parameter tree is at /architecture, since
+        # several hundred tensor names do not belong in a status payload.
+        "architecture": None if not STATE["arch"] else {
+            "tensors": STATE["arch"]["tensors"],
+            "parameters": STATE["arch"]["parameters"],
+            "config": STATE["arch"]["config"],
+            "checkpoint_meta": STATE["arch"]["checkpoint_meta"],
+            "top_level_modules": {k: v["tensors"] for k, v
+                                  in STATE["arch"]["top_level_modules"].items()},
+        },
     }
+
+
+@app.get("/architecture")
+def architecture():
+    """The full parameter tree, when the weights loaded but the code was absent.
+
+    This is the thing a replacement nn.Module has to match, key for key.
+    """
+    if not STATE["arch"]:
+        return JSONResponse({"detail": "No architecture dump — either the model "
+                                       "loaded, or no checkpoint could be read."},
+                            status_code=404)
+    return STATE["arch"]
 
 
 def _guard():
@@ -3806,7 +4012,8 @@ _proc = subprocess.Popen(
     [sys.executable, "-u", RUNNER_PATH, CFG_PATH],
     stdout=_log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
     start_new_session=True, cwd=WORKDIR)
-print("pid", _proc.pid, "· log:", LOG_PATH)
+open(PID_PATH, "w").write(str(_proc.pid))
+print("pid", _proc.pid, "· port", PORT, "· log:", LOG_PATH)
 
 print("\nWaiting for the Cloudflare tunnel…")
 url = None
