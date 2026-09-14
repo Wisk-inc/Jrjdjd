@@ -197,6 +197,7 @@ FOOTER = """<footer class="site-footer">
           <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/models/helix/">HELIX</a></li>
           <li><a href="/chat/">Chat</a></li>
         </ul>
       </nav>
