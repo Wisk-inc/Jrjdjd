@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall | CorX Labs</title>
+<meta name="description" content="HELIX is a linear-scaling sequence architecture that keeps exact long-range recall: a local window, a recurrent state and a landmark-tree index per block.">
+<link rel="canonical" href="https://corx-labs.com/models/helix/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Nathan">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/models/helix/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/models/helix/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/models/helix/">
+<meta property="og:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
+<meta property="og:description" content="Hierarchical Episodic Linear IndeX. Three mixers braided over one residual stream — a local window, a delta-rule recurrent state, and a top-k index over a landmark tree — for linear cost without losing exact recall.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="HELIX — linear scaling, exact recall">
+<meta property="article:modified_time" content="2026-09-14T00:00:00Z">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
+<meta name="twitter:description" content="A sequence architecture that separates memory capacity from memory bandwidth: O(1) hot state, O(log N) probes, and recall that survives past the local window.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+      "@id": "https://corx-labs.com/models/helix/#architecture",
+      "name": "HELIX",
+      "alternateName": ["helix-lm", "Hierarchical Episodic Linear IndeX"],
+      "url": "https://corx-labs.com/models/helix/",
+      "description": "HELIX (Hierarchical Episodic Linear IndeX) is a sequence architecture from CorX Labs that scales linearly in context length while keeping exact long-range recall. Each block braids three mixers over one residual stream: a local strand that reads a fixed window exactly with a different span per head, a recurrent strand that compresses everything into a matrix-valued delta-rule state, and an index strand that retrieves top-k memory blocks from anywhere in the past through a beam descent over a landmark tree. Storage is O(N) and append-only, hot state is O(1), and a single step performs O(log N) probes. Published as the helix-lm Python package under Apache-2.0.",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Sequence architecture",
+      "operatingSystem": "OS Independent",
+      "softwareVersion": "0.1.0",
+      "programmingLanguage": "Python",
+      "runtimePlatform": "PyTorch",
+      "codeRepository": "https://pypi.org/project/helix-lm/",
+      "downloadUrl": "https://pypi.org/project/helix-lm/",
+      "installUrl": "https://pypi.org/project/helix-lm/",
+      "softwareRequirements": "Python >= 3.10, PyTorch",
+      "isAccessibleForFree": true,
+      "datePublished": "2026-09-14",
+      "dateModified": "2026-09-14",
+      "inLanguage": "en",
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "creator": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "provider": { "@id": "https://corx-labs.com/#organization" },
+      "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
+      "keywords": "linear attention, sparse attention, long context, associative recall, delta rule, state space model, landmark tree, sequence architecture, PyTorch, transformer alternative",
+      "featureList": [
+        "Three strands per block: local window, delta-rule recurrent state, landmark-tree index",
+        "Linear scaling in attention pairs — measured N^1.00 against full attention's N^2.00",
+        "Exact long-range recall past the local window, via top-k block retrieval",
+        "O(1) hot decode state and O(log N) probes per step",
+        "O(N) append-only storage that is never rewritten and can live in cold memory",
+        "Multi-scale local windows — head groups receive geometrically different spans",
+        "Causal-by-construction landmark eligibility: a summary is never read by a query it partly describes",
+        "One routing gather serves a whole query block; the local strand covers what routing cannot anticipate",
+        "Beam descent with per-level frontiers that tile the past exactly",
+        "Selection scores fed back as additive attention logits so gradient reaches every tree level",
+        "Property tests for causality, decode/prefill equivalence, padding invariance and constant per-token work"
+      ],
+      "sameAs": ["https://pypi.org/project/helix-lm/"],
+      "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/models/helix/#webpage",
+      "url": "https://corx-labs.com/models/helix/",
+      "name": "HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "mainEntity": { "@id": "https://corx-labs.com/models/helix/#architecture" },
+      "inLanguage": "en",
+      "dateModified": "2026-09-14",
+      "breadcrumb": { "@id": "https://corx-labs.com/models/helix/#breadcrumb" },
+      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/models/helix/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/" },
+        { "@type": "ListItem", "position": 3, "name": "HELIX", "item": "https://corx-labs.com/models/helix/" }
+      ]
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://corx-labs.com/models/helix/#block-diagram",
+      "name": "HELIX block diagram",
+      "caption": "One HELIX block: the residual stream feeds three parallel mixers — a local strand reading a fixed exact window, a recurrent strand holding a matrix-valued delta-rule state, and an index strand retrieving top-k blocks through a landmark tree — whose outputs are braided back into the residual stream. Each strand's decode-time state is shown alongside it.",
+      "representativeOfPage": true
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://corx-labs.com/models/helix/#index-diagram",
+      "name": "HELIX landmark tree and beam descent",
+      "caption": "The past is cut into fixed-size blocks, each closed block is pooled into a landmark, and landmarks are pooled again into a tree. A query block descends the tree keeping a fixed beam width per level, choosing top-k blocks to read exactly. Nodes whose span has not closed before the query block are ineligible and never consulted."
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://corx-labs.com/models/helix/#article",
+      "headline": "HELIX: linear scaling without giving up exact recall",
+      "about": { "@id": "https://corx-labs.com/models/helix/#architecture" },
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "datePublished": "2026-09-14",
+      "dateModified": "2026-09-14",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://corx-labs.com/models/helix/#webpage" },
+      "proficiencyLevel": "Expert"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/models/helix/#faq",
+      "isPartOf": { "@id": "https://corx-labs.com/models/helix/#webpage" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is HELIX?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HELIX — Hierarchical Episodic Linear IndeX — is a sequence architecture that scales linearly in context length while keeping the exact long-range recall that attention is good at. Every block braids three mixers over the same residual stream: a local strand reading a fixed window exactly, a recurrent strand compressing the whole past into a matrix-valued delta-rule state, and an index strand retrieving a handful of memory blocks from anywhere in the past. It is published as the helix-lm package under Apache-2.0 and was built by Nathan at CorX Labs in Jamaica."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why can't a linear-time model just compress the past?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because of a counting argument, not an engineering gap. A fixed state of S bits cannot distinguish more than 2^S different histories, so a model that squeezes everything into a fixed-size state eventually cannot quote back a name it saw once. HELIX does not try to compress its way around this. It separates memory capacity from memory bandwidth: storage grows linearly and stays append-only, while what any single token touches stays bounded."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does O(1) hot state and O(log N) probes mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hot state is what a decoding step must keep live: for HELIX that is a window-sized ring buffer, one delta-rule matrix and two convolution states per head, all fixed-size regardless of context length. The key/value history and landmark tree grow with N but are append-only, never rewritten, and can sit in cold memory. A step reads only O(index_topk x block_size + index_branching x log N) of that. It is explicitly not O(1) total memory, which is impossible for anything that can quote an exact name from a million tokens back."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the landmark index stay causal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Two rules. A node is eligible for query block J only if the entire span it summarises ends at or before J, so a summary is never consulted by a query it partly describes — which also means a landmark is computed once and reused by every later query. And routing for block J comes from the hidden state at the end of block J-1, which is strictly past for every token in block J, so one gather serves the whole block. Anything routing could not anticipate within that block is covered exactly by the local strand."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Has HELIX been trained on real text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. There are no trained checkpoints and nobody has trained HELIX on real language data. Everything published about it concerns complexity, causality and recall mechanics — properties provable on an untrained model or measurable on a synthetic probe — not perplexity or language quality. It is an architecture proposal with a working, tested reference implementation, not a better model."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much faster is HELIX than full attention?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "On the published measurements, HELIX forms a constant 8,192 attention pairs per token at every context length, fitting N^1.00, while full attention fits N^2.00. At 32,768 tokens that is 32 times fewer pairs and 1.6 times faster wall-clock — and that comparison runs unfused reference PyTorch against a fused SDPA kernel, so the constant factor is working against HELIX, not for it. At 4,096 tokens full attention is still the faster of the two."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the index strand actually matter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That is the one result the recall experiment establishes. On multi-query associative recall with bindings placed well outside the local window, HELIX scores 30.8 percent against 6.0 percent for the same model with the index strand removed — a gap of roughly 21 standard errors, with chance at 6.2 percent. Without the index the model sits at chance, because its window cannot see the bindings and its recurrent state cannot hold them. Against full attention at 32.0 percent, HELIX is a tie rather than a win: 1.2 points with a 1.7-point standard error."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I install and try HELIX?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Run pip install helix-lm. The package ships a command-line tool: helix info explains what it is and what it costs, helix demo builds a model and verifies the decode state, helix bench measures cost against context length, and helix recall trains with and without the index strand and compares them. It requires Python 3.10 or newer and is licensed Apache-2.0."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/chat/">Chat</a>
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/" aria-current="page">Our Products</a>
+      <a href="/benchmarks/">Benchmarks</a>
+      <a href="/blog/">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="https://pypi.org/project/helix-lm/" rel="noopener" target="_blank">View on PyPI</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/chat/">Chat</a></li>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/benchmarks/">Benchmarks</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><span aria-current="page">HELIX</span></li>
+      </ol>
+    </nav>
+
+    <div class="tag-row" style="margin-top:22px">
+      <span class="tag">Architecture proposal</span>
+      <span class="tag">Linear scaling</span>
+      <span class="tag">Long context</span>
+      <span class="tag">Apache-2.0</span>
+      <span class="tag">No trained checkpoints</span>
+    </div>
+
+    <h1>HELIX</h1>
+    <p class="lede">Hierarchical Episodic Linear IndeX — a sequence architecture that keeps what
+      attention is good at while dropping the quadratic bill. Three strands braided over one
+      residual stream: an exact local window, a recurrent state, and an index that can reach any
+      block in the past.</p>
+
+    <div class="btn-row mt-m">
+      <a class="btn btn-primary" href="https://pypi.org/project/helix-lm/" rel="noopener" target="_blank">
+        View on PyPI
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+      <a class="btn btn-ghost" href="#architecture">Jump to the architecture</a>
+    </div>
+    <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
+      Package: <code>helix-lm</code> 0.1.0 &middot; Python &ge; 3.10 &middot; Developer: Nathan &middot; Origin: Jamaica
+    </p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <!-- Answer-first summary -->
+  <section class="section-tight" id="what-it-is">
+    <div class="shell">
+      <div class="answer-box" style="margin-top:0" data-reveal>
+        <p><strong>HELIX</strong> is a sequence architecture built from scratch by
+          <a href="/about/">CorX Labs</a> in Jamaica, published as the <code>helix-lm</code> package.
+          A transformer compares every token to every other token: ten thousand tokens is fifty
+          million comparisons, and doubling the input quadruples the work. Linear-time alternatives
+          fix that by squeezing the past into a fixed-size state — and then they cannot quote back a
+          name they saw once, because a state of <em>S</em> bits cannot tell apart more than
+          2<sup><em>S</em></sup> histories. That is a counting argument, not an engineering gap.</p>
+        <p>HELIX does not try to compress its way around it. It <strong>separates memory capacity
+          from memory bandwidth</strong>: storage grows linearly, stays append-only and can live in
+          cold memory, while what any one token touches stays bounded. The claim is
+          <strong>O(1) hot state and O(log N) probes</strong> — not O(1) total memory, which is
+          impossible for anything that can quote an exact name from a million tokens back.</p>
+      </div>
+
+      <div class="callout mt-m" data-reveal>
+        <p><strong>There are no trained checkpoints.</strong> Nobody has trained HELIX on real text.
+          Everything measured here is about complexity, causality and recall mechanics — properties
+          provable on an untrained model or measurable on a synthetic probe — not perplexity or
+          language quality. Treat this as an architecture proposal with a working, tested reference
+          implementation, not a better model. <a href="#not">The full caveats are below.</a></p>
+      </div>
+
+      <dl class="spec-list mt-m" data-reveal>
+        <div><dt>Package</dt><dd><code>helix-lm</code> 0.1.0</dd></div>
+        <div><dt>Mixers per block</dt><dd>3 (local, recurrent, index)</dd></div>
+        <div><dt>Attention pairs</dt><dd>N<sup>1.00</sup> measured</dd></div>
+        <div><dt>Hot decode state</dt><dd>O(1)</dd></div>
+        <div><dt>Probes per step</dt><dd>O(log N)</dd></div>
+        <div><dt>Storage</dt><dd>O(N), append-only</dd></div>
+        <div><dt>Runtime</dt><dd>PyTorch</dd></div>
+        <div><dt>Licence</dt><dd>Apache-2.0</dd></div>
+        <div><dt>Status</dt><dd>Untrained reference implementation</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Architecture diagram -->
+  <section class="section-tight" id="architecture" style="padding-top:0">
+    <div class="shell">
+      <h2>1. One HELIX block</h2>
+      <div class="prose">
+        <p>Every block braids three mixers over the same residual stream. They differ in what they
+          read, what they cost to train, and — the part that matters at inference — what they have
+          to hold on to while decoding. Solid lines carry representations forward; dashed lines are
+          reads against stored memory.</p>
+      </div>
+
+      <figure class="diagram mt-m" data-reveal>
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 1140 560" width="1140" height="560" role="img"
+               aria-labelledby="dg1-title dg1-desc">
+            <title id="dg1-title">One HELIX block: three strands over a residual stream</title>
+            <desc id="dg1-desc">The residual stream enters at the left and fans into three parallel
+              mixers. The local strand reads the last few blocks of tokens exactly, with a different
+              window span per head group, and keeps a window-sized ring buffer at decode. The
+              recurrent strand reads everything through a matrix-valued delta-rule state and keeps
+              that matrix plus two convolution states per head. The index strand selects a small
+              number of memory blocks from anywhere in the past by descending a landmark tree, and
+              reads the key-value history and that tree from append-only storage. The three outputs
+              braid back into the residual stream and continue to the next block.</desc>
+
+            <defs>
+              <marker id="hx-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow"/>
+              </marker>
+              <marker id="hx-ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow-soft"/>
+              </marker>
+            </defs>
+
+            <!-- lanes -->
+            <rect class="dg-lane" x="200" y="52"  width="700" height="128" rx="12"/>
+            <rect class="dg-lane" x="200" y="200" width="700" height="128" rx="12"/>
+            <rect class="dg-lane" x="200" y="348" width="700" height="160" rx="12"/>
+
+            <!-- input -->
+            <rect class="dg-box-a" x="16" y="236" width="152" height="82" rx="10"/>
+            <rect class="dg-accent" x="16" y="236" width="3" height="82" rx="1.5"/>
+            <text class="dg-tag"   x="34" y="258">Input</text>
+            <text class="dg-title" x="34" y="278">Residual</text>
+            <text class="dg-title" x="34" y="295">stream</text>
+            <text class="dg-sub"   x="34" y="311">token t</text>
+
+            <!-- fan-out -->
+            <path class="dg-edge" d="M168 258 H184 V116 H196" marker-end="url(#hx-ah)"/>
+            <path class="dg-edge" d="M168 277 H196" marker-end="url(#hx-ah)"/>
+            <path class="dg-edge" d="M168 296 H184 V428 H196" marker-end="url(#hx-ah)"/>
+
+            <!-- ============ STRAND L ============ -->
+            <text class="dg-tag" x="216" y="74">Strand L &middot; local</text>
+            <rect class="dg-box" x="216" y="84" width="252" height="82" rx="10"/>
+            <rect class="dg-accent" x="216" y="84" width="3" height="82" rx="1.5"/>
+            <text class="dg-title" x="234" y="108">Exact sliding window</text>
+            <text class="dg-sub"   x="234" y="126">local_blocks &times; block_size</text>
+            <text class="dg-sub"   x="234" y="142">tokens, read exactly</text>
+            <text class="dg-tag"   x="234" y="158">A different span per head</text>
+
+            <path class="dg-edge" d="M468 125 H556" marker-end="url(#hx-ah)"/>
+
+            <rect class="dg-box" x="556" y="90" width="212" height="70" rx="10"/>
+            <text class="dg-tag"   x="574" y="110">Held at decode</text>
+            <text class="dg-title" x="574" y="130">Ring buffer</text>
+            <text class="dg-sub"   x="574" y="147">window-sized &middot; fixed</text>
+
+            <!-- ============ STRAND R ============ -->
+            <text class="dg-tag" x="216" y="222">Strand R &middot; recurrent</text>
+            <rect class="dg-box" x="216" y="232" width="252" height="82" rx="10"/>
+            <rect class="dg-accent" x="216" y="232" width="3" height="82" rx="1.5"/>
+            <text class="dg-title" x="234" y="256">Delta-rule state</text>
+            <text class="dg-sub"   x="234" y="274">the entire past, compressed</text>
+            <text class="dg-sub"   x="234" y="290">into a matrix-valued state</text>
+            <text class="dg-tag"   x="234" y="306">Unbounded reach, bounded size</text>
+
+            <path class="dg-edge" d="M468 273 H556" marker-end="url(#hx-ah)"/>
+
+            <rect class="dg-box" x="556" y="238" width="212" height="70" rx="10"/>
+            <text class="dg-tag"   x="574" y="258">Held at decode</text>
+            <text class="dg-title" x="574" y="278">One matrix / head</text>
+            <text class="dg-sub"   x="574" y="295">+ two conv states</text>
+
+            <!-- ============ STRAND I ============ -->
+            <text class="dg-tag" x="216" y="370">Strand I &middot; index</text>
+            <rect class="dg-box-a" x="216" y="380" width="252" height="124" rx="10"/>
+            <rect class="dg-accent" x="216" y="380" width="3" height="124" rx="1.5"/>
+            <text class="dg-title" x="234" y="404">Top-k block retrieval</text>
+            <text class="dg-sub"   x="234" y="422">index_topk blocks chosen</text>
+            <text class="dg-sub"   x="234" y="438">anywhere in the past, by a</text>
+            <text class="dg-sub"   x="234" y="454">beam descent over a landmark tree</text>
+            <text class="dg-tag"   x="234" y="472">Read exactly, not summarised</text>
+            <text class="dg-tag"   x="234" y="486">Routing is one block stale</text>
+
+            <path class="dg-edge-dash" d="M468 420 H556" marker-end="url(#hx-ahs)"/>
+            <path class="dg-edge-dash" d="M468 460 H556" marker-end="url(#hx-ahs)"/>
+
+            <rect class="dg-box" x="556" y="386" width="212" height="102" rx="10"/>
+            <text class="dg-tag"   x="574" y="406">Append-only storage</text>
+            <text class="dg-title" x="574" y="426">Key/value history</text>
+            <text class="dg-title" x="574" y="450">+ landmark tree</text>
+            <text class="dg-sub"   x="574" y="468">O(N), never rewritten</text>
+            <text class="dg-sub"   x="574" y="482">may live in cold memory</text>
+
+            <!-- braid -->
+            <path class="dg-edge" d="M768 125 H840 V262" marker-end="url(#hx-ah)"/>
+            <path class="dg-edge" d="M768 273 H840"      marker-end="url(#hx-ah)"/>
+            <path class="dg-edge" d="M768 437 H840 V292" marker-end="url(#hx-ah)"/>
+
+            <rect class="dg-box-a" x="856" y="236" width="132" height="82" rx="10"/>
+            <rect class="dg-accent" x="856" y="236" width="3" height="82" rx="1.5"/>
+            <text class="dg-tag"   x="874" y="258">Braid</text>
+            <text class="dg-title" x="874" y="280">Combine</text>
+            <text class="dg-sub"   x="874" y="297">into the residual</text>
+            <text class="dg-sub"   x="874" y="311">stream</text>
+
+            <path class="dg-edge" d="M988 277 H1044" marker-end="url(#hx-ah)"/>
+
+            <rect class="dg-box" x="1044" y="236" width="80" height="82" rx="10"/>
+            <text class="dg-title" x="1060" y="272">Next</text>
+            <text class="dg-title" x="1060" y="290">block</text>
+
+            <!-- per-step read note -->
+            <text class="dg-sub" x="216" y="530">A step reads O(index_topk &times; block_size + index_branching &times; log N) of that storage — bounded, whatever N is.</text>
+          </svg>
+        </div>
+
+        <div class="diagram-key">
+          <span><i aria-hidden="true"></i> Representation forward</span>
+          <span><i class="is-dashed" aria-hidden="true"></i> Read against stored memory</span>
+          <span>Capacity grows; bandwidth does not</span>
+        </div>
+
+        <figcaption>One HELIX block. The same residual stream feeds all three mixers, and their
+          outputs are braided back into it. The middle column is what each strand costs at training
+          time; the right column is the part that decides whether the thing is usable at inference —
+          what has to stay live per step.</figcaption>
+      </figure>
+
+      <div class="table-wrap mt-m" data-reveal>
+        <table>
+          <caption class="visually-hidden">The three HELIX strands: what each reads, its training cost, and its decode-time state</caption>
+          <thead>
+            <tr><th scope="col">Strand</th><th scope="col">Reads</th><th scope="col">Training cost</th><th scope="col">Held at decode</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">L &mdash; local</th>
+              <td>The last <code>local_blocks &times; block_size</code> tokens, exactly, with a different window per head</td>
+              <td>O(N &middot; span)</td>
+              <td>A window-sized ring buffer</td>
+            </tr>
+            <tr>
+              <th scope="row">R &mdash; recurrent</th>
+              <td>Everything, compressed into a matrix-valued delta-rule state</td>
+              <td>O(N &middot; d<sub>k</sub> &middot; d<sub>v</sub>)</td>
+              <td>One matrix plus two convolution states per head</td>
+            </tr>
+            <tr>
+              <th scope="row">I &mdash; index</th>
+              <td><code>index_topk</code> blocks chosen anywhere in the past, by a beam descent over a landmark tree</td>
+              <td>O(N &middot; topk &middot; block_size) + O(N log N) routing</td>
+              <td>The key/value history and a landmark tree, of which a step reads O(topk &middot; block_size + branching &middot; log N)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- The index -->
+  <section class="section-tight" id="index">
+    <div class="shell">
+      <h2>2. How the index works</h2>
+      <div class="prose">
+        <p>The past is cut into blocks of <code>block_size</code> tokens. Each <em>closed</em> block
+          gets a <strong>landmark</strong> — a learned pooled summary that mixes a plain mean with an
+          attention pool, because a mean alone erases the rare token a later query will be hunting
+          for. Landmarks are pooled again, <code>index_branching</code> at a time, into a tree, using
+          one weight-shared pooler at every internal level.</p>
+      </div>
+
+      <figure class="diagram mt-m" data-reveal>
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 1140 470" width="1140" height="470" role="img"
+               aria-labelledby="dg2-title dg2-desc">
+            <title id="dg2-title">HELIX landmark tree and beam descent</title>
+            <desc id="dg2-desc">Along the bottom, the past is cut into fixed-size token blocks. Each
+              closed block is pooled into a landmark above it, and landmarks are pooled again into
+              internal nodes and finally a root. A query block on the right descends the tree from
+              the root, keeping a fixed number of candidates per level, and ends by reading a small
+              number of whole blocks exactly. Blocks whose span has not closed before the query block
+              are ineligible and are drawn faded; they are never consulted.</desc>
+
+            <defs>
+              <marker id="hx2-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow"/>
+              </marker>
+              <marker id="hx2-ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow-soft"/>
+              </marker>
+            </defs>
+
+            <!-- level labels -->
+            <text class="dg-tag" x="16" y="66">Root</text>
+            <text class="dg-tag" x="16" y="166">Internal</text>
+            <text class="dg-tag" x="16" y="256">Landmarks</text>
+            <text class="dg-tag" x="16" y="356">Token blocks</text>
+
+            <!-- root -->
+            <rect class="dg-box-a" x="270" y="40" width="330" height="44" rx="9"/>
+            <rect class="dg-accent" x="270" y="40" width="3" height="44" rx="1.5"/>
+            <text class="dg-title" x="288" y="60">Root summary</text>
+            <text class="dg-sub"   x="288" y="76">pools every eligible child</text>
+
+            <!-- internal nodes -->
+            <rect class="dg-box" x="110" y="140" width="210" height="42" rx="9"/>
+            <text class="dg-title" x="126" y="160">Node A</text>
+            <text class="dg-sub"   x="126" y="175">blocks 0&ndash;1</text>
+
+            <rect class="dg-box-a" x="340" y="140" width="210" height="42" rx="9"/>
+            <rect class="dg-accent" x="340" y="140" width="3" height="42" rx="1.5"/>
+            <text class="dg-title" x="356" y="160">Node B</text>
+            <text class="dg-sub"   x="356" y="175">blocks 2&ndash;3 &middot; on the beam</text>
+
+            <rect class="dg-box" x="570" y="140" width="210" height="42" rx="9"/>
+            <text class="dg-title" x="586" y="160">Node C</text>
+            <text class="dg-sub"   x="586" y="175">blocks 4&ndash;5 &middot; frontier</text>
+
+            <!-- root to internal -->
+            <path class="dg-edge" d="M330 84 V120 H215 V136" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M435 84 V136"           marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M540 84 V120 H675 V136" marker-end="url(#hx2-ah)"/>
+
+            <!-- landmarks -->
+            <rect class="dg-box" x="110" y="230" width="100" height="38" rx="8"/>
+            <text class="dg-title" x="124" y="254">L0</text>
+            <rect class="dg-box" x="220" y="230" width="100" height="38" rx="8"/>
+            <text class="dg-title" x="234" y="254">L1</text>
+            <rect class="dg-box-a" x="340" y="230" width="100" height="38" rx="8"/>
+            <rect class="dg-accent" x="340" y="230" width="3" height="38" rx="1.5"/>
+            <text class="dg-title" x="356" y="254">L2</text>
+            <rect class="dg-box-a" x="450" y="230" width="100" height="38" rx="8"/>
+            <rect class="dg-accent" x="450" y="230" width="3" height="38" rx="1.5"/>
+            <text class="dg-title" x="466" y="254">L3</text>
+            <rect class="dg-box" x="570" y="230" width="100" height="38" rx="8"/>
+            <text class="dg-title" x="584" y="254">L4</text>
+            <rect class="dg-box" x="680" y="230" width="100" height="38" rx="8"/>
+            <text class="dg-title" x="694" y="254">L5</text>
+
+            <!-- internal to landmarks -->
+            <path class="dg-edge" d="M215 182 V208 H160 V226" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M215 182 V208 H270 V226" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M445 182 V208 H390 V226" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M445 182 V208 H500 V226" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M675 182 V208 H620 V226" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M675 182 V208 H730 V226" marker-end="url(#hx2-ah)"/>
+
+            <!-- token blocks -->
+            <rect class="dg-box" x="110" y="320" width="100" height="46" rx="8"/>
+            <text class="dg-title" x="124" y="342">Block 0</text>
+            <text class="dg-sub"   x="124" y="357">closed</text>
+            <rect class="dg-box" x="220" y="320" width="100" height="46" rx="8"/>
+            <text class="dg-title" x="234" y="342">Block 1</text>
+            <text class="dg-sub"   x="234" y="357">closed</text>
+            <rect class="dg-box-a" x="340" y="320" width="100" height="46" rx="8"/>
+            <rect class="dg-accent" x="340" y="320" width="3" height="46" rx="1.5"/>
+            <text class="dg-title" x="356" y="342">Block 2</text>
+            <text class="dg-tag"   x="356" y="357">retrieved</text>
+            <rect class="dg-box-a" x="450" y="320" width="100" height="46" rx="8"/>
+            <rect class="dg-accent" x="450" y="320" width="3" height="46" rx="1.5"/>
+            <text class="dg-title" x="466" y="342">Block 3</text>
+            <text class="dg-tag"   x="466" y="357">retrieved</text>
+            <rect class="dg-box" x="570" y="320" width="100" height="46" rx="8"/>
+            <text class="dg-title" x="584" y="342">Block 4</text>
+            <text class="dg-sub"   x="584" y="357">closed</text>
+            <rect class="dg-box" x="680" y="320" width="100" height="46" rx="8"/>
+            <text class="dg-title" x="694" y="342">Block 5</text>
+            <text class="dg-sub"   x="694" y="357">closed</text>
+
+            <!-- landmark from block -->
+            <path class="dg-edge" d="M160 320 V272" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M270 320 V272" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M390 320 V272" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M500 320 V272" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M620 320 V272" marker-end="url(#hx2-ah)"/>
+            <path class="dg-edge" d="M730 320 V272" marker-end="url(#hx2-ah)"/>
+
+            <!-- ineligible region -->
+            <rect class="dg-lane" x="796" y="310" width="120" height="66" rx="10"/>
+            <text class="dg-sub"  x="812" y="336">Block 6</text>
+            <text class="dg-tag"  x="812" y="352">span not closed</text>
+            <text class="dg-tag"  x="812" y="366">ineligible</text>
+
+            <!-- query block -->
+            <rect class="dg-box-a" x="944" y="300" width="180" height="86" rx="10"/>
+            <rect class="dg-accent" x="944" y="300" width="3" height="86" rx="1.5"/>
+            <text class="dg-tag"   x="962" y="322">Query</text>
+            <text class="dg-title" x="962" y="342">Block J</text>
+            <text class="dg-sub"   x="962" y="359">routed from the end</text>
+            <text class="dg-sub"   x="962" y="374">of block J &minus; 1</text>
+
+            <!-- descent -->
+            <path class="dg-edge-dash" d="M1034 300 V64 H612" marker-end="url(#hx2-ahs)"/>
+            <text class="dg-tag" x="640" y="52">Beam descent &middot; starts at the root</text>
+            <path class="dg-edge-dash" d="M520 84 V136" marker-end="url(#hx2-ahs)"/>
+            <path class="dg-edge-dash" d="M478 182 V226" marker-end="url(#hx2-ahs)"/>
+            <path class="dg-edge-dash" d="M478 268 V316" marker-end="url(#hx2-ahs)"/>
+            <text class="dg-tag" x="560" y="296">Two blocks retrieved, read in full</text>
+            <text class="dg-sub" x="110" y="424">Strand L covers block J itself and its immediate neighbours exactly, which is what makes one-block-stale routing safe.</text>
+            <text class="dg-sub" x="110" y="444">Frontiers at every level tile [0, J) exactly, so nothing reachable is cut off by a beam that descended elsewhere.</text>
+          </svg>
+        </div>
+
+        <div class="diagram-key">
+          <span><i aria-hidden="true"></i> Pooling &amp; tree structure</span>
+          <span><i class="is-dashed" aria-hidden="true"></i> Routing &amp; retrieval</span>
+          <span>Eligible spans only &mdash; causal by construction</span>
+        </div>
+
+        <figcaption>The landmark tree. Blocks are pooled into landmarks, landmarks into internal
+          nodes, and a query block descends from the root to a handful of blocks it then reads in
+          full. A node is only eligible if the entire span it summarises closed before the query
+          block, so a summary is never consulted by a query it partly describes.</figcaption>
+      </figure>
+
+      <div class="prose mt-m">
+        <p>A query block retrieves in four moves:</p>
+        <ol>
+          <li><strong>Start at the root</strong>, using routing taken from the end of the previous
+            block.</li>
+          <li><strong>Keep <code>index_beam_width</code> nodes per level</strong>, scoring the beam's
+            children plus that level's frontier.</li>
+          <li><strong>Descend to the landmarks</strong>, accumulating selection scores along the
+            path.</li>
+          <li><strong>Read <code>index_topk</code> whole blocks exactly</strong> — the tokens
+            themselves, not their summaries.</li>
+        </ol>
+        <p>Two rules keep it causal and parallel:</p>
+        <ol>
+          <li>A node is <strong>eligible</strong> for query block <em>J</em> only if the whole span
+            it summarises ends at or before <em>J</em>. A summary is never consulted by a query it
+            partly describes, so a landmark is computed once and reused by every query.</li>
+          <li>Routing for block <em>J</em> comes from the hidden state at the end of block
+            <em>J</em> &minus; 1 — strictly past for every token of block <em>J</em>, so one gather
+            serves <code>block_size</code> queries. Anything routing could not anticipate inside that
+            block is covered exactly by strand L.</li>
+        </ol>
+        <p>The descent keeps <code>index_beam_width</code> nodes per level. Candidates at each level
+          are the beam's children plus that level's <strong>frontier</strong> — eligible nodes whose
+          parent is not eligible. At most <code>branching &minus; 1</code> per level, and the
+          frontiers across all levels tile [0, <em>J</em>) exactly, so nothing reachable is cut off
+          by a beam that descended elsewhere. Selection scores are fed back as additive attention
+          logits, accumulated along the descent path, which is what lets gradient reach every level
+          of the tree rather than just the leaves.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Measurements -->
+  <section class="section-tight" id="measured">
+    <div class="shell">
+      <h2>3. What has been measured</h2>
+      <div class="prose">
+        <p>On small models, 4 CPU cores. Reproduce with <code>helix bench</code> and
+          <code>helix recall</code>.</p>
+      </div>
+
+      <h3 class="mt-m">Cost against context length</h3>
+      <div class="prose">
+        <p>Attention pairs are exact — the query/key products the forward pass actually forms,
+          counted by instrumenting the attention call, not estimated from the formula.</p>
+      </div>
+
+      <div class="table-wrap mt-s" data-reveal>
+        <table>
+          <caption class="visually-hidden">Attention pairs per token and wall-clock time for HELIX against full attention, by context length</caption>
+          <thead>
+            <tr>
+              <th scope="col">Tokens</th>
+              <th scope="col">HELIX pairs/token</th>
+              <th scope="col">Full attention pairs/token</th>
+              <th scope="col">HELIX</th>
+              <th scope="col">Full attention</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">4 096</th><td>8 192</td><td>32 776</td><td>0.4 s</td><td>0.2 s</td></tr>
+            <tr><th scope="row">8 192</th><td>8 192</td><td>65 544</td><td>0.9 s</td><td>0.6 s</td></tr>
+            <tr><th scope="row">16 384</th><td>8 192</td><td>131 080</td><td>1.7 s</td><td>1.9 s</td></tr>
+            <tr><th scope="row">32 768</th><td>8 192</td><td>262 152</td><td>4.3 s</td><td>6.7 s</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="prose mt-s">
+        <p>HELIX fits N<sup>1.00</sup> in attention pairs; full attention fits N<sup>2.00</sup>. By
+          32k tokens HELIX forms <strong>32&times; fewer pairs</strong> and runs
+          <strong>1.6&times; faster</strong> — as unfused reference PyTorch against a fused SDPA
+          kernel. At 4k tokens full attention is still the faster of the two; the crossover is
+          somewhere between 8k and 16k on this hardware.</p>
+      </div>
+
+      <h3 class="mt-m">Recall from far back</h3>
+      <div class="prose">
+        <p>Multi-query associative recall: bindings written near the start, queried roughly 200
+          tokens later, well outside the local window.</p>
+      </div>
+
+      <div class="table-wrap mt-s" data-reveal>
+        <table>
+          <caption class="visually-hidden">Multi-query associative recall accuracy with 95 percent confidence intervals</caption>
+          <thead>
+            <tr><th scope="col">Model</th><th scope="col">Recall</th><th scope="col">95% CI</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">HELIX (L+R+I)</th><td>30.8%</td><td>[28.5%, 33.1%]</td></tr>
+            <tr><th scope="row">HELIX no index (L+R)</th><td>6.0%</td><td>[4.8%, 7.2%]</td></tr>
+            <tr><th scope="row">Full attention</th><td>32.0%</td><td>[29.7%, 34.3%]</td></tr>
+            <tr><th scope="row">Chance</th><td>6.2%</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout mt-m" data-reveal>
+        <p><strong>Read the two gaps separately.</strong> HELIX against its own ablation is the
+          result: strip the index strand and the same model — same width, same depth — sits at
+          chance, because its window cannot see the bindings and its recurrent state cannot hold
+          them. That gap is about <strong>21 standard errors</strong>.</p>
+        <p>HELIX against full attention is a <strong>tie, not a win or a loss</strong>: 1.2 points
+          with a 1.7-point standard error, <em>z</em> = 0.72. Anyone reporting that as a victory over
+          attention would be reading noise.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Correctness -->
+  <section class="section-tight" id="correctness">
+    <div class="shell">
+      <h2>4. Correctness</h2>
+      <div class="prose">
+        <p><code>pytest</code> covers the properties you can check without training anything:</p>
+        <ul>
+          <li><strong>Strictly causal</strong> — editing token <em>t</em> leaves every earlier logit
+            bitwise unchanged.</li>
+          <li><strong>Decode == prefill</strong> — token-by-token generation from the fixed-size
+            state reproduces the one-shot forward, as does unaligned chunked prefill.</li>
+          <li><strong>Right padding is exactly invariant.</strong></li>
+          <li><strong>Constant work per token</strong> — each query reads the same number of keys at
+            any context length.</li>
+          <li><strong>The cache is what the architecture claims</strong> — fixed-size recurrent and
+            convolution states everywhere, a window-capped key/value cache on non-indexing
+            layers.</li>
+          <li><strong>Tiling is bitwise inert</strong> — <code>attention_tile_blocks</code> caps peak
+            activation memory and changes nothing about the result.</li>
+          <li><strong>Every parameter gets gradient</strong>, landmark poolers included.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- What this is not -->
+  <section class="section-tight" id="not">
+    <div class="shell">
+      <h2>5. What this is not</h2>
+
+      <div class="callout" data-reveal>
+        <p><strong>There are no trained checkpoints. Nobody has trained HELIX on real text.</strong>
+          Everything above is about complexity, causality and recall mechanics — properties provable
+          on an untrained model or measurable on a synthetic probe — not about perplexity or
+          language quality. The inductive-bias arguments (multi-scale windows, short convolutions,
+          surprise-gated writes) are untested hypotheses.</p>
+        <p>Treat this as an <strong>architecture proposal with a working, tested reference
+          implementation</strong>, not a better model. Finding out whether it is actually better
+          needs real training runs on real hardware.</p>
+      </div>
+
+      <h3 class="mt-m">Known design limits, stated plainly</h3>
+      <div class="prose">
+        <ul>
+          <li>One retrieval serves a whole query block, so <code>index_topk</code> must cover the
+            diversity a <code>block_size</code> span asks for.</li>
+          <li>Routing is <strong>one block stale</strong> — the index cannot react to the token
+            currently being generated.</li>
+          <li>Landmarks are pooled from keys that already carry their rotary phase, so routing is not
+            purely content-addressed.</li>
+          <li>Left padding shifts the block grid, so it is not bit-identical to an unpadded run.
+            Right padding is.</li>
+          <li>No fused kernel for the gathered attention yet; the scaling is right, the constant
+            factor is not.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Using it -->
+  <section class="section-tight" id="usage">
+    <div class="shell">
+      <h2>6. Using it</h2>
+      <div class="prose">
+        <p>Install from PyPI:</p>
+      </div>
+      <pre class="mt-s"><code>pip install helix-lm</code></pre>
+
+      <div class="prose mt-m">
+        <p>Build a model and run it:</p>
+      </div>
+      <pre class="mt-s"><code>import torch
+from helix_lm import HelixConfig, HelixForCausalLM
+
+model = HelixForCausalLM(HelixConfig(vocab_size=32000, hidden_size=1024, num_hidden_layers=12))
+logits = model(torch.randint(0, 32000, (1, 8192))).logits
+text = model.generate(torch.randint(0, 32000, (1, 64)), max_new_tokens=32, temperature=0.8)</code></pre>
+
+      <div class="prose mt-m">
+        <p>The package ships a command-line tool, which is the fastest way to see the claims hold up
+          on your own machine rather than taking them on trust:</p>
+      </div>
+      <pre class="mt-s"><code>helix info      # what it is and what it costs
+helix demo      # build a model, generate, verify the decode state
+helix bench     # cost against context length
+helix recall    # train with and without the index strand, and compare</code></pre>
+
+      <h3 class="mt-m">Configuration</h3>
+      <div class="prose">
+        <p>Every knob is on <code>HelixConfig</code>, documented in its docstring. The ones that
+          matter most:</p>
+      </div>
+      <pre class="mt-s"><code>HelixConfig(
+    block_size=64,          # memory-block granularity
+    local_blocks=4,         # strand L sees 4 previous blocks plus its own
+    num_window_scales=4,    # head groups get geometrically different windows
+    index_topk=8,           # blocks strand I retrieves per query block
+    index_layer_stride=3,   # ...on every third layer; the rest keep an O(1) KV cache
+    index_branching=8,      # landmark tree fan-out
+    attention_tile_blocks=64,  # caps peak activation memory; no effect on the result
+)</code></pre>
+
+      <div class="prose mt-m">
+        <p><strong>Licence.</strong> Apache-2.0. Portions of the delta-rule and rotary helpers derive
+          from HuggingFace Transformers (Apache-2.0); see <code>NOTICE</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-tight" id="faq">
+    <div class="shell">
+      <h2>7. Questions</h2>
+      <div class="faq mt-m">
+        <details>
+          <summary>What is HELIX, in one paragraph?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Hierarchical Episodic Linear IndeX — a sequence architecture that
+            scales linearly in context length while keeping the exact long-range recall that
+            attention is good at. Every block braids three mixers over the same residual stream: a
+            local strand reading a fixed window exactly, a recurrent strand compressing the whole
+            past into a matrix-valued delta-rule state, and an index strand retrieving a handful of
+            memory blocks from anywhere in the past. Published as <code>helix-lm</code> under
+            Apache-2.0.</p></div>
+        </details>
+        <details>
+          <summary>Why can&rsquo;t a linear-time model just compress the past?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>A counting argument stops it. A fixed state of <em>S</em> bits
+            cannot tell apart more than 2<sup><em>S</em></sup> different histories, so a model that
+            squeezes everything into a fixed-size state eventually cannot quote back a name it saw
+            once. That is not an engineering gap that a better compressor closes. HELIX separates
+            capacity from bandwidth instead: storage grows linearly and stays append-only, while what
+            any single token touches stays bounded.</p></div>
+        </details>
+        <details>
+          <summary>What exactly is O(1), and what isn&rsquo;t?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>The <em>hot</em> state is O(1): a window-sized ring buffer, one
+            delta-rule matrix and two convolution states per head, all fixed-size whatever the
+            context length. The key/value history and landmark tree are O(N) — but append-only,
+            never rewritten, and able to live in cold memory. A step reads only
+            O(<code>index_topk</code> &times; <code>block_size</code> + <code>branching</code> &times;
+            log N) of it. Total memory is explicitly <em>not</em> O(1), which would be impossible for
+            anything that can quote an exact name from a million tokens back.</p></div>
+        </details>
+        <details>
+          <summary>How does the index stay causal if summaries are shared?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>A node is eligible for query block <em>J</em> only if the entire
+            span it summarises ends at or before <em>J</em> — so a summary is never consulted by a
+            query it partly describes, which is also what lets a landmark be computed once and reused
+            by every later query. Routing for block <em>J</em> comes from the hidden state at the end
+            of block <em>J</em>&nbsp;&minus;&nbsp;1, strictly past for every token in the block, so a
+            single gather serves all <code>block_size</code> queries. Whatever routing could not
+            anticipate inside that block is covered exactly by the local strand.</p></div>
+        </details>
+        <details>
+          <summary>Has it been trained on real text?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>No. There are no trained checkpoints and no language-quality
+            numbers of any kind. The published results cover complexity, causality and recall
+            mechanics only. Whether HELIX is actually <em>better</em> than the alternatives is an
+            open question that needs real training runs on real hardware to answer.</p></div>
+        </details>
+        <details>
+          <summary>Is it faster than attention?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>At long context, on the measurements published: 32&times; fewer
+            attention pairs and 1.6&times; faster wall-clock at 32k tokens, with HELIX running
+            unfused reference PyTorch against a fused SDPA kernel. At 4k tokens attention is still
+            faster. The scaling is the claim; the constant factor is not, and a fused kernel for the
+            gathered attention does not exist yet.</p></div>
+        </details>
+        <details>
+          <summary>Does the index strand actually earn its place?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>That is the one thing the recall experiment does establish. With
+            the index: 30.8%. Same model with the index strand stripped out: 6.0%, against a chance
+            floor of 6.2% — indistinguishable from guessing. The gap is roughly 21 standard errors.
+            Against full attention at 32.0% it is a tie, not a win.</p></div>
+        </details>
+        <details>
+          <summary>Where does it fall short?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>One retrieval serves a whole query block, so
+            <code>index_topk</code> has to cover everything a <code>block_size</code> span might ask
+            for. Routing is one block stale, so the index cannot react to the token being generated
+            right now. Landmarks are pooled from keys that already carry their rotary phase, so
+            routing is not purely content-addressed. Left padding shifts the block grid and so is not
+            bit-identical to an unpadded run. And there is no fused kernel yet.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">Try it yourself</p>
+        <h2 class="mt-s">The claims are reproducible in one command.</h2>
+        <p><code>helix bench</code> counts the attention pairs the forward pass actually forms, and
+          <code>helix recall</code> trains the ablation alongside the full model. Neither takes
+          special hardware — the published numbers came off 4 CPU cores.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="https://pypi.org/project/helix-lm/" rel="noopener" target="_blank">
+            View on PyPI
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="/models/">Back to all models</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/benchmarks/">Benchmarks</a></li>
+          <li><a href="/benchmarks/compare/">Compare models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/models/helix/">HELIX</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

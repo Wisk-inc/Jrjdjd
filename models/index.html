@@ -113,6 +113,24 @@
           "@type": "ListItem",
           "position": 3,
           "item": {
+            "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+            "@id": "https://corx-labs.com/models/helix/#architecture",
+            "name": "HELIX",
+            "url": "https://corx-labs.com/models/helix/",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "Sequence architecture",
+            "operatingSystem": "OS Independent",
+            "description": "A linear-scaling sequence architecture that keeps exact long-range recall by braiding a local window, a delta-rule recurrent state and a landmark-tree index over one residual stream. Published as the helix-lm package; no trained checkpoints.",
+            "license": "https://www.apache.org/licenses/LICENSE-2.0",
+            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "publisher": { "@id": "https://corx-labs.com/#organization" },
+            "isAccessibleForFree": true
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/corx1-5/#model",
             "name": "CorX1.5",
@@ -278,6 +296,44 @@
         <div class="model-head">
           <div>
             <div class="tag-row" style="margin-bottom:14px">
+              <span class="tag">Architecture proposal</span>
+              <span class="tag">Linear scaling</span>
+              <span class="tag">Long context</span>
+              <span class="tag">No trained checkpoints</span>
+            </div>
+            <h3>HELIX</h3>
+            <p class="lede" style="margin-top:12px">Hierarchical Episodic Linear IndeX — a sequence
+              architecture that drops attention&rsquo;s quadratic bill without giving up exact
+              long-range recall. Three strands per block: an exact local window, a recurrent state,
+              and an index that can reach any block in the past through a landmark tree.</p>
+          </div>
+        </div>
+
+        <dl class="spec-list">
+          <div><dt>Package</dt><dd><code>helix-lm</code> 0.1.0</dd></div>
+          <div><dt>Strands per block</dt><dd>3</dd></div>
+          <div><dt>Attention pairs</dt><dd>N<sup>1.00</sup> measured</dd></div>
+          <div><dt>Hot decode state</dt><dd>O(1)</dd></div>
+          <div><dt>Probes per step</dt><dd>O(log N)</dd></div>
+          <div><dt>Status</dt><dd>Untrained reference implementation</dd></div>
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/helix/">
+            View architecture details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://pypi.org/project/helix-lm/" rel="noopener" target="_blank">
+            View on PyPI
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card model-card mt-m" data-reveal>
+        <div class="model-head">
+          <div>
+            <div class="tag-row" style="margin-bottom:14px">
               <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
               <span class="tag">Text generation</span>
               <span class="tag">158M params</span>
@@ -358,6 +414,7 @@
           <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/models/helix/">HELIX</a></li>
           <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
         </ul>
       </nav>
