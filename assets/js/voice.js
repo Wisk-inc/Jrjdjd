@@ -326,13 +326,22 @@ async function connect(quiet) {
     // A CPU fallback connects and then takes minutes per clip. Saying "cuda"
     // vs "cpu" in the status pill is too quiet for something that decides
     // whether this is usable at all.
+    // The server reports the address it is actually reachable on. A quick
+    // tunnel rotates, and when it does the address in this box still resolves
+    // for a while — so a connection that "works" can be pointed at a dead one.
+    const live = (info.tunnel || '').replace(/\/+$/, '');
+    const moved = live && live !== url
+      ? ' Its address has changed to ' + live + ' — the one here will stop working. '
+        + 'Paste the new one from the cell output.'
+      : '';
     const onCpu = (info.device || '').toLowerCase() === 'cpu'
       ? ' It is running on CPU, not a GPU — synthesis will be far too slow to be'
         + ' usable. Check the runtime actually has a GPU attached.'
       : '';
     setMsg('Connected to ' + (info.model || 'TriStream') + ' on '
-      + (info.device || '?') + ', ' + path + '.' + (stale ? ' ' + stale : '') + onCpu,
-      (stale || onCpu) ? 'warn' : 'ok');
+      + (info.device || '?') + ', ' + path + '.' + (stale ? ' ' + stale : '')
+      + onCpu + moved,
+      (stale || onCpu || moved) ? 'warn' : 'ok');
     return true;
   } catch (err) {
     connected = false;
