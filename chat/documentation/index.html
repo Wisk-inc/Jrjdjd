@@ -2853,7 +2853,7 @@ else:
       </ol>
 
       <p style="margin-bottom:14px;font-size:.9rem">Press <strong>Copy</strong> for the whole
-        script &mdash; all 1698 lines, not just what is on screen. If you would rather not paste it
+        script &mdash; all 1826 lines, not just what is on screen. If you would rather not paste it
         by hand, the same file is at
         <code>curl -O https://corx-labs.com/chat/tristream-server.py</code>.</p>
       <div class="code-wrap">
@@ -2930,6 +2930,11 @@ PORT         = 811
 SAMPLE_RATE  = 24000          # TriStream decodes mel at 24 kHz
 STEPS        = 32             # rectified-flow sampling steps; the card says ~32
 NO_AUTH      = True           # matches the other CorX server scripts
+
+# Keep the cell running after launch, printing a heartbeat and — the part that
+# matters — the new tunnel address whenever cloudflared rotates it. Set to False
+# to have the cell finish immediately as it used to.
+KEEP_ALIVE   = True
 WORKDIR      = os.path.abspath("./tristream-run")
 
 os.makedirs(WORKDIR, exist_ok=True)
@@ -3217,6 +3222,8 @@ STATE = {
     "model": None,
     "device": DEVICE,
     "tunnel": None,
+    "tunnel_since": None,
+    "tunnel_restarts": 0,
     "started": time.time(),
 }
 
@@ -4176,6 +4183,10 @@ def health():
         # A server that quietly died and came back looks identical to one that
         # never moved, right up until you notice the work in flight was lost.
         "restarts": supervisor_restarts(),
+        # If the tunnel has rotated, the address the caller used to reach this
+        # is not the address that works now — and they cannot see that from here.
+        "tunnel": STATE["tunnel"],
+        "tunnel_restarts": STATE["tunnel_restarts"],
         "binding": STATE["binding"][1] if STATE["binding"] else None,
         "mode": STATE["binding"][0] if STATE["binding"] else None,
         "detail": STATE["detail"] or ("Still loading — downloading weights and "
@@ -4290,21 +4301,64 @@ async def generate(voice: UploadFile = File(...),
 # Cloudflare quick tunnel
 # ---------------------------------------------------------------------------
 def start_tunnel():
-    proc = subprocess.Popen(
-        ["cloudflared", "tunnel", "--url", "http://127.0.0.1:%d" % PORT, "--no-autoupdate"],
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+    """Keep a quick tunnel up, and announce the address every time it changes.
+
+    A quick tunnel is free and unguaranteed — cloudflared exits on its own often
+    enough that treating it as permanent is wrong. The previous version read
+    lines until it saw a URL, then drained the pipe until cloudflared exited, at
+    which point the thread simply ended. The server carried on serving perfectly
+    on localhost while its public address answered nothing, which from the
+    outside is indistinguishable from the server having stopped — and a
+    supervisor watching the server process sees nothing wrong, because nothing
+    is wrong with the server.
+    """
     pat = re.compile(r"https://[a-z0-9-]+\.trycloudflare\.com")
-    for line in proc.stdout:
-        m = pat.search(line)
-        if m:
-            STATE["tunnel"] = m.group(0)
-            open(URL_PATH, "w").write(m.group(0))
-            log("\n" + "=" * 72)
-            log("TUNNEL URL: " + m.group(0))
-            log("=" * 72 + "\n")
-            break
-    for _ in proc.stdout:
-        pass
+    attempt = 0
+    while True:
+        attempt += 1
+        began = time.time()
+        try:
+            proc = subprocess.Popen(
+                ["cloudflared", "tunnel", "--url", "http://127.0.0.1:%d" % PORT,
+                 "--no-autoupdate"],
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        except Exception as e:
+            log("!! could not start cloudflared: %s" % str(e)[:160])
+            time.sleep(15)
+            continue
+
+        seen = None
+        for line in proc.stdout:
+            m = pat.search(line)
+            if m and m.group(0) != seen:
+                seen = m.group(0)
+                STATE["tunnel"] = seen
+                STATE["tunnel_since"] = time.time()
+                try:
+                    with open(URL_PATH, "w") as f:
+                        f.write(seen)
+                except Exception:
+                    pass
+                log("")
+                log("=" * 72)
+                log(("TUNNEL URL: " if attempt == 1 else "NEW TUNNEL URL: ") + seen)
+                if attempt &gt; 1:
+                    log("The previous address is dead. Paste this one into the Voice panel.")
+                log("=" * 72)
+                log("")
+
+        code = proc.wait()
+        lived = time.time() - began
+        STATE["tunnel"] = None
+        STATE["tunnel_restarts"] += 1
+        log("!! the cloudflare tunnel exited (%s) after %.0fs — restarting it. "
+            "The server itself is fine; only the public address was lost."
+            % ("code %d" % code if code &gt;= 0 else "signal %d" % -code, lived))
+        # A tunnel that lasted a while is not a failing tunnel, so do not let a
+        # long-lived one inherit the backoff of an early crash.
+        if lived &gt; 120:
+            attempt = 1
+        time.sleep(min(30, 2 ** min(attempt, 4)))
 
 
 threading.Thread(target=start_tunnel, daemon=True).start()
@@ -4555,7 +4609,81 @@ else:
     print("  No tunnel URL after 180s. Log tail:")
     print("".join(open(LOG_PATH).readlines()[-40:]))
 print("=" * 72)
-print("\nFollow the log with:  !tail -f " + LOG_PATH)</code></pre>
+print("\nFollow the log with:  !tail -f " + LOG_PATH)
+
+
+# -----------------------------------------------------------------------------
+# 4. Stay with it
+#
+# The cell used to print the URL and finish. That looks like the server stopped
+# — and worse, a quick tunnel rotates its address, so when it does there is no
+# longer anything running that could tell you the new one. Staying here prints
+# the new address the moment it changes, shows a heartbeat so "still up" is
+# visible rather than assumed, and keeps the notebook busy so the runtime is
+# less likely to be reclaimed out from under it.
+#
+# Stopping this cell does not stop the server: it is detached on purpose and
+# keeps serving. Re-running the cell adopts it.
+# -----------------------------------------------------------------------------
+if KEEP_ALIVE and url:
+    import urllib.request as _u
+
+    def _health():
+        try:
+            with _u.urlopen("http://127.0.0.1:%d/health" % PORT, timeout=4) as r:
+                return json.loads(r.read())
+        except Exception:
+            return None
+
+    print("\nWatching. The server keeps running if you stop this cell.\n")
+    current, last_beat, quiet = url, 0.0, 0
+    try:
+        while True:
+            time.sleep(2)
+
+            if os.path.exists(URL_PATH):
+                try:
+                    fresh = open(URL_PATH).read().strip()
+                except Exception:
+                    fresh = ""
+                if fresh and fresh != current:
+                    current = fresh
+                    print("\n" + "=" * 72)
+                    print("  THE TUNNEL ADDRESS CHANGED. The old one is dead.")
+                    print()
+                    print("  URL:  " + current)
+                    print()
+                    print("  Paste this into the Voice panel and press Connect.")
+                    print("=" * 72 + "\n")
+
+            if time.time() - last_beat &lt; 30:
+                continue
+            last_beat = time.time()
+
+            h = _health()
+            if h is None:
+                quiet += 1
+                print("[%s] no answer from the server (%d in a row) — check the log"
+                      % (time.strftime("%H:%M:%S"), quiet))
+                if _proc.poll() is not None:
+                    print("The supervisor has exited. Last 20 log lines:\n")
+                    print("".join(open(LOG_PATH).readlines()[-20:]))
+                    break
+                continue
+
+            quiet = 0
+            state = ("ready" if h.get("ok") else
+                     "loading" if h.get("loading") else "not ready")
+            extra = ""
+            if h.get("restarts"):
+                extra += " · %d server restart(s)" % h["restarts"]
+            if h.get("tunnel_restarts"):
+                extra += " · %d tunnel restart(s)" % h["tunnel_restarts"]
+            print("[%s] %s · up %.0fs%s" % (time.strftime("%H:%M:%S"), state,
+                                            h.get("uptime", 0), extra))
+    except KeyboardInterrupt:
+        print("\nStopped watching. The server is still running at " + current)
+        print("Re-run this cell to watch it again, or check " + LOG_PATH)</code></pre>
       </div>
     </div>
   </section>
