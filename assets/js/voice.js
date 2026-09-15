@@ -27,12 +27,12 @@ const MAX_BYTES = 40 * 1024 * 1024;
    older copy of the script looks identical to one running the current copy
    until it behaves differently, and working that out from symptoms costs a
    round trip every time. /health reports its build, so say so directly. */
-const SERVER_BUILD = 7;
+const SERVER_BUILD = 8;
 
 function staleBuild(info) {
   const got = Number(info && info.build) || 0;
   return got < SERVER_BUILD
-    ? 'That server is running build ' + (got || 'older than 7') + ' of the script; this page '
+    ? 'That server is running build ' + (got || 'older than 8') + ' of the script; this page '
       + 'expects build ' + SERVER_BUILD + '. Press “Copy server code” above and re-run it — '
       + 'fixes since then will not be in the copy you have.'
     : '';

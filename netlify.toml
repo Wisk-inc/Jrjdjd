@@ -41,6 +41,12 @@
     Cache-Control = "no-cache"
 
 [[headers]]
+  for = "/chat/tristream-model.py"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "no-cache"
+
+[[headers]]
   for = "/assets/css/*"
   [headers.values]
     Cache-Control = "no-cache"
