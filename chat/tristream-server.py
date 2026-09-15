@@ -78,6 +78,8 @@ CFG_PATH    = os.path.join(WORKDIR, "config.json")
 LOG_PATH    = os.path.join(WORKDIR, "server.log")
 URL_PATH    = os.path.join(WORKDIR, "tunnel-url.txt")
 PID_PATH    = os.path.join(WORKDIR, "server.pid")
+SUPERVISOR_PATH = os.path.join(WORKDIR, "supervisor.py")
+STATUS_PATH = os.path.join(WORKDIR, "supervisor.json")
 
 
 def sh(cmd, **kw):
@@ -188,7 +190,8 @@ def is_our_runner(pid):
     """
     try:
         with open("/proc/%d/cmdline" % pid, "rb") as fh:
-            return b"runner.py" in fh.read()
+            cmd = fh.read()
+            return b"runner.py" in cmd or b"supervisor.py" in cmd
     except Exception:
         return False      # no /proc, or it is already gone — do not signal
 
@@ -299,7 +302,7 @@ json.dump({
 # between "it stopped running overnight" and a server that stays up.
 # -----------------------------------------------------------------------------
 RUNNER_SRC = r'''
-import io, json, os, re, subprocess, sys, threading, time, traceback
+import gc, io, json, os, re, subprocess, sys, threading, time, traceback
 
 CFG = json.load(open(sys.argv[1]))
 BUILD       = CFG.get("build", 0)
@@ -354,10 +357,20 @@ STATE = {
     "model": None,
     "device": DEVICE,
     "tunnel": None,
+    "started": time.time(),
 }
 
 def log(*a):
     print(*a, flush=True)
+
+
+def supervisor_restarts():
+    """How many times the supervisor has had to bring this server back."""
+    try:
+        with open(os.path.join(WORKDIR, "supervisor.json")) as f:
+            return int(json.load(f).get("restarts", 0))
+    except Exception:
+        return 0
 
 
 # ---------------------------------------------------------------------------
@@ -781,7 +794,28 @@ def describe_arch(sd, cfg, blob, rel):
 
 def bind_model():
     from huggingface_hub import snapshot_download
-    local = snapshot_download(repo_id=REPO_ID, local_dir=os.path.join(WORKDIR, "model"))
+    local_dir = os.path.join(WORKDIR, "model")
+
+    # Fetch one checkpoint, not every checkpoint. This repo ships best and last,
+    # 322M parameters each; pulling both doubles the download, doubles the disk,
+    # and buys nothing, since "last" is the same run at an earlier validation
+    # score. If the listing cannot be read, fall back to taking everything.
+    allow = None
+    try:
+        from huggingface_hub import list_repo_files
+        names = list_repo_files(REPO_ID)
+        weights = [f for f in names if f.lower().endswith(CKPT_EXT)]
+        if len(weights) > 1:
+            weights.sort(key=lambda f: next((i for i, k in enumerate(CKPT_RANK)
+                                             if k in os.path.basename(f).lower()),
+                                            len(CKPT_RANK)))
+            skip = set(weights[1:])
+            allow = [f for f in names if f not in skip]
+            log("fetching %s and skipping %s" % (weights[0], ", ".join(sorted(skip))))
+    except Exception as e:
+        log("could not list the repo first (%s); fetching everything" % str(e)[:80])
+
+    local = snapshot_download(repo_id=REPO_ID, local_dir=local_dir, allow_patterns=allow)
 
     files = walk_repo(local)
     STATE["files"] = files
@@ -899,8 +933,16 @@ def bind_model():
     ckpts.sort(key=lambda f: next((i for i, k in enumerate(CKPT_RANK)
                                    if k in os.path.basename(f).lower()), len(CKPT_RANK)))
     if obj is None and ckpts:
+        blob = None
         for rel in ckpts:
             path = os.path.join(local, rel)
+            # Release the previous one first. Python evaluates the right-hand
+            # side before rebinding, so a plain reassignment holds two 322M
+            # parameter checkpoints in memory at once — enough to get the
+            # process OOM-killed on a modest runtime, which looks from outside
+            # exactly like the server stopping for no reason.
+            blob = None
+            gc.collect()
             try:
                 blob = load_checkpoint(path)
             except ModuleNotFoundError as e:
@@ -955,7 +997,9 @@ def bind_model():
                 STATE["tried"].append(
                     "%s: %d weight tensors, but this repo ships no architecture "
                     "code to load them into — see /architecture" % (rel, len(sd)))
-                continue
+                blob, sd = None, None
+                gc.collect()
+                break      # a second checkpoint teaches nothing and costs memory
             for _, name, cls in classes[:6]:
                 made, how = construct(cls, cfg)
                 if made is None:
@@ -1268,6 +1312,10 @@ def health():
         "gpu": GPU_NAME,
         "sample_rate": SAMPLE_RATE,
         "loading": bool(STATE["loading"]),
+        "uptime": round(time.time() - STATE["started"], 1),
+        # A server that quietly died and came back looks identical to one that
+        # never moved, right up until you notice the work in flight was lost.
+        "restarts": supervisor_restarts(),
         "binding": STATE["binding"][1] if STATE["binding"] else None,
         "mode": STATE["binding"][0] if STATE["binding"] else None,
         "detail": STATE["detail"] or ("Still loading — downloading weights and "
@@ -1441,10 +1489,158 @@ uvicorn.run(app, host="0.0.0.0", port=PORT, log_level="info")
 with open(RUNNER_PATH, "w") as f:
     f.write(RUNNER_SRC)
 
+
+# -----------------------------------------------------------------------------
+# 2b. Supervisor
+#
+# A detached server that dies stays dead, and from the outside that is
+# indistinguishable from never having started: the tunnel URL keeps resolving
+# for a while, requests just stop being answered. The common killers in a
+# notebook are an OOM kill (exit -9) and the runtime reclaiming background
+# processes, neither of which the server can prevent or even report on its own
+# way out.
+#
+# So the thing that gets launched is this supervisor, and it launches the
+# server. It restarts on an unexpected exit, backs off if the exit is
+# immediate, records the exit code and the tail of the log, and stops trying
+# only on a clean stop signal or after repeated instant failures — because a
+# server that cannot survive two seconds will not survive the twentieth
+# attempt either, and a restart loop hides the real error.
+# -----------------------------------------------------------------------------
+SUPERVISOR_SRC = r"""
+import json, os, signal, subprocess, sys, time
+
+CFG_PATH = sys.argv[1]
+CFG      = json.load(open(CFG_PATH))
+WORKDIR  = CFG["workdir"]
+RUNNER   = os.path.join(WORKDIR, "runner.py")
+LOG      = os.path.join(WORKDIR, "server.log")
+STATUS   = os.path.join(WORKDIR, "supervisor.json")
+
+MAX_INSTANT_FAILURES = 5     # consecutive exits inside MIN_HEALTHY_SECONDS
+MIN_HEALTHY_SECONDS  = 30.0  # ran at least this long => the attempt counted
+
+state = {"state": "starting", "restarts": 0, "started": time.time(),
+         "last_exit": None, "detail": "", "pid": os.getpid()}
+child = None
+
+
+def save():
+    tmp = STATUS + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(state, f)
+    os.replace(tmp, STATUS)
+
+
+def describe(code):
+    if code is None:
+        return "still running"
+    if code < 0:
+        name = {9: "SIGKILL — almost certainly out of memory",
+                15: "SIGTERM — asked to stop",
+                1: "SIGHUP — the session went away",
+                2: "SIGINT — interrupted"}.get(-code, "signal %d" % -code)
+        return name
+    return "exit code %d" % code
+
+
+def tail(n=25):
+    try:
+        with open(LOG) as f:
+            return "".join(f.readlines()[-n:])
+    except Exception:
+        return ""
+
+
+def stop(signum, frame):
+    state["state"] = "stopped"
+    state["detail"] = "supervisor asked to stop"
+    save()
+    # Signal the child, but do NOT wait for it here. The main thread is already
+    # inside child.wait(), and Popen.wait() is not re-entrant — it takes a lock
+    # it is already holding, so waiting from the handler deadlocks the
+    # supervisor and nothing ever stops. A stop that hangs is worse than no
+    # stop at all, because the port stays held.
+    if child is not None:
+        for sig in (signal.SIGTERM, signal.SIGKILL):
+            try:
+                if child.poll() is None:
+                    child.send_signal(sig)
+            except Exception:
+                break
+    # os._exit rather than sys.exit: SystemExit would unwind through the same
+    # wait() and interpreter shutdown can block on it for the same reason.
+    os._exit(0)
+
+
+signal.signal(signal.SIGTERM, stop)
+signal.signal(signal.SIGINT, stop)
+
+instant = 0
+save()
+
+while True:
+    began = time.time()
+    with open(LOG, "a") as log:
+        log.write("\n--- supervisor: starting the server (attempt %d) ---\n"
+                  % (state["restarts"] + 1))
+        log.flush()
+        child = subprocess.Popen([sys.executable, "-u", RUNNER, CFG_PATH],
+                                 stdout=log, stderr=subprocess.STDOUT,
+                                 stdin=subprocess.DEVNULL, cwd=WORKDIR)
+        state["state"] = "running"
+        state["child_pid"] = child.pid
+        save()
+        code = child.wait()
+
+    ran = time.time() - began
+    reason = describe(code)
+    state["last_exit"] = {"code": code, "reason": reason,
+                          "ran_seconds": round(ran, 1), "at": time.time()}
+
+    if code == -signal.SIGTERM or code == 0:
+        # A deliberate stop, or the server choosing to exit. Not ours to undo.
+        state["state"] = "stopped"
+        state["detail"] = "server exited cleanly (%s)" % reason
+        save()
+        with open(LOG, "a") as log:
+            log.write("--- supervisor: %s after %.0fs; not restarting ---\n" % (reason, ran))
+        break
+
+    instant = instant + 1 if ran < MIN_HEALTHY_SECONDS else 0
+    state["restarts"] += 1
+    state["detail"] = "%s after %.0fs" % (reason, ran)
+
+    if instant >= MAX_INSTANT_FAILURES:
+        state["state"] = "giving up"
+        state["detail"] = ("%s, and it has failed %d times in a row within %ds. "
+                           "Restarting again would just hide the error — the log "
+                           "tail is above." % (reason, instant, int(MIN_HEALTHY_SECONDS)))
+        save()
+        with open(LOG, "a") as log:
+            log.write("--- supervisor: giving up after %d immediate failures ---\n%s\n"
+                      % (instant, tail()))
+        break
+
+    delay = min(60, 2 ** min(instant, 5))
+    state["state"] = "restarting"
+    save()
+    with open(LOG, "a") as log:
+        log.write("--- supervisor: %s after %.0fs; restarting in %ds "
+                  "(restart %d) ---\n" % (reason, ran, delay, state["restarts"]))
+        if code == -9:
+            log.write("--- that exit code is the kernel OOM killer. The runtime ran "
+                      "out of RAM; a smaller model or a bigger machine is the fix. ---\n")
+    time.sleep(delay)
+"""
+
+with open(SUPERVISOR_PATH, "w") as f:
+    f.write(SUPERVISOR_SRC)
+
 # -----------------------------------------------------------------------------
 # 3. Launch, detached
 # -----------------------------------------------------------------------------
-print("\nStarting the server in its own session (it outlives this cell)…")
+print("\nStarting the supervisor in its own session (it outlives this cell,\n      and restarts the server if it dies)…")
 if os.path.exists(URL_PATH):
     os.remove(URL_PATH)
 
@@ -1455,8 +1651,10 @@ _log = open(LOG_PATH, "w")
 _log.write("TriStream-SVS build %d — started %s — port %d\n"
            % (BUILD, time.strftime("%Y-%m-%d %H:%M:%S"), PORT))
 _log.flush()
+if os.path.exists(STATUS_PATH):
+    os.remove(STATUS_PATH)
 _proc = subprocess.Popen(
-    [sys.executable, "-u", RUNNER_PATH, CFG_PATH],
+    [sys.executable, "-u", SUPERVISOR_PATH, CFG_PATH],
     stdout=_log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
     start_new_session=True, cwd=WORKDIR)
 open(PID_PATH, "w").write(str(_proc.pid))
@@ -1470,8 +1668,13 @@ for i in range(180):
         if url:
             break
     if _proc.poll() is not None:
-        print("\n!! The server exited. Last 40 log lines:\n")
+        print("\n!! The supervisor exited. Last 40 log lines:\n")
         print("".join(open(LOG_PATH).readlines()[-40:]))
+        try:
+            st = json.load(open(STATUS_PATH))
+            print("\nsupervisor status: %s — %s" % (st.get("state"), st.get("detail")))
+        except Exception:
+            pass
         raise SystemExit(1)
     time.sleep(1)
 
