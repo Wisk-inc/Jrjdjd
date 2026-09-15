@@ -1,8 +1,8 @@
 # =============================================================================
-# TriStream-SVS server — build 8
+# TriStream-SVS server — build 9
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 8", the copy running is an older one — re-copy from
+# not say "build 9", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -53,7 +53,7 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 8
+BUILD        = 9
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 
@@ -674,6 +674,8 @@ def candidate_classes(mods):
                 continue
             if obj.__module__ != mod.__name__:      # imported from torch, not defined here
                 continue
+            if attr.startswith("_"):
+                continue                      # a helper, by convention
             score = sum(2 for h in CLASS_HINTS if h in attr.lower())
             found.append((score, attr, obj))
     found.sort(key=lambda t: -t[0])
@@ -990,6 +992,11 @@ def bind_model():
             STATE["ckpt_keys"] = list(sd)[:12]
             log("%s: %d weight tensors under '%s'" % (rel, len(sd), where))
 
+            # Record the tree first. Whether or not something below manages to
+            # load it, this is the description needed to fix a mismatch.
+            if STATE["arch"] is None:
+                describe_arch(sd, cfg, blob, rel)
+
             # A definition that builds itself from the checkpoint cannot
             # mismatch it: every layer is created at the shape the weights
             # actually have. Preferred over constructing a class blind.
@@ -1030,10 +1037,6 @@ def bind_model():
                 # and every shape — so write down the blueprint rather than only
                 # the complaint. Nothing can be reconstructed from a sentence
                 # saying it failed.
-                # Only the first, which is the best-ranked checkpoint — letting
-                # the later one overwrite it would describe the worse weights.
-                if STATE["arch"] is None:
-                    describe_arch(sd, cfg, blob, rel)
                 STATE["tried"].append(
                     "%s: %d weight tensors, but this repo ships no architecture "
                     "code to load them into — see /architecture" % (rel, len(sd)))

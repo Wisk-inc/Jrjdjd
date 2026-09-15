@@ -18,7 +18,7 @@
 # So nothing here is guessed from the config. Every layer is created at the
 # shape the weights actually have, read out of the state dict:
 #
-#   * a 1-D tensor named ".w" with no sibling bias   -> RMSNorm(size)
+#   * a 1-D tensor named ".w" with no sibling bias   -> _RMSNorm(size)
 #   * "<name>.weight" 2-D with a "<name>.bias"       -> Linear(in, out)
 #   * "<name>.weight" 2-D with no bias               -> Linear(in, out, bias=False)
 #   * "<name>.weight" 3-D                            -> Conv1d(in, out, kernel)
@@ -51,7 +51,7 @@ import torch.nn.functional as F
 # -----------------------------------------------------------------------------
 # Leaf layers, built to measured shapes
 # -----------------------------------------------------------------------------
-class RMSNorm(nn.Module):
+class _RMSNorm(nn.Module):
     """Root-mean-square norm carrying a single weight named `w`.
 
     The checkpoint's norms are a lone 1-D tensor called `.w` with no bias, which
@@ -67,7 +67,7 @@ class RMSNorm(nn.Module):
         return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps) * self.w
 
 
-class SwiGLU(nn.Module):
+class _SwiGLU(nn.Module):
     """Gated feed-forward with projections named g, u, d.
 
     Three matrices where a plain MLP has two, with the gate applied to `g`, is
@@ -82,7 +82,7 @@ class SwiGLU(nn.Module):
         return self.d(F.silu(self.g(x)) * self.u(x))
 
 
-class Attention(nn.Module):
+class _Attention(nn.Module):
     """Multi-head attention over whichever projection layout the keys show.
 
     Three spellings appear in models of this shape and all three are supported,
@@ -125,7 +125,7 @@ class Attention(nn.Module):
         return self.proj(out) if hasattr(self, "proj") else out
 
 
-class Block(nn.Module):
+class _Block(nn.Module):
     """One transformer block, assembled from whatever the checkpoint contains.
 
     Blocks in this checkpoint come in two sizes — seven tensors and ten. The
@@ -188,12 +188,19 @@ def make_leaf(sd, name):
     b = sd.get(name + ".bias")
     lone = sd.get(name)
 
+    # A norm in this checkpoint is a single 1-D parameter called `w` — so the
+    # key is "<name>.w", not "<name>.weight" and not a bare tensor at "<name>".
+    # Missing this spelling is what left spk_enc's norms unplaced: they are
+    # nested as spk_enc.blocks.<i>.<j>.w, one level deeper than a block's own.
+    norm_w = sd.get(name + ".w")
+    if norm_w is not None and norm_w.ndim == 1:
+        return _RMSNorm(norm_w.shape[0])
     if w is None and lone is not None and lone.ndim == 1:
-        return RMSNorm(lone.shape[0])          # a bare `.w`-style parameter
+        return _RMSNorm(lone.shape[0])
     if w is None:
         return None
     if w.ndim == 1:
-        m = RMSNorm(w.shape[0])
+        m = _RMSNorm(w.shape[0])
         return m
     if w.ndim == 3:
         out_c, in_c, k = w.shape
@@ -212,7 +219,7 @@ def build_block(sd, prefix, n_head):
     for leaf in leaf_names(g):
         if leaf in ("n1", "n2", "n3", "norm1", "norm2", "norm3"):
             t = g.get(leaf + ".w", g.get(leaf + ".weight", g.get(leaf)))
-            norms[leaf] = RMSNorm(t.shape[0])
+            norms[leaf] = _RMSNorm(t.shape[0])
             continue
         head, _, tail = leaf.partition(".")
         target = {"attn": attn_parts, "self_attn": attn_parts,
@@ -229,14 +236,14 @@ def build_block(sd, prefix, n_head):
         if k.endswith(".w") and t.ndim == 1:
             base = k[:-2]
             if base not in norms:
-                norms[base] = RMSNorm(t.shape[0])
+                norms[base] = _RMSNorm(t.shape[0])
 
-    attn = Attention(n_head, **attn_parts) if attn_parts else None
-    cross = Attention(n_head, **cross_parts) if cross_parts else None
-    ff = SwiGLU(mlp.get("g"), mlp.get("u"), mlp.get("d")) if "g" in mlp else None
+    attn = _Attention(n_head, **attn_parts) if attn_parts else None
+    cross = _Attention(n_head, **cross_parts) if cross_parts else None
+    ff = _SwiGLU(mlp.get("g"), mlp.get("u"), mlp.get("d")) if "g" in mlp else None
     if ff is None and "fc1" in mlp:
         ff = nn.Sequential(mlp["fc1"], nn.GELU(), mlp["fc2"])
-    return Block(n_head, norms, attn, cross, ff)
+    return _Block(n_head, norms, attn, cross, ff)
 
 
 def build_stack(sd, prefix, n_head):
@@ -255,14 +262,24 @@ def build_plain(sd, prefix):
     g = group(sd, prefix)
     mods = nn.ModuleDict()
     holder = _Named()
+    placed = set()
     for leaf in leaf_names(g):
         mod = make_leaf(g, leaf)
         if mod is None:
             t = g.get(leaf)
             if t is not None and t.ndim == 1:
-                mod = RMSNorm(t.shape[0])
+                mod = _RMSNorm(t.shape[0])
         if mod is not None:
             holder.add(leaf, mod)
+            placed.add(leaf)
+
+    # Anything still unplaced is kept as a raw parameter under its own name,
+    # so the tree matches the checkpoint rather than quietly dropping tensors.
+    for k, t in g.items():
+        base = k.rsplit(".", 1)[0] if "." in k else k
+        if base in placed or k in placed:
+            continue
+        holder.add_param(k, t)
     return holder
 
 
@@ -276,6 +293,16 @@ class _Named(nn.Module):
     def __init__(self):
         super().__init__()
         self._order = []
+
+    def add_param(self, dotted, tensor):
+        """Keep a tensor the shape rules could not classify, at its own name."""
+        parent, leaf = self, dotted
+        while "." in leaf:
+            head, _, leaf = leaf.partition(".")
+            if not hasattr(parent, head):
+                setattr(parent, head, _Named())
+            parent = getattr(parent, head)
+        parent.register_parameter(leaf, nn.Parameter(torch.empty_like(tensor)))
 
     def add(self, dotted, mod):
         parent, self_name = self, dotted
