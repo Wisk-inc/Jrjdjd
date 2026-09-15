@@ -27,12 +27,12 @@ const MAX_BYTES = 40 * 1024 * 1024;
    older copy of the script looks identical to one running the current copy
    until it behaves differently, and working that out from symptoms costs a
    round trip every time. /health reports its build, so say so directly. */
-const SERVER_BUILD = 6;
+const SERVER_BUILD = 7;
 
 function staleBuild(info) {
   const got = Number(info && info.build) || 0;
   return got < SERVER_BUILD
-    ? 'That server is running build ' + (got || 'older than 6') + ' of the script; this page '
+    ? 'That server is running build ' + (got || 'older than 7') + ' of the script; this page '
       + 'expects build ' + SERVER_BUILD + '. Press “Copy server code” above and re-run it — '
       + 'fixes since then will not be in the copy you have.'
     : '';
@@ -80,6 +80,30 @@ let connected = false;
 let busy = false;
 let lastUrl = null;
 let lastHealth = null;
+let inflight = null;
+
+/* Generation is the one request with no natural bound — a long clip on a cold
+   GPU legitimately takes minutes, so a short timeout would cancel real work.
+   But without any bound at all a dead server leaves the button reading
+   "Generating…" forever with nothing to press. A generous cap plus a Cancel
+   the user controls covers both. */
+const GENERATE_TIMEOUT_MS = 10 * 60 * 1000;
+
+/* Formats libsndfile can actually open. Checked before upload rather than
+   after: a 30MB file that was never going to decode should fail in the file
+   picker, not two minutes later. */
+const AUDIO_OK = ['wav', 'flac', 'ogg', 'oga', 'opus', 'mp3', 'aiff', 'aif'];
+const AUDIO_BAD = { m4a: 'M4A', mp4: 'MP4', aac: 'AAC', webm: 'WebM', wma: 'WMA', amr: 'AMR', caf: 'CAF' };
+
+function formatWarning(file) {
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (AUDIO_OK.indexOf(ext) !== -1) return '';
+  const named = AUDIO_BAD[ext];
+  return named
+    ? named + ' files cannot be decoded by the server. Re-export as WAV, FLAC, OGG or MP3 — '
+      + 'a phone voice memo is usually .m4a, which is this case.'
+    : '.' + ext + ' may not decode. WAV, FLAC, OGG and MP3 are the safe choices.';
+}
 
 function setMsg(text, kind) {
   if (!els.msg) return;
@@ -218,6 +242,7 @@ function wireSlot(input, nameEl, audioEl) {
       return;
     }
     nameEl.textContent = file.name + ' · ' + (file.size / 1024).toFixed(0) + ' KB';
+    const warn = formatWarning(file);
     if (audioEl) {
       if (audioEl.dataset.blob) URL.revokeObjectURL(audioEl.dataset.blob);
       const url = URL.createObjectURL(file);
@@ -225,7 +250,9 @@ function wireSlot(input, nameEl, audioEl) {
       audioEl.src = url;
       audioEl.hidden = false;
     }
-    setMsg('');
+    // The browser will happily preview an .m4a it can decode itself; the
+    // server is the one that cannot, so a working preview is not reassurance.
+    setMsg(warn, warn ? 'warn' : '');
   });
 }
 
@@ -369,8 +396,15 @@ async function generate() {
   setMsg('Running the flow-matching decoder. A few seconds of audio takes about that many '
     + 'seconds on a warm GPU, and rather longer on the first run while weights load.', '');
 
+  const ctrl = new AbortController();
+  inflight = ctrl;
+  const timer = setTimeout(() => ctrl.abort('timeout'), GENERATE_TIMEOUT_MS);
+  if (els.cancel) els.cancel.hidden = false;
+
   try {
-    const res = await fetch(url + endpoint, { method: 'POST', body, credentials: 'omit' });
+    const res = await fetch(url + endpoint, {
+      method: 'POST', body, credentials: 'omit', signal: ctrl.signal,
+    });
     if (!res.ok) {
       let detail = 'HTTP ' + res.status;
       try {
@@ -380,6 +414,12 @@ async function generate() {
       throw new Error(detail);
     }
     const blob = await res.blob();
+    // A 200 carrying nothing, or carrying JSON, would otherwise become an
+    // <audio> element that silently refuses to play.
+    if (!blob.size) throw new Error('The server returned an empty response.');
+    if (blob.type && blob.type.indexOf('audio') === -1 && blob.type.indexOf('octet-stream') === -1) {
+      throw new Error('The server returned ' + blob.type + ' instead of audio.');
+    }
     if (lastUrl) URL.revokeObjectURL(lastUrl);
     lastUrl = URL.createObjectURL(blob);
 
@@ -390,20 +430,39 @@ async function generate() {
 
     const path = res.headers.get('X-TriStream-Path');
     const secs = res.headers.get('X-TriStream-Seconds');
+    const trimmed = res.headers.get('X-TriStream-Trimmed');
+    const note = res.headers.get('X-TriStream-Note');
     els.note.textContent = [
       (blob.size / 1024).toFixed(0) + ' KB WAV',
       secs ? secs + 's' : null,
       path || null,
+      trimmed || null,
     ].filter(Boolean).join(' · ');
 
-    setMsg('');
+    // Trimming and a fallback vocoder both change what came back, so neither
+    // should be discoverable only by listening hard.
+    const caveats = [trimmed, note].filter(Boolean).join('. ');
+    setMsg(caveats ? caveats + '.' : '', caveats ? 'warn' : '');
     els.audio.play().catch(() => { /* autoplay blocked; the controls still work */ });
   } catch (err) {
-    setMsg('Generation failed: ' + err.message, 'warn');
+    // abort(reason) makes fetch reject with the reason itself, not a
+    // DOMException — so err.name is undefined and err.message with it. The
+    // signal is the reliable place to ask whether this was an abort at all.
+    if (ctrl.signal.aborted) {
+      setMsg(ctrl.signal.reason === 'timeout'
+        ? 'Gave up after 10 minutes with no response. The server may have died mid-run — '
+          + 'check the cell output, then press Connect again.'
+        : 'Cancelled.', 'warn');
+    } else {
+      setMsg('Generation failed: ' + (err && err.message ? err.message : err), 'warn');
+    }
   } finally {
+    clearTimeout(timer);
+    inflight = null;
     busy = false;
     els.go.disabled = false;
     els.go.textContent = 'Generate';
+    if (els.cancel) els.cancel.hidden = true;
   }
 }
 
@@ -476,7 +535,11 @@ function open() {
   else els.copy?.focus();
 }
 
-function close() { els.sheet.hidden = true; }
+function close() {
+  els.sheet.hidden = true;
+  // Audio kept playing from a closed panel with no visible control to stop it.
+  if (els.audio && !els.audio.paused) els.audio.pause();
+}
 
 /* --- init ------------------------------------------------------------------ */
 function init() {
@@ -492,7 +555,11 @@ function init() {
     download: $('#voice-download'), note: $('#voice-out-note'), msg: $('#voice-msg'),
     setup: $('#voice-setup'), setupHint: $('#voice-setup-hint'),
     copy: $('#voice-copy'), copyCmd: $('#voice-copy-cmd'), cmd: $('#voice-cmd'),
-    diag: $('#voice-diag'), open: $('#voice-open'),
+    diag: $('#voice-diag'), open: $('#voice-open'), cancel: $('#voice-cancel'),
+  });
+
+  els.cancel?.addEventListener('click', () => {
+    if (inflight) inflight.abort('user');
   });
 
   els.diag?.addEventListener('click', async () => {
