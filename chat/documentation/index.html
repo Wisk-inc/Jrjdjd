@@ -2853,16 +2853,16 @@ else:
       </ol>
 
       <p style="margin-bottom:14px;font-size:.9rem">Press <strong>Copy</strong> for the whole
-        script &mdash; all 1351 lines, not just what is on screen. If you would rather not paste it
+        script &mdash; all 1495 lines, not just what is on screen. If you would rather not paste it
         by hand, the same file is at
         <code>curl -O https://corx-labs.com/chat/tristream-server.py</code>.</p>
       <div class="code-wrap">
         <button class="code-copy" type="button" id="copy-tristream">Copy</button>
         <pre class="server-code"><code id="tristream-code"># =============================================================================
-# TriStream-SVS server — build 6
+# TriStream-SVS server — build 7
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 6", the copy running is an older one — re-copy from
+# not say "build 7", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -2913,7 +2913,7 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 6
+BUILD        = 7
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 
@@ -3223,18 +3223,88 @@ def log(*a):
 # ---------------------------------------------------------------------------
 # Audio helpers — the two inputs the panel sends
 # ---------------------------------------------------------------------------
-def load_audio(raw, target_sr=None):
-    """Bytes -&gt; mono float32 at target_sr."""
-    target_sr = target_sr or SAMPLE_RATE
+# A whole song is a realistic upload and a bad idea: pitch tracking alone runs
+# at roughly 3x realtime, so four minutes of audio is over a minute of CPU work
+# before the model is even called. Clips are trimmed to this and the caller is
+# told, rather than being left to wonder why nothing came back.
+MAX_SECONDS = 60.0
+
+
+def sniff_format(raw):
+    """Name the container from its magic bytes.
+
+    libsndfile reports "Format not recognised" next to a BytesIO object address,
+    which tells a person nothing about the file they just picked.
+    """
+    if raw[:4] == b"RIFF" and raw[8:12] == b"WAVE": return "WAV"
+    if raw[:4] == b"fLaC": return "FLAC"
+    if raw[:4] == b"OggS": return "OGG"
+    if raw[:3] == b"ID3":  return "MP3"
+    if len(raw) &gt; 1 and raw[0] == 0xFF and (raw[1] &amp; 0xE0) == 0xE0: return "MP3"
+    if raw[4:8] == b"ftyp": return "MP4/M4A/AAC"
+    if raw[:4] == b"\x1aE\xdf\xa3": return "WebM/Matroska"
+    if raw[:4] == b"FORM": return "AIFF"
+    if raw[:4] == b"caff": return "CAF"
+    return "unknown"
+
+
+def decode_audio(raw):
+    """Bytes -&gt; (float32 samples, sample rate), trying more than one decoder.
+
+    libsndfile handles WAV, FLAC, OGG and MP3, but not the MPEG-4 family — and
+    .m4a is what an iPhone voice memo and most Android recorders produce, which
+    makes it the single most likely file for someone cloning their own voice.
+    librosa/audioread covers it when a system codec exists.
+    """
+    errors = []
+    try:
+        wav, sr = sf.read(io.BytesIO(raw), dtype="float32", always_2d=True)
+        return wav.mean(axis=1), sr
+    except Exception as e:
+        errors.append("soundfile: %s" % str(e)[:80])
+
+    try:
+        import librosa
+        wav, sr = librosa.load(io.BytesIO(raw), sr=None, mono=True)
+        return np.asarray(wav, dtype="float32"), sr
+    except Exception as e:
+        errors.append("librosa/audioread: %s" % str(e)[:80])
+
+    fmt = sniff_format(raw)
+    # The decoder errors go to the log, not to the person: libsndfile&#x27;s message
+    # is "Format not recognised" next to a BytesIO object address, which reads
+    # like a crash and says nothing about the file they picked.
+    log("decode failed (%s): %s" % (fmt, "; ".join(errors)))
+    raise ValueError("This build cannot decode %s. Re-export the clip as WAV, FLAC, "
+                     "OGG or MP3 — all four work. On a phone, a voice memo is usually "
+                     ".m4a, which is the case that lands here most often." % fmt)
+
+
+def load_audio(raw, target_sr=None, max_seconds=MAX_SECONDS, label="clip"):
+    """Bytes -&gt; mono float32 at target_sr, trimmed and sanity-checked."""
     import librosa
-    wav, sr = sf.read(io.BytesIO(raw), dtype="float32", always_2d=True)
-    wav = wav.mean(axis=1)
+    target_sr = target_sr or SAMPLE_RATE
+    if not raw:
+        raise ValueError("The %s was empty — no bytes arrived." % label)
+
+    wav, sr = decode_audio(raw)
     if sr != target_sr:
         wav = librosa.resample(wav, orig_sr=sr, target_sr=target_sr)
+
+    trimmed = 0.0
+    if max_seconds and len(wav) &gt; int(max_seconds * target_sr):
+        trimmed = len(wav) / float(target_sr)
+        wav = wav[:int(max_seconds * target_sr)]
+
     peak = float(np.max(np.abs(wav))) if wav.size else 0.0
-    if peak &gt; 0:
-        wav = wav / peak * 0.97
-    return wav.astype("float32")
+    if wav.size &lt; target_sr // 10:
+        raise ValueError("The %s is only %.2fs long. Give it at least a second of "
+                         "audio to work with." % (label, wav.size / float(target_sr)))
+    if peak &lt; 1e-4:
+        raise ValueError("The %s is silent (peak %.2g). Check the right file was "
+                         "picked and that it is not a muted export." % (label, peak))
+    wav = wav / peak * 0.97
+    return wav.astype("float32"), trimmed
 
 
 def f0_contour(wav, sr=None, fmin=65.0, fmax=1200.0):
@@ -3884,7 +3954,8 @@ def run_convert(voice_wav, perf_wav, residual_from="performance", pitch_shift=0.
         out = _call_flexible(fn, perf_wav, voice_wav, steps, lyrics)
         used = "repo conversion call (%s)" % name
 
-    return _as_audio(out), used
+    wav, note = _as_audio(out)
+    return wav, used, note
 
 
 @torch.inference_mode()
@@ -3904,7 +3975,8 @@ def run_generate(voice_wav, lyrics, melody_wav=None, steps=STEPS, pitch_shift=0.
         out = fn(**kwargs)
     else:
         out = _call_flexible(fn, None, voice_wav, steps, lyrics, melody_wav)
-    return _as_audio(out), "generation (%s)" % name
+    wav, note = _as_audio(out)
+    return wav, "generation (%s)" % name, note
 
 
 def _call_flexible(fn, content_wav, reference_wav, steps, lyrics, melody_wav=None):
@@ -3961,10 +4033,52 @@ def _call_flexible(fn, content_wav, reference_wav, steps, lyrics, melody_wav=Non
     raise RuntimeError("No call signature worked. Tried: " + " | ".join(attempts))
 
 
+N_MELS = 100          # what the model card says the decoder emits
+
+
+def looks_like_mel(arr):
+    """Is this a mel spectrogram rather than a waveform?
+
+    It matters because the two are not interchangeable and the difference is
+    silent: flattening a (n_mels, frames) mel into a 1-D array interleaves
+    frequency bins as if they were time samples, which plays as noise. The
+    decoder in this model emits a 100-band mel, so this is the expected shape,
+    not an edge case.
+    """
+    if arr.ndim != 2:
+        return False
+    a, b = arr.shape
+    # One axis the size of the mel band count, the other much longer.
+    return (a == N_MELS and b &gt;= 8) or (b == N_MELS and a &gt;= 8)
+
+
+def mel_to_wave(mel):
+    """Vocode a mel with Griffin-Lim, since no neural vocoder ships here.
+
+    Griffin-Lim is phase-blind, so this sounds thinner and slightly metallic
+    next to a trained vocoder. It is still recognisably the right voice singing
+    the right notes, which is the whole point, and it is honest about what it is
+    — the response says a fallback vocoder was used.
+    """
+    import librosa
+    if mel.shape[0] != N_MELS:
+        mel = mel.T
+    power = np.exp(mel.astype("float64"))      # mel_spec() stored log-magnitude
+    wav = librosa.feature.inverse.mel_to_audio(
+        power, sr=SAMPLE_RATE, n_fft=1024, hop_length=256, n_iter=48)
+    return np.asarray(wav, dtype="float32")
+
+
 def _as_audio(out):
-    """Whatever came back -&gt; a mono float32 waveform."""
+    """Whatever came back -&gt; (mono float32 waveform, note about how).
+
+    Batch and channel dimensions are squeezed before anything else. The previous
+    version reshaped any multi-dimensional output into one long row, which is
+    correct for (1, samples) and destroys a (1, n_mels, frames) mel.
+    """
+    note = ""
     if isinstance(out, dict):
-        for k in ("audio", "wav", "waveform", "samples", "output"):
+        for k in ("audio", "wav", "waveform", "samples", "output", "mel", "mel_spectrogram"):
             if k in out:
                 out = out[k]
                 break
@@ -3973,13 +4087,23 @@ def _as_audio(out):
     if torch.is_tensor(out):
         out = out.detach().float().cpu().numpy()
     out = np.asarray(out, dtype="float32")
-    if out.ndim &gt; 1:
-        out = out.reshape(out.shape[0], -1).mean(axis=0) if out.shape[0] &lt; out.shape[-1] \
-              else out.mean(axis=-1)
+
+    while out.ndim &gt; 1 and out.shape[0] == 1:      # drop batch/channel dims of 1
+        out = out[0]
+
+    if looks_like_mel(out):
+        out = mel_to_wave(out)
+        note = "mel output vocoded with Griffin-Lim (no neural vocoder in this build)"
+    elif out.ndim &gt; 1:
+        # Genuinely multi-channel audio: average the channels, keeping time.
+        time_axis = int(np.argmax(out.shape))
+        out = out.mean(axis=1 - time_axis) if out.ndim == 2 else out.reshape(-1)
+
+    out = np.asarray(out, dtype="float32").reshape(-1)
     peak = float(np.max(np.abs(out))) if out.size else 0.0
     if peak &gt; 1.0:
         out = out / peak * 0.97
-    return out
+    return out, note
 
 
 # ---------------------------------------------------------------------------
@@ -4054,17 +4178,25 @@ async def convert(voice: UploadFile = File(...),
                   lyrics: str = Form("")):
     _guard()
     try:
-        v = load_audio(await voice.read())
-        p = load_audio(await performance.read())
+        v, v_trim = load_audio(await voice.read(), label="voice clip")
+        p, p_trim = load_audio(await performance.read(), label="performance clip")
         t0 = time.time()
-        wav, used = run_convert(v, p, residual_from, pitch_shift, steps, lyrics)
-        return Response(
-            content=to_wav_bytes(wav), media_type="audio/wav",
-            headers={"X-TriStream-Path": used,
-                     "X-TriStream-Seconds": "%.1f" % (time.time() - t0),
-                     "Content-Disposition": &#x27;attachment; filename="tristream.wav"&#x27;})
+        wav, used, notes = run_convert(v, p, residual_from, pitch_shift, steps, lyrics)
+        headers = {"X-TriStream-Path": used,
+                   "X-TriStream-Seconds": "%.1f" % (time.time() - t0),
+                   "Content-Disposition": &#x27;attachment; filename="tristream.wav"&#x27;}
+        trims = ["%s %.0fs" % (n, t) for n, t in (("voice", v_trim), ("performance", p_trim)) if t]
+        if trims:
+            headers["X-TriStream-Trimmed"] = "first %.0fs used (%s)" % (MAX_SECONDS, ", ".join(trims))
+        if notes:
+            headers["X-TriStream-Note"] = notes
+        return Response(content=to_wav_bytes(wav), media_type="audio/wav", headers=headers)
     except HTTPException:
         raise
+    except ValueError as e:
+        # Bad input, not a broken server. Say so with a 400 so the panel can
+        # show the reason instead of "the server had an internal error".
+        return JSONResponse(status_code=400, content={"error": str(e)})
     except Exception as e:
         traceback.print_exc()
         return JSONResponse(status_code=500, content={"error": str(e)})
@@ -4078,17 +4210,29 @@ async def generate(voice: UploadFile = File(...),
                    steps: int = Form(STEPS)):
     _guard()
     try:
-        v = load_audio(await voice.read())
-        m = load_audio(await melody.read()) if melody is not None else None
+        v, v_trim = load_audio(await voice.read(), label="voice clip")
+        m, m_trim = (None, 0.0)
+        if melody is not None:
+            raw = await melody.read()
+            if raw:
+                m, m_trim = load_audio(raw, label="melody guide")
         t0 = time.time()
-        wav, used = run_generate(v, lyrics, m, steps, pitch_shift)
-        return Response(
-            content=to_wav_bytes(wav), media_type="audio/wav",
-            headers={"X-TriStream-Path": used,
-                     "X-TriStream-Seconds": "%.1f" % (time.time() - t0),
-                     "Content-Disposition": &#x27;attachment; filename="tristream.wav"&#x27;})
+        wav, used, notes = run_generate(v, lyrics, m, steps, pitch_shift)
+        headers = {"X-TriStream-Path": used,
+                   "X-TriStream-Seconds": "%.1f" % (time.time() - t0),
+                   "Content-Disposition": &#x27;attachment; filename="tristream.wav"&#x27;}
+        trims = ["%s %.0fs" % (n, t) for n, t in (("voice", v_trim), ("melody", m_trim)) if t]
+        if trims:
+            headers["X-TriStream-Trimmed"] = "first %.0fs used (%s)" % (MAX_SECONDS, ", ".join(trims))
+        if notes:
+            headers["X-TriStream-Note"] = notes
+        return Response(content=to_wav_bytes(wav), media_type="audio/wav", headers=headers)
     except HTTPException:
         raise
+    except ValueError as e:
+        # Bad input, not a broken server. Say so with a 400 so the panel can
+        # show the reason instead of "the server had an internal error".
+        return JSONResponse(status_code=400, content={"error": str(e)})
     except Exception as e:
         traceback.print_exc()
         return JSONResponse(status_code=500, content={"error": str(e)})

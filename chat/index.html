@@ -484,7 +484,7 @@
         <p>A clean clip of the singer you want it to sound like. The speaker encoder takes a
           voice fingerprint from this and nothing else.</p>
         <label class="btn btn-ghost btn-sm" for="voice-ref">Choose audio</label>
-        <input id="voice-ref" type="file" accept="audio/*" hidden>
+        <input id="voice-ref" type="file" accept=".wav,.flac,.ogg,.oga,.opus,.mp3,.aiff,.aif,audio/*" hidden>
         <span class="voice-file" id="voice-ref-name">No file chosen</span>
         <audio class="voice-preview" id="voice-ref-audio" controls hidden></audio>
       </div>
@@ -496,7 +496,7 @@
           used — the source stream cannot carry timbre, so this singer's voice does not come
           across with it.</p>
         <label class="btn btn-ghost btn-sm" for="voice-perf">Choose audio</label>
-        <input id="voice-perf" type="file" accept="audio/*" hidden>
+        <input id="voice-perf" type="file" accept=".wav,.flac,.ogg,.oga,.opus,.mp3,.aiff,.aif,audio/*" hidden>
         <span class="voice-file" id="voice-perf-name">No file chosen</span>
         <audio class="voice-preview" id="voice-perf-audio" controls hidden></audio>
       </div>
@@ -508,7 +508,7 @@
           from these unless you add a melody guide.</p>
         <textarea id="voice-lyrics" rows="4" placeholder="One line per phrase&#10;the way you want it sung"></textarea>
         <label class="btn btn-ghost btn-sm" for="voice-melody" style="margin-top:10px">Melody guide (optional)</label>
-        <input id="voice-melody" type="file" accept="audio/*" hidden>
+        <input id="voice-melody" type="file" accept=".wav,.flac,.ogg,.oga,.opus,.mp3,.aiff,.aif,audio/*" hidden>
         <span class="voice-file" id="voice-melody-name">No file chosen</span>
       </div>
     </div>
@@ -549,6 +549,7 @@
     <div class="sheet-actions">
       <button class="btn btn-ghost btn-sm" type="button" id="voice-close">Close</button>
       <span class="spacer"></span>
+      <button class="vs-copy" type="button" id="voice-cancel" hidden>Cancel</button>
       <button class="btn btn-primary btn-sm" type="button" id="voice-go">Generate</button>
     </div>
   </div>
