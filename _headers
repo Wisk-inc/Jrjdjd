@@ -30,6 +30,10 @@
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache
 
+/chat/tristream-model.py
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: no-cache
+
 # Crawler-facing files should never be served stale for long.
 /sitemap.xml
   Cache-Control: public, max-age=3600

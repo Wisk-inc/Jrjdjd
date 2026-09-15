@@ -1,8 +1,8 @@
 # =============================================================================
-# TriStream-SVS server — build 7
+# TriStream-SVS server — build 8
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 7", the copy running is an older one — re-copy from
+# not say "build 8", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -53,7 +53,7 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 7
+BUILD        = 8
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 
@@ -64,7 +64,7 @@ REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 # drop the file at <workdir>/model_def.py and leave this empty. Whatever class
 # it defines is constructed from config.json and checked tensor by tensor
 # against the checkpoint before it is used.
-MODEL_DEF    = ""
+MODEL_DEF    = "https://corx-labs.com/chat/tristream-model.py"
 
 PORT         = 811
 SAMPLE_RATE  = 24000          # TriStream decodes mel at 24 kHz
@@ -990,8 +990,41 @@ def bind_model():
             STATE["ckpt_keys"] = list(sd)[:12]
             log("%s: %d weight tensors under '%s'" % (rel, len(sd), where))
 
+            # A definition that builds itself from the checkpoint cannot
+            # mismatch it: every layer is created at the shape the weights
+            # actually have. Preferred over constructing a class blind.
+            builder = None
+            for mod in repo_mods:
+                fn = getattr(mod, "build_from_checkpoint", None)
+                if callable(fn):
+                    builder = (mod, fn)
+                    break
+            if builder is not None:
+                mod, fn = builder
+                try:
+                    made = fn(sd, cfg)
+                except Exception as e:
+                    traceback.print_exc()
+                    STATE["tried"].append("%s.build_from_checkpoint: %s: %s"
+                                          % (mod.__name__, type(e).__name__, str(e)[:160]))
+                    made = None
+                if made is not None:
+                    missing, unexpected = made.load_state_dict(sd, strict=False)
+                    matched = len(sd) - len(unexpected)
+                    if matched == len(sd) and not missing:
+                        obj = made
+                        STATE["detail"] = ("built from the checkpoint by %s: all %d "
+                                           "tensors loaded" % (mod.__name__, len(sd)))
+                        break
+                    STATE["tried"].append(
+                        "%s.build_from_checkpoint: %d/%d tensors matched, %d missing "
+                        "(first missing: %s) (first unexpected: %s)"
+                        % (mod.__name__, matched, len(sd), len(missing),
+                           ", ".join(list(missing)[:5]) or "none",
+                           ", ".join(list(unexpected)[:5]) or "none"))
+
             classes = candidate_classes(repo_mods)
-            if not classes:
+            if obj is None and not classes:
                 # The weights are here and readable; the class to put them in is
                 # not. That is recoverable — a state_dict names every submodule
                 # and every shape — so write down the blueprint rather than only
@@ -1026,8 +1059,11 @@ def bind_model():
                                        "from %s (%d missing)"
                                        % (how, matched, len(sd), rel, len(missing)))
                     break
-                STATE["tried"].append("%s: only %d/%d tensors matched"
-                                      % (name, matched, len(sd)))
+                STATE["tried"].append(
+                    "%s: only %d/%d tensors matched — first missing: %s; first "
+                    "unexpected: %s" % (name, matched, len(sd),
+                                        ", ".join(list(missing)[:6]) or "none",
+                                        ", ".join(list(unexpected)[:6]) or "none"))
             if obj is not None:
                 break
 
