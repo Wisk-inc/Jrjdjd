@@ -1,8 +1,8 @@
 # =============================================================================
-# TriStream-SVS server — build 11
+# TriStream-SVS server — build 12
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 11", the copy running is an older one — re-copy from
+# not say "build 12", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -53,7 +53,7 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 11
+BUILD        = 12
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 
@@ -1185,6 +1185,11 @@ def run_convert(voice_wav, perf_wav, residual_from="performance", pitch_shift=0.
         used = "repo conversion call (%s)" % name
 
     wav, note = _as_audio(out)
+    # The model may have degraded something rather than failing outright; say
+    # so alongside the vocoder note instead of letting it pass unremarked.
+    warn = getattr(model, "last_warning", "")
+    if warn:
+        note = (note + "; " + warn) if note else warn
     return wav, used, note
 
 
