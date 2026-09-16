@@ -170,6 +170,50 @@ class _Block(nn.Module):
 # -----------------------------------------------------------------------------
 # Reading the checkpoint's structure
 # -----------------------------------------------------------------------------
+def _in_width(mod):
+    """How wide an input this layer declares, or None if it does not care."""
+    if isinstance(mod, nn.Linear):
+        return mod.in_features
+    if isinstance(mod, nn.Conv1d):
+        return mod.in_channels
+    return None
+
+
+def _widen(x, need, history):
+    """Reach `need` features from `x`, using what the architecture would use.
+
+    Two moves cover the shapes a speaker encoder produces. If the target is a
+    whole multiple of the current width and enough earlier outputs are banked,
+    concatenate them — that is multi-layer aggregation. If it is exactly double
+    and nothing is banked, concatenate mean and standard deviation over time,
+    which is statistics pooling. Anything else is left alone so the failure
+    stays a clear shape error rather than a quietly reshaped tensor.
+    """
+    have = x.shape[-1]
+    if need == have:
+        return x
+    if need % have == 0:
+        k = need // have
+        usable = [h for h in history[-k:] if h.shape[-1] == have
+                  and h.shape[1] == x.shape[1]]
+        if len(usable) == k:
+            return torch.cat(usable, dim=-1)
+        if len(usable) >= 1:
+            # Short of k distinct outputs: repeat the newest to fill, which
+            # keeps the width right and the content the most recent available.
+            pad = [usable[-1]] * (k - len(usable))
+            return torch.cat(usable + pad, dim=-1)
+    if need == have * 2:
+        mean = x.mean(dim=1, keepdim=True)
+        # unbiased=False on purpose. The speaker embedding is pooled to a single
+        # frame before this runs, and the default unbiased estimator divides by
+        # (n - 1), which is zero for one frame — the whole tensor becomes NaN
+        # and every layer after it inherits that silently.
+        std = x.var(dim=1, keepdim=True, unbiased=False).clamp_min(1e-8).sqrt()
+        return torch.cat([mean.expand_as(x), std.expand_as(x)], dim=-1)
+    return x
+
+
 def attach_tensor(module, name, tensor):
     """Register a tensor under `name`, as the right kind of thing.
 
@@ -364,12 +408,30 @@ class _Named(nn.Module):
         # part of the computation instead of dead weight.
         if hasattr(self, "w") and not self._order and not list(self.children()):
             return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + 1e-6) * self.w
+
+        # Running the sub-modules as a straight chain is wrong for a speaker
+        # encoder. This one is an ECAPA-TDNN: several residual blocks whose
+        # outputs are concatenated before pooling, so a layer part-way through
+        # wants three times the width the previous one produced, and statistics
+        # pooling then wants twice again. A chain hits the first of those as
+        # "expected 1536 channels, got 512".
+        #
+        # Rather than hard-code that topology, each layer's declared input width
+        # is compared against what is actually in hand, and the gap is closed
+        # the way the architecture closes it: by concatenating the most recent
+        # block outputs, or — when nothing is banked — by concatenating the mean
+        # and standard deviation over time, which is what statistics pooling is.
+        history = []
         for mod in self.modules_in_order():
+            need = _in_width(mod)
+            if need is not None and x.shape[-1] != need:
+                x = _widen(x, need, history)
             if isinstance(mod, nn.Conv1d):
                 x = mod(x.transpose(1, 2)).transpose(1, 2)
             else:
                 x = mod(x)
             x = F.silu(x) if x.shape[-1] > 1 else x
+            history.append(x)
         return x
 
 
@@ -465,11 +527,45 @@ class TriStreamSing(nn.Module):
         return x
 
     def _speaker(self, mel):
+        """Voice identity from the reference clip.
+
+        Guarded, because this is the one sub-network whose internal topology is
+        inferred rather than read. If it cannot run, a mean-pooled projection of
+        the reference mel still carries some identity — far less of it — and
+        that is better than failing the whole request. It is recorded, not
+        hidden: cloning quality is the whole point of this clip.
+        """
+        self.last_warning = ""
         if not hasattr(self, "spk_enc"):
             return None
-        h = self.spk_enc(mel)
-        h = h.mean(dim=1, keepdim=True)                 # pooled over time
-        return self.spk_to_d(h) if hasattr(self, "spk_to_d") else h
+        try:
+            h = self.spk_enc(mel)
+            h = h.mean(dim=1, keepdim=True)             # pooled over time
+            if hasattr(self, "spk_to_d"):
+                want = _in_width(self.spk_to_d)
+                if want is not None and h.shape[-1] != want:
+                    h = _widen(h, want, [])
+                h = self.spk_to_d(h)
+            return h
+        except Exception as e:
+            self.last_warning = (
+                "the speaker encoder could not run (%s), so voice identity came "
+                "from a plain pooled projection of the reference clip — the "
+                "cloning will be much weaker than it should be"
+                % str(e)[:150])
+            if hasattr(self, "spk_to_d"):
+                want = _in_width(self.spk_to_d)
+                pooled = mel.mean(dim=1, keepdim=True)
+                if want is not None and pooled.shape[-1] != want:
+                    if hasattr(self, "mel_in"):
+                        pooled = self.mel_in(mel).mean(dim=1, keepdim=True)
+                    else:
+                        return None
+                try:
+                    return self.spk_to_d(pooled)
+                except Exception:
+                    return None
+            return None
 
     def _mel(self, wav, sr):
         import librosa
