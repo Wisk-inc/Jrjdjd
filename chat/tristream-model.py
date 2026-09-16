@@ -170,6 +170,24 @@ class _Block(nn.Module):
 # -----------------------------------------------------------------------------
 # Reading the checkpoint's structure
 # -----------------------------------------------------------------------------
+def attach_tensor(module, name, tensor):
+    """Register a tensor under `name`, as the right kind of thing.
+
+    nn.Parameter accepts only floating point and complex tensors — anything
+    integer or boolean raises "Only Tensors of floating point and complex dtype
+    can require gradients". Checkpoints routinely carry such tensors: step
+    counters, cached position indices, attention masks. They belong in buffers,
+    which is also how they were saved, and a buffer round-trips through
+    state_dict exactly like a parameter.
+    """
+    if name in module._parameters or name in module._buffers:
+        return
+    if tensor.is_floating_point() or tensor.is_complex():
+        module.register_parameter(name, nn.Parameter(torch.empty_like(tensor)))
+    else:
+        module.register_buffer(name, torch.empty_like(tensor))
+
+
 def group(sd, prefix):
     """Every key under a prefix, with the prefix stripped."""
     cut = len(prefix) + 1
@@ -197,6 +215,13 @@ def make_leaf(sd, name):
     # key is "<name>.w", not "<name>.weight" and not a bare tensor at "<name>".
     # Missing this spelling is what left spk_enc's norms unplaced: they are
     # nested as spk_enc.blocks.<i>.<j>.w, one level deeper than a block's own.
+    # An integer tensor is never a layer weight — it is a counter, an index or
+    # a mask. Let those fall through to the sweep, which registers them as
+    # buffers, rather than inventing a Linear whose weights cannot hold them.
+    for t in (w, b, lone, sd.get(name + ".w")):
+        if t is not None and not (t.is_floating_point() or t.is_complex()):
+            return None
+
     norm_w = sd.get(name + ".w")
     if norm_w is not None and norm_w.ndim == 1:
         return _RMSNorm(norm_w.shape[0])
@@ -273,7 +298,11 @@ def build_plain(sd, prefix):
         mod = make_leaf(g, leaf)
         if mod is None:
             t = g.get(leaf)
-            if t is not None and t.ndim == 1:
+            # Same rule as make_leaf: a 1-D integer tensor is a counter or an
+            # index, not a norm. Building a module here would also claim the
+            # name, and the sweep would then find the slot taken by a module
+            # when it came to place the tensor itself.
+            if t is not None and t.ndim == 1 and (t.is_floating_point() or t.is_complex()):
                 mod = _RMSNorm(t.shape[0])
         if mod is not None:
             holder.add(leaf, mod)
@@ -308,7 +337,7 @@ class _Named(nn.Module):
             if not hasattr(parent, head):
                 setattr(parent, head, _Named())
             parent = getattr(parent, head)
-        parent.register_parameter(leaf, nn.Parameter(torch.empty_like(tensor)))
+        attach_tensor(parent, leaf, tensor)
 
     def add(self, dotted, mod):
         parent, self_name = self, dotted
@@ -427,7 +456,7 @@ class TriStreamSing(nn.Module):
             raise ValueError(
                 "cannot place %r: %r is already a sub-module built from other "
                 "keys, so it cannot also be a tensor" % (path, leaf))
-        parent.register_parameter(leaf, nn.Parameter(torch.empty_like(tensor)))
+        attach_tensor(parent, leaf, tensor)
 
     # --- helpers -------------------------------------------------------------
     def _run(self, stack, x, mem=None):
