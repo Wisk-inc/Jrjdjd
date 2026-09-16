@@ -44,6 +44,12 @@ import math
 import re
 
 import torch
+
+# Bumped whenever this file changes, reported by /health as model_def_version.
+# The server learned this lesson already: without it, "did the fix actually
+# reach the machine" is a guess, and a guess costs a round trip every time.
+MODEL_DEF_VERSION = 3
+
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -198,11 +204,14 @@ def _widen(x, need, history):
                   and h.shape[1] == x.shape[1]]
         if len(usable) == k:
             return torch.cat(usable, dim=-1)
-        if len(usable) >= 1:
-            # Short of k distinct outputs: repeat the newest to fill, which
-            # keeps the width right and the content the most recent available.
-            pad = [usable[-1]] * (k - len(usable))
-            return torch.cat(usable + pad, dim=-1)
+        # Short of k usable outputs — which happens when earlier layers changed
+        # the frame count, so their outputs no longer line up in time. Fill
+        # from what is available, and from x itself when nothing is. Falling
+        # through instead would hand the layer the width it just rejected.
+        parts = list(usable) if usable else []
+        while len(parts) < k:
+            parts.append(parts[-1] if parts else x)
+        return torch.cat(parts[:k], dim=-1)
     if need == have * 2:
         mean = x.mean(dim=1, keepdim=True)
         # unbiased=False on purpose. The speaker embedding is pooled to a single

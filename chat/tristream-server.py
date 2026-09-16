@@ -1,8 +1,8 @@
 # =============================================================================
-# TriStream-SVS server — build 12
+# TriStream-SVS server — build 13
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 12", the copy running is an older one — re-copy from
+# not say "build 13", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -53,7 +53,7 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 12
+BUILD        = 13
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 
@@ -359,6 +359,7 @@ STATE = {
     "tried": [],
     "ckpt_keys": [],      # first weight names, when a checkpoint was opened
     "arch": None,         # the parameter tree, when weights load but code is absent
+    "model_def_version": None,
     "model": None,
     "device": DEVICE,
     "tunnel": None,
@@ -728,9 +729,13 @@ def load_model_def():
                               % (src, type(e).__name__, str(e)[:160]))
         return []
     names = [n for _, n, _ in candidate_classes([mod])]
-    log("model definition %s defines: %s" % (src, ", ".join(names) or "no nn.Module subclass"))
-    STATE["tried"].append("model definition %s imported (classes: %s)"
-                          % (src, ", ".join(names) or "none"))
+    ver = getattr(mod, "MODEL_DEF_VERSION", None)
+    STATE["model_def_version"] = ver
+    log("model definition %s (version %s) defines: %s"
+        % (src, ver if ver is not None else "unstamped", ", ".join(names) or "none"))
+    STATE["tried"].append("model definition %s imported (version %s, classes: %s)"
+                          % (src, ver if ver is not None else "unstamped",
+                             ", ".join(names) or "none"))
     return [mod]
 
 
@@ -1367,6 +1372,10 @@ def health():
         # A server that quietly died and came back looks identical to one that
         # never moved, right up until you notice the work in flight was lost.
         "restarts": supervisor_restarts(),
+        # Which copy of the model definition is loaded. Without this, a fix
+        # that has not reached the machine is indistinguishable from a fix
+        # that did not work.
+        "model_def_version": STATE["model_def_version"],
         # If the tunnel has rotated, the address the caller used to reach this
         # is not the address that works now — and they cannot see that from here.
         "tunnel": STATE["tunnel"],
