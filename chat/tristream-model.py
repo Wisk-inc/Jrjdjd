@@ -44,14 +44,14 @@ import math
 import re
 
 import torch
-
-# Bumped whenever this file changes, reported by /health as model_def_version.
-# The server learned this lesson already: without it, "did the fix actually
-# reach the machine" is a guess, and a guess costs a round trip every time.
-MODEL_DEF_VERSION = 3
-
 import torch.nn as nn
 import torch.nn.functional as F
+
+# Bumped whenever this file changes, reported by /health as model_def_version
+# and stamped onto every error this file raises. The server learned this lesson
+# already: without it, "did the fix reach the machine" is a guess, and a guess
+# costs a round trip every time.
+MODEL_DEF_VERSION = 4
 
 
 # -----------------------------------------------------------------------------
@@ -431,14 +431,32 @@ class _Named(nn.Module):
         # block outputs, or — when nothing is banked — by concatenating the mean
         # and standard deviation over time, which is what statistics pooling is.
         history = []
-        for mod in self.modules_in_order():
+        mods = self.modules_in_order()
+        for i, mod in enumerate(mods):
             need = _in_width(mod)
+            before = tuple(x.shape)
+            widened = False
             if need is not None and x.shape[-1] != need:
                 x = _widen(x, need, history)
-            if isinstance(mod, nn.Conv1d):
-                x = mod(x.transpose(1, 2)).transpose(1, 2)
-            else:
-                x = mod(x)
+                widened = tuple(x.shape) != before
+            try:
+                if isinstance(mod, nn.Conv1d):
+                    x = mod(x.transpose(1, 2)).transpose(1, 2)
+                else:
+                    x = mod(x)
+            except Exception as e:
+                # A bare shape error names two numbers and no location, which
+                # is not enough to fix anything — and says nothing about which
+                # copy of this file produced it. Say all of it.
+                path = self._order[i] if i < len(self._order) else "step %d" % i
+                raise RuntimeError(
+                    "[model_def v%d] %s (%s) failed: input %s, layer wants %s, "
+                    "arrived as %s, widen %s, %d earlier outputs banked "
+                    "(widths %s) -- %s"
+                    % (MODEL_DEF_VERSION, path, type(mod).__name__,
+                       tuple(x.shape), need, before,
+                       "applied" if widened else "not applied",
+                       len(history), [h.shape[-1] for h in history[-4:]], e))
             x = F.silu(x) if x.shape[-1] > 1 else x
             history.append(x)
         return x
@@ -587,8 +605,18 @@ class TriStreamSing(nn.Module):
 
     # --- the operation the voice panel asks for ------------------------------
     @torch.inference_mode()
-    def convert_streams(self, source=None, filter=None, residual=None,
-                        lyrics=None, steps=32, **kw):
+    def convert_streams(self, *a, **kw):
+        """Wrapper that stamps the version onto anything that goes wrong."""
+        try:
+            return self._convert_streams(*a, **kw)
+        except Exception as e:
+            if str(e).startswith("[model_def v"):
+                raise
+            raise RuntimeError("[model_def v%d] %s" % (MODEL_DEF_VERSION, e))
+
+    @torch.inference_mode()
+    def _convert_streams(self, source=None, filter=None, residual=None,
+                         lyrics=None, steps=32, **kw):
         """Sing the source contour in the filter clip's voice.
 
         The stream mapping is the architecture's own: pitch drives the source
