@@ -58,13 +58,18 @@ class _RMSNorm(nn.Module):
     is RMSNorm's signature — LayerNorm would carry `.weight` and `.bias`.
     """
 
-    def __init__(self, size, eps=1e-6):
+    def __init__(self, size, eps=1e-6, param="w"):
         super().__init__()
-        self.w = nn.Parameter(torch.ones(size))
+        self._pname = param
+        self.register_parameter(param, nn.Parameter(torch.ones(size)))
         self.eps = eps
 
+    @property
+    def scale(self):
+        return getattr(self, self._pname)
+
     def forward(self, x):
-        return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps) * self.w
+        return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps) * self.scale
 
 
 class _SwiGLU(nn.Module):
@@ -200,8 +205,9 @@ def make_leaf(sd, name):
     if w is None:
         return None
     if w.ndim == 1:
-        m = _RMSNorm(w.shape[0])
-        return m
+        # 1-D and called `.weight`, so the norm must call its parameter
+        # `weight` too, or the key changes on the way back out.
+        return _RMSNorm(w.shape[0], param="weight")
     if w.ndim == 3:
         out_c, in_c, k = w.shape
         return nn.Conv1d(in_c, out_c, k, bias=b is not None)
@@ -324,6 +330,11 @@ class _Named(nn.Module):
         return out
 
     def forward(self, x):
+        # A container holding only a 1-D `w` is a norm: that is the shape the
+        # checkpoint uses, and treating it as one keeps a swept-in parameter
+        # part of the computation instead of dead weight.
+        if hasattr(self, "w") and not self._order and not list(self.children()):
+            return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + 1e-6) * self.w
         for mod in self.modules_in_order():
             if isinstance(mod, nn.Conv1d):
                 x = mod(x.transpose(1, 2)).transpose(1, 2)
@@ -370,6 +381,53 @@ class TriStreamSing(nn.Module):
                      "residual_blocks", "fusion_blocks", "dec_blocks"):
             if name in top:
                 setattr(self, name, build_stack(sd, name, self.n_head))
+
+        # Everything above recognises structure it has seen before. This does
+        # not: it takes whatever keys are still unaccounted for and creates them
+        # at exactly their own path, whatever that path turns out to be.
+        #
+        # It exists because inferring a sub-network's layout from tensor counts
+        # is guesswork, and a guess that is wrong drops tensors silently. With
+        # this, the parameter tree matches the checkpoint by construction rather
+        # than by having predicted it correctly.
+        self.swept = self._sweep(sd)
+
+    def _sweep(self, sd):
+        """Create every checkpoint key the build did not already cover."""
+        have = set(self.state_dict())
+        missed = [k for k in sd if k not in have]
+        for k in missed:
+            self._attach(k, sd[k])
+        return missed
+
+    def _attach(self, path, tensor):
+        parts = path.split(".")
+        parent = self
+        for i, part in enumerate(parts[:-1]):
+            child = getattr(parent, part, None)
+            if isinstance(child, nn.Module):
+                parent = child
+                continue
+            if part in parent._parameters or part in parent._buffers:
+                # "a.b" needs "a" to be a module, but "a" is already a tensor.
+                # A real checkpoint cannot contain both — say which two keys
+                # disagree rather than letting torch raise "attribute already
+                # exists", which names neither.
+                raise ValueError(
+                    "cannot place %r: %r is itself a tensor in this checkpoint, "
+                    "so it cannot also contain %r"
+                    % (path, ".".join(parts[:i + 1]), ".".join(parts[i + 1:])))
+            child = _Named()
+            setattr(parent, part, child)
+            parent = child
+        leaf = parts[-1]
+        if leaf in parent._parameters or leaf in parent._buffers:
+            return
+        if leaf in parent._modules:
+            raise ValueError(
+                "cannot place %r: %r is already a sub-module built from other "
+                "keys, so it cannot also be a tensor" % (path, leaf))
+        parent.register_parameter(leaf, nn.Parameter(torch.empty_like(tensor)))
 
     # --- helpers -------------------------------------------------------------
     def _run(self, stack, x, mem=None):
@@ -479,9 +537,11 @@ def build_from_checkpoint(state_dict, config=None):
     model = TriStreamSing(state_dict, config or {})
     missing, unexpected = model.load_state_dict(state_dict, strict=False)
     if missing or unexpected:
+        # Every key, not a sample. A truncated list is what turned three
+        # separate mismatches into three separate round trips.
         raise ValueError(
-            "rebuilt %d/%d tensors. missing: %s ... unexpected: %s"
+            "rebuilt %d/%d tensors. missing (%d): %s | unexpected (%d): %s"
             % (len(state_dict) - len(unexpected), len(state_dict),
-               ", ".join(list(missing)[:8]) or "none",
-               ", ".join(list(unexpected)[:8]) or "none"))
+               len(missing), ", ".join(sorted(missing)[:80]) or "none",
+               len(unexpected), ", ".join(sorted(unexpected)[:80]) or "none"))
     return model.eval()

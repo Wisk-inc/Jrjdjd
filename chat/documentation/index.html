@@ -2859,10 +2859,10 @@ else:
       <div class="code-wrap">
         <button class="code-copy" type="button" id="copy-tristream">Copy</button>
         <pre class="server-code"><code id="tristream-code"># =============================================================================
-# TriStream-SVS server — build 9
+# TriStream-SVS server — build 10
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 9", the copy running is an older one — re-copy from
+# not say "build 10", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -2913,7 +2913,7 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 9
+BUILD        = 10
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 
@@ -3873,7 +3873,7 @@ def bind_model():
                 except Exception as e:
                     traceback.print_exc()
                     STATE["tried"].append("%s.build_from_checkpoint: %s: %s"
-                                          % (mod.__name__, type(e).__name__, str(e)[:160]))
+                                          % (mod.__name__, type(e).__name__, str(e)[:1200]))
                     made = None
                 if made is not None:
                     missing, unexpected = made.load_state_dict(sd, strict=False)
