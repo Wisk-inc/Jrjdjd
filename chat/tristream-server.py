@@ -1,8 +1,8 @@
 # =============================================================================
-# TriStream-SVS server — build 13
+# TriStream-SVS server — build 14
 #
 # The build number is printed at startup and reported by /health. If a log does
-# not say "build 13", the copy running is an older one — re-copy from
+# not say "build 14", the copy running is an older one — re-copy from
 # https://corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
@@ -53,7 +53,7 @@ import time
 # Bumped whenever this file changes. Printed at startup and reported by /health,
 # so a log or a screenshot says which version is actually running — guessing
 # that from behaviour wastes a round every time.
-BUILD        = 13
+BUILD        = 14
 
 REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 
