@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Automa — Run Your AI Company From Your Phone | CorX Labs</title>
+<meta name="description" content="Automa is an Android app for running a company of AI agents from your phone: tasks, approvals, agents, routines, and a file channel agents can pull from.">
+<link rel="canonical" href="https://corx-labs.com/automa/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Nathan">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/automa/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/automa/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/automa/">
+<meta property="og:title" content="Automa — Run Your AI Company From Your Phone">
+<meta property="og:description" content="Tasks, approvals, agents, and files. Your agents run on a server; the phone is where the decisions land — and where agents can ask for the files they need.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Automa — run your AI company from your phone">
+<meta property="article:modified_time" content="2026-09-28T00:00:00Z">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Automa — Run Your AI Company From Your Phone">
+<meta name="twitter:description" content="An Android app for a company of AI agents: what needs you, what they are working on, and the files they are waiting on.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["MobileApplication", "SoftwareApplication"],
+      "@id": "https://corx-labs.com/automa/#app",
+      "name": "Automa",
+      "url": "https://corx-labs.com/automa/",
+      "description": "Automa is an Android app from CorX Labs for running a company of AI agents from a phone. The agents themselves run on a server — either on the phone itself under Termux, or on a machine reachable over HTTPS — and Automa is the control surface: a home screen that shows only what needs a human, a task list, agent roles, recurring routines, scoped third-party connections, and a Device Files channel through which an agent can request a file from the phone and the phone can send it back.",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "AI agent orchestration client",
+      "operatingSystem": "Android",
+      "inLanguage": "en",
+      "dateModified": "2026-09-28",
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "creator": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "provider": { "@id": "https://corx-labs.com/#organization" },
+      "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
+      "keywords": "AI agents, agent orchestration, Android app, approvals, task management, routines, MCP, device files, Termux, mobile agent client",
+      "featureList": [
+        "Connect to an agent server by address — the phone itself under Termux, or an HTTPS machine",
+        "A home screen built around what needs a human: inbox, approvals, file requests, agents",
+        "Tasks grouped by day, with the agent and state on every row",
+        "Agents with named roles — CEO, CTO, engineer, designer — that you can add to or leave",
+        "Routines: recurring work definitions that materialise into auditable execution tasks",
+        "Scoped connections: which agents get access, which account they use, which actions they can take",
+        "Provider-hosted MCP connections alongside first-party ones",
+        "Device Files — an agent can request a file and the phone can send it, with optional auto-send",
+        "Thumb-zone layout with a raised centre create button, undo on destructive actions, and haptics"
+      ],
+      "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/automa/#webpage",
+      "url": "https://corx-labs.com/automa/",
+      "name": "Automa — Run Your AI Company From Your Phone",
+      "isPartOf": { "@id": "https://corx-labs.com/#website" },
+      "mainEntity": { "@id": "https://corx-labs.com/automa/#app" },
+      "inLanguage": "en",
+      "dateModified": "2026-09-28",
+      "breadcrumb": { "@id": "https://corx-labs.com/automa/#breadcrumb" },
+      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/automa/#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/" },
+        { "@type": "ListItem", "position": 3, "name": "Automa", "item": "https://corx-labs.com/automa/" }
+      ]
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://corx-labs.com/automa/#architecture-diagram",
+      "name": "How Automa is wired",
+      "caption": "The phone runs Automa, which talks to an agent server on port 3100 — either the same phone under Termux or a machine reachable over HTTPS. The server holds the agents, the tasks and the routines, and reaches outward through scoped connections to services like Gmail, GitHub, Notion, Slack and provider-hosted MCP endpoints. Three things flow back to the phone: approvals, file requests against the shared folder, and inbox messages.",
+      "representativeOfPage": true
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://corx-labs.com/automa/#article",
+      "headline": "Automa: the phone as the control surface for a company of agents",
+      "about": { "@id": "https://corx-labs.com/automa/#app" },
+      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "datePublished": "2026-09-28",
+      "dateModified": "2026-09-28",
+      "inLanguage": "en",
+      "isPartOf": { "@id": "https://corx-labs.com/automa/#webpage" },
+      "proficiencyLevel": "Beginner"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/automa/#faq",
+      "isPartOf": { "@id": "https://corx-labs.com/automa/#webpage" },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Automa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Automa is an Android app built by Nathan at CorX Labs in Jamaica. It is the control surface for a company of AI agents: the agents run on a server, and the phone is where you see what they are doing, approve the things that need a human, and hand over the files they ask for. It is not the model and not the agent runtime — it is the thing you hold."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a server to use Automa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Automa is a client, so it connects to an agent server by address — the default in the app is port 3100. There are two ways to get one. The server can run on the phone itself under Termux, in which case the phone is both the server and the client and nothing leaves the device unless an agent's connection sends it. Or it can run on another machine reachable over an HTTPS address, which is what you want if the work should carry on while the phone is asleep."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the home screen show?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only what needs a human. Four rows sit under a heading that says Needs you: the inbox, approvals waiting on you for things like hires, budgets and plans, file requests where an agent is blocked waiting on a file, and agents, which is who is working on what. Below that is the agent roster with the task each one is on and when it last finished something. Everything an agent can do without you stays off that screen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are Device Files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Device Files is the channel that lets an agent get a file off your phone. You pick one folder to share — Documents, for example — and the phone appears to the agents as a connected device. When an agent needs a file it posts a request, the request shows up on the Files tab and on the home screen under Needs you, and you send it. Nothing outside the folder you chose is visible to the agents."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is auto-send safe to turn on?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Understand what it changes before you do. With auto-send off, every file leaves the phone because you tapped Send. With it on, a file an agent asks for is sent without asking you, so anything inside the shared folder can leave the phone without a decision at the moment it happens. That is the whole point of the switch, and it is also the risk. Share a narrow folder that exists for this, not your whole Documents tree, and leave auto-send off until the folder is one you would be comfortable handing over wholesale."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a routine?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A routine is a recurring work definition, and it is deliberately not the work itself. When a routine fires it materialises an ordinary execution task — one that appears in the task list, is attributed to an agent, and leaves the same audit trail as a task you created by hand. A weekly report or a daily inbox sweep is a routine; each Monday's report is a task."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is an agent's access to Gmail or GitHub scoped?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three separate choices per connection, not one on-off switch: which agents get access, which account they use, and which actions they are allowed to take. So an engineer agent can hold write access to one GitHub account while the rest of the company has none, and a designer agent can read a Notion space without being able to change it. Alongside first-party connections, Automa also lists provider-hosted MCP servers — Airtable, for instance — which are scoped the same way."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I download Automa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not from this page yet. Automa is Android-only and new, and there is no public download link here — this page describes what the app is and how it works. If you want to try it, contact CorX Labs at lkk89002@gmail.com."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/chat/">Chat</a>
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/" aria-current="page">Our Products</a>
+      <a href="/benchmarks/">Benchmarks</a>
+      <a href="/blog/">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/contact/">Get in touch</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/chat/">Chat</a></li>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/benchmarks/">Benchmarks</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="/contact/">Get in touch</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><span aria-current="page">Automa</span></li>
+      </ol>
+    </nav>
+
+    <div class="tag-row" style="margin-top:22px">
+      <span class="tag">App</span>
+      <span class="tag">Android</span>
+      <span class="tag">Agent orchestration</span>
+      <span class="tag">Device Files</span>
+      <span class="tag">No public download yet</span>
+    </div>
+
+    <h1>Automa</h1>
+    <p class="lede">Run your AI company from your phone. Tasks, approvals, agents and files —
+      and agents that can ask your phone for the files they need.</p>
+
+    <div class="btn-row mt-m">
+      <a class="btn btn-primary" href="#screens">See the app</a>
+      <a class="btn btn-ghost" href="#how">How it is wired</a>
+    </div>
+    <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
+      Platform: Android &middot; Server port: <code>3100</code> &middot; Developer: Nathan &middot; Origin: Jamaica
+    </p>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <!-- Answer-first summary -->
+  <section class="section-tight" id="what-it-is">
+    <div class="shell">
+      <div class="answer-box" style="margin-top:0" data-reveal>
+        <p><strong>Automa</strong> is an Android app from <a href="/about/">CorX Labs</a> for running a
+          company of AI agents from a phone. The agents do not live in the app. They run on a server —
+          either the same phone under Termux, or a machine somewhere else reachable over HTTPS — and
+          Automa is the <strong>control surface</strong>: the place where you see what they are doing,
+          approve what needs a human, and hand over the files they are waiting on.</p>
+        <p>The design bet is that a phone is a bad place to <em>supervise</em> work and a good place to
+          <strong>unblock</strong> it. So the home screen does not try to show the company. It shows
+          one heading — <em>Needs you</em> — and four things under it: your inbox, approvals, file
+          requests, and who is working on what. Everything an agent can finish on its own never
+          reaches that screen.</p>
+      </div>
+
+      <div class="callout mt-m" data-reveal>
+        <p><strong>Automa is Android-only and new, and there is no public download link on this page
+          yet.</strong> What follows is a description of the app and how it works, drawn from the
+          build itself — not a store listing, and not a set of performance claims.
+          <a href="/contact/">Get in touch</a> if you want to try it.</p>
+      </div>
+
+      <dl class="spec-list mt-m" data-reveal>
+        <div><dt>Platform</dt><dd>Android</dd></div>
+        <div><dt>Shape</dt><dd>Client for an agent server</dd></div>
+        <div><dt>Server</dt><dd>This phone (Termux) or HTTPS</dd></div>
+        <div><dt>Default port</dt><dd><code>3100</code></dd></div>
+        <div><dt>Primary nav</dt><dd>Home, Tasks, +, Files, Inbox</dd></div>
+        <div><dt>File channel</dt><dd>Device Files, one shared folder</dd></div>
+        <div><dt>Recurring work</dt><dd>Routines &rarr; execution tasks</dd></div>
+        <div><dt>Connections</dt><dd>First-party &amp; provider-hosted MCP</dd></div>
+        <div><dt>Download</dt><dd>Not linked here yet</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- How it is wired -->
+  <section class="section-tight" id="how" style="padding-top:0">
+    <div class="shell">
+      <h2>1. How it is wired</h2>
+      <div class="prose">
+        <p>Three parts, and it matters which one is where. The <strong>phone</strong> holds the app and
+          one shared folder. The <strong>server</strong> holds the agents, their tasks and their
+          routines, and does the work. The <strong>connections</strong> are how the server reaches
+          services that are not yours to host — mail, code, docs, chat. Solid lines carry requests
+          outward; dashed lines are the three things that come back to you.</p>
+      </div>
+
+      <figure class="diagram mt-m" data-reveal>
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 1140 596" width="1140" height="596" role="img"
+               aria-labelledby="au1-title au1-desc">
+            <title id="au1-title">How Automa is wired: phone, agent server, and scoped connections</title>
+            <desc id="au1-desc">On the left, the phone runs the Automa app and shares one folder. It
+              connects to an agent server on port 3100, which is either that same phone running under
+              Termux or a separate machine reachable over an HTTPS address. The server holds the
+              agents, the task list and the routines, and reaches outward through per-agent scoped
+              connections to services such as Gmail, GitHub, Notion, Slack and provider-hosted MCP
+              endpoints. Three things flow back to the phone along dashed lines: approvals that need a
+              human decision, file requests against the shared folder, and inbox messages.</desc>
+
+            <defs>
+              <marker id="au-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow"/>
+              </marker>
+              <marker id="au-ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                <path d="M0,1 L9,5 L0,9 z" class="dg-arrow-soft"/>
+              </marker>
+            </defs>
+
+            <!-- lanes -->
+            <rect class="dg-lane" x="252" y="40"  width="872" height="290" rx="12"/>
+            <rect class="dg-lane" x="252" y="368" width="872" height="172" rx="12"/>
+            <text class="dg-tag" x="268" y="32">The company runs here</text>
+            <text class="dg-tag" x="268" y="360">Comes back to you</text>
+
+            <!-- phone -->
+            <rect class="dg-box-a" x="16" y="128" width="196" height="150" rx="12"/>
+            <rect class="dg-accent" x="16" y="128" width="3" height="150" rx="1.5"/>
+            <text class="dg-tag"   x="36" y="152">Your phone</text>
+            <text class="dg-title" x="36" y="174">Automa</text>
+            <text class="dg-sub"   x="36" y="194">Home &middot; Tasks &middot; + &middot; Files &middot; Inbox</text>
+            <text class="dg-sub"   x="36" y="212">one shared folder</text>
+            <text class="dg-sub"   x="36" y="240">Sees what needs a human.</text>
+            <text class="dg-sub"   x="36" y="256">Does not run the agents.</text>
+
+            <!-- phone to server -->
+            <path class="dg-edge" d="M212 186 H268" marker-end="url(#au-ah)"/>
+
+            <!-- server -->
+            <rect class="dg-box-a" x="268" y="120" width="236" height="166" rx="12"/>
+            <rect class="dg-accent" x="268" y="120" width="3" height="166" rx="1.5"/>
+            <text class="dg-tag"   x="288" y="144">Agent server</text>
+            <text class="dg-title" x="288" y="166">Port 3100</text>
+            <text class="dg-sub"   x="288" y="188">Either:</text>
+            <text class="dg-sub"   x="288" y="206">&bull; this phone, under Termux</text>
+            <text class="dg-sub"   x="288" y="224">&bull; a machine on an HTTPS address</text>
+            <text class="dg-sub"   x="288" y="252">Holds the agents, the tasks</text>
+            <text class="dg-sub"   x="288" y="268">and the routines.</text>
+
+            <!-- server to agents / tasks -->
+            <path class="dg-edge" d="M504 170 H560 V112 H596" marker-end="url(#au-ah)"/>
+            <path class="dg-edge" d="M504 236 H560 V248 H596" marker-end="url(#au-ah)"/>
+
+            <!-- agents -->
+            <rect class="dg-box" x="596" y="60" width="214" height="120" rx="11"/>
+            <text class="dg-tag"   x="614" y="82">Agents</text>
+            <text class="dg-title" x="614" y="104">Named roles</text>
+            <text class="dg-sub"   x="614" y="124">Ada &mdash; CEO</text>
+            <text class="dg-sub"   x="614" y="140">Grace &mdash; CTO</text>
+            <text class="dg-sub"   x="614" y="156">Linus &mdash; Engineer</text>
+            <text class="dg-sub"   x="614" y="172">Margaret &mdash; Designer</text>
+
+            <!-- tasks -->
+            <rect class="dg-box" x="596" y="200" width="214" height="110" rx="11"/>
+            <text class="dg-tag"   x="614" y="222">Work</text>
+            <text class="dg-title" x="614" y="244">Tasks</text>
+            <text class="dg-sub"   x="614" y="264">one unit, one owner, one state</text>
+            <text class="dg-title" x="614" y="286">Routines</text>
+            <text class="dg-sub"   x="614" y="302">fire, and materialise a task</text>
+
+            <!-- agents to connections -->
+            <path class="dg-edge" d="M810 120 H866" marker-end="url(#au-ah)"/>
+            <text class="dg-tag" x="814" y="112">scoped</text>
+
+            <!-- connections -->
+            <rect class="dg-box" x="866" y="60" width="240" height="250" rx="11"/>
+            <text class="dg-tag"   x="884" y="82">Connections</text>
+            <text class="dg-title" x="884" y="104">What agents may touch</text>
+            <text class="dg-sub"   x="884" y="128">Gmail</text>
+            <text class="dg-sub"   x="884" y="146">GitHub</text>
+            <text class="dg-sub"   x="884" y="164">Notion</text>
+            <text class="dg-sub"   x="884" y="182">Slack</text>
+            <text class="dg-sub"   x="884" y="200">Airtable &mdash; provider-hosted MCP</text>
+            <text class="dg-tag"   x="884" y="232">Three choices per connection</text>
+            <text class="dg-sub"   x="884" y="252">which agents,</text>
+            <text class="dg-sub"   x="884" y="268">which account,</text>
+            <text class="dg-sub"   x="884" y="284">which actions.</text>
+
+            <!-- back to you lane -->
+            <rect class="dg-box" x="268" y="392" width="244" height="90" rx="11"/>
+            <text class="dg-tag"   x="286" y="414">Needs a decision</text>
+            <text class="dg-title" x="286" y="436">Approvals</text>
+            <text class="dg-sub"   x="286" y="456">hires, budgets, plans</text>
+            <text class="dg-sub"   x="286" y="472">nothing proceeds until you say</text>
+
+            <rect class="dg-box-a" x="536" y="392" width="244" height="90" rx="11"/>
+            <rect class="dg-accent" x="536" y="392" width="3" height="90" rx="1.5"/>
+            <text class="dg-tag"   x="554" y="414">Needs a file</text>
+            <text class="dg-title" x="554" y="436">File requests</text>
+            <text class="dg-sub"   x="554" y="456">against the one shared folder</text>
+            <text class="dg-sub"   x="554" y="472">you send &mdash; or auto-send does</text>
+
+            <rect class="dg-box" x="804" y="392" width="244" height="90" rx="11"/>
+            <text class="dg-tag"   x="822" y="414">Needs reading</text>
+            <text class="dg-title" x="822" y="436">Inbox</text>
+            <text class="dg-sub"   x="822" y="456">what the agents finished,</text>
+            <text class="dg-sub"   x="822" y="472">and what they could not</text>
+
+            <!-- the server produces what lands in the lane below -->
+            <path class="dg-edge" d="M386 286 V388" marker-end="url(#au-ah)"/>
+            <text class="dg-tag" x="392" y="342">raises</text>
+
+            <!-- dashed returns, routed under the boxes so nothing is struck through -->
+            <path class="dg-edge-dash" d="M386 482 V500 H200 V286" marker-end="url(#au-ahs)"/>
+            <path class="dg-edge-dash" d="M658 482 V514 H160 V286" marker-end="url(#au-ahs)"/>
+            <path class="dg-edge-dash" d="M926 482 V528 H120 V286" marker-end="url(#au-ahs)"/>
+
+            <text class="dg-sub" x="16" y="576">The shared folder never leaves the phone. A file does, one request at a time — and that is the one place where turning a switch on removes you from the loop.</text>
+          </svg>
+        </div>
+
+        <div class="diagram-key">
+          <span><i aria-hidden="true"></i> Work going out</span>
+          <span><i class="is-dashed" aria-hidden="true"></i> Coming back to you</span>
+          <span>The phone is the control surface, not the runtime</span>
+        </div>
+
+        <figcaption>How Automa is wired. The app connects to an agent server on port 3100 — which may
+          be the phone itself under Termux. The server holds the agents and their work and reaches
+          outward through connections you scope per agent. Three things come back: approvals, file
+          requests, and the inbox.</figcaption>
+      </figure>
+
+      <div class="table-wrap mt-m" data-reveal>
+        <table>
+          <caption class="visually-hidden">Where each part of Automa runs, and what it is responsible for</caption>
+          <thead>
+            <tr><th scope="col">Part</th><th scope="col">Where it runs</th><th scope="col">Responsible for</th><th scope="col">Keeps working if the phone sleeps</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Automa</th>
+              <td>The phone</td>
+              <td>Showing what needs a human; creating tasks; sending files</td>
+              <td>Not needed &mdash; it is only the control surface</td>
+            </tr>
+            <tr>
+              <th scope="row">Agent server</th>
+              <td>The phone under Termux, <em>or</em> a machine on an HTTPS address</td>
+              <td>Running the agents, the tasks and the routines</td>
+              <td>Only if the server is not the phone</td>
+            </tr>
+            <tr>
+              <th scope="row">Shared folder</th>
+              <td>The phone, always</td>
+              <td>The only files agents can ask for</td>
+              <td>Requests queue; the file goes when the phone is reachable</td>
+            </tr>
+            <tr>
+              <th scope="row">Connections</th>
+              <td>The provider, or a provider-hosted MCP server</td>
+              <td>Mail, code, docs, chat &mdash; scoped per agent</td>
+              <td>Yes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- The screens -->
+  <section class="section-tight" id="screens">
+    <div class="shell">
+      <h2>2. The app, screen by screen</h2>
+      <div class="prose">
+        <p>Eight screens, in the order you meet them. Every action sits in the bottom third where a
+          thumb reaches — <strong>Home, Tasks, a raised create button, Files, Inbox</strong> — and the
+          destructive ones undo rather than confirm.</p>
+      </div>
+
+      <div class="ph-grid mt-m" data-reveal>
+
+        <!-- ============ 1. Connect ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph1t ph1d">
+            <title id="ph1t">Automa: connect to your server</title>
+            <desc id="ph1d">A connect screen with a server address field reading 192.168.1.20 colon
+              3100, two choices below it — this phone under Termux, selected, or an HTTPS address —
+              a list of recently used addresses, and a Connect button.</desc>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <text class="ph-h" x="24" y="76">Connect</text>
+            <text class="ph-s" x="24" y="92">Point Automa at the server</text>
+            <text class="ph-s" x="24" y="104">running your company.</text>
+
+            <rect class="ph-card" x="20" y="118" width="260" height="48" rx="10"/>
+            <text class="ph-k" x="32" y="136">Server address</text>
+            <text class="ph-m" x="32" y="154">192.168.1.20:3100</text>
+
+            <rect class="ph-card-a" x="20" y="176" width="260" height="46" rx="10"/>
+            <circle class="ph-stroke" cx="38" cy="199" r="6.5"/>
+            <circle class="ph-accent" cx="38" cy="199" r="3.4"/>
+            <text class="ph-t" x="54" y="196">This phone (Termux)</text>
+            <text class="ph-s" x="54" y="210">The server runs here</text>
+
+            <rect class="ph-card" x="20" y="230" width="260" height="46" rx="10"/>
+            <circle class="ph-stroke" cx="38" cy="253" r="6.5"/>
+            <text class="ph-t" x="54" y="250">HTTPS address</text>
+            <text class="ph-s" x="54" y="264">A machine somewhere else</text>
+
+            <text class="ph-k" x="24" y="302">Recent</text>
+            <rect class="ph-card" x="20" y="312" width="260" height="36" rx="9"/>
+            <text class="ph-m" x="32" y="329">192.168.1.20:3100</text>
+            <text class="ph-s" x="32" y="341">2 minutes ago</text>
+            <rect class="ph-card" x="20" y="356" width="260" height="36" rx="9"/>
+            <text class="ph-m" x="32" y="373">10.0.0.14:3100</text>
+            <text class="ph-s" x="32" y="385">yesterday</text>
+            <rect class="ph-card" x="20" y="400" width="260" height="36" rx="9"/>
+            <text class="ph-m" x="32" y="417">nor.local:3100</text>
+            <text class="ph-s" x="32" y="429">last week</text>
+
+            <rect class="ph-accent" x="20" y="478" width="260" height="42" rx="21"/>
+            <text class="ph-btn-t" x="150" y="504">Connect</text>
+            <text class="ph-s ph-mid" x="150" y="538">Nothing is stored off the device.</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>Connect to your server</strong>Two ways in: the phone itself under
+            Termux, or a machine on an HTTPS address.</figcaption>
+        </figure>
+
+        <!-- ============ 2. Home ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph2t ph2d">
+            <title id="ph2t">Automa: home, what needs you</title>
+            <desc id="ph2d">A home screen headed Needs you, with four rows — inbox, approvals for
+              hires, budgets and plans, file requests where agents are waiting on a file, and agents,
+              who is working on what. Below is the agent roster showing Linus writing the Q4 product
+              roadmap, task NOR-3, finished five hours ago.</desc>
+            <defs><linearGradient id="au2g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" class="ph-g0"/><stop offset="1" class="ph-g1"/></linearGradient></defs>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <text class="ph-h" x="24" y="76">Home</text>
+            <text class="ph-s" x="24" y="90">NOR &middot; 4 agents</text>
+            <path d="M266 58 c11 1 14 12 10 19 c-5 8 -18 9 -23 2 c-6 -8 -1 -22 13 -21z" fill="url(#au2g)"/>
+
+            <text class="ph-k" x="24" y="118">Needs you</text>
+
+            <rect class="ph-card" x="20" y="128" width="260" height="42" rx="10"/>
+            <text class="ph-t" x="34" y="146">Inbox</text>
+            <text class="ph-s" x="34" y="160">What finished, and what did not</text>
+            <circle class="ph-accent" cx="262" cy="149" r="9"/>
+            <text class="ph-btn-t" x="262" y="152" style="font-size:8.5px">3</text>
+
+            <rect class="ph-card-a" x="20" y="178" width="260" height="42" rx="10"/>
+            <rect class="ph-accent" x="20" y="178" width="3" height="42" rx="1.5"/>
+            <text class="ph-t" x="34" y="196">Approvals</text>
+            <text class="ph-s" x="34" y="210">Hires, budgets, plans</text>
+            <circle class="ph-accent" cx="262" cy="199" r="9"/>
+            <text class="ph-btn-t" x="262" y="202" style="font-size:8.5px">2</text>
+
+            <rect class="ph-card-a" x="20" y="228" width="260" height="42" rx="10"/>
+            <rect class="ph-accent" x="20" y="228" width="3" height="42" rx="1.5"/>
+            <text class="ph-t" x="34" y="246">File requests</text>
+            <text class="ph-s" x="34" y="260">Agents waiting on a file</text>
+            <circle class="ph-accent" cx="262" cy="249" r="9"/>
+            <text class="ph-btn-t" x="262" y="252" style="font-size:8.5px">1</text>
+
+            <rect class="ph-card" x="20" y="278" width="260" height="42" rx="10"/>
+            <text class="ph-t" x="34" y="296">Agents</text>
+            <text class="ph-s" x="34" y="310">Who is working on what</text>
+            <path class="ph-stroke" d="M258 293 l5 5 l-5 5"/>
+
+            <text class="ph-k" x="24" y="350">Agents</text>
+            <rect class="ph-card" x="20" y="360" width="260" height="76" rx="11"/>
+            <circle cx="44" cy="384" r="13" fill="url(#au2g)"/>
+            <text class="ph-t" x="66" y="381">Linus</text>
+            <text class="ph-s" x="66" y="394">Engineer &middot; Backend</text>
+            <path class="ph-hair" d="M32 404 H268"/>
+            <text class="ph-s" x="32" y="420">Write Q4 product roadmap</text>
+            <text class="ph-a" x="32" y="432">NOR-3</text>
+            <text class="ph-s ph-end" x="268" y="432">Finished 5h ago</text>
+
+            <rect class="ph-card" x="20" y="446" width="260" height="60" rx="11"/>
+            <circle cx="44" cy="470" r="13" fill="url(#au2g)"/>
+            <text class="ph-t" x="66" y="467">Ada</text>
+            <text class="ph-s" x="66" y="480">CEO</text>
+            <text class="ph-s" x="32" y="498">Waiting on your approval &middot; budget</text>
+
+            <path class="ph-hair" d="M9 542 H291"/>
+            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
+            <text class="ph-nav is-on" x="37" y="584">Home</text>
+            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
+            <text class="ph-nav" x="93" y="584">Tasks</text>
+            <circle class="ph-fab" cx="150" cy="558" r="17"/>
+            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
+            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
+            <text class="ph-nav" x="207" y="584">Files</text>
+            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
+            <text class="ph-nav" x="263" y="584">Inbox</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>Home: what needs you</strong>Four rows under one heading. Work an agent
+            can finish alone never appears here.</figcaption>
+        </figure>
+
+        <!-- ============ 3. Tasks ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph3t ph3d">
+            <title id="ph3t">Automa: tasks</title>
+            <desc id="ph3d">A task list with a search field and a list-or-board toggle. Tasks are
+              grouped by day under a Yesterday heading — fixing a login redirect bug on Android,
+              drafting the September expense report, collecting receipts, refreshing onboarding copy
+              and a weekly metrics digest — each with its owner and state.</desc>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <text class="ph-h" x="24" y="76">Tasks</text>
+
+            <rect class="ph-card" x="20" y="90" width="260" height="34" rx="17"/>
+            <circle class="ph-stroke" cx="40" cy="106" r="4.5"/>
+            <path class="ph-stroke" d="M43.5 109.5 l3 3"/>
+            <text class="ph-s" x="56" y="110">Search tasks, agents, tags</text>
+
+            <rect class="ph-card-a" x="20" y="134" width="130" height="26" rx="8"/>
+            <text class="ph-ghost-t" x="85" y="151">List</text>
+            <text class="ph-s ph-mid" x="215" y="151">Board</text>
+
+            <text class="ph-k" x="24" y="186">Yesterday</text>
+
+            <rect class="ph-card" x="20" y="196" width="260" height="46" rx="10"/>
+            <circle class="ph-accent" cx="34" cy="219" r="3.5"/>
+            <text class="ph-t" x="46" y="215">Fix login redirect bug</text>
+            <text class="ph-s" x="46" y="229">Linus &middot; In review</text>
+            <text class="ph-a ph-end" x="268" y="229">NOR-7</text>
+
+            <rect class="ph-card" x="20" y="250" width="260" height="46" rx="10"/>
+            <circle class="ph-stroke" cx="34" cy="273" r="3.5"/>
+            <text class="ph-t" x="46" y="269">Draft expense report</text>
+            <text class="ph-s" x="46" y="283">Ada &middot; Todo</text>
+            <text class="ph-a ph-end" x="268" y="283">NOR-8</text>
+
+            <rect class="ph-card-a" x="20" y="304" width="260" height="46" rx="10"/>
+            <rect class="ph-accent" x="20" y="304" width="3" height="46" rx="1.5"/>
+            <text class="ph-t" x="46" y="323">Collect September receipts</text>
+            <text class="ph-s" x="46" y="337">Waiting on a file from you</text>
+            <text class="ph-a ph-end" x="268" y="337">NOR-9</text>
+
+            <rect class="ph-card" x="20" y="358" width="260" height="46" rx="10"/>
+            <circle class="ph-stroke" cx="34" cy="381" r="3.5"/>
+            <text class="ph-t" x="46" y="377">Refresh onboarding copy</text>
+            <text class="ph-s" x="46" y="391">Margaret &middot; Done</text>
+            <text class="ph-a ph-end" x="268" y="391">NOR-10</text>
+
+            <rect class="ph-card" x="20" y="412" width="260" height="46" rx="10"/>
+            <circle class="ph-stroke" cx="34" cy="435" r="3.5"/>
+            <text class="ph-t" x="46" y="431">Weekly metrics digest</text>
+            <text class="ph-s" x="46" y="445">Routine &middot; Auto mode</text>
+            <text class="ph-a ph-end" x="268" y="445">NOR-11</text>
+
+            <text class="ph-s ph-mid" x="150" y="490">Swipe a row to move it. Undo, not confirm.</text>
+
+            <path class="ph-hair" d="M9 542 H291"/>
+            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
+            <text class="ph-nav" x="37" y="584">Home</text>
+            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
+            <text class="ph-nav is-on" x="93" y="584">Tasks</text>
+            <circle class="ph-fab" cx="150" cy="558" r="17"/>
+            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
+            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
+            <text class="ph-nav" x="207" y="584">Files</text>
+            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
+            <text class="ph-nav" x="263" y="584">Inbox</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>Tasks</strong>Grouped by day. Every row carries its owner, its state and
+            its tag — enough to answer &ldquo;where is that?&rdquo; without opening it.</figcaption>
+        </figure>
+
+        <!-- ============ 4. Connections ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph4t ph4d">
+            <title id="ph4t">Automa: connections</title>
+            <desc id="ph4d">A connections screen explaining that you choose which agents get access,
+              which accounts they use and which actions they can take. Rows list Gmail, GitHub,
+              Notion, Slack and Airtable, the last marked as a provider-hosted MCP server, each
+              showing how many agents hold it and at what permission.</desc>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <text class="ph-h" x="24" y="76">Connections</text>
+            <text class="ph-s" x="24" y="94">Give your agents the access they</text>
+            <text class="ph-s" x="24" y="106">need — and only that. Choose which</text>
+            <text class="ph-s" x="24" y="118">agents, which account, which actions.</text>
+
+            <rect class="ph-card" x="20" y="134" width="260" height="46" rx="10"/>
+            <rect class="ph-card-a" x="32" y="146" width="22" height="22" rx="6"/>
+            <text class="ph-a" x="39" y="161">G</text>
+            <text class="ph-t" x="64" y="154">Gmail</text>
+            <text class="ph-s" x="64" y="168">1 agent &middot; send &amp; read</text>
+            <text class="ph-a ph-end" x="268" y="161">Connected</text>
+
+            <rect class="ph-card" x="20" y="188" width="260" height="46" rx="10"/>
+            <rect class="ph-card-a" x="32" y="200" width="22" height="22" rx="6"/>
+            <text class="ph-a" x="39" y="215">GH</text>
+            <text class="ph-t" x="64" y="208">GitHub</text>
+            <text class="ph-s" x="64" y="222">2 agents &middot; write on one repo</text>
+            <text class="ph-a ph-end" x="268" y="215">Connected</text>
+
+            <rect class="ph-card" x="20" y="242" width="260" height="46" rx="10"/>
+            <rect class="ph-card-a" x="32" y="254" width="22" height="22" rx="6"/>
+            <text class="ph-a" x="39" y="269">N</text>
+            <text class="ph-t" x="64" y="262">Notion</text>
+            <text class="ph-s" x="64" y="276">1 agent &middot; read only</text>
+            <text class="ph-a ph-end" x="268" y="269">Connected</text>
+
+            <rect class="ph-card" x="20" y="296" width="260" height="46" rx="10"/>
+            <rect class="ph-card-a" x="32" y="308" width="22" height="22" rx="6"/>
+            <text class="ph-a" x="39" y="323">S</text>
+            <text class="ph-t" x="64" y="316">Slack</text>
+            <text class="ph-s" x="64" y="330">No agents yet</text>
+            <text class="ph-s ph-end" x="268" y="323">Connect</text>
+
+            <rect class="ph-card-a" x="20" y="350" width="260" height="58" rx="10"/>
+            <rect class="ph-accent" x="20" y="350" width="3" height="58" rx="1.5"/>
+            <rect class="ph-card" x="32" y="362" width="22" height="22" rx="6"/>
+            <text class="ph-a" x="39" y="377">A</text>
+            <text class="ph-t" x="64" y="370">Airtable</text>
+            <text class="ph-s" x="64" y="384">1 agent &middot; read &amp; append rows</text>
+            <text class="ph-k" x="32" y="400">Provider-hosted MCP</text>
+            <text class="ph-a ph-end" x="268" y="400">Connected</text>
+
+            <rect class="ph-dash" x="20" y="424" width="260" height="58" rx="10"/>
+            <text class="ph-k" x="32" y="442">Scope, per connection</text>
+            <text class="ph-s" x="32" y="459">Which agents &middot; which account</text>
+            <text class="ph-s" x="32" y="473">&middot; which actions. Not one switch.</text>
+
+            <path class="ph-hair" d="M9 542 H291"/>
+            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
+            <text class="ph-nav" x="37" y="584">Home</text>
+            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
+            <text class="ph-nav" x="93" y="584">Tasks</text>
+            <circle class="ph-fab" cx="150" cy="558" r="17"/>
+            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
+            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
+            <text class="ph-nav" x="207" y="584">Files</text>
+            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
+            <text class="ph-nav" x="263" y="584">Inbox</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>Connections</strong>Access is three choices, not one switch: which
+            agents, which account, which actions.</figcaption>
+        </figure>
+
+        <!-- ============ 5. New task ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph5t ph5d">
+            <title id="ph5t">Automa: the new task sheet</title>
+            <desc id="ph5d">A sheet slid up over the task list, headed NOR then New task. A text field
+              reads: collect receipts for the September expense report. Below it are fields for which
+              agent it is for and which company it is in, three chips — Todo, Upload and Auto mode —
+              and two buttons, Discard draft and Create task.</desc>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <!-- dimmed list behind -->
+            <rect class="ph-dim" x="24" y="66" width="70" height="9" rx="4" style="opacity:.28"/>
+            <rect class="ph-dim" x="20" y="88" width="260" height="30" rx="9" style="opacity:.16"/>
+            <rect class="ph-dim" x="20" y="126" width="260" height="30" rx="9" style="opacity:.16"/>
+            <rect class="ph-dim" x="20" y="164" width="260" height="30" rx="9" style="opacity:.16"/>
+
+            <!-- sheet -->
+            <path class="ph-card-a" d="M9 234 a24 24 0 0 1 24 -24 h234 a24 24 0 0 1 24 24 v376 h-282z"/>
+            <rect class="ph-dim" x="132" y="220" width="36" height="4" rx="2"/>
+            <text class="ph-k" x="32" y="250">NOR &rsaquo; New task</text>
+
+            <rect class="ph-card" x="24" y="262" width="252" height="66" rx="10"/>
+            <text class="ph-t" x="36" y="286">Collect receipts for the</text>
+            <text class="ph-t" x="36" y="302">September expense report</text>
+            <rect class="ph-accent" x="36" y="310" width="1.4" height="11"/>
+
+            <rect class="ph-card" x="24" y="340" width="122" height="44" rx="10"/>
+            <text class="ph-k" x="36" y="358">For</text>
+            <text class="ph-t" x="36" y="374">Ada</text>
+            <rect class="ph-card" x="154" y="340" width="122" height="44" rx="10"/>
+            <text class="ph-k" x="166" y="358">In</text>
+            <text class="ph-t" x="166" y="374">NOR</text>
+
+            <rect class="ph-card" x="24" y="398" width="58" height="26" rx="13"/>
+            <text class="ph-ghost-t" x="53" y="415">Todo</text>
+            <rect class="ph-card" x="90" y="398" width="66" height="26" rx="13"/>
+            <text class="ph-ghost-t" x="123" y="415">Upload</text>
+            <rect class="ph-card-a" x="164" y="398" width="88" height="26" rx="13"/>
+            <rect class="ph-accent" x="176" y="408" width="6" height="6" rx="3"/>
+            <text class="ph-ghost-t" x="215" y="415">Auto mode</text>
+
+            <text class="ph-s" x="24" y="448">Auto mode lets the agent pick its own</text>
+            <text class="ph-s" x="24" y="460">next step. You still hold the approvals.</text>
+
+            <rect class="ph-card" x="24" y="482" width="118" height="42" rx="21"/>
+            <text class="ph-ghost-t" x="83" y="508">Discard draft</text>
+            <rect class="ph-accent" x="158" y="482" width="118" height="42" rx="21"/>
+            <text class="ph-btn-t" x="217" y="508">Create task</text>
+
+            <text class="ph-k ph-mid" x="150" y="556">Both buttons in the thumb zone</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>New task</strong>One sheet, raised by the centre button. The two
+            decisions sit where the thumb already is.</figcaption>
+        </figure>
+
+        <!-- ============ 6. Files ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph6t ph6d">
+            <title id="ph6t">Automa: Device Files</title>
+            <desc id="ph6d">A files screen showing this device, a Pixel 8, connected so agents can
+              reach it. It is sharing a Documents folder of four files, with an auto-send requested
+              files switch turned on, and buttons to change the folder or stop sharing. Tabs read
+              Requests, Files, and Devices, and two pending requests are listed with a Send action.</desc>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <text class="ph-h" x="24" y="76">Files</text>
+
+            <rect class="ph-card-a" x="20" y="90" width="260" height="50" rx="10"/>
+            <rect class="ph-accent" x="20" y="90" width="3" height="50" rx="1.5"/>
+            <circle class="ph-accent" cx="38" cy="112" r="4"/>
+            <text class="ph-t" x="52" y="110">Pixel 8</text>
+            <text class="ph-s" x="52" y="124">Connected &middot; agents can reach</text>
+            <text class="ph-s" x="52" y="134">this phone</text>
+
+            <rect class="ph-card" x="20" y="150" width="260" height="88" rx="11"/>
+            <text class="ph-k" x="32" y="168">Sharing</text>
+            <text class="ph-t" x="32" y="185">Documents</text>
+            <text class="ph-s" x="32" y="198">4 files &middot; nothing outside it is visible</text>
+            <path class="ph-hair" d="M32 210 H268"/>
+            <text class="ph-t" x="32" y="228">Auto-send requested files</text>
+            <rect class="ph-accent" x="238" y="216" width="28" height="16" rx="8"/>
+            <circle cx="258" cy="224" r="6" fill="var(--paper)"/>
+
+            <rect class="ph-card" x="20" y="248" width="124" height="34" rx="17"/>
+            <text class="ph-ghost-t" x="82" y="269">Change folder</text>
+            <rect class="ph-card" x="156" y="248" width="124" height="34" rx="17"/>
+            <text class="ph-ghost-t" x="218" y="269">Stop sharing</text>
+
+            <text class="ph-ghost-t" x="58" y="312">Requests</text>
+            <rect class="ph-accent" x="26" y="320" width="64" height="2" rx="1"/>
+            <text class="ph-s ph-mid" x="150" y="312">Files (3)</text>
+            <text class="ph-s ph-mid" x="240" y="312">Devices (1)</text>
+            <path class="ph-hair" d="M20 321 H280"/>
+
+            <rect class="ph-card-a" x="20" y="334" width="260" height="48" rx="10"/>
+            <rect class="ph-accent" x="20" y="334" width="3" height="48" rx="1.5"/>
+            <text class="ph-t" x="34" y="353">Linus wants invoice-sept.pdf</text>
+            <text class="ph-s" x="34" y="367">2 minutes ago &middot; NOR-7</text>
+            <text class="ph-a ph-end" x="268" y="367">Send</text>
+
+            <rect class="ph-card" x="20" y="392" width="260" height="48" rx="10"/>
+            <text class="ph-t" x="34" y="411">Ada wants receipts-09.zip</text>
+            <text class="ph-s" x="34" y="425">Sent automatically &middot; 1h ago</text>
+            <text class="ph-s ph-end" x="268" y="425">Undo</text>
+
+            <rect class="ph-accent" x="20" y="464" width="260" height="42" rx="21"/>
+            <text class="ph-btn-t" x="150" y="490">Send a file</text>
+
+            <path class="ph-hair" d="M9 542 H291"/>
+            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
+            <text class="ph-nav" x="37" y="584">Home</text>
+            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
+            <text class="ph-nav" x="93" y="584">Tasks</text>
+            <circle class="ph-fab" cx="150" cy="558" r="17"/>
+            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
+            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
+            <text class="ph-nav is-on" x="207" y="584">Files</text>
+            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
+            <text class="ph-nav" x="263" y="584">Inbox</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>Files: agents pull files</strong>One shared folder, a request queue, and
+            an auto-send switch that takes you out of the loop.</figcaption>
+        </figure>
+
+        <!-- ============ 7. Routines ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph7t ph7d">
+            <title id="ph7t">Automa: routines, and the thumb zone</title>
+            <desc id="ph7d">A routines screen describing routines as recurring work definitions that
+              materialise into auditable execution tasks. The empty state reads: no routines yet, a
+              routine starts a task on a schedule, like a weekly report or a daily inbox sweep, with
+              a create routine button. The raised centre button of the bottom bar is ringed to show
+              the thumb zone.</desc>
+            <defs><linearGradient id="au7g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" class="ph-g0"/><stop offset="1" class="ph-g1"/></linearGradient></defs>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <text class="ph-h" x="24" y="76">Routines</text>
+            <text class="ph-s" x="24" y="94">Recurring work definitions that</text>
+            <text class="ph-s" x="24" y="106">materialize into auditable</text>
+            <text class="ph-s" x="24" y="118">execution tasks.</text>
+
+            <rect class="ph-dash" x="20" y="140" width="260" height="184" rx="14"/>
+            <path d="M150 172 c19 0 26 16 22 29 c-4 14 -23 20 -34 12 c-13 -9 -12 -33 3 -40 c3 -1 6 -1 9 -1z" fill="url(#au7g)"/>
+            <text class="ph-h ph-mid" x="150" y="246">No routines yet</text>
+            <text class="ph-s ph-mid" x="150" y="266">A routine starts a task on a</text>
+            <text class="ph-s ph-mid" x="150" y="280">schedule, like a weekly report</text>
+            <text class="ph-s ph-mid" x="150" y="294">or a daily inbox sweep.</text>
+
+            <rect class="ph-accent" x="66" y="344" width="168" height="40" rx="20"/>
+            <path class="ph-fab-plus" d="M104 364 h12 M110 358 v12"/>
+            <text class="ph-btn-t" x="162" y="369">Create routine</text>
+
+            <text class="ph-k" x="24" y="420">Once it fires</text>
+            <rect class="ph-card" x="20" y="430" width="260" height="42" rx="10"/>
+            <text class="ph-t" x="34" y="448">It creates an ordinary task</text>
+            <text class="ph-s" x="34" y="462">Same list, same owner, same audit trail</text>
+
+            <circle class="ph-dash" cx="150" cy="558" r="25"/>
+            <text class="ph-k ph-mid" x="150" y="524">Thumb zone</text>
+
+            <path class="ph-hair" d="M9 542 H291"/>
+            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
+            <text class="ph-nav" x="37" y="584">Home</text>
+            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
+            <text class="ph-nav" x="93" y="584">Tasks</text>
+            <circle class="ph-fab" cx="150" cy="558" r="17"/>
+            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
+            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
+            <text class="ph-nav" x="207" y="584">Files</text>
+            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
+            <text class="ph-nav" x="263" y="584">Inbox</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>Create in the thumb zone</strong>Routines define recurring work. Every
+            create action lives on the raised centre button.</figcaption>
+        </figure>
+
+        <!-- ============ 8. Agents ============ -->
+        <figure class="ph-fig">
+          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph8t ph8d">
+            <title id="ph8t">Automa: agents</title>
+            <desc id="ph8d">An agents screen listing four agents in the company — Ada as chief
+              executive, Grace as chief technology officer, Linus as a backend engineer and Margaret
+              as a product designer — each with a Leave action, and a New agent button below.</desc>
+            <defs><linearGradient id="au8g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" class="ph-g0"/><stop offset="1" class="ph-g1"/></linearGradient></defs>
+            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
+            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
+            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
+            <text class="ph-k" x="24" y="46">9:41</text>
+            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
+
+            <text class="ph-h" x="24" y="76">Agents</text>
+            <text class="ph-s" x="24" y="92">4 in NOR &middot; roles, not personalities</text>
+
+            <rect class="ph-card" x="20" y="108" width="260" height="62" rx="11"/>
+            <circle cx="46" cy="139" r="14" fill="url(#au8g)"/>
+            <text class="ph-t" x="70" y="134">Ada</text>
+            <text class="ph-s" x="70" y="148">CEO</text>
+            <text class="ph-s" x="70" y="161">Sets direction, asks for approvals</text>
+            <rect class="ph-card-a" x="224" y="128" width="46" height="22" rx="11"/>
+            <text class="ph-s ph-mid" x="247" y="143">Leave</text>
+
+            <rect class="ph-card" x="20" y="180" width="260" height="62" rx="11"/>
+            <circle cx="46" cy="211" r="14" fill="url(#au8g)"/>
+            <text class="ph-t" x="70" y="206">Grace</text>
+            <text class="ph-s" x="70" y="220">CTO</text>
+            <text class="ph-s" x="70" y="233">Owns the technical plan</text>
+            <rect class="ph-card-a" x="224" y="200" width="46" height="22" rx="11"/>
+            <text class="ph-s ph-mid" x="247" y="215">Leave</text>
+
+            <rect class="ph-card" x="20" y="252" width="260" height="62" rx="11"/>
+            <circle cx="46" cy="283" r="14" fill="url(#au8g)"/>
+            <text class="ph-t" x="70" y="278">Linus</text>
+            <text class="ph-s" x="70" y="292">Engineer &middot; Backend</text>
+            <text class="ph-s" x="70" y="305">Holds write access on one repo</text>
+            <rect class="ph-card-a" x="224" y="272" width="46" height="22" rx="11"/>
+            <text class="ph-s ph-mid" x="247" y="287">Leave</text>
+
+            <rect class="ph-card" x="20" y="324" width="260" height="62" rx="11"/>
+            <circle cx="46" cy="355" r="14" fill="url(#au8g)"/>
+            <text class="ph-t" x="70" y="350">Margaret</text>
+            <text class="ph-s" x="70" y="364">Designer &middot; Product Designer</text>
+            <text class="ph-s" x="70" y="377">Reads the docs space, cannot edit</text>
+            <rect class="ph-card-a" x="224" y="344" width="46" height="22" rx="11"/>
+            <text class="ph-s ph-mid" x="247" y="359">Leave</text>
+
+            <rect class="ph-accent" x="76" y="408" width="148" height="40" rx="20"/>
+            <path class="ph-fab-plus" d="M106 428 h12 M112 422 v12"/>
+            <text class="ph-btn-t" x="166" y="433">New agent</text>
+
+            <text class="ph-s ph-mid" x="150" y="482">Leaving an agent is undoable,</text>
+            <text class="ph-s ph-mid" x="150" y="496">not confirmable.</text>
+
+            <path class="ph-hair" d="M9 542 H291"/>
+            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
+            <text class="ph-nav is-on" x="37" y="584">Home</text>
+            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
+            <text class="ph-nav" x="93" y="584">Tasks</text>
+            <circle class="ph-fab" cx="150" cy="558" r="17"/>
+            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
+            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
+            <text class="ph-nav" x="207" y="584">Files</text>
+            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
+            <text class="ph-nav" x="263" y="584">Inbox</text>
+            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
+          </svg>
+          <figcaption><strong>Agents</strong>Four roles, each with its own scoped access. Add one, or
+            let one leave.</figcaption>
+        </figure>
+      </div>
+
+      <p class="mt-m" style="font-size:.82rem;color:var(--faint)">The screens above are drawn from the
+        build, not photographed from it — they are vector redraws, so they stay sharp and follow the
+        site&rsquo;s light and dark themes. Names, addresses and task titles are examples.</p>
+    </div>
+  </section>
+
+  <!-- Device Files -->
+  <section class="section-tight" id="device-files">
+    <div class="shell">
+      <h2>3. Device Files — the part worth reading twice</h2>
+      <div class="prose">
+        <p>Most agent tooling breaks at the same place: the agent needs a file, and the file is on your
+          phone. Automa makes that an explicit channel rather than a dead end. You share
+          <strong>one folder</strong>. The phone then shows up to the agents as a connected device, and
+          when an agent needs something it posts a request — which lands on the Files tab and on the
+          home screen under <em>Needs you</em>.</p>
+        <p>Nothing outside the folder you chose is visible. That is the boundary, and it is the only
+          one, so it is worth choosing narrowly.</p>
+      </div>
+
+      <div class="callout mt-m" data-reveal>
+        <p><strong>Auto-send removes you from the loop. That is the feature and that is the
+          risk.</strong> With the switch off, every file leaves the phone because you tapped
+          <em>Send</em>. With it on, a file an agent asks for goes without asking you — so anything
+          inside the shared folder can leave the device without a decision at the moment it
+          happens.</p>
+        <p>Share a folder that exists for this purpose, not your whole Documents tree, and leave
+          auto-send off until the folder is one you would be comfortable handing over wholesale. An
+          agent that can ask for a file can ask for any file in there.</p>
+      </div>
+
+      <div class="table-wrap mt-m" data-reveal>
+        <table>
+          <caption class="visually-hidden">What changes when auto-send is on or off</caption>
+          <thead>
+            <tr><th scope="col">&nbsp;</th><th scope="col">Auto-send off</th><th scope="col">Auto-send on</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">A file leaves when</th>
+              <td>You tap <em>Send</em> on the request</td>
+              <td>The agent asks for it</td>
+            </tr>
+            <tr>
+              <th scope="row">You find out</th>
+              <td>Before &mdash; it is a request</td>
+              <td>After &mdash; it is a log line, with <em>Undo</em></td>
+            </tr>
+            <tr>
+              <th scope="row">Agent is blocked</th>
+              <td>Until you look at your phone</td>
+              <td>Not at all</td>
+            </tr>
+            <tr>
+              <th scope="row">Reasonable when</th>
+              <td>Always</td>
+              <td>The shared folder holds nothing you would mind sending</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tasks and routines -->
+  <section class="section-tight" id="work">
+    <div class="shell">
+      <h2>4. Tasks, routines and approvals</h2>
+      <div class="prose">
+        <p>Three objects, kept deliberately separate.</p>
+        <ul>
+          <li><strong>A task</strong> is one unit of work with one owner and one state. It carries a
+            tag like <code>NOR-7</code>, an agent, and where it has got to. Created by you from the
+            centre button, or by a routine, or by an agent that decided it needed one.</li>
+          <li><strong>A routine</strong> is a recurring <em>definition</em>, not the work. When it
+            fires it materialises an ordinary execution task — same list, same owner, same audit
+            trail. A weekly report is a routine; each Monday&rsquo;s report is a task.</li>
+          <li><strong>An approval</strong> is a task that has stopped and is waiting on a human.
+            Hires, budgets, plans. Nothing proceeds past one until you answer it, which is the point:
+            the phone is where that answer is cheap to give.</li>
+        </ul>
+        <p><strong>Auto mode</strong> sits on a task, not on the company. A task in auto mode lets its
+          agent choose its own next step; the approvals it runs into still come to you. There is no
+          global switch that turns supervision off.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Design -->
+  <section class="section-tight" id="design">
+    <div class="shell">
+      <h2>5. Built for one hand</h2>
+      <div class="prose">
+        <p>The interface rules are short, and they are the reason the app feels different from a
+          dashboard shrunk to phone width.</p>
+      </div>
+
+      <ul class="fact-list mt-m" data-reveal>
+        <li><strong>Every action lives in the thumb zone.</strong> The five-slot bottom bar — Home,
+          Tasks, a raised create button, Files, Inbox — and both buttons of every sheet sit in the
+          bottom third of the screen.</li>
+        <li><strong>One create button.</strong> Tasks, routines and agents are all made from the same
+          raised centre control, so there is never a hunt for the right plus.</li>
+        <li><strong>Undo, not confirm.</strong> Destructive actions happen and offer a way back,
+          rather than stopping to ask. Leaving an agent, sending a file and moving a task all work
+          this way.</li>
+        <li><strong>Haptics carry the state change.</strong> A send, an approval and an undo each feel
+          different, so you do not have to read a toast to know what happened.</li>
+        <li><strong>One mascot, many moods.</strong> A single gradient character covers empty states
+          and confirmations instead of a set of unrelated illustrations.</li>
+        <li><strong>The home screen is a filter, not a summary.</strong> It answers one question —
+          what needs you — and leaves everything else to the tabs.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- What it is not -->
+  <section class="section-tight" id="not">
+    <div class="shell">
+      <h2>6. What Automa is not</h2>
+
+      <div class="callout" data-reveal>
+        <p><strong>It is not the agents, and it is not a model.</strong> Automa does not contain an
+          AI. It talks to a server that runs the agents; if that server is off, the app has nothing to
+          show. Whether the agents are any good is a question about the server and the models behind
+          it, not about this app.</p>
+        <p><strong>It is not a claim that this replaces a company.</strong> The words &ldquo;CEO&rdquo;
+          and &ldquo;CTO&rdquo; in the app are role labels that decide what an agent may touch. They
+          are scoping, not seniority.</p>
+      </div>
+
+      <h3 class="mt-m">Current limits, stated plainly</h3>
+      <div class="prose">
+        <ul>
+          <li><strong>Android only.</strong> There is no iOS build and no desktop build.</li>
+          <li><strong>No public download link on this page yet.</strong> This page describes the app;
+            it is not a store listing.</li>
+          <li><strong>The server is yours to run.</strong> Automa does not host anything for you — you
+            point it at an address, on this phone under Termux or on a machine over HTTPS.</li>
+          <li><strong>If the server is the phone, the company sleeps when the phone does.</strong>
+            Work carries on overnight only if the server is somewhere else.</li>
+          <li><strong>One shared folder, not a file browser.</strong> Agents see the folder you chose
+            and nothing else — which is the safety property, and also the limitation.</li>
+          <li><strong>No published benchmarks or reliability numbers.</strong> Nothing on this page is
+            a performance claim, because none have been measured.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-tight" id="faq">
+    <div class="shell">
+      <h2>7. Questions</h2>
+      <div class="faq mt-m">
+        <details>
+          <summary>What is Automa?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>An Android app built by Nathan at CorX Labs in Jamaica. It is the
+            control surface for a company of AI agents: the agents run on a server, and the phone is
+            where you see what they are doing, approve the things that need a human, and hand over the
+            files they ask for. It is not the model and not the agent runtime — it is the thing you
+            hold.</p></div>
+        </details>
+        <details>
+          <summary>Do I need a server?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes — Automa is a client, and it connects to an agent server by
+            address, on port <code>3100</code> by default. There are two ways to get one. The server
+            can run on the phone itself under <strong>Termux</strong>, in which case the phone is both
+            server and client. Or it can run on another machine reachable over an
+            <strong>HTTPS address</strong>, which is what you want if the work should carry on while
+            the phone is asleep.</p></div>
+        </details>
+        <details>
+          <summary>What does the home screen show?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Only what needs a human. Four rows under one heading that says
+            <em>Needs you</em>: the inbox, approvals waiting on you for hires, budgets and plans, file
+            requests where an agent is blocked on a file, and agents — who is working on what. Below
+            that is the roster, with the task each agent is on and when it last finished something.
+            Anything an agent can do without you stays off that screen.</p></div>
+        </details>
+        <details>
+          <summary>How does an agent get a file off my phone?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Through Device Files. You share one folder — Documents, say — and
+            the phone appears to the agents as a connected device. When an agent needs a file it posts
+            a request; the request shows up on the Files tab and on the home screen, and you send it.
+            Nothing outside the folder you picked is visible to the agents.</p></div>
+        </details>
+        <details>
+          <summary>Should I turn auto-send on?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Only once you know what it changes. Off, every file leaves because
+            you tapped <em>Send</em>. On, a file an agent asks for is sent without asking you — so
+            anything in the shared folder can leave the phone without a decision at the moment it
+            happens. That is the feature and it is also the risk. Share a narrow folder that exists
+            for this, not your whole Documents tree, and leave the switch off until that folder is one
+            you would be comfortable handing over wholesale.</p></div>
+        </details>
+        <details>
+          <summary>What is a routine, and how is it different from a task?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>A routine is a recurring work <em>definition</em> — deliberately not
+            the work. When it fires it materialises an ordinary execution task: one that appears in the
+            task list, is attributed to an agent, and leaves the same audit trail as a task you made
+            by hand. A weekly report or a daily inbox sweep is a routine; each Monday&rsquo;s report is
+            a task.</p></div>
+        </details>
+        <details>
+          <summary>How is an agent&rsquo;s access to Gmail or GitHub scoped?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Three separate choices per connection, not one on-off switch: which
+            agents get access, which account they use, and which actions they may take. An engineer
+            agent can hold write access on one repository while the rest of the company has none; a
+            designer agent can read a docs space without being able to change it. Alongside
+            first-party connections, Automa also lists <strong>provider-hosted MCP</strong> servers —
+            Airtable, for instance — scoped exactly the same way.</p></div>
+        </details>
+        <details>
+          <summary>Can I download it, and is there an iOS version?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Automa is Android-only, and there is no public download link on this
+            page yet — this page describes what the app is and how it works rather than shipping it.
+            There is no iOS or desktop build. If you want to try it,
+            <a href="/contact/">get in touch</a>.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">Automa</p>
+        <h2 class="mt-s">The company runs on a server. You carry the decisions.</h2>
+        <p>Approvals, file requests and an inbox — the three things that actually need a person — on
+          the device that is already in your hand. Android, built in Jamaica.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/contact/">Ask about Automa</a>
+          <a class="btn btn-ghost" href="/models/">See everything we have built</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/benchmarks/">Benchmarks</a></li>
+          <li><a href="/benchmarks/compare/">Compare models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/models/helix/">HELIX</a></li>
+          <li><a href="/automa/">Automa</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

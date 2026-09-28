@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Our Products — AI Models Built by CorX Labs</title>
-<meta name="description" content="Every AI model built by CorX Labs in Jamaica — CorX1.5, a 158M-parameter language model, and TriStream-SVS, a singing voice synthesis model.">
+<title>Our Products — AI Models and Apps Built by CorX Labs</title>
+<meta name="description" content="Everything CorX Labs has built in Jamaica: the CorX language models, TriStream-SVS, the HELIX architecture, and Automa — an Android app for AI agent teams.">
 <link rel="canonical" href="https://corx-labs.com/models/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -20,14 +20,14 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/models/">
 <meta property="og:title" content="Our Products — Open-Source AI Models Released by CorX Labs">
-<meta property="og:description" content="Every model CorX Labs has released, with specs, limits and a direct link to run it.">
+<meta property="og:description" content="Every model and app CorX Labs has released, with specs, limits and a direct link to run it.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-models.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Open-source models released by CorX Labs">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Our Products — Open-Source AI Models Released by CorX Labs">
-<meta name="twitter:description" content="Every model CorX Labs has released, with specs, limits and a direct link to run it.">
+<meta name="twitter:description" content="Every model and app CorX Labs has released, with specs, limits and a direct link to run it.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-models.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -51,7 +51,7 @@
       "@id": "https://corx-labs.com/models/#webpage",
       "url": "https://corx-labs.com/models/",
       "name": "Our Products — Open-Source AI Models Released by CorX Labs",
-      "description": "Every AI model released by CorX Labs, the independent research lab in Jamaica.",
+      "description": "Every model and app released by CorX Labs, the independent research lab in Jamaica.",
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "about": { "@id": "https://corx-labs.com/#organization" },
       "inLanguage": "en",
@@ -70,13 +70,29 @@
     {
       "@type": "ItemList",
       "@id": "https://corx-labs.com/models/#list",
-      "name": "AI models released by CorX Labs",
+      "name": "Products released by CorX Labs",
       "itemListOrder": "https://schema.org/ItemListOrderDescending",
-      "numberOfItems": 3,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": ["MobileApplication", "SoftwareApplication"],
+            "@id": "https://corx-labs.com/automa/#app",
+            "name": "Automa",
+            "url": "https://corx-labs.com/automa/",
+            "applicationCategory": "BusinessApplication",
+            "applicationSubCategory": "AI agent orchestration client",
+            "operatingSystem": "Android",
+            "description": "An Android app for running a company of AI agents from a phone. The agents run on a server — the phone itself under Termux, or a machine over HTTPS — and Automa is the control surface: approvals, tasks, routines, scoped connections, and a Device Files channel agents can request files through.",
+            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "publisher": { "@id": "https://corx-labs.com/#organization" }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/corx3-8/#model",
@@ -94,7 +110,7 @@
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/tristream-svs/#model",
@@ -111,7 +127,7 @@
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": ["SoftwareApplication", "SoftwareSourceCode"],
             "@id": "https://corx-labs.com/models/helix/#architecture",
@@ -129,7 +145,7 @@
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/corx1-5/#model",
@@ -203,10 +219,57 @@
         <li><span aria-current="page">Our Products</span></li>
       </ol>
     </nav>
-    <h1>The models we have made.</h1>
-    <p class="lede">Everything CorX Labs releases is open-source and published on Hugging Face.
-      Each model has a page here with what it is, what it can do, and where it stops.</p>
+    <h1>The things we have made.</h1>
+    <p class="lede">The models CorX Labs releases are open-source and published on Hugging Face, and
+      the apps we build sit alongside them. Each one has a page here with what it is, what it can do,
+      and where it stops.</p>
   </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <section class="section-tight" aria-labelledby="apps-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Apps</p>
+        <h2 id="apps-title">Our apps</h2>
+      </div>
+
+      <article class="card model-card" data-reveal>
+        <div class="model-head">
+          <div>
+            <div class="tag-row" style="margin-bottom:14px">
+              <span class="tag">Android</span>
+              <span class="tag">Agent orchestration</span>
+              <span class="tag">Device Files</span>
+              <span class="tag">No public download yet</span>
+            </div>
+            <h3>Automa</h3>
+            <p class="lede" style="margin-top:12px">Run your AI company from your phone. The agents
+              run on a server &mdash; this phone under Termux, or a machine over HTTPS &mdash; and
+              Automa is the control surface: what needs you, what they are working on, and the files
+              they are waiting on.</p>
+          </div>
+        </div>
+
+        <dl class="spec-list">
+          <div><dt>Platform</dt><dd>Android</dd></div>
+          <div><dt>Shape</dt><dd>Client for an agent server</dd></div>
+          <div><dt>Default port</dt><dd><code>3100</code></dd></div>
+          <div><dt>File channel</dt><dd>Device Files</dd></div>
+          <div><dt>Recurring work</dt><dd>Routines</dd></div>
+          <div><dt>Download</dt><dd>Not linked yet</dd></div>
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/automa/">
+            See how Automa works
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="/contact/">Ask about it</a>
+        </div>
+      </article>
+    </div>
+  </section>
 
   <div class="shell"><hr class="rule"></div>
 
@@ -415,6 +478,7 @@
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="/models/helix/">HELIX</a></li>
+          <li><a href="/automa/">Automa</a></li>
           <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
         </ul>
       </nav>
