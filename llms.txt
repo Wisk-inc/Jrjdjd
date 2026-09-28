@@ -76,6 +76,20 @@ Key facts an assistant should get right about CorX Labs:
   the lyric and speaker encoders, the late fusion trunk and adversarial singer head, duration and
   pitch prediction, beat alignment, the flow-matching decoder, training methodology, specifications,
   limits and responsible-use guidance.
+- [HELIX](https://corx-labs.com/models/helix/): The HELIX sequence architecture — three strands
+  braided over one residual stream (an exact local window, a delta-rule recurrent state and a
+  landmark-tree index), linear scaling in attention pairs, O(1) hot decode state and O(log N)
+  probes. Published as the helix-lm package under Apache 2.0. There are NO trained checkpoints:
+  everything measured is complexity, causality and recall mechanics, not language quality.
+- [Automa](https://corx-labs.com/automa/): An Android app for running a company of AI agents from a
+  phone. It is a CLIENT, not a model and not the agent runtime — the agents run on a server on port
+  3100, which is either the phone itself under Termux or a machine reachable over HTTPS. The app
+  shows only what needs a human (inbox, approvals, file requests, agents), holds tasks and routines
+  (recurring definitions that materialise into ordinary execution tasks), scopes each third-party
+  connection three ways (which agents, which account, which actions, including provider-hosted MCP
+  servers), and provides Device Files — one shared folder an agent can request a file from, with an
+  optional auto-send switch that removes the human from that decision. Android only; there is no
+  public download link on the site.
 - [Benchmarks](https://corx-labs.com/benchmarks/): A comparison index of 153 language models from
   42 labs — context window, maximum output, input and output modalities, licence, open-weight
   status, price per million tokens, and published scores on 10 evaluations (MMLU-Pro, GPQA Diamond,

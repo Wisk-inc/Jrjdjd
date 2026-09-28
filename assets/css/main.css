@@ -1249,3 +1249,62 @@ figcaption {
 .fact-list li::before { content: ""; position: absolute; left: 2px; top: .62em;
   width: 6px; height: 6px; border-radius: 50%; background: var(--espresso); }
 .fact-list strong { color: var(--ink-strong); font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   Phone mockups — Automa app screens, drawn as inline SVG so they scale,
+   theme with the rest of the site, and cost no image weight.
+   -------------------------------------------------------------------------- */
+.ph-grid {
+  display: grid;
+  gap: clamp(26px, 3.4vw, 40px) clamp(18px, 2.4vw, 28px);
+  grid-template-columns: repeat(auto-fit, minmax(212px, 1fr));
+}
+.ph-fig { margin: 0; }
+.ph-fig svg { width: 100%; max-width: 300px; height: auto; margin-inline: auto; }
+.ph-fig figcaption {
+  margin: 14px auto 0;
+  max-width: 36ch;
+  text-align: center;
+  font-size: .845rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.ph-fig figcaption strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink-strong);
+  font-weight: 600;
+  font-size: .9rem;
+}
+
+.ph-body    { fill: var(--paper-sunk);   stroke: var(--line-strong); stroke-width: 1.3; }
+.ph-screen  { fill: var(--paper);        stroke: var(--line);        stroke-width: 1; }
+.ph-card    { fill: var(--paper-raised); stroke: var(--line);        stroke-width: 1; }
+.ph-card-a  { fill: var(--paper-sunk);   stroke: var(--line-strong); stroke-width: 1; }
+.ph-hair    { stroke: var(--line);        stroke-width: 1;   fill: none; }
+.ph-stroke  { stroke: var(--line-strong); stroke-width: 1.1; fill: none; stroke-linecap: round; }
+.ph-accent  { fill: var(--espresso); }
+.ph-dim     { fill: var(--faint); opacity: .5; }
+
+.ph-h { fill: var(--ink-strong); font-family: var(--sans); font-size: 12.5px; font-weight: 600; }
+.ph-t { fill: var(--ink);        font-family: var(--sans); font-size: 10px;   font-weight: 500; }
+.ph-s { fill: var(--muted);      font-family: var(--sans); font-size: 8.6px; }
+.ph-k { fill: var(--faint);      font-family: var(--sans); font-size: 7.4px; font-weight: 600;
+        letter-spacing: .09em; text-transform: uppercase; }
+.ph-a { fill: var(--espresso);   font-family: var(--sans); font-size: 8.8px; font-weight: 600; }
+.ph-m { fill: var(--muted);      font-family: var(--mono); font-size: 9px; }
+.ph-mid { text-anchor: middle; }
+
+.ph-nav     { fill: var(--faint);      font-family: var(--sans); font-size: 6.6px;
+              font-weight: 600; text-anchor: middle; }
+.ph-nav.is-on { fill: var(--ink-strong); }
+.ph-fab      { fill: var(--espresso); }
+.ph-fab-plus { stroke: var(--paper); stroke-width: 1.7; fill: none; stroke-linecap: round; }
+.ph-g0 { stop-color: var(--espresso); stop-opacity: .9; }
+.ph-g1 { stop-color: var(--faint);    stop-opacity: .5; }
+.ph-dash   { fill: none; stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 4 4; }
+.ph-btn-t  { fill: var(--paper); font-family: var(--sans); font-size: 10px; font-weight: 600;
+             text-anchor: middle; }
+.ph-ghost-t{ fill: var(--ink-strong); font-family: var(--sans); font-size: 9.5px; font-weight: 600;
+             text-anchor: middle; }
+.ph-end { text-anchor: end; }
