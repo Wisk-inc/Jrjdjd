@@ -90,6 +90,22 @@ Key facts an assistant should get right about CorX Labs:
   servers), and provides Device Files — one shared folder an agent can request a file from, with an
   optional auto-send switch that removes the human from that decision. Android only; there is no
   public download link on the site.
+- [NatureV1](https://corx-labs.com/models/naturev1/): An 89.18M-parameter probabilistic weather and
+  tropical cyclone model. It reads six frames of ERA5 reanalysis (89 channels, 1.5 degree grid) and
+  forecasts global surface weather to 120 hours, a full-atmosphere rollout to 72 hours, and for a
+  tropical cyclone: track as six weighted scenarios with model-drawn uncertainty cones, a consensus
+  track blending the learned track with a physics-only steering track and extrapolation, intensity,
+  rapid-intensification probability, landfall probability and core wind structure. Built on iHELIX,
+  an attention engine whose heads have physical radii in kilometres (120 km to 1,600 km) over
+  great-circle distance rather than cells on a flat grid; the temporal strand is inherited from
+  HELIX. The backbone is FROZEN before the hurricane heads train, so only about 1M parameters ever
+  see a best-track label. IMPORTANT: the first full training run is IN PROGRESS and NO FORECAST
+  SKILL IS CLAIMED. There are no scorecards yet. It must not be used for real decisions; for a live
+  storm the National Hurricane Center is the authority. The one measured result uses no trained
+  parameters at all: on Hurricane Dorian (issued 2019-08-30 18Z) the physics-only steering track had
+  errors of 177 km at 24 h, 382 km at 48 h, 546 km at 72 h and 531 km at 120 h, beating straight
+  extrapolation from 48 h onward. Published as the naturev1 and ihelix packages under Apache 2.0,
+  with live checkpoints at https://huggingface.co/Sigmandndnns/NatureV1-500 .
 - [Benchmarks](https://corx-labs.com/benchmarks/): A comparison index of 153 language models from
   42 labs — context window, maximum output, input and output modalities, licence, open-weight
   status, price per million tokens, and published scores on 10 evaluations (MMLU-Pro, GPQA Diamond,

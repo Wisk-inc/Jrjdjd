@@ -72,7 +72,7 @@
       "@id": "https://corx-labs.com/models/#list",
       "name": "Products released by CorX Labs",
       "itemListOrder": "https://schema.org/ItemListOrderDescending",
-      "numberOfItems": 5,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -94,6 +94,24 @@
           "@type": "ListItem",
           "position": 2,
           "item": {
+            "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+            "@id": "https://corx-labs.com/models/naturev1/#model",
+            "name": "NatureV1",
+            "url": "https://corx-labs.com/models/naturev1/",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "Weather and tropical cyclone model",
+            "operatingSystem": "OS Independent",
+            "description": "An 89.18M-parameter probabilistic weather and hurricane model built on geodesic attention over the real sphere. Forecasts global weather to five days and, for a tropical cyclone, track scenarios, intensity, rapid intensification and landfall, each with an uncertainty. Training in progress; no forecast skill is claimed.",
+            "license": "https://www.apache.org/licenses/LICENSE-2.0",
+            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "publisher": { "@id": "https://corx-labs.com/#organization" },
+            "isAccessibleForFree": true
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/corx3-8/#model",
             "name": "CorX3.8-27B",
@@ -110,7 +128,7 @@
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/tristream-svs/#model",
@@ -127,7 +145,7 @@
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": ["SoftwareApplication", "SoftwareSourceCode"],
             "@id": "https://corx-labs.com/models/helix/#architecture",
@@ -145,7 +163,7 @@
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "@id": "https://corx-labs.com/models/corx1-5/#model",
@@ -281,6 +299,46 @@
       </div>
 
       <article class="card model-card" data-reveal>
+        <div class="model-head">
+          <div>
+            <div class="tag-row" style="margin-bottom:14px">
+              <span class="tag">Training in progress</span>
+              <span class="tag">Weather &amp; hurricanes</span>
+              <span class="tag">89.18M params</span>
+              <span class="tag">Probabilistic</span>
+              <span class="tag">No skill claimed</span>
+            </div>
+            <h3>NatureV1</h3>
+            <p class="lede" style="margin-top:12px">A probabilistic model of the atmosphere whose
+              attention works in kilometres on the real sphere, not in cells on a flat grid. Five-day
+              global weather, a full-atmosphere rollout, and &mdash; for a tropical cyclone &mdash;
+              track, intensity, rapid intensification and landfall, every number with an uncertainty
+              attached.</p>
+          </div>
+        </div>
+
+        <dl class="spec-list">
+          <div><dt>Parameters</dt><dd>89.18M</dd></div>
+          <div><dt>Blocks</dt><dd>17 iHELIX</dd></div>
+          <div><dt>Head radii</dt><dd>120&ndash;1,600 km</dd></div>
+          <div><dt>Input grid</dt><dd>1.5&deg;, 89 channels</dd></div>
+          <div><dt>Leads</dt><dd>6 h &rarr; 120 h</dd></div>
+          <div><dt>Status</dt><dd>First run in progress</dd></div>
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/naturev1/">
+            View model details
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="https://huggingface.co/Sigmandndnns/NatureV1-500" rel="noopener" target="_blank">
+            View on Hugging Face
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card model-card mt-m" data-reveal>
         <div class="model-head">
           <div>
             <div class="tag-row" style="margin-bottom:14px">
@@ -478,6 +536,7 @@
           <li><a href="/models/corx1-5/">CorX1.5</a></li>
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="/models/helix/">HELIX</a></li>
+          <li><a href="/models/naturev1/">NatureV1</a></li>
           <li><a href="/automa/">Automa</a></li>
           <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
         </ul>

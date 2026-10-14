@@ -1008,6 +1008,7 @@ figcaption {
 .dg-arrow { fill: var(--line-strong); }
 .dg-arrow-soft { fill: var(--faint); }
 .dg-lane  { fill: none; stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 5; }
+.dg-rule  { fill: none; stroke: var(--line); stroke-width: 1; }
 
 .diagram-key {
   display: flex;
