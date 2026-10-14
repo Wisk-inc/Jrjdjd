@@ -81,7 +81,7 @@
         "Global surface weather to 120 hours with a mean and a 90 percent interval at every grid point",
         "Full-atmosphere rollout: all 86 prognostic channels stepped 6 hours at a time to 72 hours, with mass conservation",
         "Tropical cyclone track as six weighted scenarios, each with a tilting uncertainty ellipse per lead",
-        "Multi-model consensus track blending the learned track, a physics-only steering track and extrapolation",
+        "Multi-model consensus track blending the learned track, two physics-only steering tracks and straight extrapolation",
         "Rapid-intensification probability at 25, 30 and 35 knots in 24 hours",
         "Landfall probability by lead, and 34/50/64 knot wind radii by quadrant",
         "Frozen backbone for scarce best-track labels: about 1M parameters ever see a HURDAT2 label",
@@ -128,7 +128,7 @@
       "@type": "ImageObject",
       "@id": "https://corx-labs.com/models/naturev1/#storm-diagram",
       "name": "How NatureV1 assembles a storm forecast",
-      "caption": "The processed mesh is pooled twice around the storm centre — a 500 km Gaussian for the core and a 1,000 km pool for the steering ridge — then joined with the storm's own state, its position, and a physical environment computed from the state tensor. The track head predicts the residual from a physics-only steering track rather than the track itself, and the learned track, the steering track and straight extrapolation are blended into a consensus with per-lead weights fitted on held-out seasons."
+      "caption": "The processed mesh is pooled twice around the storm centre — a 500 km Gaussian for the core and a 1,000 km pool for the steering ridge — then joined with the storm's own state, its position, and a physical environment computed from the state tensor. The track head predicts the residual from a physics-only steering track rather than the track itself, and four tracks — the learned track, a steering track from the frozen analysis, a steering track from the model's own rolled-out atmosphere, and straight extrapolation — are blended into a consensus with per-lead weights fitted on held-out seasons."
     },
     {
       "@type": "TechArticle",
@@ -192,7 +192,7 @@
           "name": "What is the consensus track?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Three tracks are produced — the learned one, the physics-only steering one, and straight extrapolation of the storm's current motion — and blended with per-lead weights fitted on held-out seasons. This copies the way operational consensus aids at the National Hurricane Center routinely beat every individual model that goes into them. Every member is reported alongside the blend, so you can see what the consensus was made of rather than taking one number on trust."
+            "text": "Four tracks are produced — the learned one; a physics-only steering track from the issue-time analysis, held frozen; the same steering calculation run on the model's own rolled-out atmosphere; and straight extrapolation of the storm's current motion — and blended with per-lead weights fitted on held-out seasons. This copies the way operational consensus aids at the National Hurricane Center routinely beat every individual model that goes into them. Every member is reported alongside the blend, so you can see what the consensus was made of rather than taking one number on trust. Until those weights are fitted the blend is unweighted, and on the Dorian hindcast that made it worse than steering alone at long range."
           }
         },
         {
@@ -208,7 +208,7 @@
           "name": "Has anything actually been measured yet?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "One thing, and only because it uses no trained parameters. On Hurricane Dorian, issued 30 August 2019 at 18Z from the 1.5 degree analysis, the physics-only steering track had great-circle errors of 177 km at 24 hours, 382 km at 48, 546 km at 72 and 531 km at 120 — beating straight extrapolation from 48 hours onward, where extrapolation was 397, 651 and 1012 km. That is the floor the learned model starts from, not a result about the learned model. For scale, the National Hurricane Center's official Atlantic track errors in recent seasons have averaged on the order of 60 km at 24 hours and 145 km at 72. Everything else — the whole pipeline, the three training stages, the scorecards and the hindcast — has been verified to run end to end on real data at reduced scale, with 236 tests over the physics, the label pairing and the honesty rules."
+            "text": "Nothing that establishes skill. One hindcast has been run, on Hurricane Dorian from 18Z on 30 August 2019, using the 1.5 degree ERA5 analysis. The physics-only steering track, which has no trained parameters, had great-circle errors of 177 km at 24 hours, 382 km at 48, 546 km at 72 and 531 km at 120. Straight extrapolation was better before 48 hours (161 km at 24, 268 at 36) and far worse after (651 km at 72, 1,012 km at 120). A learned track from a checkpoint about 17 percent through training stayed within 10 km of steering at every lead, which is the design working as intended: the model starts from steering and had not learned its corrections yet. Intensity failed: the model forecast about 62 knots flat while Dorian peaked at 160 knots. For scale, the National Hurricane Center's five-year Atlantic average track error is about 66 km at 24 hours and 168 km at 72, so steering was roughly three times worse on this storm — though one difficult storm against an average over many is not a fair head-to-head. Everything else verified so far is mechanism: the whole pipeline runs end to end on real data at reduced scale, with 236 tests over the physics, the label pairing and the honesty rules."
           }
         }
       ]
@@ -383,7 +383,7 @@
             </tr>
             <tr>
               <td>Consensus track</td>
-              <td>Learned track, physics-only steering track and extrapolation, blended with per-lead weights; every member reported alongside the blend</td>
+              <td>Learned track, two physics-only steering tracks (frozen analysis, and the model&rsquo;s own rollout) and extrapolation, blended with per-lead weights; every member reported alongside the blend</td>
             </tr>
             <tr>
               <td>Intensity</td>
@@ -603,10 +603,11 @@
               position, which fixes Coriolis and beta drift; and a physical environment of steering
               flow, shear, mid-level humidity and sea surface temperature computed directly from the
               state tensor. These feed the storm heads. The track head predicts a residual from a
-              physics-only steering track rather than the track itself. Finally the learned track,
-              the steering track and straight extrapolation are blended into a consensus with
-              per-lead weights fitted on held-out seasons, and every member is reported alongside the
-              blend.</desc>
+              physics-only steering track rather than the track itself. Finally four tracks — the
+              learned track, a steering track from the frozen analysis, a steering track from the
+              model's own rolled-out atmosphere, and straight extrapolation — are blended into a
+              consensus with per-lead weights fitted on held-out seasons, and every member is
+              reported alongside the blend.</desc>
 
             <defs>
               <marker id="nv2-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -704,25 +705,26 @@
             <!-- consensus -->
             <path class="dg-edge" d="M892 104 H916 V250 H944" marker-end="url(#nv2-ah)"/>
 
-            <rect class="dg-box-a" x="944" y="196" width="180" height="192" rx="11"/>
-            <rect class="dg-accent" x="944" y="196" width="3" height="192" rx="1.5"/>
+            <rect class="dg-box-a" x="944" y="196" width="180" height="196" rx="11"/>
+            <rect class="dg-accent" x="944" y="196" width="3" height="196" rx="1.5"/>
             <text class="dg-tag"   x="962" y="218">Consensus</text>
-            <text class="dg-title" x="962" y="240">Blend of three</text>
+            <text class="dg-title" x="962" y="240">Blend of four</text>
             <text class="dg-sub"   x="962" y="262">learned track</text>
-            <text class="dg-sub"   x="962" y="278">steering track</text>
-            <text class="dg-sub"   x="962" y="294">extrapolation</text>
-            <path class="dg-rule" d="M962 310 H1106"/>
-            <text class="dg-sub"   x="962" y="330">per-lead weights,</text>
-            <text class="dg-sub"   x="962" y="346">fitted on held-out</text>
-            <text class="dg-sub"   x="962" y="362">seasons</text>
+            <text class="dg-sub"   x="962" y="278">steering (frozen)</text>
+            <text class="dg-sub"   x="962" y="294">steering (rollout)</text>
+            <text class="dg-sub"   x="962" y="310">extrapolation</text>
+            <path class="dg-rule" d="M962 324 H1106"/>
+            <text class="dg-sub"   x="962" y="342">per-lead weights,</text>
+            <text class="dg-sub"   x="962" y="358">fitted on held-out seasons</text>
             <text class="dg-sub"   x="962" y="380">members always shown</text>
 
             <!-- steering, no training -->
-            <rect class="dg-box" x="616" y="490" width="508" height="72" rx="11"/>
+            <rect class="dg-box" x="616" y="490" width="508" height="92" rx="11"/>
             <text class="dg-tag"   x="636" y="512">The member that needs no training at all</text>
             <text class="dg-sub"   x="636" y="532">Thickness-weighted 850&ndash;200 hPa steering over the 200&ndash;800 km ring around the centre,</text>
-            <text class="dg-sub"   x="636" y="550">advected with the correct longitude scaling, plus climatological beta drift.</text>
-            <path class="dg-edge-dash" d="M870 490 V476 H1040 V392" marker-end="url(#nv2-ahs)"/>
+            <text class="dg-sub"   x="636" y="550">with the inner 200 km left out so the storm&rsquo;s own circulation is not counted,</text>
+            <text class="dg-sub"   x="636" y="568">plus beta drift of 1 m/s west and 1 m/s poleward, stepped every 6 h.</text>
+            <path class="dg-edge-dash" d="M870 490 V476 H1040 V396" marker-end="url(#nv2-ahs)"/>
           </svg>
         </div>
 
@@ -734,7 +736,7 @@
 
         <figcaption>The storm path. Two pools at different radii, three explicit physical inputs, and
           a track head that predicts the residual from a steering track rather than the track itself.
-          The consensus blends the learned track with two baselines, and reports every member.</figcaption>
+          The consensus blends the learned track with three baselines, and reports every member.</figcaption>
       </figure>
 
       <div class="callout mt-m" data-reveal>
@@ -864,50 +866,140 @@
       <h2>6. What has been measured</h2>
 
       <div class="callout" data-reveal>
-        <p><strong>Nothing, for skill.</strong> The first full training run is in progress. What has
-          been verified end to end is the <em>mechanism</em>: staging, all three training stages, the
-          scorecards and the hindcast run on real ERA5 and HURDAT2 data at reduced scale, with 236
-          tests covering the physics, the label pairing, the resilience paths and the honesty rules.
-          When the run finishes, the scorecards go here verbatim.</p>
+        <p><strong>Nothing that establishes skill.</strong> The first full training run is in
+          progress. What has been verified end to end is the <em>mechanism</em>: staging, all three
+          training stages, the scorecards and the hindcast run on real ERA5 and HURDAT2 data at
+          reduced scale, with 236 tests covering the physics, the label pairing, the resilience paths
+          and the honesty rules. One hindcast has been run, below. It is one storm, and one storm
+          proves nothing on its own. When the run finishes, the scorecards go here verbatim.</p>
       </div>
 
-      <h3 class="mt-m">The one number that does not depend on training</h3>
+      <h3 class="mt-m">The Dorian hindcast</h3>
       <div class="prose">
-        <p>The steering member uses <strong>no trained parameters at all</strong>, so it can be
-          scored today. On Hurricane Dorian, issued 2019&#8209;08&#8209;30 18Z from the 1.5&deg;
-          analysis:</p>
+        <p>Forecast issued at <strong>18Z on 30 August 2019</strong>, from the 1.5&deg; ERA5
+          analysis at that moment. Dorian is a hard case for anyone: it stalled over the Bahamas and
+          then turned north.</p>
+        <p>The short version: the physics-only steering track got the overall drift of the storm
+          roughly right with no learning involved. It beat straight-line extrapolation from 48 hours
+          onward and kept its error flat at long range. It is still a crude forecast &mdash; about
+          three times the error of an official NHC forecast.</p>
       </div>
 
+      <h3 class="mt-m">How the steering forecast is made</h3>
+      <div class="prose">
+        <ol>
+          <li><strong>Measure the flow around the storm.</strong> Average the deep-layer wind,
+            850&ndash;200 hPa, over a ring 200&ndash;800 km from the centre. The inner 200 km is left
+            out so the storm&rsquo;s own circulation does not count as steering.</li>
+          <li><strong>Add beta drift.</strong> The usual push storms get from the Earth&rsquo;s
+            rotation: 1 m/s westward and 1 m/s poleward.</li>
+          <li><strong>Move the storm.</strong> Step it along that flow every 6 hours, out to 120
+            hours.</li>
+        </ol>
+        <p>The steering column holds that flow <strong>frozen at the issue-time analysis for all
+          five days</strong>, so it never sees how the atmosphere actually changed. It has no trained
+          parameters, so its score does not depend on how training is going.</p>
+      </div>
+
+      <dl class="spec-list mt-m" data-reveal>
+        <div><dt>Steering</dt><dd>Frozen analysis flow, above</dd></div>
+        <div><dt>Extrapolation</dt><dd>Current motion, straight on</dd></div>
+        <div><dt>Rollout-steer</dt><dd>Same, on the model&rsquo;s own forecast weather</dd></div>
+        <div><dt>Learned</dt><dd>Checkpoint ~17% through training</dd></div>
+        <div><dt>Consensus</dt><dd>Blend of the four, unweighted</dd></div>
+      </dl>
+
+      <h3 class="mt-m">Track error</h3>
       <div class="table-wrap mt-s" data-reveal>
         <table>
-          <caption class="visually-hidden">Great-circle track error on Hurricane Dorian for the physics-only steering track against straight extrapolation</caption>
+          <caption class="visually-hidden">Great-circle track error in kilometres on Hurricane Dorian, issued 18Z 30 August 2019, for five forecasts; the lowest error in each row is in bold</caption>
           <thead>
             <tr>
               <th scope="col">Lead</th>
-              <th scope="col">Physics-only steering</th>
-              <th scope="col">Straight extrapolation</th>
-              <th scope="col">NHC official, recent seasons</th>
+              <th scope="col">Steering</th>
+              <th scope="col">Extrapolation</th>
+              <th scope="col">Rollout-steer</th>
+              <th scope="col">Learned (17%)</th>
+              <th scope="col">Consensus</th>
             </tr>
           </thead>
           <tbody>
-            <tr><th scope="row">24 h</th><td>177 km</td><td>Not reported</td><td>~60 km</td></tr>
-            <tr><th scope="row">48 h</th><td>382 km</td><td>397 km</td><td>~100 km</td></tr>
-            <tr><th scope="row">72 h</th><td>546 km</td><td>651 km</td><td>~145 km</td></tr>
-            <tr><th scope="row">120 h</th><td>531 km</td><td>1,012 km</td><td>~230 km</td></tr>
+            <tr><th scope="row">6 h</th><td><strong>14</strong></td><td>17</td><td><strong>14</strong></td><td>18</td><td>16</td></tr>
+            <tr><th scope="row">24 h</th><td>177</td><td><strong>161</strong></td><td>180</td><td>186</td><td>182</td></tr>
+            <tr><th scope="row">36 h</th><td>279</td><td><strong>268</strong></td><td>283</td><td>278</td><td>278</td></tr>
+            <tr><th scope="row">48 h</th><td><strong>382</strong></td><td>397</td><td>389</td><td>384</td><td>390</td></tr>
+            <tr><th scope="row">72 h</th><td><strong>546</strong></td><td>651</td><td>554</td><td>550</td><td>619</td></tr>
+            <tr><th scope="row">96 h</th><td><strong>650</strong></td><td>920</td><td>656</td><td><strong>650</strong></td><td>824</td></tr>
+            <tr><th scope="row">120 h</th><td>531</td><td>1,012</td><td>569</td><td><strong>528</strong></td><td>921</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-s" style="font-size:.82rem;color:var(--faint)">Kilometres, great-circle distance
+        from the best track. Lowest error in each row in bold; ties both bold.</p>
+
+      <h3 class="mt-m">Intensity</h3>
+      <div class="table-wrap mt-s" data-reveal>
+        <table>
+          <caption class="visually-hidden">Forecast against actual maximum sustained wind on Hurricane Dorian, in knots</caption>
+          <thead>
+            <tr><th scope="col">Lead</th><th scope="col">Forecast</th><th scope="col">Actual</th><th scope="col">Missed by</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">6 h</th><td>62 kt</td><td>115 kt</td><td>53 kt</td></tr>
+            <tr><th scope="row">24 h</th><td>62 kt</td><td>130 kt</td><td>68 kt</td></tr>
+            <tr><th scope="row">36 h</th><td>62 kt</td><td>145 kt</td><td>83 kt</td></tr>
+            <tr><th scope="row">48 h</th><td>63 kt</td><td>160 kt</td><td>97 kt</td></tr>
+            <tr><th scope="row">72 h</th><td>65 kt</td><td>125 kt</td><td>60 kt</td></tr>
+            <tr><th scope="row">96 h</th><td>63 kt</td><td>95 kt</td><td>32 kt</td></tr>
+            <tr><th scope="row">120 h</th><td>61 kt</td><td>95 kt</td><td>34 kt</td></tr>
           </tbody>
         </table>
       </div>
 
-      <div class="prose mt-s">
-        <p>Read it the right way round. Steering beats extrapolation <strong>from 48 hours
-          onward</strong>, and the gap widens with lead — by five days it is roughly half the error.
-          That is the expected shape: extrapolation is fine for a few hours and hopeless once a storm
-          turns.</p>
-        <p>The NHC column is there for <strong>scale, not for comparison</strong>. Those are
-          averages over many storms from an operational centre using every tool it has; this is a
-          single storm, from a single 1.5&deg; analysis, with no training. The right conclusion is
-          that <strong>the steering member is the floor the learned model starts from, not the
-          ceiling it is aiming at</strong>.</p>
+      <h3 class="mt-m">What this shows</h3>
+      <div class="prose">
+        <ul>
+          <li><strong>Before 48 hours, extrapolation wins</strong> &mdash; 161 against 177 km at
+            24 h, 268 against 279 at 36 h. Over a day or so a storm&rsquo;s own momentum is the best
+            guess, and frozen steering adds nothing.</li>
+          <li><strong>From 48 hours onward, steering pulls ahead fast</strong> &mdash; 546 against
+            651 km at 72 h, 650 against 920 at 96 h, and 531 against 1,012 at 120 h, nearly half the
+            error. Extrapolation runs the storm off in a straight line; steering keeps it in the flow
+            it is actually sitting in.</li>
+          <li><strong>Steering error at 120 h is lower than at 96 h</strong> (531 against 650 km).
+            Dorian stalled over the Bahamas and then turned north, and forecast and storm ended up
+            closer together after the turn. That is partly luck of timing, not skill.</li>
+          <li><strong>Rollout-steer did slightly worse than steering</strong> (569 against 531 km at
+            120 h). It steers with the model&rsquo;s own forecast weather instead of the frozen
+            analysis, and in principle it should do better. It does not here, because the weather it
+            steered with came from a partly trained model.</li>
+          <li><strong>The learned track barely departs from steering.</strong> From a checkpoint
+            about 17% through training, it stays within 10 km of steering at every lead. That is the
+            design working as intended: the model starts from the steering track and only learns
+            corrections on top of it. At that stage it had not learned any yet.</li>
+          <li><strong>The consensus did worse than steering at long range</strong> (921 against 531
+            km at 120 h). That is expected: the blend weights had not been fitted, so it was an
+            unweighted mix dragged down by extrapolation.</li>
+          <li><strong>Intensity was a failure.</strong> The model forecast about 62 kt flat while
+            Dorian peaked at 160 kt. At 1.5&deg; the model cannot resolve an eyewall. This is the known
+            weak point, and the limits section below says so.</li>
+        </ul>
+      </div>
+
+      <h3 class="mt-m">Against the National Hurricane Center</h3>
+      <div class="prose">
+        <p>NHC&rsquo;s five-year Atlantic average is about <strong>66 km at 24 h and 168 km at
+          72 h</strong>. Steering was 177 and 546 km on this storm &mdash; roughly three times worse.
+          That is an average over many storms set against a single difficult case, so it is not a
+          fair head-to-head, and the stall made Dorian an unusually hard track for everyone. It is
+          there for scale.</p>
+      </div>
+
+      <div class="callout mt-m" data-reveal>
+        <p><strong>Bottom line.</strong> The steering track is a solid <strong>floor</strong>: it is
+          what physics alone can do from one snapshot. The learned model&rsquo;s job is to cut those
+          382, 546 and 531 km numbers. Whether it does will show in the final storm scorecard across
+          every held-out storm &mdash; not in this one hindcast.</p>
       </div>
 
       <h3 class="mt-m">What else the pipeline checks</h3>
@@ -943,9 +1035,10 @@
 
       <div class="prose mt-m">
         <ul>
-          <li><strong>Resolution.</strong> 1.5&deg; is about 165 km, which cannot resolve an eyewall.
-            Intensity is expected to be the weakest output; the explicit environment inputs exist to
-            compensate, and the scorecard will say how far they get.</li>
+          <li><strong>Resolution, and therefore intensity.</strong> 1.5&deg; is about 165 km, which
+            cannot resolve an eyewall. On the Dorian hindcast the model forecast about 62 kt flat
+            while the storm peaked at 160 kt. The explicit environment inputs exist to compensate, and
+            the final scorecard will say how far they get.</li>
           <li><strong>Not operational.</strong> It runs on reanalysis, which is published days after
             the fact. There is no real-time analysis feed, and the satellite input path exists but is
             untrained.</li>
@@ -1124,12 +1217,17 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
             much.</p></div>
         </details>
         <details>
-          <summary>What is the consensus track, and why three members?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>The learned track, the steering track and straight extrapolation are
-            blended with per-lead weights fitted on held-out seasons. This copies something
-            operational forecasting established long ago: consensus aids routinely beat every
-            individual model that goes into them. Every member is reported alongside the blend, so you
-            can see what the consensus was made of rather than taking one number on trust.</p></div>
+          <summary>What is the consensus track, and why four members?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Four tracks are blended with per-lead weights fitted on held-out
+            seasons: the learned track; a steering track from the issue-time analysis, held frozen;
+            the same steering calculation run on the model&rsquo;s own rolled-out atmosphere; and
+            straight extrapolation. This copies something operational forecasting established long
+            ago: consensus aids routinely beat every individual model that goes into them. Every
+            member is reported alongside the blend, so you can see what the consensus was made of
+            rather than taking one number on trust.</p>
+            <p>Until the weights are fitted the blend is unweighted &mdash; and on the Dorian hindcast
+            that made it worse than steering alone at long range, dragged down by
+            extrapolation.</p></div>
         </details>
         <details>
           <summary>What does the model refuse to do?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -1143,14 +1241,18 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         </details>
         <details>
           <summary>Has anything been measured yet?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>One thing, and only because it uses no trained parameters. On
-            Hurricane Dorian, issued 2019&#8209;08&#8209;30 18Z, the physics-only steering track had
-            errors of 177&nbsp;km at 24&nbsp;h, 382 at 48, 546 at 72 and 531 at 120 &mdash; beating
-            straight extrapolation from 48&nbsp;h onward (397, 651, 1012&nbsp;km). That is a result
-            about the <em>floor</em>, not about the learned model. Everything else verified so far is
-            mechanism: the whole pipeline runs end to end on real data at reduced scale, with 236
-            tests over the physics, the label pairing, the resilience paths and the honesty
-            rules.</p></div>
+          <div class="faq-body"><p>Nothing that establishes skill. One hindcast has been run, on
+            Hurricane Dorian from 18Z on 30 August 2019. The physics-only steering track had errors of
+            177&nbsp;km at 24&nbsp;h, 382 at 48, 546 at 72 and 531 at 120. Straight extrapolation was
+            better before 48&nbsp;h (161&nbsp;km at 24) and far worse after (651 at 72, 1,012 at
+            120).</p>
+            <p>A learned track from a checkpoint about 17% through training stayed within 10&nbsp;km
+            of steering at every lead &mdash; the design working as intended, since it starts from
+            steering and had not learned its corrections yet. Intensity failed: about 62&nbsp;kt flat
+            against a 160&nbsp;kt peak. For scale, NHC&rsquo;s five-year Atlantic average is about
+            66&nbsp;km at 24&nbsp;h and 168&nbsp;km at 72, so steering was roughly three times worse
+            on this storm &mdash; one hard storm against an average over many, which is not a fair
+            head-to-head. <a href="#measured">The full tables are above.</a></p></div>
         </details>
       </div>
     </div>

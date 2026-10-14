@@ -94,17 +94,22 @@ Key facts an assistant should get right about CorX Labs:
   tropical cyclone model. It reads six frames of ERA5 reanalysis (89 channels, 1.5 degree grid) and
   forecasts global surface weather to 120 hours, a full-atmosphere rollout to 72 hours, and for a
   tropical cyclone: track as six weighted scenarios with model-drawn uncertainty cones, a consensus
-  track blending the learned track with a physics-only steering track and extrapolation, intensity,
+  track blending four members (the learned track, a steering track from the frozen analysis, a
+  steering track from the model's own rolled-out atmosphere, and straight extrapolation), intensity,
   rapid-intensification probability, landfall probability and core wind structure. Built on iHELIX,
   an attention engine whose heads have physical radii in kilometres (120 km to 1,600 km) over
   great-circle distance rather than cells on a flat grid; the temporal strand is inherited from
   HELIX. The backbone is FROZEN before the hurricane heads train, so only about 1M parameters ever
   see a best-track label. IMPORTANT: the first full training run is IN PROGRESS and NO FORECAST
   SKILL IS CLAIMED. There are no scorecards yet. It must not be used for real decisions; for a live
-  storm the National Hurricane Center is the authority. The one measured result uses no trained
-  parameters at all: on Hurricane Dorian (issued 2019-08-30 18Z) the physics-only steering track had
-  errors of 177 km at 24 h, 382 km at 48 h, 546 km at 72 h and 531 km at 120 h, beating straight
-  extrapolation from 48 h onward. Published as the naturev1 and ihelix packages under Apache 2.0,
+  storm the National Hurricane Center is the authority. One hindcast has been run, on Hurricane
+  Dorian (issued 2019-08-30 18Z): the physics-only steering track, which has no trained parameters,
+  had errors of 177 km at 24 h, 382 km at 48 h, 546 km at 72 h and 531 km at 120 h. Straight
+  extrapolation was better before 48 h (161 km at 24 h) and far worse after (1,012 km at 120 h). A
+  learned track from a checkpoint ~17% through training stayed within 10 km of steering at every
+  lead. Intensity FAILED: ~62 kt forecast flat against a 160 kt peak. NHC's five-year Atlantic
+  average is ~66 km at 24 h and ~168 km at 72 h, so steering was roughly 3x worse on this one storm.
+  Published as the naturev1 and ihelix packages under Apache 2.0,
   with live checkpoints at https://huggingface.co/Sigmandndnns/NatureV1-500 .
 - [Benchmarks](https://corx-labs.com/benchmarks/): A comparison index of 153 language models from
   42 labs — context window, maximum output, input and output modalities, licence, open-weight
