@@ -105,9 +105,11 @@ Key facts an assistant should get right about CorX Labs:
   storm the National Hurricane Center is the authority. One hindcast has been run, on Hurricane
   Dorian (issued 2019-08-30 18Z): the physics-only steering track, which has no trained parameters,
   had errors of 177 km at 24 h, 382 km at 48 h, 546 km at 72 h and 531 km at 120 h. Straight
-  extrapolation was better before 48 h (161 km at 24 h) and far worse after (1,012 km at 120 h). A
-  learned track from a checkpoint ~17% through training stayed within 10 km of steering at every
-  lead. Intensity FAILED: ~62 kt forecast flat against a 160 kt peak. NHC's five-year Atlantic
+  extrapolation was better before 48 h (161 km at 24 h) and far worse after (1,012 km at 120 h).
+  The model proposes SIX track scenarios with a probability on each; its top-rated one stayed within
+  10 km of steering at every lead and was given 17% — exactly the uniform share for six (100/6) —
+  so it did not yet favour any path. (The 17% is that probability, NOT training progress.) A trained
+  model's top scenario should carry clearly more than 17%. Intensity FAILED: ~62 kt forecast flat against a 160 kt peak. NHC's five-year Atlantic
   average is ~66 km at 24 h and ~168 km at 72 h, so steering was roughly 3x worse on this one storm.
   Published as the naturev1 and ihelix packages under Apache 2.0,
   with live checkpoints at https://huggingface.co/Sigmandndnns/NatureV1-500 .
