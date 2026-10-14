@@ -208,7 +208,7 @@
           "name": "Has anything actually been measured yet?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Nothing that establishes skill. One hindcast has been run, on Hurricane Dorian from 18Z on 30 August 2019, using the 1.5 degree ERA5 analysis. The physics-only steering track, which has no trained parameters, had great-circle errors of 177 km at 24 hours, 382 km at 48, 546 km at 72 and 531 km at 120. Straight extrapolation was better before 48 hours (161 km at 24, 268 at 36) and far worse after (651 km at 72, 1,012 km at 120). A learned track from a checkpoint about 17 percent through training stayed within 10 km of steering at every lead, which is the design working as intended: the model starts from steering and had not learned its corrections yet. Intensity failed: the model forecast about 62 knots flat while Dorian peaked at 160 knots. For scale, the National Hurricane Center's five-year Atlantic average track error is about 66 km at 24 hours and 168 km at 72, so steering was roughly three times worse on this storm — though one difficult storm against an average over many is not a fair head-to-head. Everything else verified so far is mechanism: the whole pipeline runs end to end on real data at reduced scale, with 236 tests over the physics, the label pairing and the honesty rules."
+            "text": "Nothing that establishes skill. One hindcast has been run, on Hurricane Dorian from 18Z on 30 August 2019, using the 1.5 degree ERA5 analysis. The physics-only steering track, which has no trained parameters, had great-circle errors of 177 km at 24 hours, 382 km at 48, 546 km at 72 and 531 km at 120. Straight extrapolation was better before 48 hours (161 km at 24, 268 at 36) and far worse after (651 km at 72, 1,012 km at 120). The model proposes six track scenarios with a probability on each; its most likely one stayed within 10 km of steering at every lead, and it gave that track 17 percent — the share each of six scenarios gets under an even split (100 divided by 6). So it did not yet favour any path over another, and its learned corrections to steering were still tiny. A trained model's top scenario should carry clearly more than 17 percent. Intensity failed: the model forecast about 62 knots flat while Dorian peaked at 160 knots. For scale, the National Hurricane Center's five-year Atlantic average track error is about 66 km at 24 hours and 168 km at 72, so steering was roughly three times worse on this storm — though one difficult storm against an average over many is not a fair head-to-head. Everything else verified so far is mechanism: the whole pipeline runs end to end on real data at reduced scale, with 236 tests over the physics, the label pairing and the honesty rules."
           }
         }
       ]
@@ -905,7 +905,7 @@
         <div><dt>Steering</dt><dd>Frozen analysis flow, above</dd></div>
         <div><dt>Extrapolation</dt><dd>Current motion, straight on</dd></div>
         <div><dt>Rollout-steer</dt><dd>Same, on the model&rsquo;s own forecast weather</dd></div>
-        <div><dt>Learned</dt><dd>Checkpoint ~17% through training</dd></div>
+        <div><dt>Model</dt><dd>Its top-rated of six scenarios, given 17%</dd></div>
         <div><dt>Consensus</dt><dd>Blend of the four, unweighted</dd></div>
       </dl>
 
@@ -919,7 +919,7 @@
               <th scope="col">Steering</th>
               <th scope="col">Extrapolation</th>
               <th scope="col">Rollout-steer</th>
-              <th scope="col">Learned (17%)</th>
+              <th scope="col">Model, top scenario (17%)</th>
               <th scope="col">Consensus</th>
             </tr>
           </thead>
@@ -973,10 +973,11 @@
             120 h). It steers with the model&rsquo;s own forecast weather instead of the frozen
             analysis, and in principle it should do better. It does not here, because the weather it
             steered with came from a partly trained model.</li>
-          <li><strong>The learned track barely departs from steering.</strong> From a checkpoint
-            about 17% through training, it stays within 10 km of steering at every lead. That is the
-            design working as intended: the model starts from the steering track and only learns
-            corrections on top of it. At that stage it had not learned any yet.</li>
+          <li><strong>The model&rsquo;s track barely departs from steering</strong> &mdash; within
+            10 km at every lead: 550 against 546 km at 72 h, 528 against 531 at 120 h. That is the
+            design working as intended. Every scenario starts from the steering track and the head
+            adds a learned correction on top; at this point the corrections were tiny, so most of the
+            &ldquo;model&rdquo; track was still the physics.</li>
           <li><strong>The consensus did worse than steering at long range</strong> (921 against 531
             km at 120 h). That is expected: the blend weights had not been fitted, so it was an
             unweighted mix dragged down by extrapolation.</li>
@@ -984,6 +985,30 @@
             Dorian peaked at 160 kt. At 1.5&deg; the model cannot resolve an eyewall. This is the known
             weak point, and the limits section below says so.</li>
         </ul>
+      </div>
+
+      <h3 class="mt-m">The number to watch: 17%</h3>
+      <div class="prose">
+        <p>The model never gives one track for a hurricane. It proposes <strong>six
+          scenarios</strong> and puts a probability on each, and the model column above is the one it
+          rated most likely. The 17% in that column&rsquo;s header is <strong>the probability it gave
+          that track</strong> &mdash; not how far training had got.</p>
+        <p>With six scenarios, an even split is 100&nbsp;&divide;&nbsp;6&nbsp;=&nbsp;16.7%. So the
+          model&rsquo;s favourite track carried exactly the share it would get if all six were rated
+          equally likely: <strong>it did not yet favour any path over another</strong>. That fits the
+          rest of the table. Corrections this small leave six scenarios that are all nearly the
+          steering track, with nothing to choose between them.</p>
+      </div>
+
+      <div class="callout mt-m" data-reveal>
+        <p><strong>What a trained model should look like.</strong> The top scenario should carry
+          clearly more than 17% &mdash; for a storm with an obvious path, perhaps 40&ndash;60%. Where
+          the path genuinely splits, as with Dorian&rsquo;s stall or a turn north against a run
+          straight into Florida, two scenarios should both carry real weight.</p>
+        <p>When the run finishes, this is the first number to check. If the top scenario is still
+          sitting near 17%, the hurricane heads have learned nothing beyond steering. If it has moved,
+          the heads are telling paths apart &mdash; and whether they tell them apart
+          <em>correctly</em> is what the storm scorecard measures.</p>
       </div>
 
       <h3 class="mt-m">Against the National Hurricane Center</h3>
@@ -1246,9 +1271,10 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
             177&nbsp;km at 24&nbsp;h, 382 at 48, 546 at 72 and 531 at 120. Straight extrapolation was
             better before 48&nbsp;h (161&nbsp;km at 24) and far worse after (651 at 72, 1,012 at
             120).</p>
-            <p>A learned track from a checkpoint about 17% through training stayed within 10&nbsp;km
-            of steering at every lead &mdash; the design working as intended, since it starts from
-            steering and had not learned its corrections yet. Intensity failed: about 62&nbsp;kt flat
+            <p>The model&rsquo;s own track &mdash; the most likely of the six scenarios it proposes
+            &mdash; stayed within 10&nbsp;km of steering at every lead, and the model gave it 17%:
+            exactly the share each of six scenarios gets under an even split. It did not yet favour
+            any path, and its corrections to steering were still tiny. Intensity failed: about 62&nbsp;kt flat
             against a 160&nbsp;kt peak. For scale, NHC&rsquo;s five-year Atlantic average is about
             66&nbsp;km at 24&nbsp;h and 168&nbsp;km at 72, so steering was roughly three times worse
             on this storm &mdash; one hard storm against an average over many, which is not a fair
