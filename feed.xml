@@ -6,13 +6,64 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Tue, 19 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 16 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>NatureV1 — a weather and hurricane model, in training</title>
+      <link>https://corx-labs.com/models/naturev1/</link>
+      <guid isPermaLink="true">https://corx-labs.com/models/naturev1/</guid>
+      <pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Weather model</category>
+      <description><![CDATA[
+        <p>NatureV1 is an 89.18M-parameter probabilistic model of the atmosphere. It forecasts global
+        weather out to five days and, for a tropical cyclone, its track as six weighted scenarios,
+        its intensity, the chance of rapid intensification and the chance of landfall, every number
+        with an uncertainty. It is built on iHELIX, an attention engine whose heads have physical
+        radii in kilometres over the real sphere.</p>
+        <p><strong>The first full training run is in progress and no forecast skill is claimed.</strong>
+        Do not use it for real decisions; for a live storm, use the National Hurricane Center. Live
+        checkpoints: <a href="https://huggingface.co/Sigmandndnns/NatureV1-500">Sigmandndnns/NatureV1-500</a>.
+        Code: <a href="https://pypi.org/project/naturev1/">naturev1 on PyPI</a>, Apache 2.0.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Automa — run your AI company from your phone</title>
+      <link>https://corx-labs.com/automa/</link>
+      <guid isPermaLink="true">https://corx-labs.com/automa/</guid>
+      <pubDate>Mon, 28 Sep 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>App</category>
+      <description><![CDATA[
+        <p>Automa is an Android app for running a company of AI agents from a phone. The agents run on
+        a server — the phone itself under Termux, or a machine over HTTPS — and Automa is the control
+        surface: what needs you, tasks, routines, scoped connections, and a Device Files channel
+        agents can request files through. There is no public download link yet.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>HELIX — linear scaling with exact long-range recall</title>
+      <link>https://corx-labs.com/models/helix/</link>
+      <guid isPermaLink="true">https://corx-labs.com/models/helix/</guid>
+      <pubDate>Mon, 14 Sep 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Architecture</category>
+      <description><![CDATA[
+        <p>HELIX is a sequence architecture that scales linearly in context length while keeping exact
+        long-range recall, by braiding a local window, a delta-rule recurrent state and a
+        landmark-tree index over one residual stream. Published as
+        <a href="https://pypi.org/project/helix-lm/">helix-lm</a> under Apache 2.0, with a tested
+        reference implementation. There are no trained checkpoints.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>CorX3.8-27B — Jamaica's first large open-weight LLM</title>
