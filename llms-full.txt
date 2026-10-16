@@ -1,7 +1,7 @@
 # CorX Labs — complete site content
 
 Source: https://corx-labs.com/
-Last updated: 2026-08-20
+Last updated: 2026-10-16
 Licence of described models: Apache 2.0
 
 ===============================================================================
@@ -21,6 +21,9 @@ Website: https://corx-labs.com/
 Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
         TriStream-SVS (singing voice synthesis, released) — https://huggingface.co/Sigmandndnns/TriStream-SVS-300M
         CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) — https://huggingface.co/Sigmandndnns/CorX3.8-27B
+        HELIX (sequence architecture, no trained checkpoints) — https://corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
+        NatureV1 (89M weather and hurricane model, IN TRAINING, no skill claimed) — https://corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
+App:    Automa (Android app for running AI agents from a phone, no public download yet) — https://corx-labs.com/automa/
 
 ===============================================================================
 CORX1.5 — MODEL CARD
