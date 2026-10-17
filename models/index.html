@@ -101,7 +101,7 @@
             "applicationCategory": "DeveloperApplication",
             "applicationSubCategory": "Weather and tropical cyclone model",
             "operatingSystem": "OS Independent",
-            "description": "An 89.18M-parameter probabilistic weather and hurricane model built on geodesic attention over the real sphere. Forecasts global weather to five days and, for a tropical cyclone, track scenarios, intensity, rapid intensification and landfall, each with an uncertainty. Training in progress; no forecast skill is claimed.",
+            "description": "An 89.45M-parameter probabilistic weather and hurricane model built on geodesic attention over the real sphere, released as a research model. On held-out seasons its hurricane track beats physics-only steering and extrapolation at every lead, at 2.5 to 4.5 times the National Hurricane Center's error.",
             "license": "https://www.apache.org/licenses/LICENSE-2.0",
             "author": { "@id": "https://corx-labs.com/#nathan" },
             "publisher": { "@id": "https://corx-labs.com/#organization" },
@@ -302,11 +302,11 @@
         <div class="model-head">
           <div>
             <div class="tag-row" style="margin-bottom:14px">
-              <span class="tag">Training in progress</span>
+              <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> Released</span>
               <span class="tag">Weather &amp; hurricanes</span>
-              <span class="tag">89.18M params</span>
+              <span class="tag">89.45M params</span>
               <span class="tag">Probabilistic</span>
-              <span class="tag">No skill claimed</span>
+              <span class="tag">Research model</span>
             </div>
             <h3>NatureV1</h3>
             <p class="lede" style="margin-top:12px">A probabilistic model of the atmosphere whose
@@ -318,12 +318,12 @@
         </div>
 
         <dl class="spec-list">
-          <div><dt>Parameters</dt><dd>89.18M</dd></div>
+          <div><dt>Parameters</dt><dd>89.45M</dd></div>
           <div><dt>Blocks</dt><dd>17 iHELIX</dd></div>
           <div><dt>Head radii</dt><dd>120&ndash;1,600 km</dd></div>
           <div><dt>Input grid</dt><dd>1.5&deg;, 89 channels</dd></div>
           <div><dt>Leads</dt><dd>6 h &rarr; 120 h</dd></div>
-          <div><dt>Status</dt><dd>First run in progress</dd></div>
+          <div><dt>24 h track error</dt><dd>163 km, held-out</dd></div>
         </dl>
 
         <div class="btn-row">

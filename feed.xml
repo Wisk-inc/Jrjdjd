@@ -6,13 +6,36 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Fri, 16 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 17 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>NatureV1 released — trained, scored and red-teamed</title>
+      <link>https://corx-labs.com/models/naturev1/</link>
+      <guid isPermaLink="false">https://corx-labs.com/models/naturev1/#released-2026-10-17</guid>
+      <pubDate>Sat, 17 Oct 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Weather model</category>
+      <description><![CDATA[
+        <p>NatureV1's first full run is complete, and every result was measured on data it never
+        trained on. On 59 storms from the held-out 2017, 2019 and 2021 Atlantic seasons its hurricane
+        track beats a physics-only steering track and straight-line extrapolation at every lead —
+        163 km at 24 hours and 739 km at 72 — and on the unseen 2023 El Niño season it beat steering
+        for every one of the seven hurricanes. Its full-atmosphere rollout has skill against
+        persistence and climatology out to 72 hours.</p>
+        <p>It is a research model, not an operational forecast. Its track errors are 2.5 to 4.5
+        times the National Hurricane Center's, it underestimates strong storms, its
+        rapid-intensification probabilities are far too high, and it missed Hurricane Otis's
+        explosive intensification entirely. A red-team section on the model page lists where it
+        breaks. Weights, results and evaluation scripts:
+        <a href="https://huggingface.co/Sigmandndnns/NatureV1-500">Sigmandndnns/NatureV1-500</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>NatureV1 — a weather and hurricane model, in training</title>
