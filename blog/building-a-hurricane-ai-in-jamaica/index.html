@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Building a Hurricane AI in Jamaica on One GPU | CorX Labs</title>
+<meta name="description" content="How NatureV1, an open-source AI weather and hurricane model, was built in Jamaica in a week on one GPU — what worked, and where a red team broke it.">
+<link rel="canonical" href="https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/">
+
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="Nathan">
+<meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/">
+<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="CorX Labs">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/">
+<meta property="og:title" content="Building a Hurricane AI in Jamaica on One GPU">
+<meta property="og:description" content="An open-source AI weather and hurricane model, built in Jamaica by one developer in a week on one GPU. What worked, the number that showed it learned something, and where a red team broke it.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Building a hurricane AI in Jamaica on one GPU — CorX Labs">
+<meta property="article:published_time" content="2026-10-24T00:00:00Z">
+<meta property="article:modified_time" content="2026-10-24T00:00:00Z">
+<meta property="article:author" content="Nathan">
+<meta property="article:section" content="Weather and climate">
+<meta property="article:tag" content="hurricane AI">
+<meta property="article:tag" content="Jamaica">
+<meta property="article:tag" content="weather forecasting">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:label1" content="Written by"><meta name="twitter:data1" content="Nathan">
+<meta name="twitter:label2" content="Reading time"><meta name="twitter:data2" content="8 minutes">
+<meta name="twitter:title" content="Building a Hurricane AI in Jamaica on One GPU">
+<meta name="twitter:description" content="An open-source AI weather and hurricane model, built in Jamaica in a week on one GPU — and where a red team broke it.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/main.css">
+<style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "BlogPosting",
+        "TechArticle"
+      ],
+      "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#post",
+      "headline": "Building a Hurricane AI in Jamaica on One GPU",
+      "alternativeHeadline": "How NatureV1, an open-source AI weather and hurricane model, was built in Jamaica",
+      "description": "How NatureV1, an open-source AI weather and hurricane model, was built in Jamaica: three design bets, a week of training on one GPU in a hosted notebook, the number that showed the hurricane heads learned something, the results on storms it never saw, and where a red team broke it.",
+      "url": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/",
+      "mainEntityOfPage": {
+        "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#webpage"
+      },
+      "isPartOf": {
+        "@id": "https://corx-labs.com/blog/#blog"
+      },
+      "inLanguage": "en",
+      "datePublished": "2026-10-24",
+      "dateModified": "2026-10-24",
+      "author": {
+        "@id": "https://corx-labs.com/#nathan"
+      },
+      "publisher": {
+        "@id": "https://corx-labs.com/#organization"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://corx-labs.com/assets/img/og-default.jpg",
+        "width": 1200,
+        "height": 630
+      },
+      "about": {
+        "@id": "https://corx-labs.com/models/naturev1/#model"
+      },
+      "contentLocation": {
+        "@type": "Place",
+        "name": "Jamaica",
+        "sameAs": "https://en.wikipedia.org/wiki/Jamaica"
+      },
+      "articleSection": "Weather and climate",
+      "proficiencyLevel": "Beginner",
+      "timeRequired": "PT8M",
+      "keywords": "Jamaican AI weather model, hurricane AI, AI hurricane forecasting, Caribbean hurricane model, AI weather model built in Jamaica, train weather model on one GPU, NatureV1, open-source weather model, red team AI model",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [
+          ".answer-box"
+        ]
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#webpage",
+      "url": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/",
+      "name": "Building a Hurricane AI in Jamaica on One GPU",
+      "isPartOf": {
+        "@id": "https://corx-labs.com/#website"
+      },
+      "inLanguage": "en",
+      "breadcrumb": {
+        "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://corx-labs.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://corx-labs.com/blog/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Building a Hurricane AI in Jamaica",
+          "item": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#faq",
+      "isPartOf": {
+        "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is there a Jamaican AI weather model?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. NatureV1 is an open-source AI weather and hurricane model built in Jamaica by CorX Labs. It rolls the global atmosphere forward three days and, for hurricanes, forecasts track, intensity, rapid intensification and landfall, each with an uncertainty. It is a research model, not an operational forecast."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long did NatureV1 take to train?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "About one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook. The GPU time was three to four days; the rest was session restarts, because hosted sessions end after 12 hours or 90 idle minutes and wipe the disk. The full-atmosphere rollout stage alone took 74.3 GPU-hours."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can NatureV1 predict hurricanes that hit Jamaica?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not for a live storm. It covers the Atlantic basin, including the Caribbean Sea, and was tested on storms that crossed the Caribbean islands, but it runs on reanalysis data published days after the fact, its track errors are 2.5 to 4.5 times the National Hurricane Center's, and it cannot warn of explosive intensification. In Jamaica, follow the Meteorological Service of Jamaica and ODPEM."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is NatureV1 open source?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, under the Apache-2.0 licence. The weights, raw results and evaluation scripts are on Hugging Face at Sigmandndnns/NatureV1-500, and the engine, model and training pipeline install from PyPI with pip install naturev1[all]."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead-inner">
+    <a class="brand" href="/" aria-label="CorX Labs — home">
+      <span class="mark" aria-hidden="true">C</span>
+      <span class="brand-name">CorX Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/chat/">Chat</a>
+      <a href="/documentation/">Documentation</a>
+      <a href="/models/">Our Products</a>
+      <a href="/benchmarks/">Benchmarks</a>
+      <a href="/blog/" aria-current="page">Blog</a>
+      <a href="/developers/">Developers</a>
+      <a href="/about/">About Us</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="masthead-actions">
+      <a class="btn btn-primary btn-sm" href="/models/corx1-5/">CorX1.5</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/chat/">Chat</a></li>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/benchmarks/">Benchmarks</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="/models/corx1-5/">CorX1.5</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="shell page-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><span aria-current="page">Building a Hurricane AI in Jamaica</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow" style="margin-top:22px">Build notes</p>
+    <h1>Building a hurricane AI in Jamaica, on one GPU.</h1>
+    <p class="lede">NatureV1 is an open-source AI weather and hurricane model, built in Jamaica by one
+      developer in about a week of training on a single GPU. This is how it was built, what it gets
+      right, and where a deliberate attempt to break it succeeded.</p>
+    <div class="post-meta">
+      <span>By <a href="/developers/">Nathan</a></span>
+      <span><time datetime="2026-10-24">24 October 2026</time></span>
+      <span>8 min read</span>
+      <span>Model: <a href="/models/naturev1/">NatureV1</a></span>
+    </div>
+  </div>
+
+  <div class="shell"><hr class="rule"></div>
+
+  <div class="shell section-tight">
+    <div class="doc-layout">
+
+      <aside class="toc" aria-label="On this page">
+        <p class="toc-title">On this page</p>
+        <ol>
+          <li><a href="#short">The short version</a></li>
+          <li><a href="#why">Why build it in Jamaica</a></li>
+          <li><a href="#bets">Three bets</a></li>
+          <li><a href="#week">A week on a hosted notebook</a></li>
+          <li><a href="#signal">The number that moved</a></li>
+          <li><a href="#right">What it gets right</a></li>
+          <li><a href="#breaks">Where it breaks</a></li>
+          <li><a href="#for">What it is for</a></li>
+          <li><a href="#next">What comes next</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <article>
+        <section class="doc-section" id="short">
+          <h2>The short version</h2>
+          <div class="answer-box">
+            <p><strong>NatureV1 is an 89-million-parameter AI model of the atmosphere, made in Jamaica
+              by CorX Labs and released under Apache-2.0.</strong> Given the last 30 hours of global
+              reanalysis, it rolls the weather forward three days and, for a hurricane, forecasts its
+              track, its strength, its chance of rapid intensification and its chance of landfall
+              &mdash; each with an uncertainty.</p>
+            <p>On 59 storms it never saw, its hurricane track beat a physics-only steering forecast at
+              every lead: 163&nbsp;km off at 24 hours, 739&nbsp;km at 72. That is 2.5 to 4.5 times
+              worse than the US National Hurricane Center. It is a research model, built to be open and
+              inspectable &mdash; not a forecast to act on.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="why">
+          <h2>Why build a hurricane model in Jamaica</h2>
+          <div class="prose">
+            <p>Jamaica sits in the Atlantic hurricane belt, and hurricane forecasting is one of the
+              places AI has already earned a role. When Hurricane Melissa made landfall in Jamaica in
+              October 2025, the <a href="https://www.nhc.noaa.gov/" rel="noopener nofollow" target="_blank">National Hurricane Center</a> drew on <a href="https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica/" rel="noopener nofollow" target="_blank">Google DeepMind&rsquo;s WeatherNext</a> for its forecast of the
+              storm&rsquo;s rapid intensification.</p>
+            <p>Systems like that are built by large teams, at 0.25&deg; resolution, on decades of data
+              and enormous compute. NatureV1 asks a narrower question: what can one developer, one GPU
+              and public data produce &mdash; and can the result be honest about exactly how good it
+              is? Every part of it is open: the engine, the model, the training pipeline and the
+              scoring.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="bets">
+          <h2>Three bets</h2>
+          <div class="prose">
+            <p><strong>Don&rsquo;t make the model learn geometry.</strong> Most weather transformers
+              flatten the globe into tokens and let the model work out geography from data. NatureV1
+              runs on iHELIX, an engine where every attention head has a physical radius &mdash; from
+              120&nbsp;km for fronts and convection to 1,600&nbsp;km for whole weather systems &mdash;
+              measured along the curved Earth, and where the vertical axis is log-pressure. Distances,
+              areas and the sphere are given, so the parameters go on the atmosphere.</p>
+            <p><strong>Spend scarce labels on few parameters.</strong> The whole Atlantic best-track
+              record is on the order of 55,000 points, and some fields are far thinner &mdash; radius of
+              maximum wind only entered the record in 2021. So the backbone learns from about
+              2&times;10<sup>11</sup> values of free reanalysis, then freezes, and only about 1.2
+              million parameters ever see a hurricane label: 16,219 samples from 584 storms. Even the
+              track is not learned from scratch. It starts from a physics-only steering track &mdash;
+              the path the surrounding winds would carry the storm along &mdash; and learns only the
+              correction.</p>
+            <p><strong>A forecast must be able to say it doesn&rsquo;t know.</strong> Every output
+              carries an uncertainty. An output that was never trained is never shown, and a forecast
+              run from an input the model was never trained on is flagged as untrustworthy.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="week">
+          <h2>A week on a hosted notebook</h2>
+          <div class="prose">
+            <p>The whole run took about one week of wall-clock time on a single RTX PRO 6000 (96&nbsp;GB)
+              in a hosted notebook. Only three to four days of that was GPU time. The rest was the cost
+              of the platform: sessions end after 12 hours or 90 idle minutes and the disk is wiped, so
+              every restart re-pulled checkpoints and staged data from Hugging Face before training
+              could resume. Every stage resumes from a one-minute checkpoint, so no restart lost more
+              than a minute of training.</p>
+          </div>
+          <div class="table-wrap mt-s">
+            <table>
+              <caption class="visually-hidden">The three training stages of NatureV1</caption>
+              <thead>
+                <tr><th scope="col">Stage</th><th scope="col">What trained</th><th scope="col">Size of the job</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Reanalysis pretraining</th><td>Backbone and surface heads</td><td>7,275 steps, 8 epochs of ERA5 2011&ndash;2015</td></tr>
+                <tr><th scope="row">Full-state rollout</th><td>Backbone and state head</td><td>4,000 steps, curriculum to 72 h &mdash; 74.3 GPU-hours</td></tr>
+                <tr><th scope="row">Hurricane heads</th><td>~1.2M parameters, backbone frozen</td><td>Best at epoch 3 of 28; minutes per run</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="prose mt-s">
+            <p>The reanalysis was five years of ERA5, 2011&ndash;2015 &mdash; 7,300 global states, about
+              38&nbsp;GB &mdash; with 2016 for validation. The hurricane heads trained on Atlantic
+              seasons from 1979 to 2016 and were scored on 2017, 2019 and 2021, which they never
+              saw.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="signal">
+          <h2>The number that showed it learned something</h2>
+          <div class="prose">
+            <p>NatureV1 never gives one track for a hurricane. It proposes six scenarios and puts a
+              probability on each. With six scenarios, an even split is 16.7%.</p>
+            <p>Midway through training, a hindcast of Hurricane Dorian (2019) gave its top scenario
+              <strong>17%</strong> &mdash; an even split &mdash; and its track sat within 10&nbsp;km of
+              the steering track at every lead. It had not yet learned to tell one path from another.
+              The released model gives its top scenario <strong>26%</strong>, and its learned track was
+              99&nbsp;km off at 24 hours, against 177 for steering.</p>
+            <p>One storm proves nothing, so the held-out seasons are what count: across 59 storms the
+              final forecast beat steering at every lead, and the full set of scenarios turned out to be
+              honest &mdash; the region it called 90% likely held the real storm 87&ndash;92% of the
+              time.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="right">
+          <h2>What it gets right</h2>
+          <div class="prose">
+            <ul>
+              <li><strong>Hurricane track</strong> beats a physics-only steering track and straight-line
+                extrapolation at every lead on the held-out seasons: 163&nbsp;km at 24 hours,
+                421&nbsp;km at 48, 739&nbsp;km at 72.</li>
+              <li><strong>On an unseen El Ni&ntilde;o year</strong>, 2023, it beat steering for all seven
+                hurricanes at 24, 48 and 72 hours, and its margin over steering grew &mdash; 29% better
+                at 72 hours, against 25% on the held-out seasons.</li>
+              <li><strong>Landfall probability</strong> is skilful, with an AUC of 0.81&ndash;0.86.</li>
+              <li><strong>Hurricane wind</strong> beats &ldquo;it stays as strong as it is now&rdquo; from
+                24 hours on.</li>
+              <li><strong>The full-atmosphere rollout</strong> beats climatology on all 84 field&ndash;lead
+                pairs scored, and has skill against persistence and climatology out to 72 hours.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="doc-section" id="breaks">
+          <h2>Where it breaks</h2>
+          <div class="prose">
+            <p>Before release the model went through a red team &mdash; a deliberate attempt to break it.
+              Most of what it found is the kind of thing a model page usually leaves out:</p>
+            <ul>
+              <li><strong>It is 2.5&ndash;4.5&times; less accurate than the NHC</strong>, which averaged
+                about 66&nbsp;km at 24 hours and 168&nbsp;km at 72 over 2018&ndash;2022.</li>
+              <li><strong>It underestimates strong storms</strong> &mdash; by 10&ndash;18&nbsp;kt for
+                major hurricanes. It forecast about 70&nbsp;kt for storms that reached
+                145&ndash;160&nbsp;kt.</li>
+              <li><strong>It cannot warn of explosive intensification.</strong> Hurricane Otis (2023) went
+                from 50&nbsp;kt to a 130&nbsp;kt Category 5 in 24 hours; NatureV1 forecast 45&nbsp;kt.</li>
+              <li><strong>Its rapid-intensification probabilities are far too high.</strong> When it said
+                55%, it happened 38% of the time.</li>
+              <li><strong>Garbage in, plausible out.</strong> Random noise in place of its inputs produced
+                a normal-looking forecast that passed every check.</li>
+              <li><strong>A single scenario&rsquo;s cone is over-confident.</strong> Its
+                &ldquo;95%&rdquo; cone held the storm 60&ndash;87% of the time; the cone has to be drawn
+                from all six scenarios.</li>
+            </ul>
+            <p>Every one of those is listed, with the numbers, on the
+              <a href="/models/naturev1/#red-team">NatureV1 page</a>.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="for">
+          <h2>What it is for, and what it is not</h2>
+          <div class="callout">
+            <p><strong>NatureV1 is not a forecast to act on.</strong> It runs on reanalysis data that is
+              published days after the fact, so it cannot see a live storm. For warnings in Jamaica,
+              follow the Meteorological Service of Jamaica and <a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>; for the wider Atlantic,
+              the <a href="https://www.nhc.noaa.gov/" rel="noopener nofollow" target="_blank">National Hurricane Center</a>.</p>
+          </div>
+          <div class="prose mt-m">
+            <p>What it is for is openness: a weather and hurricane model built in Jamaica whose weights,
+              code, results and failure modes are all public. Anyone can download it, re-run the
+              numbers, retrain it, or try to break it further.</p>
+          </div>
+          <pre class="mt-s"><code>pip install "naturev1[all]"</code></pre>
+        </section>
+
+        <section class="doc-section" id="next">
+          <h2>What comes next</h2>
+          <div class="prose">
+            <p>Two tests were still running at release: six storms outside the Atlantic &mdash; in the
+              West Pacific, the Southern Hemisphere and the East Pacific &mdash; and a 10-day rollout to
+              see whether the atmosphere stays stable past the 72 hours it was trained on. Their results
+              will go on the <a href="/models/naturev1/">model page</a>, whatever they show.</p>
+          </div>
+        </section>
+
+        <section class="doc-section" id="faq">
+          <h2>FAQ</h2>
+          <div class="faq mt-m">
+            <details open>
+              <summary>Is there a Jamaican AI weather model?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Yes. <a href="/models/naturev1/">NatureV1</a> is an open-source AI weather and hurricane model built in Jamaica by CorX Labs. It rolls the global atmosphere forward three days and, for hurricanes, forecasts track, intensity, rapid intensification and landfall, each with an uncertainty. It is a research model, not an operational forecast.</p></div>
+            </details>
+            <details>
+              <summary>How long did NatureV1 take to train?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>About one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook. The GPU time was three to four days; the rest was session restarts, because hosted sessions end after 12 hours or 90 idle minutes and wipe the disk. The full-atmosphere rollout stage alone took 74.3 GPU-hours.</p></div>
+            </details>
+            <details>
+              <summary>Can NatureV1 predict hurricanes that hit Jamaica?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Not for a live storm. It covers the Atlantic basin, including the Caribbean Sea, and was tested on storms that crossed the Caribbean islands, but it runs on reanalysis published days after the fact, its track errors are 2.5&ndash;4.5&times; the National Hurricane Center&rsquo;s, and it cannot warn of explosive intensification. In Jamaica, follow the Meteorological Service of Jamaica and <a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>.</p></div>
+            </details>
+            <details>
+              <summary>Is NatureV1 open source?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Yes, under Apache-2.0. The weights, raw results and evaluation scripts are on <a href="https://huggingface.co/Sigmandndnns/NatureV1-500" rel="noopener" target="_blank">Hugging Face</a>, and the engine, model and training pipeline install from PyPI with <code>pip install "naturev1[all]"</code>.</p></div>
+            </details>
+          </div>
+        </section>
+      </article>
+    </div>
+  </div>
+
+  <section class="section-tight">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <p class="eyebrow is-plain" style="justify-content:center">The model</p>
+        <h2 class="mt-s">Every number, every table, the full red team.</h2>
+        <p>NatureV1 &mdash; an open-source AI weather and hurricane model, made in Jamaica, released
+          under Apache-2.0.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/models/naturev1/">See NatureV1</a>
+          <a class="btn btn-ghost" href="/blog/">More from the blog</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="/" aria-label="CorX Labs — home">
+          <span class="mark" aria-hidden="true">C</span>
+          <span class="brand-name">CorX Labs</span>
+        </a>
+        <p>An independent AI research lab and research station in Jamaica, the Caribbean.
+          Architecting the future, from the ground up.</p>
+      </div>
+      <nav class="footer-col" aria-label="Products">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="/models/">All models</a></li>
+          <li><a href="/benchmarks/">Benchmarks</a></li>
+          <li><a href="/benchmarks/compare/">Compare models</a></li>
+          <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
+          <li><a href="/models/corx1-5/">CorX1.5</a></li>
+          <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
+          <li><a href="/models/helix/">HELIX</a></li>
+          <li><a href="/models/naturev1/">NatureV1</a></li>
+          <li><a href="/automa/">Automa</a></li>
+          <li><a href="https://huggingface.co/Sigmandndnns/CorX1.5-160M" rel="noopener" target="_blank">Hugging Face</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Lab">
+        <h4>Lab</h4>
+        <ul>
+          <li><a href="/documentation/">Documentation</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/developers/">Developers</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-col" aria-label="Resources">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
+          <li><a href="/documentation/#safety">Safety</a></li>
+          <li><a href="/feed.xml">Release feed (RSS)</a></li>
+          <li><a href="/sitemap.xml">Sitemap</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer-base">
+      <span>&copy; <span data-year>2026</span> CorX Labs. Models released under the Apache 2.0 license.</span>
+      <span class="made">Made in Jamaica &middot; <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js" defer></script>
+</body>
+</html>

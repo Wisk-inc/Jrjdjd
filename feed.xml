@@ -6,13 +6,28 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sat, 17 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 24 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Building a Hurricane AI in Jamaica on One GPU</title>
+      <link>https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/</link>
+      <guid isPermaLink="true">https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/</guid>
+      <pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan</dc:creator>
+      <category>Build notes</category>
+      <description><![CDATA[
+        <p>NatureV1 is an open-source AI weather and hurricane model, built in Jamaica in about a week
+        on a single GPU. How it was built &mdash; three design bets, a hosted notebook that wiped its
+        disk every session, the number that showed the hurricane heads learned something &mdash; what
+        it gets right on storms it never saw, and where a red team broke it.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>NatureV1 released — trained, scored and red-teamed</title>
