@@ -29,10 +29,12 @@
 /chat/tristream-server.py
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache
+  X-Robots-Tag: noindex
 
 /chat/tristream-model.py
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache
+  X-Robots-Tag: noindex
 
 # Crawler-facing files should never be served stale for long.
 /sitemap.xml
@@ -46,10 +48,14 @@
 /robots.txt
   Cache-Control: public, max-age=3600
 
+# For AI assistants, not search results: noindex keeps these text dumps from
+# competing with the real pages they summarise. Crawlers can still read them.
 /llms.txt
   Cache-Control: public, max-age=3600
   Content-Type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex
 
 /llms-full.txt
   Cache-Control: public, max-age=3600
   Content-Type: text/plain; charset=utf-8
+  X-Robots-Tag: noindex

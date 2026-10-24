@@ -41,6 +41,18 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /contact             /contact/              301
 /index.html          /                      301
 
+# Newer products.
+/naturev1            /models/naturev1/      301
+/nature-v1           /models/naturev1/      301
+/nature              /models/naturev1/      301
+/hurricane           /models/naturev1/      301
+/hurricane-ai        /models/naturev1/      301
+/weather             /models/naturev1/      301
+/weather-ai          /models/naturev1/      301
+/helix               /models/helix/         301
+/helix-lm            /models/helix/         301
+/automa              /automa/               301
+
 /benchmark           /benchmarks/           301
 /benchmarks          /benchmarks/           301
 /leaderboard         /benchmarks/leaderboard/ 301

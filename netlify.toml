@@ -39,12 +39,27 @@
   [headers.values]
     Content-Type = "text/plain; charset=utf-8"
     Cache-Control = "no-cache"
+    X-Robots-Tag = "noindex"
 
 [[headers]]
   for = "/chat/tristream-model.py"
   [headers.values]
     Content-Type = "text/plain; charset=utf-8"
     Cache-Control = "no-cache"
+    X-Robots-Tag = "noindex"
+
+# For AI assistants, not search results.
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/llms-full.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    X-Robots-Tag = "noindex"
 
 [[headers]]
   for = "/assets/css/*"

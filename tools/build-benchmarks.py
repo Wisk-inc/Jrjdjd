@@ -55,6 +55,24 @@ def write(rel_path, html_text):
     return path
 
 
+def fit(*candidates, limit=155):
+    """The first candidate short enough not to be cut off in a search result.
+
+    Google truncates descriptions at roughly 155-160 characters and titles at
+    roughly 60, usually mid-word. Each call passes the full wording first and
+    progressively shorter fallbacks; only if none fit is the last one trimmed.
+    """
+    for c in candidates:
+        if len(c) <= limit:
+            return c
+    c = candidates[-1]
+    return c[:limit - 1].rsplit(" ", 1)[0].rstrip(",;:") + "\u2026"
+
+
+def fit_title(*candidates):
+    return fit(*candidates, limit=60)
+
+
 def nil(text):
     return '<span class="bm-nil">Not reported</span>' if text is None else esc(text)
 
@@ -573,10 +591,13 @@ def build_hub():
 
     write("/benchmarks/", page(
         "AI Model Benchmarks — Compare %d Models Side by Side" % n_models,
-        "Compare %d AI models from %d labs: context window, price per million tokens, "
-        "licence and published scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench "
-        "Verified. Free, sortable, and clear about what has not been measured."
-        % (n_models, n_companies),
+        fit("Compare %d AI models from %d labs: context window, price per million tokens, "
+            "licence and published scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench "
+            "Verified. Free, sortable, and clear about what has not been measured."
+            % (n_models, n_companies),
+            "Compare %d AI models from %d labs: context window, price, licence and published "
+            "scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified."
+            % (n_models, n_companies)),
         SITE + "/benchmarks/", body, jsonld=ld,
         scripts=["/assets/js/benchmarks.js"]))
 
@@ -842,11 +863,16 @@ def build_model(m):
     if m.get("pin") is not None:
         desc_bits.append("%s per million input tokens" % fmt_price(m["pin"]))
     desc_bits.append("open weights" if is_open(m) else "proprietary")
-    meta_desc = "%s by %s: %s. Published benchmark scores, full specification and side-by-side comparisons." % (
-        m["name"], co["name"], ", ".join(desc_bits))
+    lead = "%s by %s: %s." % (m["name"], co["name"], ", ".join(desc_bits))
+    meta_desc = fit(lead + " Published benchmark scores, full specification and side-by-side comparisons.",
+                    lead + " Published benchmark scores, specs and comparisons.",
+                    lead + " Benchmarks, specs and comparisons.",
+                    lead)
 
     write(model_url(slug), page(
-        "%s — Specs, Pricing and Benchmarks" % m["name"],
+        fit_title("%s — Specs, Pricing and Benchmarks" % m["name"],
+                  "%s — Specs and Benchmarks" % m["name"],
+                  "%s Benchmarks" % m["name"]),
         meta_desc, url, body, jsonld=ld, og_image="og-model.jpg"))
 
 
@@ -1177,6 +1203,7 @@ def build_comparison(a_slug, b_slug):
 
   <section class="section-tight" style="padding-top:0">
     <div class="shell">
+      <h2 class="visually-hidden">At a glance</h2>
       <div class="bm-verdict">
         <div>
           <h3>Benchmarks</h3>
@@ -1269,10 +1296,19 @@ def build_comparison(a_slug, b_slug):
     ]}
 
     write(compare_url(a_slug, b_slug), page(
-        "%s — Benchmarks, Price and Specs Compared" % title_pair,
-        "%s or %s? Compare context window, price per million tokens, licence and published "
-        "scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified, side by side."
-        % (a["name"], b["name"]),
+        fit_title("%s — Benchmarks, Price and Specs Compared" % title_pair,
+                  "%s — Benchmarks and Price" % title_pair,
+                  "%s Benchmarks" % title_pair,
+                  title_pair),
+        fit("%s or %s? Compare context window, price per million tokens, licence and published "
+            "scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified, side by side."
+            % (a["name"], b["name"]),
+            "%s or %s? Compare context window, price, licence and published scores on "
+            "MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified." % (a["name"], b["name"]),
+            "%s or %s? Compare context window, price, licence and published benchmark scores "
+            "side by side." % (a["name"], b["name"]),
+            "%s vs %s: context window, price, licence and benchmark scores."
+            % (a["name"], b["name"])),
         url, body, jsonld=ld, og_image="og-compare.jpg"))
 
 
@@ -1623,9 +1659,11 @@ def build_leaderboard():
 
     write("/benchmarks/leaderboard/", page(
         "AI Model Leaderboard — Top Models in Every Field",
-        "Which AI models lead at reasoning, maths, coding, knowledge, multimodal, instruction "
-        "following and human preference. Ranked from published benchmark figures across %d models "
-        "from %d labs." % (len(MODELS), len(COMPANIES)),
+        fit("Which AI models lead at reasoning, maths, coding, knowledge, multimodal, instruction "
+            "following and human preference. Ranked from published benchmark figures across %d models "
+            "from %d labs." % (len(MODELS), len(COMPANIES)),
+            "Which AI models lead at reasoning, maths, coding, knowledge, multimodal, instruction "
+            "following and human preference, ranked from published benchmarks."),
         url, body, jsonld=ld))
 
 
@@ -1727,9 +1765,13 @@ def build_test(b):
     ]}
 
     write(test_url(key), page(
-        "%s — What It Measures and Which AI Models Lead" % b["name"],
-        "%s %s Published scores for %d models, ranked, with what the benchmark does and "
-        "does not tell you." % (b["name"] + ":", b["blurb"], len(ranked)),
+        fit_title("%s — What It Measures and Which AI Models Lead" % b["name"],
+                  "%s — What It Measures and Who Leads" % b["name"],
+                  "%s Benchmark Explained" % b["name"]),
+        fit("%s %s Published scores for %d models, ranked, with what the benchmark does and "
+            "does not tell you." % (b["name"] + ":", b["blurb"], len(ranked)),
+            "%s %s Published scores for %d models, ranked." % (b["name"] + ":", b["blurb"], len(ranked)),
+            "%s %s" % (b["name"] + ":", b["blurb"])),
         url, body, jsonld=ld))
 
 
@@ -1986,8 +2028,10 @@ def build_corx_company(cid, meta):
 
     write(company_url(cid), page(
         "CorX Labs Models — Every Model Built by the Lab",
-        "Every model CorX Labs has released: %s. Parameters, architecture, licence and where to "
-        "download each one." % ", ".join(m["name"] for m in models),
+        fit("Every model CorX Labs has released: %s. Parameters, architecture, licence and where to "
+            "download each one." % ", ".join(m["name"] for m in models),
+            "Every model CorX Labs has released: %s. Parameters, licence and downloads."
+            % ", ".join(m["name"] for m in models)),
         url, body, jsonld=ld, og_image="og-models.jpg"))
 
 
@@ -2058,10 +2102,21 @@ def build_company(cid, meta):
     ]}
 
     write(company_url(cid), page(
-        "%s AI Models — Specs, Pricing and Benchmarks" % meta["name"],
-        "Every %s model in the CorX Labs index: %s. Context window, price per million "
-        "tokens, licence and published benchmark scores."
-        % (meta["name"], ", ".join(m["name"] for m in models[:6])),
+        fit_title("%s AI Models — Specs, Pricing and Benchmarks" % meta["name"],
+                  "%s AI Models — Specs and Benchmarks" % meta["name"],
+                  "%s AI Models" % meta["name"]),
+        fit(*[("Every %s model in the CorX Labs index: %s%s. Context window, price per million "
+               "tokens, licence and published benchmark scores."
+               % (meta["name"], ", ".join(m["name"] for m in models[:k]),
+                  "" if k >= len(models) else " and %d more" % (len(models) - k)))
+              for k in range(min(6, len(models)), 0, -1)],
+            *[("Every %s model in the CorX Labs index: %s%s. Context window, price, licence "
+               "and benchmark scores."
+               % (meta["name"], ", ".join(m["name"] for m in models[:k]),
+                  "" if k >= len(models) else " and %d more" % (len(models) - k)))
+              for k in range(min(6, len(models)), 0, -1)],
+            "Every %s model in the CorX Labs index, with context window, price, licence and "
+            "published benchmark scores." % meta["name"]),
         url, body, jsonld=ld))
 
 
