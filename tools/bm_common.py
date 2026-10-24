@@ -180,7 +180,7 @@ FOOTER = """<footer class="site-footer">
           Architecting the future, from the ground up.</p>
       </div>
       <nav class="footer-col" aria-label="Benchmarks">
-        <h4>Benchmarks</h4>
+        <h2>Benchmarks</h2>
         <ul>
           <li><a href="/benchmarks/">All models</a></li>
           <li><a href="/benchmarks/leaderboard/">Leaderboard</a></li>
@@ -191,7 +191,7 @@ FOOTER = """<footer class="site-footer">
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Products">
-        <h4>Products</h4>
+        <h2>Products</h2>
         <ul>
           <li><a href="/models/">All models</a></li>
           <li><a href="/models/corx3-8/">CorX3.8-27B</a></li>
@@ -204,7 +204,7 @@ FOOTER = """<footer class="site-footer">
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Lab">
-        <h4>Lab</h4>
+        <h2>Lab</h2>
         <ul>
           <li><a href="/documentation/">Documentation</a></li>
           <li><a href="/blog/">Blog</a></li>

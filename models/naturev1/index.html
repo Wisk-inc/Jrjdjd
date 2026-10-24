@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>NatureV1 — Probabilistic Weather and Hurricane Model on Geodesic Attention | CorX Labs</title>
-<meta name="description" content="An 89M-parameter hurricane and weather model on geodesic attention. Beats physics steering on track at every lead — a research model, not a forecast.">
+<title>NatureV1 — Jamaican AI Weather &amp; Hurricane Model | CorX Labs</title>
+<meta name="description" content="NatureV1 is an open-source AI weather and hurricane model made in Jamaica. It beats physics steering on hurricane track at every lead. A research model.">
 <link rel="canonical" href="https://corx-labs.com/models/naturev1/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -20,15 +20,15 @@
 <meta property="og:site_name" content="CorX Labs">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/models/naturev1/">
-<meta property="og:title" content="NatureV1 — Probabilistic Weather and Hurricane Model on Geodesic Attention">
+<meta property="og:title" content="NatureV1 — a Jamaican-made AI weather and hurricane model">
 <meta property="og:description" content="An 89M-parameter weather and hurricane model on geodesic attention. On held-out seasons its hurricane track beats physics steering at every lead, at 2.5–4.5× the NHC's error. A research model, not a forecast.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="NatureV1 — weather and hurricane forecasting on geodesic attention">
-<meta property="article:modified_time" content="2026-10-17T00:00:00Z">
+<meta property="og:image:alt" content="NatureV1 — an open-source AI weather and hurricane model made in Jamaica">
+<meta property="article:modified_time" content="2026-10-24T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="NatureV1 — Probabilistic Weather and Hurricane Model on Geodesic Attention">
+<meta name="twitter:title" content="NatureV1 — a Jamaican-made AI weather and hurricane model">
 <meta name="twitter:description" content="Trained, scored on data it never saw, and red-teamed: a hurricane model that beats physics steering at every lead and says plainly where it breaks.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-default.jpg">
 
@@ -66,15 +66,15 @@
       "installUrl": "https://pypi.org/project/naturev1/",
       "softwareRequirements": "Python >= 3.10, PyTorch",
       "isAccessibleForFree": true,
-      "dateModified": "2026-10-17",
+      "dateModified": "2026-10-24",
       "inLanguage": "en",
       "license": "https://www.apache.org/licenses/LICENSE-2.0",
-      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
       "creator": { "@id": "https://corx-labs.com/#nathan" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "provider": { "@id": "https://corx-labs.com/#organization" },
       "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
-      "keywords": "weather forecasting, tropical cyclone, hurricane track forecast, geodesic attention, ERA5, WeatherBench 2, HURDAT2, probabilistic forecasting, ensemble, rapid intensification, steering flow, physics-informed machine learning, PyTorch",
+      "keywords": "Jamaican AI weather model, AI weather model, AI hurricane model, hurricane forecasting AI, Caribbean hurricane model, Jamaica, open-source weather model, machine learning weather prediction, weather forecasting, tropical cyclone, hurricane track forecast, rapid intensification, geodesic attention, ERA5, WeatherBench 2, HURDAT2, probabilistic forecasting, ensemble, PyTorch",
       "featureList": [
         "Geodesic attention with head radii from 120 km to 1,600 km over great-circle distance",
         "Encode from any source grid onto a shared 4,096-point mesh, process, decode onto any output grid",
@@ -93,6 +93,13 @@
         "https://pypi.org/project/ihelix/",
         "https://huggingface.co/Sigmandndnns/NatureV1-500"
       ],
+      "about": [
+        { "@type": "Thing", "name": "Weather forecasting", "sameAs": "https://en.wikipedia.org/wiki/Weather_forecasting" },
+        { "@type": "Thing", "name": "Tropical cyclone forecasting", "sameAs": "https://en.wikipedia.org/wiki/Tropical_cyclone_forecasting" },
+        { "@type": "Thing", "name": "Numerical weather prediction", "sameAs": "https://en.wikipedia.org/wiki/Numerical_weather_prediction" }
+      ],
+      "locationCreated": { "@type": "Place", "name": "Jamaica", "sameAs": "https://en.wikipedia.org/wiki/Jamaica" },
+      "subjectOf": { "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#post" },
       "isBasedOn": { "@id": "https://corx-labs.com/models/helix/#architecture" },
       "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
     },
@@ -100,11 +107,11 @@
       "@type": "WebPage",
       "@id": "https://corx-labs.com/models/naturev1/#webpage",
       "url": "https://corx-labs.com/models/naturev1/",
-      "name": "NatureV1 — Probabilistic Weather and Hurricane Model on Geodesic Attention",
+      "name": "NatureV1 — Jamaican AI Weather and Hurricane Model",
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "mainEntity": { "@id": "https://corx-labs.com/models/naturev1/#model" },
       "inLanguage": "en",
-      "dateModified": "2026-10-17",
+      "dateModified": "2026-10-24",
       "breadcrumb": { "@id": "https://corx-labs.com/models/naturev1/#breadcrumb" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
@@ -133,11 +140,11 @@
     {
       "@type": "TechArticle",
       "@id": "https://corx-labs.com/models/naturev1/#article",
-      "headline": "NatureV1: geometry you do not have to learn, and labels you cannot make more of",
+      "headline": "NatureV1: an open-source AI weather and hurricane model built in Jamaica",
       "about": { "@id": "https://corx-labs.com/models/naturev1/#model" },
-      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
-      "dateModified": "2026-10-17",
+      "dateModified": "2026-10-24",
       "inLanguage": "en",
       "isPartOf": { "@id": "https://corx-labs.com/models/naturev1/#webpage" },
       "proficiencyLevel": "Expert"
@@ -157,6 +164,22 @@
         },
         {
           "@type": "Question",
+          "name": "Is there a Jamaican AI weather model?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. NatureV1 is an open-source AI weather and hurricane model built in Jamaica by CorX Labs, an independent AI lab founded by Nathan. It rolls the global atmosphere forward three days and, for hurricanes, forecasts their track, intensity, rapid intensification and landfall, each with an uncertainty. It is free under the Apache-2.0 licence on Hugging Face and PyPI. It is a research model rather than an operational forecast, so for official forecasts and warnings in Jamaica, use the Meteorological Service of Jamaica."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can NatureV1 forecast hurricanes that affect Jamaica and the Caribbean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It covers the whole Atlantic basin, including the Caribbean Sea, because its storm heads were trained on the Atlantic best-track record from 1979 onward, and it was tested on storms that crossed the Caribbean islands, such as Maria in 2017 and Franklin and Tammy in 2023. But it cannot be used for a live storm: it runs on reanalysis data published days after the fact, its track errors are 2.5 to 4.5 times the National Hurricane Center's, it underestimates strong storms, and it cannot warn of explosive intensification. In Jamaica, follow the Meteorological Service of Jamaica and ODPEM."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "Can I use NatureV1 to forecast a real storm?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -169,6 +192,22 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "On 59 Atlantic storms from the held-out 2017, 2019 and 2021 seasons, its consensus track error was 163 km at 24 hours, 421 km at 48, 739 km at 72 and 1,373 km at 120 — better than a physics-only steering track and straight-line extrapolation at every lead. Its wind forecast beat persistence from 24 hours on. On the unseen 2023 El Niño season it scored 167 km at 24 hours and 810 km at 72, and beat steering for every one of the seven hurricanes at 24, 48 and 72 hours. For scale, the National Hurricane Center's official error averaged about 66 km at 24 hours and 168 km at 72 over 2018 to 2022, so NatureV1's errors are 2.5 to 4.5 times larger."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does NatureV1 compare with GraphCast and other AI weather models?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is far smaller and less accurate. The leading AI weather models, GraphCast, Pangu-Weather and FuXi, and the ECMWF forecast are in the same league as the National Hurricane Center's official track forecasts, which averaged about 66 km of error at 24 hours and 168 km at 72 hours over 2018 to 2022. NatureV1's 163 km and 739 km are 2.5 to 4.5 times larger. Those systems run at 0.25 degrees with decades of training data and orders of magnitude more compute; NatureV1 is a 1.5 degree model trained on five years of data with a few GPU-days."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do AI weather models work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An AI weather model learns how the atmosphere changes from decades of past weather, usually the ERA5 reanalysis, instead of solving the physics equations step by step. Given the current state of the atmosphere, it predicts the state a few hours later, then feeds that prediction back in to step further ahead. NatureV1 works this way, stepping six hours at a time out to 72 hours. What is different about it is the engine: its attention heads work in physical kilometres over the curved Earth rather than on a flat grid, and its hurricane forecasts start from a physics-only steering track and learn a correction on top."
           }
         },
         {
@@ -209,6 +248,22 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "An output whose head never received a training step is not shown at all — weather type and landfall timing, among others, come back as unavailable, and the training record travels inside the checkpoint. A forecast from the untrained satellite path is flagged untrustworthy, and the live satellite forecast is refused. Every scenario track, intensity, eyewall and rapid-intensification value is checked against physical bounds, but the check reports problems rather than blocking the forecast. A red-team pass found what gets through: random noise in place of the backbone features produced a normal-looking forecast with no check failures, a corrupted steering prior passed straight through, and the consensus track is not bounds-checked. There is no out-of-distribution detector."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is NatureV1 free and open source?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. NatureV1 and its engine, iHELIX, are released under the Apache-2.0 licence, which allows commercial use. The weights, raw results and evaluation scripts are on Hugging Face at Sigmandndnns/NatureV1-500, and the code installs with pip install naturev1[all]. One reproducibility gap is stated openly: the per-channel tendency statistics the weather rollout needs are not shipped and have to be re-measured from ERA5."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who built NatureV1, and how long did training take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nathan, the founder of CorX Labs and a solo developer from Jamaica, built the whole stack: the iHELIX engine, the model, the training pipeline and the evaluation. The training run took about one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook — three to four days of GPU time, with the rest lost to session restarts. The full-atmosphere rollout stage alone took 74.3 GPU-hours."
           }
         }
       ]
@@ -281,10 +336,10 @@
     </div>
 
     <h1>NatureV1</h1>
-    <p class="lede">A probabilistic model of the atmosphere whose attention works in kilometres on the
-      real sphere, not in cells on a flat grid. Five-day global weather, a full-atmosphere rollout,
-      and — for a tropical cyclone — track, intensity, rapid intensification and landfall, every
-      number with an uncertainty attached.</p>
+    <p class="lede">An open-source AI weather and hurricane model, made in Jamaica. Its attention
+      works in kilometres on the real sphere, not in cells on a flat grid. It rolls the whole
+      atmosphere forward three days and, for a hurricane, forecasts track, intensity, rapid
+      intensification and landfall &mdash; every number with an uncertainty attached.</p>
 
     <div class="btn-row mt-m">
       <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/NatureV1-500" rel="noopener" target="_blank">
@@ -305,7 +360,7 @@
   <section class="section-tight" id="what-it-is">
     <div class="shell">
       <div class="answer-box" style="margin-top:0" data-reveal>
-        <p><strong>NatureV1</strong> is an 89.45-million-parameter model of the atmosphere built from
+        <p><strong>NatureV1</strong> is an 89.45-million-parameter AI model of the atmosphere built from
           scratch by <a href="/about/">CorX Labs</a> in Jamaica, and released. It reads the last 30
           hours of reanalysis &mdash; six frames, 89 channels, a 1.5&deg; global grid &mdash; rolls the
           whole atmosphere forward to three days, and, for a tropical cyclone, says where it will go,
@@ -1377,14 +1432,53 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
     </div>
   </section>
 
+  <!-- Jamaica -->
+  <section class="section-tight" id="jamaica">
+    <div class="shell">
+      <h2>10. Made in Jamaica, for the hurricane belt</h2>
+      <div class="prose">
+        <p>NatureV1 is an open-source AI weather and hurricane model built in Jamaica, an island that
+          sits squarely in the Atlantic hurricane belt. Its storm heads were trained on HURDAT2, the
+          Atlantic best-track record, which covers the Caribbean Sea and the Gulf of Mexico as well as
+          the open ocean &mdash; the same storms that reach the Caribbean. Its held-out tests include
+          storms that crossed the islands, among them <strong>Irma and Maria</strong> in 2017 and
+          <strong>Franklin and Tammy</strong> in 2023.</p>
+        <p>AI forecasting already matters here. When Hurricane Melissa made landfall in Jamaica in
+          October 2025, the <a href="https://www.nhc.noaa.gov/" rel="noopener nofollow" target="_blank">National Hurricane Center</a> drew on <a href="https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica/" rel="noopener nofollow" target="_blank">Google DeepMind&rsquo;s WeatherNext</a> for its forecast of the
+          storm&rsquo;s rapid intensification. NatureV1 is not that kind of system. It is a 1.5&deg;
+          research model built by one person, and its own red team shows it
+          <strong>cannot warn of explosive intensification</strong> &mdash; the kind of rapid
+          strengthening that makes storms like Melissa so dangerous.</p>
+        <p>What it offers instead is openness: a Jamaican-built weather model whose weights, code,
+          results and failure modes are all public, that anyone can download, re-run, retrain or try
+          to break. How it was built is written up in
+          <a href="/blog/building-a-hurricane-ai-in-jamaica/">Building a hurricane AI in Jamaica, on one GPU</a>.</p>
+      </div>
+
+      <div class="callout mt-m" data-reveal>
+        <p><strong>For warnings in Jamaica</strong>, follow the Meteorological Service of Jamaica and the
+          Office of Disaster Preparedness and Emergency Management (<a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>). For the wider
+          Atlantic, the <a href="https://www.nhc.noaa.gov/" rel="noopener nofollow" target="_blank">National Hurricane Center</a>. NatureV1 is not a substitute for any of them.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- FAQ -->
   <section class="section-tight" id="faq">
     <div class="shell">
-      <h2>10. Questions</h2>
+      <h2>11. Questions</h2>
       <div class="faq mt-m">
         <details>
           <summary>What is NatureV1?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>An 89.45M-parameter probabilistic model of the atmosphere, released under Apache-2.0. Given the last 30 hours of ERA5 reanalysis it rolls the whole atmosphere forward to 72 hours and, for a tropical cyclone, forecasts its track as weighted scenarios, its intensity, the chance of rapid intensification and the chance of landfall &mdash; every number with an uncertainty. The first full run is complete and it has been scored on data it never trained on. It is a research model, not an operational forecast.</p></div>
+        </details>
+        <details>
+          <summary>Is there a Jamaican AI weather model?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. NatureV1 is an open-source AI weather and hurricane model built in Jamaica by CorX Labs, an independent AI lab founded by Nathan. It rolls the global atmosphere forward three days and, for hurricanes, forecasts their track, intensity, rapid intensification and landfall, each with an uncertainty. It is free under Apache-2.0 on Hugging Face and PyPI. It is a research model rather than an operational forecast, so for official forecasts and warnings in Jamaica, use the Meteorological Service of Jamaica.</p></div>
+        </details>
+        <details>
+          <summary>Can NatureV1 forecast hurricanes that affect Jamaica and the Caribbean?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>It covers the whole Atlantic basin, including the Caribbean Sea, because its storm heads were trained on the Atlantic best-track record from 1979 onward, and it was tested on storms that crossed the Caribbean islands, such as Maria in 2017 and Franklin and Tammy in 2023. But it <strong>cannot be used for a live storm</strong>: it runs on reanalysis published days after the fact, its track errors are 2.5&ndash;4.5&times; the National Hurricane Center&rsquo;s, it underestimates strong storms, and it cannot warn of explosive intensification. In Jamaica, follow the Meteorological Service of Jamaica and <a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>.</p></div>
         </details>
         <details>
           <summary>Can I use NatureV1 to forecast a real storm?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -1393,6 +1487,14 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         <details>
           <summary>How accurate is NatureV1 on hurricanes?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>On 59 Atlantic storms from the held-out 2017, 2019 and 2021 seasons, its consensus track error was 163&nbsp;km at 24&nbsp;h, 421 at 48, 739 at 72 and 1,373 at 120 &mdash; better than a physics-only steering track and straight-line extrapolation at every lead. Its wind forecast beat persistence from 24&nbsp;h on. On the unseen 2023 El Ni&ntilde;o season it scored 167&nbsp;km at 24&nbsp;h and 810 at 72, and beat steering for all seven hurricanes at 24, 48 and 72&nbsp;h. For scale, the NHC&rsquo;s official error averaged about 66&nbsp;km at 24&nbsp;h and 168 at 72 over 2018&ndash;2022, so NatureV1&rsquo;s errors are 2.5&ndash;4.5&times; larger. <a href="#results">The full tables are above.</a></p></div>
+        </details>
+        <details>
+          <summary>How does NatureV1 compare with GraphCast and other AI weather models?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>It is far smaller and less accurate. The leading AI weather models &mdash; GraphCast, Pangu-Weather and FuXi &mdash; and the ECMWF forecast are in the same league as the National Hurricane Center&rsquo;s official track forecasts, which averaged about 66&nbsp;km of error at 24&nbsp;h and 168&nbsp;km at 72 over 2018&ndash;2022. NatureV1&rsquo;s 163&nbsp;km and 739&nbsp;km are 2.5&ndash;4.5&times; larger. Those systems run at 0.25&deg; with decades of data and orders of magnitude more compute; NatureV1 is a 1.5&deg; model trained on five years of data with a few GPU-days.</p></div>
+        </details>
+        <details>
+          <summary>How do AI weather models work?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>An AI weather model learns how the atmosphere changes from decades of past weather &mdash; usually the ERA5 reanalysis &mdash; instead of solving the physics equations step by step. Given the current state of the atmosphere it predicts the state a few hours later, then feeds that prediction back in to step further ahead. NatureV1 works this way, six hours at a time out to 72 hours. What is different is the engine: its attention heads work in physical kilometres over the curved Earth rather than on a flat grid, and its hurricane forecasts start from a physics-only steering track and learn a correction on top.</p></div>
         </details>
         <details>
           <summary>What is geodesic attention, and why does it matter for weather?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -1413,6 +1515,14 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         <details>
           <summary>What does NatureV1 refuse to do, and what still gets through?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>An output whose head never received a training step is not shown at all &mdash; weather type and landfall timing, among others, come back as unavailable. A forecast from the untrained satellite path is flagged untrustworthy, and the live satellite forecast is refused. Every scenario track, intensity, eyewall and rapid-intensification value is checked against physical bounds &mdash; but the check <em>reports</em> problems rather than blocking them. The red team found what gets through: random noise in place of the backbone features produced a normal-looking forecast with zero check failures, a corrupted steering prior passed straight through, and the consensus track is not bounds-checked. There is no out-of-distribution detector.</p></div>
+        </details>
+        <details>
+          <summary>Is NatureV1 free and open source?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. NatureV1 and its engine, iHELIX, are released under Apache-2.0, which allows commercial use. The weights, raw results and evaluation scripts are on <a href="https://huggingface.co/Sigmandndnns/NatureV1-500" rel="noopener" target="_blank">Hugging Face</a>, and the code installs with <code>pip install "naturev1[all]"</code>. One reproducibility gap is stated openly: the per-channel tendency statistics the weather rollout needs are not shipped and have to be re-measured from ERA5.</p></div>
+        </details>
+        <details>
+          <summary>Who built NatureV1, and how long did training take?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p><a href="/developers/">Nathan</a>, the founder of CorX Labs and a solo developer from Jamaica, built the whole stack: the iHELIX engine, the model, the training pipeline and the evaluation. Training took about one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook &mdash; three to four days of GPU time, the rest lost to session restarts. The full-atmosphere rollout stage alone took 74.3 GPU-hours. <a href="/blog/building-a-hurricane-ai-in-jamaica/">The full story is on the blog.</a></p></div>
         </details>
       </div>
     </div>
@@ -1450,7 +1560,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
           Architecting the future, from the ground up.</p>
       </div>
       <nav class="footer-col" aria-label="Products">
-        <h4>Products</h4>
+        <h2>Products</h2>
         <ul>
           <li><a href="/models/">All models</a></li>
           <li><a href="/benchmarks/">Benchmarks</a></li>
@@ -1464,7 +1574,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Lab">
-        <h4>Lab</h4>
+        <h2>Lab</h2>
         <ul>
           <li><a href="/documentation/">Documentation</a></li>
           <li><a href="/blog/">Blog</a></li>
@@ -1474,7 +1584,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Resources">
-        <h4>Resources</h4>
+        <h2>Resources</h2>
         <ul>
           <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
           <li><a href="/documentation/#safety">Safety</a></li>

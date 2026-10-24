@@ -1107,7 +1107,10 @@ figcaption {
   gap: 40px 24px;
 }
 .footer-brand p { margin-top: 18px; font-size: .885rem; color: var(--muted); max-width: 34ch; }
+.footer-col h2,
 .footer-col h4 {
+  font-family: var(--sans);
+  line-height: 1.65;
   font-size: .705rem;
   letter-spacing: .16em;
   text-transform: uppercase;

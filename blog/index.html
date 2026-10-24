@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>Blog — Notes From the Lab | CorX Labs</title>
-<meta name="description" content="Technical write-ups from CorX Labs on building language models from scratch in Jamaica — single-GPU training, architecture decisions, and what went wrong.">
+<meta name="description" content="Write-ups from CorX Labs on building AI models in Jamaica, from a language model on one GPU to a hurricane AI: the maths, the decisions, what went wrong.">
 <link rel="canonical" href="https://corx-labs.com/blog/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -20,14 +20,14 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/blog/">
 <meta property="og:title" content="Blog — Notes From the Lab | CorX Labs">
-<meta property="og:description" content="Technical write-ups on building language models from scratch in Jamaica.">
+<meta property="og:description" content="Write-ups on building AI models in Jamaica, from language models to a hurricane AI.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-blog.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="CorX Labs blog — notes from the lab">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blog — Notes From the Lab | CorX Labs">
-<meta name="twitter:description" content="Technical write-ups on building language models from scratch in Jamaica.">
+<meta name="twitter:description" content="Write-ups on building AI models in Jamaica, from language models to a hurricane AI.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-blog.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -51,11 +51,23 @@
       "@id": "https://corx-labs.com/blog/#blog",
       "url": "https://corx-labs.com/blog/",
       "name": "CorX Labs Blog",
-      "description": "Technical write-ups from CorX Labs on building language models from scratch.",
+      "description": "Technical write-ups from CorX Labs on building AI models in Jamaica, from language models to a hurricane AI.",
       "inLanguage": "en",
       "publisher": { "@id": "https://corx-labs.com/#organization" },
-      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
       "blogPost": [
+        {
+          "@type": "BlogPosting",
+          "@id": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/#post",
+          "headline": "Building a Hurricane AI in Jamaica on One GPU",
+          "url": "https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/",
+          "datePublished": "2026-10-24",
+          "dateModified": "2026-10-24",
+          "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
+          "publisher": { "@id": "https://corx-labs.com/#organization" },
+          "image": "https://corx-labs.com/assets/img/og-default.jpg",
+          "description": "How NatureV1, an open-source AI weather and hurricane model, was built in Jamaica in a week on one GPU, what it gets right, and where a red team broke it."
+        },
         {
           "@type": "BlogPosting",
           "@id": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/#post",
@@ -63,7 +75,7 @@
           "url": "https://corx-labs.com/blog/3-billion-tokens-one-gpu/",
           "datePublished": "2026-08-01",
           "dateModified": "2026-08-01",
-          "author": { "@id": "https://corx-labs.com/#nathan" },
+          "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
           "publisher": { "@id": "https://corx-labs.com/#organization" },
           "image": "https://corx-labs.com/assets/img/og-post-3b.jpg",
           "description": "Why 3 billion training tokens never need to fit in VRAM — and what actually does. Memory arithmetic, memory-mapped token files, sequence packing, gradient accumulation and throughput."
@@ -78,7 +90,7 @@
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "mainEntity": { "@id": "https://corx-labs.com/blog/#blog" },
       "inLanguage": "en",
-      "dateModified": "2026-08-01",
+      "dateModified": "2026-10-24",
       "breadcrumb": { "@id": "https://corx-labs.com/blog/#breadcrumb" }
     },
     {
@@ -146,7 +158,7 @@
       </ol>
     </nav>
     <h1>Notes from the lab.</h1>
-    <p class="lede">Technical write-ups on building language models from scratch — the arithmetic,
+    <p class="lede">Technical write-ups on building AI models from scratch in Jamaica — the arithmetic,
       the decisions, and the parts that went wrong. Written for people who want the working, not
       the headline.</p>
   </div>
@@ -156,6 +168,21 @@
   <section class="section-tight">
     <div class="shell">
       <div class="post-list">
+        <a class="post-item" href="/blog/building-a-hurricane-ai-in-jamaica/">
+          <time datetime="2026-10-24">24 Oct 2026</time>
+          <div>
+            <h2>Building a Hurricane AI in Jamaica on One GPU</h2>
+            <p>NatureV1 is an open-source AI weather and hurricane model, built in Jamaica in about a
+              week on a single GPU. Three design bets, a hosted notebook that wiped its disk every
+              session, the number that showed the hurricane heads learned something &mdash; and where a
+              red team broke it.</p>
+            <div class="tag-row">
+              <span class="tag">Hurricane AI</span>
+              <span class="tag">Jamaica</span>
+              <span class="tag">8 min read</span>
+            </div>
+          </div>
+        </a>
         <a class="post-item" href="/blog/3-billion-tokens-one-gpu/">
           <time datetime="2026-08-01">1 Aug 2026</time>
           <div>
@@ -205,7 +232,7 @@
           Architecting the future, from the ground up.</p>
       </div>
       <nav class="footer-col" aria-label="Products">
-        <h4>Products</h4>
+        <h2>Products</h2>
         <ul>
           <li><a href="/models/">All models</a></li>
           <li><a href="/benchmarks/">Benchmarks</a></li>
@@ -220,7 +247,7 @@
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Lab">
-        <h4>Lab</h4>
+        <h2>Lab</h2>
         <ul>
           <li><a href="/documentation/">Documentation</a></li>
           <li><a href="/blog/">Blog</a></li>
@@ -230,7 +257,7 @@
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Resources">
-        <h4>Resources</h4>
+        <h2>Resources</h2>
         <ul>
           <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
           <li><a href="/documentation/#safety">Safety</a></li>

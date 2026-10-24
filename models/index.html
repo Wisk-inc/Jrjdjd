@@ -86,7 +86,7 @@
             "applicationSubCategory": "AI agent orchestration client",
             "operatingSystem": "Android",
             "description": "An Android app for running a company of AI agents from a phone. The agents run on a server — the phone itself under Termux, or a machine over HTTPS — and Automa is the control surface: approvals, tasks, routines, scoped connections, and a Device Files channel agents can request files through.",
-            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
             "publisher": { "@id": "https://corx-labs.com/#organization" }
           }
         },
@@ -103,7 +103,7 @@
             "operatingSystem": "OS Independent",
             "description": "An 89.45M-parameter probabilistic weather and hurricane model built on geodesic attention over the real sphere, released as a research model. On held-out seasons its hurricane track beats physics-only steering and extrapolation at every lead, at 2.5 to 4.5 times the National Hurricane Center's error.",
             "license": "https://www.apache.org/licenses/LICENSE-2.0",
-            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
             "publisher": { "@id": "https://corx-labs.com/#organization" },
             "isAccessibleForFree": true
           }
@@ -121,7 +121,7 @@
             "operatingSystem": "Cross-platform",
             "description": "A 27B parameter Jamaican Patois-speaking assistant, fine-tuned from Qwen3.8-27B. Direct, honest and culturally grounded. Open weights under Apache 2.0.",
             "license": "https://www.apache.org/licenses/LICENSE-2.0",
-            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
             "publisher": { "@id": "https://corx-labs.com/#organization" },
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
           }
@@ -138,7 +138,7 @@
             "applicationSubCategory": "Singing voice synthesis",
             "operatingSystem": "Cross-platform",
             "description": "A 321.8M parameter singing voice synthesis model that factors pitch, timbre and breath texture into three parallel encoder streams.",
-            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
             "publisher": { "@id": "https://corx-labs.com/#organization" },
             "isAccessibleForFree": true
           }
@@ -156,7 +156,7 @@
             "operatingSystem": "OS Independent",
             "description": "A linear-scaling sequence architecture that keeps exact long-range recall by braiding a local window, a delta-rule recurrent state and a landmark-tree index over one residual stream. Published as the helix-lm package; no trained checkpoints.",
             "license": "https://www.apache.org/licenses/LICENSE-2.0",
-            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
             "publisher": { "@id": "https://corx-labs.com/#organization" },
             "isAccessibleForFree": true
           }
@@ -174,7 +174,7 @@
             "operatingSystem": "Cross-platform",
             "description": "A 158M parameter open-source decoder-only transformer language model, built from scratch by CorX Labs in Jamaica.",
             "license": "https://www.apache.org/licenses/LICENSE-2.0",
-            "author": { "@id": "https://corx-labs.com/#nathan" },
+            "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
             "publisher": { "@id": "https://corx-labs.com/#organization" },
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
           }
@@ -309,9 +309,9 @@
               <span class="tag">Research model</span>
             </div>
             <h3>NatureV1</h3>
-            <p class="lede" style="margin-top:12px">A probabilistic model of the atmosphere whose
-              attention works in kilometres on the real sphere, not in cells on a flat grid. Five-day
-              global weather, a full-atmosphere rollout, and &mdash; for a tropical cyclone &mdash;
+            <p class="lede" style="margin-top:12px">Jamaica&rsquo;s open-source AI weather and
+              hurricane model. Its attention works in kilometres on the real sphere, not in cells on a
+              flat grid; it rolls the atmosphere forward three days and, for a hurricane, forecasts
               track, intensity, rapid intensification and landfall, every number with an uncertainty
               attached.</p>
           </div>
@@ -322,7 +322,7 @@
           <div><dt>Blocks</dt><dd>17 iHELIX</dd></div>
           <div><dt>Head radii</dt><dd>120&ndash;1,600 km</dd></div>
           <div><dt>Input grid</dt><dd>1.5&deg;, 89 channels</dd></div>
-          <div><dt>Leads</dt><dd>6 h &rarr; 120 h</dd></div>
+          <div><dt>Weather rollout</dt><dd>To 72 h, skilful</dd></div>
           <div><dt>24 h track error</dt><dd>163 km, held-out</dd></div>
         </dl>
 
@@ -527,7 +527,7 @@
           Architecting the future, from the ground up.</p>
       </div>
       <nav class="footer-col" aria-label="Products">
-        <h4>Products</h4>
+        <h2>Products</h2>
         <ul>
           <li><a href="/models/">All models</a></li>
           <li><a href="/benchmarks/">Benchmarks</a></li>
@@ -542,7 +542,7 @@
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Lab">
-        <h4>Lab</h4>
+        <h2>Lab</h2>
         <ul>
           <li><a href="/documentation/">Documentation</a></li>
           <li><a href="/blog/">Blog</a></li>
@@ -552,7 +552,7 @@
         </ul>
       </nav>
       <nav class="footer-col" aria-label="Resources">
-        <h4>Resources</h4>
+        <h2>Resources</h2>
         <ul>
           <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
           <li><a href="/documentation/#safety">Safety</a></li>

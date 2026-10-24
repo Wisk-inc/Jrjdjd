@@ -112,6 +112,196 @@
       "source": "/best-ai-model",
       "destination": "/benchmarks/leaderboard/",
       "permanent": true
+    },
+    {
+      "source": "/chatbot",
+      "destination": "/chat/",
+      "permanent": true
+    },
+    {
+      "source": "/chat/docs",
+      "destination": "/chat/documentation/",
+      "permanent": true
+    },
+    {
+      "source": "/chat/setup",
+      "destination": "/chat/documentation/",
+      "permanent": true
+    },
+    {
+      "source": "/chat/guide",
+      "destination": "/chat/documentation/",
+      "permanent": true
+    },
+    {
+      "source": "/documentation",
+      "destination": "/documentation/",
+      "permanent": true
+    },
+    {
+      "source": "/products/:path*",
+      "destination": "/models/",
+      "permanent": true
+    },
+    {
+      "source": "/model",
+      "destination": "/models/",
+      "permanent": true
+    },
+    {
+      "source": "/models",
+      "destination": "/models/",
+      "permanent": true
+    },
+    {
+      "source": "/corx3.8",
+      "destination": "/models/corx3-8/",
+      "permanent": true
+    },
+    {
+      "source": "/corx3-8",
+      "destination": "/models/corx3-8/",
+      "permanent": true
+    },
+    {
+      "source": "/corx38",
+      "destination": "/models/corx3-8/",
+      "permanent": true
+    },
+    {
+      "source": "/corx3.8-27b",
+      "destination": "/models/corx3-8/",
+      "permanent": true
+    },
+    {
+      "source": "/models/corx3.8",
+      "destination": "/models/corx3-8/",
+      "permanent": true
+    },
+    {
+      "source": "/corx1.5",
+      "destination": "/models/corx1-5/",
+      "permanent": true
+    },
+    {
+      "source": "/models/corx1.5",
+      "destination": "/models/corx1-5/",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/posts",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/posts/:path*",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/news",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/developers",
+      "destination": "/developers/",
+      "permanent": true
+    },
+    {
+      "source": "/team",
+      "destination": "/developers/",
+      "permanent": true
+    },
+    {
+      "source": "/team/:path*",
+      "destination": "/developers/",
+      "permanent": true
+    },
+    {
+      "source": "/tristream",
+      "destination": "/models/tristream-svs/",
+      "permanent": true
+    },
+    {
+      "source": "/tristream-svs",
+      "destination": "/models/tristream-svs/",
+      "permanent": true
+    },
+    {
+      "source": "/svs",
+      "destination": "/models/tristream-svs/",
+      "permanent": true
+    },
+    {
+      "source": "/models/tristream",
+      "destination": "/models/tristream-svs/",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact/",
+      "permanent": true
+    },
+    {
+      "source": "/naturev1",
+      "destination": "/models/naturev1/",
+      "permanent": true
+    },
+    {
+      "source": "/nature-v1",
+      "destination": "/models/naturev1/",
+      "permanent": true
+    },
+    {
+      "source": "/nature",
+      "destination": "/models/naturev1/",
+      "permanent": true
+    },
+    {
+      "source": "/hurricane",
+      "destination": "/models/naturev1/",
+      "permanent": true
+    },
+    {
+      "source": "/hurricane-ai",
+      "destination": "/models/naturev1/",
+      "permanent": true
+    },
+    {
+      "source": "/weather",
+      "destination": "/models/naturev1/",
+      "permanent": true
+    },
+    {
+      "source": "/weather-ai",
+      "destination": "/models/naturev1/",
+      "permanent": true
+    },
+    {
+      "source": "/helix",
+      "destination": "/models/helix/",
+      "permanent": true
+    },
+    {
+      "source": "/helix-lm",
+      "destination": "/models/helix/",
+      "permanent": true
+    },
+    {
+      "source": "/automa",
+      "destination": "/automa/",
+      "permanent": true
     }
   ],
   "headers": [
@@ -190,6 +380,10 @@
         {
           "key": "Cache-Control",
           "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
         }
       ]
     },
@@ -203,6 +397,36 @@
         {
           "key": "Cache-Control",
           "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/llms-full.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
         }
       ]
     }

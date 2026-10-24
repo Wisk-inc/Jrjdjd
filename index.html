@@ -158,7 +158,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "primaryImageOfPage": { "@id": "https://corx-labs.com/#logo" },
       "inLanguage": "en",
       "datePublished": "2026-08-01",
-      "dateModified": "2026-10-17",
+      "dateModified": "2026-10-24",
       "speakable": {
         "@type": "SpeakableSpecification",
         "cssSelector": [".answer-box", ".fact-list", "h1"]
@@ -172,9 +172,9 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "url": "https://corx-labs.com/#announcement",
       "mainEntityOfPage": { "@id": "https://corx-labs.com/#webpage" },
       "datePublished": "2026-08-01",
-      "dateModified": "2026-10-17",
+      "dateModified": "2026-10-24",
       "inLanguage": "en",
-      "author": { "@id": "https://corx-labs.com/#nathan" },
+      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "image": "https://corx-labs.com/assets/img/og-default.jpg",
       "about": [
@@ -317,10 +317,10 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         },
         {
           "@type": "Question",
-          "name": "Does CorX Labs have a hurricane or weather model?",
+          "name": "Is there a Jamaican AI weather or hurricane model?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. NatureV1 is an 89-million-parameter probabilistic weather and hurricane model built by CorX Labs in Jamaica and released as a research model. For a tropical cyclone it forecasts the track as weighted scenarios, the intensity, the chance of rapid intensification and the chance of landfall, every number with an uncertainty. On 59 storms from held-out Atlantic seasons its track error was 163 km at 24 hours and 739 km at 72, beating a physics-only steering track at every lead, and on the unseen 2023 season it beat steering for every hurricane. It is still 2.5 to 4.5 times less accurate than the National Hurricane Center, underestimates strong storms and cannot warn of explosive intensification, so it must not be used for real decisions — for a live storm, use the National Hurricane Center. Details are at corx-labs.com/models/naturev1."
+            "text": "Yes. NatureV1 is an open-source AI weather and hurricane model with 89 million parameters, built by CorX Labs in Jamaica and released as a research model. For a tropical cyclone it forecasts the track as weighted scenarios, the intensity, the chance of rapid intensification and the chance of landfall, every number with an uncertainty. On 59 storms from held-out Atlantic seasons its track error was 163 km at 24 hours and 739 km at 72, beating a physics-only steering track at every lead, and on the unseen 2023 season it beat steering for every hurricane. It is still 2.5 to 4.5 times less accurate than the National Hurricane Center, underestimates strong storms and cannot warn of explosive intensification, so it must not be used for real decisions — for a live storm, use the National Hurricane Center. Details are at corx-labs.com/models/naturev1."
           }
         },
         {
@@ -514,8 +514,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
 
           <h3>NatureV1 — a hurricane model, trained and scored</h3>
 
-          <p>NatureV1 is an 89-million-parameter probabilistic model of the atmosphere. It forecasts
-            global weather out to five days and, for a tropical cyclone, its track as weighted
+          <p>NatureV1 is an 89-million-parameter AI model of the atmosphere. It rolls the global
+            atmosphere forward three days and, for a tropical cyclone, forecasts its track as weighted
             scenarios, its intensity, the chance of rapid intensification and the chance of landfall
             &mdash; every number with an uncertainty. Its attention heads work in kilometres over the
             real sphere rather than in cells on a flat grid, and because hurricane labels are scarce,
@@ -632,7 +632,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
           <li><strong>CorX1.5 is a 158-million-parameter language model trained from random weights</strong> on a single GPU — architecture, tokenizer and training pipeline all written in house. It is not a fine-tune of any existing model.</li>
           <li><strong>TriStream-SVS is a 321.8-million-parameter singing voice synthesis model</strong> that splits the human voice into three encoder streams: pitch, timbre and breath texture.</li>
           <li><strong>HELIX is a linear-scaling sequence architecture</strong> published as the <code>helix-lm</code> Python package. It has a tested reference implementation and no trained checkpoints.</li>
-          <li><strong>NatureV1 is an 89-million-parameter weather and hurricane model</strong> built on attention over the real sphere, released as a research model. On held-out seasons its hurricane track beats physics-only steering at every lead, but its errors are 2.5&ndash;4.5&times; the National Hurricane Center&rsquo;s.</li>
+          <li><strong>NatureV1 is a Jamaican-made AI weather and hurricane model</strong> with 89 million parameters, built on attention over the real sphere and released as a research model. On held-out seasons its hurricane track beats physics-only steering at every lead, but its errors are 2.5&ndash;4.5&times; the National Hurricane Center&rsquo;s.</li>
           <li><strong>Automa is an Android app</strong> for running a company of AI agents from a phone.</li>
           <li><strong>Every CorX Labs model is open-source under the Apache 2.0 licence</strong> &mdash; on Hugging Face under the account <a href="https://huggingface.co/Sigmandndnns" rel="noopener" target="_blank">Sigmandndnns</a>, on PyPI, or both.</li>
           <li><strong>You can talk to CorX3.8 free in a browser</strong> at <a href="/chat/">corx-labs.com/chat</a>, with no sign-up and no API key.</li>
@@ -695,8 +695,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
               <span class="tag">89.45M params</span>
             </div>
             <h3>NatureV1</h3>
-            <p class="lede" style="margin-top:12px">A probabilistic weather and hurricane model whose
-              attention works in kilometres on the real sphere. Track, intensity, rapid
+            <p class="lede" style="margin-top:12px">Jamaica&rsquo;s open-source AI weather and
+              hurricane model, whose attention works in kilometres on the real sphere. Track, intensity, rapid
               intensification and landfall, every number with an uncertainty. Beats physics steering
               on track at every lead &mdash; a research model, not a forecast.</p>
           </div>
@@ -1012,9 +1012,9 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         </details>
 
         <details>
-          <summary>Does CorX Labs have a hurricane or weather model?<span class="plus" aria-hidden="true">
+          <summary>Is there a Jamaican AI weather or hurricane model?<span class="plus" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Yes. <a href="/models/naturev1/">NatureV1</a> is an 89-million-parameter probabilistic weather and hurricane model built by CorX Labs in Jamaica and released as a research model. For a tropical cyclone it forecasts the track as weighted scenarios, the intensity, the chance of rapid intensification and the chance of landfall &mdash; every number with an uncertainty. On 59 storms from held-out Atlantic seasons its track error was 163&nbsp;km at 24 hours and 739&nbsp;km at 72, beating a physics-only steering track at every lead, and on the unseen 2023 season it beat steering for every hurricane.</p>
+          <div class="faq-body"><p>Yes. <a href="/models/naturev1/">NatureV1</a> is an open-source AI weather and hurricane model with 89 million parameters, built by CorX Labs in Jamaica and released as a research model. For a tropical cyclone it forecasts the track as weighted scenarios, the intensity, the chance of rapid intensification and the chance of landfall &mdash; every number with an uncertainty. On 59 storms from held-out Atlantic seasons its track error was 163&nbsp;km at 24 hours and 739&nbsp;km at 72, beating a physics-only steering track at every lead, and on the unseen 2023 season it beat steering for every hurricane.</p>
             <p>It is still <strong>2.5&ndash;4.5&times; less accurate than the National Hurricane Center</strong>, underestimates strong storms and cannot warn of explosive intensification, so it must not be used for real decisions. For a live storm, use the <a href="https://www.nhc.noaa.gov/" rel="noopener nofollow" target="_blank">National Hurricane Center</a>.</p></div>
         </details>
 
@@ -1076,7 +1076,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       </div>
 
       <nav class="footer-col" aria-label="Products">
-        <h4>Products</h4>
+        <h2>Products</h2>
         <ul>
           <li><a href="/models/">All models</a></li>
           <li><a href="/benchmarks/">Benchmarks</a></li>
@@ -1092,7 +1092,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       </nav>
 
       <nav class="footer-col" aria-label="Lab">
-        <h4>Lab</h4>
+        <h2>Lab</h2>
         <ul>
           <li><a href="/documentation/">Documentation</a></li>
           <li><a href="/blog/">Blog</a></li>
@@ -1103,7 +1103,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       </nav>
 
       <nav class="footer-col" aria-label="Resources">
-        <h4>Resources</h4>
+        <h2>Resources</h2>
         <ul>
           <li><a href="/documentation/#usage">Usage &amp; loading</a></li>
           <li><a href="/documentation/#safety">Safety</a></li>
