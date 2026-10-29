@@ -41,7 +41,7 @@ from bm_common import (  # noqa: E402
 from model_catalog import COMPARISONS, MODELS, validate  # noqa: E402
 
 OUT = os.path.join(ROOT, "benchmarks")
-UPDATED = "2026-09-04"
+UPDATED = "2026-10-29"
 
 
 # ===========================================================================
@@ -367,7 +367,7 @@ def build_hub():
       <div class="bm-toolbar">
         <div class="bm-search">
           %(search_icon)s
-          <input type="search" id="bm-q" placeholder="Search 153 models — GPT, Claude, Qwen&hellip;"
+          <input type="search" id="bm-q" placeholder="Search %(n)d models — GPT, Claude, Qwen&hellip;"
                  aria-label="Search models by name or maker" autocomplete="off">
         </div>
         <select class="bm-select" id="bm-company" aria-label="Filter by maker">
@@ -1812,12 +1812,20 @@ TEST_NOTES = {
         "It measures an entire agent, not a model. Retrieval, retries and test execution are "
         "all part of the harness, and two labs reporting the same number may be running very "
         "different scaffolds. It is also Python-only, on twelve repositories."),
+    "tbench20": (
+        "The 2.0 task set of Terminal-Bench, and the version almost every launch from late 2025 "
+        "to spring 2026 reported. It is the only terminal figure most models from that window "
+        "have, which is why it gets its own column.",
+        "Do not read it against 2.1 or 4.0 — the task sets differ. Labs also ran it on very "
+        "different harnesses, from the public Terminus-2 agent to their own coding CLIs, and "
+        "the harness moves the score as much as the model does."),
     "tbench21": (
         "The 2.1 task set of Terminal-Bench. It is the version most third-party runs used "
         "through 2026, which makes it the one place several frontier models can be compared "
         "on a harness nobody selling a model controls.",
-        "Do not read it against Terminal-Bench 4.0. The task set changed between versions, so "
-        "a 2.1 score and a 4.0 score are different measurements that happen to share a name."),
+        "Do not read it against Terminal-Bench 2.0 or 4.0. The task set changed between "
+        "versions, so a 2.1 score and a 4.0 score are different measurements that happen to "
+        "share a name."),
     "frontier": (
         "Frontier-Bench is built from problems designed to resist memorisation, and scored on "
         "whether a model makes progress at all. Absolute numbers are low by design — the "
