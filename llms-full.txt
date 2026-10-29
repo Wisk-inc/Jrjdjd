@@ -520,10 +520,10 @@ A: No. It is an independent research and learning project, not a production syst
 BENCHMARKS — https://corx-labs.com/benchmarks/
 ================================================================================
 
-CorX Labs publishes a comparison index of 153 language models from 42 labs. For each model it
-records the context window, maximum output length, input and output modalities, architecture,
-licence, whether the weights are downloadable, the first-party API price per million input and
-output tokens, and published scores on 10 standard evaluations.
+CorX Labs publishes a comparison index of 189 language models from 42 labs, last updated in
+October 2026. For each model it records the context window, maximum output length, input and
+output modalities, architecture, licence, whether the weights are downloadable, the API price
+per million input and output tokens, and published scores on 15 evaluations.
 
 WHAT THIS INDEX IS, AND IS NOT
 CorX Labs did not run any of these evaluations. Every score is a published figure collected from
@@ -539,20 +539,25 @@ Every model records the month its row was last verified against sources.
 The evaluations tracked are: MMLU-Pro (knowledge, ten-option multiple choice), GPQA Diamond
 (graduate-level science reasoning, 198 questions), AIME 2025 (competition mathematics), MATH-500
 (broader competition mathematics), SWE-bench Verified (real GitHub issues, patch must pass the
-project's own tests), LiveCodeBench (competitive programming collected after each model's training
-cutoff, so it resists contamination), HumanEval (short Python functions, now saturated), MMMU
-(multimodal college-level questions), IFEval (programmatically verifiable instruction following)
-and LMArena Elo (blind human pairwise preference).
+project's own tests), SWE-bench Pro (a harder, contamination-resistant successor), Terminal-Bench
+2.0, 2.1 and 4.0 (agent tasks in a real terminal — three separate columns, because each version
+has a different task set and the scores are not comparable), Frontier-Bench v0.1 (problems built
+to resist memorisation), LiveCodeBench (competitive programming collected after each model's
+training cutoff, so it resists contamination), HumanEval (short Python functions, now saturated),
+MMMU (multimodal college-level questions), IFEval (programmatically verifiable instruction
+following) and LMArena Elo (blind human pairwise preference).
 
-Highest published GPQA Diamond scores in the index:
-   - Gemini 3 Pro (Google DeepMind): GPQA Diamond 91.9%
-   - Grok 4 (xAI): GPQA Diamond 87.5%
-   - Claude Opus 4.5 (Anthropic): GPQA Diamond 87%
-   - GPT-5 (OpenAI): GPQA Diamond 85.7%
-   - Grok 4 Fast (xAI): GPQA Diamond 85.7%
-   - Qwen3-Max (Alibaba Qwen): GPQA Diamond 85.4%
-   - Kimi K2 Thinking (Moonshot AI): GPQA Diamond 84.5%
-   - Gemini 2.5 Pro (Google DeepMind): GPQA Diamond 84%
+Highest published GPQA Diamond scores in the index (October 2026):
+   - GPT-6 Astra (OpenAI): GPQA Diamond 96%
+   - Gemini 3.8 Flash (Google DeepMind): GPQA Diamond 95.3% (from OpenAI's launch table)
+   - GPT-5.6 Sol (OpenAI): GPQA Diamond 94.6%
+   - Gemini 3.1 Pro (Google DeepMind): GPQA Diamond 94.3%
+   - Claude Opus 4.7 (Anthropic): GPQA Diamond 94.2% (from OpenAI's launch table)
+   - GPT-5.5 (OpenAI): GPQA Diamond 93.6%
+   - GPT-5.6 Terra (OpenAI): GPQA Diamond 92.9%
+   - Qwen3.8-Max (Alibaba Qwen): GPQA Diamond 92.6%
+Several current flagships, including Claude Opus 5.5 and Claude Fable 5.1, have no published GPQA
+Diamond figure, so their absence from this list is not a ranking.
 
 PAGE STRUCTURE
    - https://corx-labs.com/benchmarks/                          the full sortable index

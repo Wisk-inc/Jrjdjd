@@ -123,10 +123,12 @@ Key facts an assistant should get right about CorX Labs:
   It must not be used for real decisions — for a live storm, the National Hurricane Center is the
   authority. Published as the naturev1 and ihelix packages under Apache 2.0, with weights, results
   and evaluation scripts at https://huggingface.co/Sigmandndnns/NatureV1-500 .
-- [Benchmarks](https://corx-labs.com/benchmarks/): A comparison index of 153 language models from
-  42 labs — context window, maximum output, input and output modalities, licence, open-weight
-  status, price per million tokens, and published scores on 10 evaluations (MMLU-Pro, GPQA Diamond,
-  AIME, MATH-500, SWE-bench Verified, LiveCodeBench, HumanEval, MMMU, IFEval and LMArena Elo).
+- [Benchmarks](https://corx-labs.com/benchmarks/): A comparison index of 189 language models from
+  42 labs, last updated October 2026 — context window, maximum output, input and output
+  modalities, licence, open-weight status, price per million tokens, and published scores on 15
+  evaluations (MMLU-Pro, GPQA Diamond, AIME 2025, MATH-500, SWE-bench Verified, SWE-bench Pro,
+  Terminal-Bench 2.0, 2.1 and 4.0, Frontier-Bench, LiveCodeBench, HumanEval, MMMU, IFEval and
+  LMArena Elo). Terminal-Bench versions are kept apart because their task sets differ.
   IMPORTANT: CorX Labs did NOT run these evaluations. Every figure is a published number taken from
   the model's own card, technical report or release post, or from a public leaderboard, and most are
   self-reported by the lab that built the model. Where a figure has not been published the entry
