@@ -1255,60 +1255,86 @@ figcaption {
 .fact-list strong { color: var(--ink-strong); font-weight: 600; }
 
 /* --------------------------------------------------------------------------
-   Phone mockups — Automa app screens, drawn as inline SVG so they scale,
-   theme with the rest of the site, and cost no image weight.
+   Automa screenshots — real phone screens from the app, shown in a thin
+   device frame. A row scrolls sideways inside its own box on narrow screens,
+   so the page itself never scrolls horizontally.
    -------------------------------------------------------------------------- */
-.ph-grid {
+.shot-row {
   display: grid;
-  gap: clamp(26px, 3.4vw, 40px) clamp(18px, 2.4vw, 28px);
-  grid-template-columns: repeat(auto-fit, minmax(212px, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(168px, 206px);
+  gap: clamp(16px, 2.2vw, 26px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 2px;
+  padding: 4px 2px 16px;
+  scrollbar-width: thin;
+  min-width: 0;
 }
-.ph-fig { margin: 0; }
-.ph-fig svg { width: 100%; max-width: 300px; height: auto; margin-inline: auto; }
-.ph-fig figcaption {
-  margin: 14px auto 0;
-  max-width: 36ch;
-  text-align: center;
-  font-size: .845rem;
-  line-height: 1.55;
+.shot { margin: 0; scroll-snap-align: start; min-width: 0; }
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 200 / 444;
+  border-radius: 24px;
+  border: 6px solid #050505;
+  background: #000;
+  outline: 1px solid var(--line-strong);
+  outline-offset: 0;
+  box-shadow: 0 1px 2px rgba(33,26,19,.06), 0 18px 36px -20px rgba(33,26,19,.42);
+}
+.shot figcaption {
+  margin-top: 12px;
+  font-size: .835rem;
+  line-height: 1.5;
   color: var(--muted);
 }
-.ph-fig figcaption strong {
+.shot figcaption strong {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   color: var(--ink-strong);
   font-weight: 600;
-  font-size: .9rem;
+  font-size: .88rem;
 }
 
-.ph-body    { fill: var(--paper-sunk);   stroke: var(--line-strong); stroke-width: 1.3; }
-.ph-screen  { fill: var(--paper);        stroke: var(--line);        stroke-width: 1; }
-.ph-card    { fill: var(--paper-raised); stroke: var(--line);        stroke-width: 1; }
-.ph-card-a  { fill: var(--paper-sunk);   stroke: var(--line-strong); stroke-width: 1; }
-.ph-hair    { stroke: var(--line);        stroke-width: 1;   fill: none; }
-.ph-stroke  { stroke: var(--line-strong); stroke-width: 1.1; fill: none; stroke-linecap: round; }
-.ph-accent  { fill: var(--espresso); }
-.ph-dim     { fill: var(--faint); opacity: .5; }
+/* The three-phone fan under the Automa page title. */
+.au-trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 2.4vw, 28px);
+  max-width: 700px;
+  margin: clamp(30px, 5vw, 52px) auto 0;
+  align-items: start;
+}
+.au-trio .shot img { border-width: 5px; border-radius: 22px; }
+.au-trio .shot:nth-child(1) { margin-top: 28px; }
+.au-trio .shot:nth-child(3) { margin-top: 28px; }
+@media (min-width: 760px) {
+  .au-trio .shot:nth-child(1) { transform: rotate(-3deg); }
+  .au-trio .shot:nth-child(3) { transform: rotate(3deg); }
+}
+.au-trio figcaption { text-align: center; }
 
-.ph-h { fill: var(--ink-strong); font-family: var(--sans); font-size: 12.5px; font-weight: 600; }
-.ph-t { fill: var(--ink);        font-family: var(--sans); font-size: 10px;   font-weight: 500; }
-.ph-s { fill: var(--muted);      font-family: var(--sans); font-size: 8.6px; }
-.ph-k { fill: var(--faint);      font-family: var(--sans); font-size: 7.4px; font-weight: 600;
-        letter-spacing: .09em; text-transform: uppercase; }
-.ph-a { fill: var(--espresso);   font-family: var(--sans); font-size: 8.8px; font-weight: 600; }
-.ph-m { fill: var(--muted);      font-family: var(--mono); font-size: 9px; }
-.ph-mid { text-anchor: middle; }
+/* "Every kind of AI work" cards on the Automa page. */
+.au-uses .card { padding: clamp(20px, 2.4vw, 26px); }
+.au-uses .card h3 { font-size: 1.12rem; }
+.au-uses .card p { font-size: .9rem; }
+.au-uses .card a { color: var(--ink-strong); text-decoration: underline; text-underline-offset: 3px; }
 
-.ph-nav     { fill: var(--faint);      font-family: var(--sans); font-size: 6.6px;
-              font-weight: 600; text-anchor: middle; }
-.ph-nav.is-on { fill: var(--ink-strong); }
-.ph-fab      { fill: var(--espresso); }
-.ph-fab-plus { stroke: var(--paper); stroke-width: 1.7; fill: none; stroke-linecap: round; }
-.ph-g0 { stop-color: var(--espresso); stop-opacity: .9; }
-.ph-g1 { stop-color: var(--faint);    stop-opacity: .5; }
-.ph-dash   { fill: none; stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 4 4; }
-.ph-btn-t  { fill: var(--paper); font-family: var(--sans); font-size: 10px; font-weight: 600;
-             text-anchor: middle; }
-.ph-ghost-t{ fill: var(--ink-strong); font-family: var(--sans); font-size: 9.5px; font-weight: 600;
-             text-anchor: middle; }
-.ph-end { text-anchor: end; }
+/* Numbered steps in a fact list. */
+.fact-list.is-steps { counter-reset: step; }
+.fact-list.is-steps li { padding-left: 32px; counter-increment: step; }
+.fact-list.is-steps li::before {
+  content: counter(step);
+  left: 0; top: .2em;
+  width: 21px; height: 21px;
+  display: grid; place-items: center;
+  font-size: .72rem; font-weight: 600; line-height: 1;
+  color: var(--paper);
+  background: var(--espresso);
+}
+@media (max-width: 560px) {
+  .au-trio figcaption { display: none; }
+}

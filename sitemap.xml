@@ -5,7 +5,7 @@
 
   <url>
     <loc>https://corx-labs.com/</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/"/>
@@ -33,7 +33,7 @@
 
   <url>
     <loc>https://corx-labs.com/models/</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/models/"/>
@@ -133,20 +133,44 @@
 
   <url>
     <loc>https://corx-labs.com/automa/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/automa/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/automa/"/>
     <image:image>
-      <image:loc>https://corx-labs.com/assets/img/og-default.jpg</image:loc>
-      <image:title>Automa — run your AI company from your phone</image:title>
+      <image:loc>https://corx-labs.com/assets/img/og-automa.jpg</image:loc>
+      <image:title>Automa — your AI company, in your pocket</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/automa/01-home.webp</image:loc>
+      <image:title>Automa home screen: what needs you</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/automa/06-moan-patois.webp</image:loc>
+      <image:title>Moan, Automa's Jamaican AI, answering in Patois</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/automa/07-image-generated.webp</image:loc>
+      <image:title>A logo drawn by an Automa agent</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/automa/09-model-switcher-free-models.webp</image:loc>
+      <image:title>Automa's free AI models, no key needed</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/automa/30-app-studio.webp</image:loc>
+      <image:title>Automa App Studio: build apps on your phone</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/automa/37-terminals.webp</image:loc>
+      <image:title>Coding terminals on the phone in Automa</image:title>
     </image:image>
   </url>
 
   <url>
     <loc>https://corx-labs.com/blog/</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/"/>
@@ -154,6 +178,19 @@
     <image:image>
       <image:loc>https://corx-labs.com/assets/img/og-blog.jpg</image:loc>
       <image:title>CorX Labs blog — notes from the lab</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://corx-labs.com/blog/automa-is-out/</loc>
+    <lastmod>2026-11-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/automa-is-out/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/blog/automa-is-out/"/>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/og-automa.jpg</image:loc>
+      <image:title>Automa is out: an AI agents app, made in Jamaica</image:title>
     </image:image>
   </url>
 
