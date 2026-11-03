@@ -139,7 +139,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/automa/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/automa/"/>
     <image:image>
-      <image:loc>https://corx-labs.com/assets/img/og-automa.jpg</image:loc>
+      <image:loc>https://corx-labs.com/assets/img/og-automa-1-9-7.jpg</image:loc>
       <image:title>Automa — your AI company, in your pocket</image:title>
     </image:image>
     <image:image>
@@ -189,8 +189,8 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/blog/automa-is-out/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/blog/automa-is-out/"/>
     <image:image>
-      <image:loc>https://corx-labs.com/assets/img/og-automa.jpg</image:loc>
-      <image:title>Automa is out: an AI agents app, made in Jamaica</image:title>
+      <image:loc>https://corx-labs.com/assets/img/og-automa-1-9-7.jpg</image:loc>
+      <image:title>Meet Automa: an AI agents app, made in Jamaica</image:title>
     </image:image>
   </url>
 

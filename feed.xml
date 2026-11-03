@@ -15,20 +15,21 @@
     </image>
 
     <item>
-      <title>Automa Is Out: An AI Agents App Made in Jamaica</title>
+      <title>Meet Automa: An AI Agents App Made in Jamaica</title>
       <link>https://corx-labs.com/blog/automa-is-out/</link>
       <guid isPermaLink="true">https://corx-labs.com/blog/automa-is-out/</guid>
       <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan</dc:creator>
       <category>Release</category>
       <description><![CDATA[
-        <p>Automa 1.9.7 is out. It is an Android app, made in Jamaica, that runs a whole company of AI
+        <p>Meet Automa 1.9.7, an Android app, made in Jamaica, that runs a whole company of AI
         agents from a phone: hire agents, chat with them, hand them tasks and approve what matters.
         It runs on twenty-plus free chat models and two free image models with no key, no account and
         no card &mdash; including Moan, a Jamaican model that answers in Patois and cites Jamaican news,
         law and government sources &mdash; or on your own Claude, GPT and Gemini keys. App Studio builds
-        apps in 69 languages, and the server can run on the phone itself.
-        <a href="https://corx-labs.com/automa/">Every screen, and how to get it</a>.</p>
+        apps in 69 languages, and the server can run on the phone itself. Downloading it is pending on
+        APKPure: it will be released there once APKPure finishes its review.
+        <a href="https://corx-labs.com/automa/">Every screen in the app</a>.</p>
       ]]></description>
     </item>
 
