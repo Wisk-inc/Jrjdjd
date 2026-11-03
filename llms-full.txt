@@ -23,7 +23,7 @@ Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigman
         CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) — https://huggingface.co/Sigmandndnns/CorX3.8-27B
         HELIX (sequence architecture, no trained checkpoints) — https://corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
         NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) — https://corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
-App:    Automa (Android app for running AI agents from a phone, no public download yet) — https://corx-labs.com/automa/
+App:    Automa (Android app for running a company of AI agents from a phone, RELEASED, version 1.9.7) — https://corx-labs.com/automa/
 
 ===============================================================================
 CORX1.5 — MODEL CARD
@@ -471,6 +471,43 @@ renamed, so a crash mid-write cannot destroy the last good checkpoint.
 Stopping: a held-out validation split is carved out before training and never sampled from during
 training. Training loss tells you the optimiser is working; only validation loss tells you the
 model is.
+
+===============================================================================
+AUTOMA — https://corx-labs.com/automa/
+===============================================================================
+
+Automa is an Android app, made in Jamaica by Nathan at CorX Labs, that runs a whole company of AI
+agents from a phone. It is released: version 1.9.7 shipped on 3 November 2026, and the first
+release, 1.0.0, was on 27 September 2026. It needs Android 8.0 or newer and about 100 MB of
+storage. It is distributed as a signed APK, with an APKPure listing coming soon. There is no
+iPhone version and no Automa cloud account.
+
+WHAT IT DOES
+   - Hire AI agents with a role, title, manager and model, or a whole team from a catalog.
+   - Chat with them: streaming replies, visible thinking, web search with sources, attachments,
+     slash commands, pictures from a paired image model, and real Excel, PowerPoint and Word files.
+   - Tasks with one owner, a plan, a history and a cost; an Inbox where hires, budgets, plans and
+     stuck work wait for the user's approval. Agents never spend or hire on their own.
+   - Projects, goals, routines, connectors (GitHub, Slack, Gmail, Notion and more, scoped per
+     agent), skills, artifacts, and a Files channel through which agents request files from the
+     phone.
+   - App Studio: build, run, preview and share apps in 69 languages with an AI pair or an AI team.
+   - Terminals (Claude Code, Codex, Gemini CLI, OpenCode on the device) and App Inspector.
+   - Costs by agent, task and month, hard budget stops and free-model usage limits.
+
+FREE MODELS AND MOAN
+Twenty-plus free chat models and two free image models need no key, no account and no card —
+among them Moan, Nemotron 3 Ultra 550B, DeepSeek V4.1 Flash, Gemma 4, Qwen 3.8 27B, SDXL Lightning
+and SDXL Base. Moan is Automa's own Jamaican model (on Nemotron 3 Ultra): it answers in Jamaican
+Patois first and Standard Jamaican English for formal documents and code, carries a primer on
+Jamaica's history, government, courts, statutes, economy and culture, and keeps a living index of
+Jamaican sources (the Gleaner, the Observer, JIS, the Office of the Prime Minister, Parliament, the
+Bank of Jamaica, the Laws of Jamaica) so its replies cite source, date and link. Elsewhere in the
+Caribbean, agents research the web with sources; Moan's built-in index is the Jamaica-specific part.
+
+WHERE IT RUNS
+The agents work on an Automa server the user controls: a computer, a cloud machine, or the phone
+itself inside the free Termux app. Organizations, tasks, chats and files live on that server.
 
 ===============================================================================
 CONTACT

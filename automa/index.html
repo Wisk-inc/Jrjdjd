@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Automa — Run Your AI Company From Your Phone | CorX Labs</title>
-<meta name="description" content="Automa is an Android app for running a company of AI agents from your phone: tasks, approvals, agents, routines, and a file channel agents can pull from.">
+<title>Automa — AI Agents App for Android, Made in Jamaica | CorX Labs</title>
+<meta name="description" content="Automa runs a company of AI agents from your Android phone: free AI models with no key or card, Moan the Patois-speaking Jamaican AI, and App Studio.">
 <link rel="canonical" href="https://corx-labs.com/automa/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -16,21 +16,22 @@
 <link rel="alternate" hreflang="en" href="https://corx-labs.com/automa/">
 <link rel="alternate" hreflang="x-default" href="https://corx-labs.com/automa/">
 
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:site_name" content="CorX Labs">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/automa/">
-<meta property="og:title" content="Automa — Run Your AI Company From Your Phone">
-<meta property="og:description" content="Tasks, approvals, agents, and files. Your agents run on a server; the phone is where the decisions land — and where agents can ask for the files they need.">
-<meta property="og:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+<meta property="og:title" content="Automa — your AI company, in your pocket">
+<meta property="og:description" content="An Android app, made in Jamaica, that runs a team of AI agents for you — on free models with no key, account or card, or on your own Claude, GPT and Gemini keys.">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-automa.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Automa — run your AI company from your phone">
-<meta property="article:modified_time" content="2026-09-28T00:00:00Z">
+<meta property="og:image:alt" content="Automa — your AI company, in your pocket. Three Automa screens: home, Moan answering in Patois, and a generated logo.">
+<meta property="article:modified_time" content="2026-11-03T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Automa — Run Your AI Company From Your Phone">
-<meta name="twitter:description" content="An Android app for a company of AI agents: what needs you, what they are working on, and the files they are waiting on.">
-<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+<meta name="twitter:title" content="Automa — your AI company, in your pocket">
+<meta name="twitter:description" content="Hire AI agents, chat with them, hand them tasks and approve what matters — from an Android phone. Free models, no key. Made in Jamaica.">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-automa.jpg">
+<meta name="twitter:image:alt" content="Three Automa screens: home, Moan answering in Patois, and a generated logo.">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
@@ -42,6 +43,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" as="image" href="/assets/img/automa/06-moan-patois.webp" type="image/webp">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
 
 <script type="application/ld+json">
@@ -49,143 +51,344 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": ["MobileApplication", "SoftwareApplication"],
+      "@type": [
+        "MobileApplication",
+        "SoftwareApplication"
+      ],
       "@id": "https://corx-labs.com/automa/#app",
       "name": "Automa",
+      "alternateName": "Automa for Android",
       "url": "https://corx-labs.com/automa/",
-      "description": "Automa is an Android app from CorX Labs for running a company of AI agents from a phone. The agents themselves run on a server — either on the phone itself under Termux, or on a machine reachable over HTTPS — and Automa is the control surface: a home screen that shows only what needs a human, a task list, agent roles, recurring routines, scoped third-party connections, and a Device Files channel through which an agent can request a file from the phone and the phone can send it back.",
-      "applicationCategory": "BusinessApplication",
-      "applicationSubCategory": "AI agent orchestration client",
-      "operatingSystem": "Android",
-      "inLanguage": "en",
-      "dateModified": "2026-09-28",
-      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
-      "creator": { "@id": "https://corx-labs.com/#nathan" },
-      "publisher": { "@id": "https://corx-labs.com/#organization" },
-      "provider": { "@id": "https://corx-labs.com/#organization" },
-      "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
-      "keywords": "AI agents, agent orchestration, Android app, approvals, task management, routines, MCP, device files, Termux, mobile agent client",
-      "featureList": [
-        "Connect to an agent server by address — the phone itself under Termux, or an HTTPS machine",
-        "A home screen built around what needs a human: inbox, approvals, file requests, agents",
-        "Tasks grouped by day, with the agent and state on every row",
-        "Agents with named roles — CEO, CTO, engineer, designer — that you can add to or leave",
-        "Routines: recurring work definitions that materialise into auditable execution tasks",
-        "Scoped connections: which agents get access, which account they use, which actions they can take",
-        "Provider-hosted MCP connections alongside first-party ones",
-        "Device Files — an agent can request a file and the phone can send it, with optional auto-send",
-        "Thumb-zone layout with a raised centre create button, undo on destructive actions, and haptics"
+      "description": "Automa is an Android app, made in Jamaica by CorX Labs, that runs a company of AI agents from a phone. You hire agents into an org chart, chat with them, hand them tasks and approve hires, budgets and plans. It runs on free AI models with no key, account or card - including Moan, a Jamaican model that speaks Patois - or on your own Claude, GPT, Gemini, DeepSeek and Grok keys. The agents work on an Automa server you control: a computer, a cloud machine, or the phone itself in Termux.",
+      "image": "https://corx-labs.com/assets/img/og-automa.jpg",
+      "screenshot": [
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/01-home.webp",
+          "caption": "Automa home screen: free models saved $0.30, Working late with two things that need you, and the Needs you list",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/03-chats.webp",
+          "caption": "Chats screen listing three agents, Moan, Nova and Pixel, each with its model, and a Hire an agent button",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/06-moan-patois.webp",
+          "caption": "Moan answering in Jamaican Patois with a checklist for registering a small bakery in Kingston with the Companies Office of Jamaica",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/07-image-generated.webp",
+          "caption": "Pixel's reply with a generated flat-style logo of a golden Jamaican beef patty for Yaad Bites",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/09-model-switcher-free-models.webp",
+          "caption": "Free models list in the model switcher: Nemotron, DeepSeek V4.1 Flash, Gemma 4 and Qwen 3.8, each marked Free",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/10-tasks.webp",
+          "caption": "Task list with to do, working, review and done counts and three tasks for the bakery",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/13-inbox.webp",
+          "caption": "Inbox listing tasks that need attention, including one that needs recovery",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/17-org-chart.webp",
+          "caption": "Org chart for the organization with Moan, Nova and Pixel",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/30-app-studio.webp",
+          "caption": "App Studio home with quick starts for a website, Python and a full-stack app",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/34-studio-ai.webp",
+          "caption": "App Studio AI panel on a free model with thinking modes and suggested prompts",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/37-terminals.webp",
+          "caption": "Terminals screen with a free models chat, Claude Code ready, Codex and Gemini CLI",
+          "width": 200,
+          "height": 444
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://corx-labs.com/assets/img/automa/40-costs-usage-limits.webp",
+          "caption": "Usage limits card: monthly allowance for the free models and per-model availability",
+          "width": 200,
+          "height": 444
+        }
       ],
-      "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "AI agents",
+      "operatingSystem": "Android 8.0 or newer",
+      "availableOnDevice": "Android phones, tablets, foldables and Chromebooks",
+      "softwareVersion": "1.9.7",
+      "datePublished": "2026-09-27",
+      "dateModified": "2026-11-03",
+      "releaseNotes": "https://corx-labs.com/automa/#whats-new",
+      "storageRequirements": "About 100 MB",
+      "inLanguage": "en",
+      "countryOfOrigin": {
+        "@type": "Country",
+        "name": "Jamaica"
+      },
+      "author": {
+        "@type": "Person",
+        "@id": "https://corx-labs.com/#nathan",
+        "name": "Nathan",
+        "url": "https://corx-labs.com/developers/"
+      },
+      "creator": {
+        "@type": "Person",
+        "@id": "https://corx-labs.com/#nathan",
+        "name": "Nathan",
+        "url": "https://corx-labs.com/developers/"
+      },
+      "publisher": {
+        "@id": "https://corx-labs.com/#organization"
+      },
+      "provider": {
+        "@id": "https://corx-labs.com/#organization"
+      },
+      "keywords": "AI agents app, Android AI app, free AI models, no API key, Jamaican AI, Patois AI, Caribbean AI, AI for small business, AI app builder, AI image generator, Claude Code on Android, Termux, made in Jamaica",
+      "featureList": [
+        "Hire AI agents with a role, title, manager and model, or install a whole team from the teams catalog",
+        "Chat with streaming replies, visible thinking, web search with sources, attachments and slash commands",
+        "Twenty-plus free chat models and two free image models with no key, account or card",
+        "Moan, a Jamaican model that speaks Patois and keeps a living index of Jamaican news, law and government",
+        "Pictures from a paired image model, and real Excel, PowerPoint and Word files",
+        "Tasks with one owner, a plan, a history and a cost; approvals for hires, budgets and plans",
+        "Projects, goals, routines, pipelines, cases and workspaces",
+        "App Studio: build, run, preview and share apps in 69 languages with an AI pair or AI team",
+        "Coding terminals on the device: Claude Code, Codex, Gemini CLI and OpenCode",
+        "App Inspector: decode an Android app, read it as Java, and rebuild a signed APK",
+        "Costs by agent, task and month, hard budget stops and free-model usage limits",
+        "Run the Automa server on the phone itself in Termux, with hourly backups"
+      ],
+      "isPartOf": {
+        "@id": "https://corx-labs.com/models/#list"
+      }
     },
     {
       "@type": "WebPage",
       "@id": "https://corx-labs.com/automa/#webpage",
       "url": "https://corx-labs.com/automa/",
-      "name": "Automa — Run Your AI Company From Your Phone",
-      "isPartOf": { "@id": "https://corx-labs.com/#website" },
-      "mainEntity": { "@id": "https://corx-labs.com/automa/#app" },
+      "name": "Automa — AI Agents App for Android, Made in Jamaica",
+      "isPartOf": {
+        "@id": "https://corx-labs.com/#website"
+      },
+      "mainEntity": {
+        "@id": "https://corx-labs.com/automa/#app"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "contentUrl": "https://corx-labs.com/assets/img/og-automa.jpg",
+        "width": 1200,
+        "height": 630
+      },
       "inLanguage": "en",
-      "dateModified": "2026-09-28",
-      "breadcrumb": { "@id": "https://corx-labs.com/automa/#breadcrumb" },
-      "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
+      "datePublished": "2026-09-28",
+      "dateModified": "2026-11-03",
+      "breadcrumb": {
+        "@id": "https://corx-labs.com/automa/#breadcrumb"
+      },
+      "about": [
+        {
+          "@type": "Thing",
+          "name": "AI agents"
+        },
+        {
+          "@type": "Thing",
+          "name": "Jamaican Patois"
+        },
+        {
+          "@type": "Place",
+          "name": "Caribbean"
+        }
+      ],
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [
+          ".answer-box"
+        ]
+      }
     },
     {
       "@type": "BreadcrumbList",
       "@id": "https://corx-labs.com/automa/#breadcrumb",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/" },
-        { "@type": "ListItem", "position": 3, "name": "Automa", "item": "https://corx-labs.com/automa/" }
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://corx-labs.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Our Products",
+          "item": "https://corx-labs.com/models/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Automa",
+          "item": "https://corx-labs.com/automa/"
+        }
       ]
     },
     {
       "@type": "ImageObject",
       "@id": "https://corx-labs.com/automa/#architecture-diagram",
       "name": "How Automa is wired",
-      "caption": "The phone runs Automa, which talks to an agent server on port 3100 — either the same phone under Termux or a machine reachable over HTTPS. The server holds the agents, the tasks and the routines, and reaches outward through scoped connections to services like Gmail, GitHub, Notion, Slack and provider-hosted MCP endpoints. Three things flow back to the phone: approvals, file requests against the shared folder, and inbox messages.",
-      "representativeOfPage": true
-    },
-    {
-      "@type": "TechArticle",
-      "@id": "https://corx-labs.com/automa/#article",
-      "headline": "Automa: the phone as the control surface for a company of agents",
-      "about": { "@id": "https://corx-labs.com/automa/#app" },
-      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
-      "publisher": { "@id": "https://corx-labs.com/#organization" },
-      "datePublished": "2026-09-28",
-      "dateModified": "2026-09-28",
-      "inLanguage": "en",
-      "isPartOf": { "@id": "https://corx-labs.com/automa/#webpage" },
-      "proficiencyLevel": "Beginner"
+      "caption": "The phone runs Automa, which talks to an Automa server on port 3100 — either the same phone in Termux or a computer or cloud machine. The server holds the agents, the tasks and the routines, and reaches outward through scoped connections to services like Gmail, GitHub, Notion, Slack and provider-hosted MCP endpoints. Three things flow back to the phone: approvals, file requests against the shared folder, and inbox messages."
     },
     {
       "@type": "FAQPage",
       "@id": "https://corx-labs.com/automa/#faq",
-      "isPartOf": { "@id": "https://corx-labs.com/automa/#webpage" },
+      "isPartOf": {
+        "@id": "https://corx-labs.com/automa/#webpage"
+      },
       "mainEntity": [
         {
           "@type": "Question",
           "name": "What is Automa?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Automa is an Android app built by Nathan at CorX Labs in Jamaica. It is the control surface for a company of AI agents: the agents run on a server, and the phone is where you see what they are doing, approve the things that need a human, and hand over the files they ask for. It is not the model and not the agent runtime — it is the thing you hold."
+            "text": "Automa is an Android app, made in Jamaica by Nathan at CorX Labs, that runs a whole company of AI agents for you. You hire agents, give them roles, chat with them like teammates, hand them tasks, let them build and run apps, draw pictures, search the web and work with your files — and you approve anything that matters. The agents work on an Automa server you control: your computer, a cloud machine, or the phone itself inside the free Termux app."
           }
         },
         {
           "@type": "Question",
-          "name": "Do I need a server to use Automa?",
+          "name": "Do I need an API key or a credit card?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Automa is a client, so it connects to an agent server by address — the default in the app is port 3100. There are two ways to get one. The server can run on the phone itself under Termux, in which case the phone is both the server and the client and nothing leaves the device unless an agent's connection sends it. Or it can run on another machine reachable over an HTTPS address, which is what you want if the work should carry on while the phone is asleep."
+            "text": "No. Pick a free model and start: Automa’s free models need no key, no account and no card. Add keys later under Settings → API keys if you want Claude, GPT, Gemini or another paid model, and set a monthly spending limit so nothing overspends."
           }
         },
         {
           "@type": "Question",
-          "name": "What does the home screen show?",
+          "name": "Do I need a computer?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Only what needs a human. Four rows sit under a heading that says Needs you: the inbox, approvals waiting on you for things like hires, budgets and plans, file requests where an agent is blocked waiting on a file, and agents, which is who is working on what. Below that is the agent roster with the task each one is on and when it last finished something. Everything an agent can do without you stays off that screen."
+            "text": "No. Tap Run Automa on this phone and the server runs inside Termux on the phone. A computer, a virtual machine or a cloud machine works too, and is what you want if the agents should keep working while the phone sleeps."
           }
         },
         {
           "@type": "Question",
-          "name": "What are Device Files?",
+          "name": "Is there an AI that speaks Jamaican Patois?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Device Files is the channel that lets an agent get a file off your phone. You pick one folder to share — Documents, for example — and the phone appears to the agents as a connected device. When an agent needs a file it posts a request, the request shows up on the Files tab and on the home screen under Needs you, and you send it. Nothing outside the folder you chose is visible to the agents."
+            "text": "Yes. Moan is Automa’s own Jamaican model, free with no key. It answers in Patois first and in Standard Jamaican English for formal documents and code, carries a primer on Jamaica’s history, government, courts, statutes, economy and culture, and keeps a living index of Jamaican sources — the Gleaner, the Observer, JIS, the Office of the Prime Minister, Parliament, the Bank of Jamaica and the Laws of Jamaica — so its replies cite source, date and link."
           }
         },
         {
           "@type": "Question",
-          "name": "Is auto-send safe to turn on?",
+          "name": "Can I use Automa elsewhere in the Caribbean?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Understand what it changes before you do. With auto-send off, every file leaves the phone because you tapped Send. With it on, a file an agent asks for is sent without asking you, so anything inside the shared folder can leave the phone without a decision at the moment it happens. That is the whole point of the switch, and it is also the risk. Share a narrow folder that exists for this, not your whole Documents tree, and leave auto-send off until the folder is one you would be comfortable handing over wholesale."
+            "text": "Automa itself is not tied to Jamaica: you install the APK yourself and the agents run on a server you control. Free agents search and read the web with sources, so research about Trinidad and Tobago, Barbados, Guyana, the Bahamas or anywhere else works the same way. Moan’s built-in knowledge index is the Jamaica-specific part."
           }
         },
         {
           "@type": "Question",
-          "name": "What is a routine?",
+          "name": "Which AI models does Automa work with?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A routine is a recurring work definition, and it is deliberately not the work itself. When a routine fires it materialises an ordinary execution task — one that appears in the task list, is attributed to an agent, and leaves the same audit trail as a task you created by hand. A weekly report or a daily inbox sweep is a routine; each Monday's report is a task."
+            "text": "Twenty-plus free chat models and two free image models with no key — including Moan, Nemotron 3 Ultra, DeepSeek V4.1 Flash, Gemma 4 and Qwen 3.8, plus SDXL Lightning and SDXL Base for pictures. With your own keys or subscriptions it runs Claude, GPT, Gemini, DeepSeek, Grok and Kimi, and engines such as Claude Code, Codex, Cursor, Gemini CLI, OpenCode and any OpenAI-compatible endpoint."
           }
         },
         {
           "@type": "Question",
-          "name": "How is an agent's access to Gmail or GitHub scoped?",
+          "name": "Can Automa make pictures, spreadsheets and documents?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Three separate choices per connection, not one on-off switch: which agents get access, which account they use, and which actions they are allowed to take. So an engineer agent can hold write access to one GitHub account while the rest of the company has none, and a designer agent can read a Notion space without being able to change it. Alongside first-party connections, Automa also lists provider-hosted MCP servers — Airtable, for instance — which are scoped the same way."
+            "text": "Yes. A free chat model paired with an image model draws pictures and logos, and redraws an attached photo with the change you ask for. Free agents also make real Excel spreadsheets with formulas, PowerPoint decks with charts and pictures, and Word documents, and read the files you attach."
           }
         },
         {
           "@type": "Question",
-          "name": "Can I download Automa?",
+          "name": "Can I build apps on my phone with Automa?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not from this page yet. Automa is Android-only and new, and there is no public download link here — this page describes what the app is and how it works. If you want to try it, contact CorX Labs at lkk89002@gmail.com."
+            "text": "Yes, in App Studio: 69 languages, an AI pair or a whole AI team that writes the code and fixes what breaks, a sandboxed preview, a public link in one tap, undo for every AI change, and friends invited by code or link. It works on the free models with no key."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens offline?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With the server on the phone, Automa itself keeps working offline. The AI features need internet. When the phone loses the network, a sheet says so and counts down to the next try, and what you typed is kept."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an account, and where is my data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no Automa cloud account. Your organizations, tasks, chats and files live on your own Automa server, and sign-in exists only on that server, when you turn it on. Free-model requests go from your server to the free AI service Automa uses."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can other people use my organization?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Invite members with roles; an invite can’t give more than the person who made it has. App Studio projects can be shared with friends by join code or link."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an iPhone version?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Automa is for Android 8.0 or newer, on phones, tablets, foldables and Chromebooks."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I download Automa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Automa 1.9.7 is a signed APK, distributed in the release zip; email lkk89002@gmail.com to get it. It is coming soon to APKPure with the same signed build, so updates can arrive on their own. Every release from 1.8.2 on installs over the previous one and keeps your data."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who made Automa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nathan, the 14-year-old founder of CorX Labs in Jamaica, who also built the CorX language models and NatureV1. Automa builds on an MIT-licensed open-source control plane for AI agents."
           }
         }
       ]
@@ -249,75 +452,642 @@
     </nav>
 
     <div class="tag-row" style="margin-top:22px">
-      <span class="tag">App</span>
-      <span class="tag">Android</span>
-      <span class="tag">Agent orchestration</span>
-      <span class="tag">Device Files</span>
-      <span class="tag">No public download yet</span>
+      <span class="tag">Android app</span>
+      <span class="tag">Version 1.9.7 &middot; out now</span>
+      <span class="tag">Free AI models, no key</span>
+      <span class="tag">Speaks Patois</span>
+      <span class="tag">Made in Jamaica</span>
     </div>
 
     <h1>Automa</h1>
-    <p class="lede">Run your AI company from your phone. Tasks, approvals, agents and files —
-      and agents that can ask your phone for the files they need.</p>
+    <p class="lede">Your AI company, in your pocket. Hire AI agents, chat with them like teammates,
+      hand them tasks, let them build apps, draw pictures and search the web &mdash; and approve
+      anything that matters. On free AI models with no key, no account and no card, or on your own
+      Claude, GPT, Gemini, DeepSeek and Grok keys.</p>
 
     <div class="btn-row mt-m">
-      <a class="btn btn-primary" href="#screens">See the app</a>
-      <a class="btn btn-ghost" href="#how">How it is wired</a>
+      <a class="btn btn-primary" href="#download">Get Automa</a>
+      <a class="btn btn-ghost" href="#tour">See every screen</a>
     </div>
     <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
-      Platform: Android &middot; Server port: <code>3100</code> &middot; Developer: Nathan &middot; Origin: Jamaica
+      Version 1.9.7 &middot; 3 November 2026 &middot; Android 8.0 or newer &middot; Made in Jamaica by
+      Nathan, <a href="/about/" style="color:inherit">CorX Labs</a>
     </p>
+
+    <div class="au-trio" role="group" aria-label="Three Automa screens">
+      <figure class="shot"><img src="/assets/img/automa/01-home.webp" width="200" height="444" alt="Automa home screen: free models saved $0.30, Working late with two things that need you, and the Needs you list"><figcaption><strong>Home</strong>What needs you, who is working late, and what the free models saved.</figcaption></figure>
+      <figure class="shot"><img src="/assets/img/automa/06-moan-patois.webp" width="200" height="444" alt="Moan answering in Jamaican Patois with a checklist for registering a small bakery in Kingston with the Companies Office of Jamaica"><figcaption><strong>Moan, in Patois</strong>Asked in Patois how to register a bakery, Moan answers in Patois.</figcaption></figure>
+      <figure class="shot"><img src="/assets/img/automa/07-image-generated.webp" width="200" height="444" alt="Pixel's reply with a generated flat-style logo of a golden Jamaican beef patty for Yaad Bites"><figcaption><strong>A drawn logo</strong>The paired image model draws a logo from a description.</figcaption></figure>
+    </div>
   </div>
 
   <div class="shell"><hr class="rule"></div>
 
   <!-- Answer-first summary -->
-  <section class="section-tight" id="what-it-is">
+  <section class="section-tight" id="what-it-is" aria-labelledby="what-title">
     <div class="shell">
+      <h2 id="what-title" class="visually-hidden">What Automa is</h2>
       <div class="answer-box" style="margin-top:0" data-reveal>
-        <p><strong>Automa</strong> is an Android app from <a href="/about/">CorX Labs</a> for running a
-          company of AI agents from a phone. The agents do not live in the app. They run on a server —
-          either the same phone under Termux, or a machine somewhere else reachable over HTTPS — and
-          Automa is the <strong>control surface</strong>: the place where you see what they are doing,
-          approve what needs a human, and hand over the files they are waiting on.</p>
-        <p>The design bet is that a phone is a bad place to <em>supervise</em> work and a good place to
-          <strong>unblock</strong> it. So the home screen does not try to show the company. It shows
-          one heading — <em>Needs you</em> — and four things under it: your inbox, approvals, file
-          requests, and who is working on what. Everything an agent can finish on its own never
-          reaches that screen.</p>
+        <p><strong>Automa</strong> is an Android app from <a href="/about/">CorX Labs</a>, made in
+          Jamaica, that runs a whole company of AI agents for you. You create an organization with a
+          goal, hire agents into an org chart, give them work in plain words, and watch them plan it,
+          do it and check in when they need you. Every task traces back to the organization&rsquo;s
+          goal, hires, budgets and plans wait for your approval, and every token is counted against a
+          budget with a hard stop.</p>
+        <p>The agents work on an <strong>Automa server you control</strong>: your computer, a cloud
+          machine, or <strong>the phone itself</strong> inside the free Termux app. Nothing sits in
+          the middle &mdash; no Automa cloud account, no ads, no tracking. And it runs on
+          <strong>free AI models with no key, no account and no card</strong>, including
+          <strong>Moan</strong>, Automa&rsquo;s own Jamaican model that talks Patois.</p>
       </div>
 
       <div class="callout mt-m" data-reveal>
-        <p><strong>Automa is Android-only and new, and there is no public download link on this page
-          yet.</strong> What follows is a description of the app and how it works, drawn from the
-          build itself — not a store listing, and not a set of performance claims.
-          <a href="/contact/">Get in touch</a> if you want to try it.</p>
+        <p><strong>Automa is out.</strong> Version 1.9.7 shipped on 3 November 2026 as a signed APK for
+          Android 8.0 or newer. Every release since 1.8.2 is signed with the same key, so new versions
+          install over old ones and keep your sign-in, settings and data.
+          <a href="#download">How to get it</a>.</p>
       </div>
 
       <dl class="spec-list mt-m" data-reveal>
-        <div><dt>Platform</dt><dd>Android</dd></div>
-        <div><dt>Shape</dt><dd>Client for an agent server</dd></div>
-        <div><dt>Server</dt><dd>This phone (Termux) or HTTPS</dd></div>
-        <div><dt>Default port</dt><dd><code>3100</code></dd></div>
-        <div><dt>Primary nav</dt><dd>Home, Tasks, +, Files, Inbox</dd></div>
-        <div><dt>File channel</dt><dd>Device Files, one shared folder</dd></div>
-        <div><dt>Recurring work</dt><dd>Routines &rarr; execution tasks</dd></div>
-        <div><dt>Connections</dt><dd>First-party &amp; provider-hosted MCP</dd></div>
-        <div><dt>Download</dt><dd>Not linked here yet</dd></div>
+        <div><dt>Latest version</dt><dd>1.9.7 &middot; 3 Nov 2026</dd></div>
+        <div><dt>First released</dt><dd>1.0.0 &middot; 27 Sep 2026</dd></div>
+        <div><dt>Platform</dt><dd>Android 8.0 or newer</dd></div>
+        <div><dt>Storage</dt><dd>About 100 MB</dd></div>
+        <div><dt>Free AI models</dt><dd>20+ chat, 2 image &middot; no key</dd></div>
+        <div><dt>Your own models</dt><dd>Claude, GPT, Gemini, DeepSeek, Grok, Kimi &amp; more</dd></div>
+        <div><dt>Server</dt><dd>Your computer, a cloud VM, or this phone</dd></div>
+        <div><dt>Account</dt><dd>None &mdash; no Automa cloud</dd></div>
+        <div><dt>Package</dt><dd><code>com.corxlabs.automa</code></dd></div>
       </dl>
     </div>
   </section>
 
-  <!-- How it is wired -->
-  <section class="section-tight" id="how" style="padding-top:0">
+  <!-- One minute -->
+  <section class="section-tight" id="one-minute" style="padding-top:0" aria-labelledby="minute-title">
     <div class="shell">
-      <h2>1. How it is wired</h2>
-      <div class="prose">
+      <h2 id="minute-title">What Automa does, in one minute</h2>
+      <ul class="fact-list mt-m" data-reveal>
+        <li><strong>Hire AI agents</strong> with a role, a title, a manager and a model &mdash; a whole
+          team in one tap from the teams catalog, or one agent at a time.</li>
+        <li><strong>Chat with them</strong> like teammates: replies stream in, their thinking shows in a
+          panel, they search the web and cite sources, read your attachments, draw pictures, and make
+          real Excel, PowerPoint and Word files.</li>
+        <li><strong>Give them tasks.</strong> Every task has one owner, a plan, a history and a cost.
+          Agents ask you questions right in the task when they need a decision.</li>
+        <li><strong>Approve what matters.</strong> Hires, budgets, plans and anything an agent gets stuck
+          on wait for your yes in the Inbox. Agents never spend or hire on their own.</li>
+        <li><strong>Build apps on the phone.</strong> App Studio writes, runs, previews and shares apps in
+          69 languages, with an AI pair or an AI team, and undo for every change.</li>
+        <li><strong>Use free models.</strong> Twenty-plus chat models and two image models that need no
+          key &mdash; including Moan, which talks Patois and knows Jamaica&rsquo;s news, law and
+          government.</li>
+        <li><strong>Bring your own models</strong> too: Claude, GPT, Gemini, DeepSeek, Grok, Kimi,
+          Cursor, Codex, Gemini CLI, OpenCode and any OpenAI-compatible endpoint.</li>
+        <li><strong>Run coding terminals</strong> (Claude Code, Codex, Gemini CLI) on the device, and
+          <strong>take apps apart</strong> with App Inspector.</li>
+        <li><strong>Count every token.</strong> Costs by agent, by task and by month, hard budget stops,
+          and what the free work would have cost at paid prices.</li>
+        <li><strong>Keep it yours.</strong> Organizations, chats and files live on your own server, which
+          can be the phone in your hand.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Every kind of AI work -->
+  <section class="section-tight au-uses" id="what-ai-does" aria-labelledby="uses-title">
+    <div class="shell">
+      <h2 id="uses-title">Every kind of AI work, from one phone</h2>
+      <div class="prose mt-s">
+        <p>Automa is not one chatbot. It is a team of agents that each have a job, and between them they
+          cover most of the AI work a small business, a student or a developer does in a week.</p>
+      </div>
+      <div class="grid grid-4 mt-m">
+        <article class="card" data-reveal>
+          <h3>Research with sources</h3>
+          <p>Agents search the web across many results, read and crawl pages, and answer with tables and
+            linked sources. <a href="#chats">Chats</a></p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>Writing and marketing</h3>
+          <p>Launch posts, Instagram and WhatsApp captions, emails and plans &mdash; written as tasks you
+            can read and approve. <a href="#tasks">Tasks</a></p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>Spreadsheets, decks, documents</h3>
+          <p>Real Excel files with formulas, PowerPoint decks with charts and pictures, and Word
+            documents &mdash; and they read the ones you attach. <a href="#free-models">Free models</a></p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>Pictures and logos</h3>
+          <p>A paired image model draws from a description, or redraws an attached photo with the change
+            you ask for. <a href="#chats">Pictures</a></p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>Apps and websites</h3>
+          <p>App Studio builds, runs and shares apps in 69 languages, with an AI that sees the page and
+            fixes what breaks. <a href="#app-studio">App Studio</a></p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>Coding terminals</h3>
+          <p>Claude Code, Codex, Gemini CLI and OpenCode in their full terminal UI, on the phone.
+            <a href="#terminals">Terminals</a></p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>Running the work</h3>
+          <p>Projects, goals, routines on a schedule, approvals and budgets &mdash; the plumbing of a
+            company, run by agents. <a href="#projects">Projects</a></p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>Jamaican knowledge</h3>
+          <p>Moan answers in Patois and knows Jamaica&rsquo;s news, government, courts and statutes, with
+            source, date and link. <a href="#caribbean">Moan</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Caribbean -->
+  <section class="section-tight" id="caribbean" aria-labelledby="caribbean-title">
+    <div class="shell">
+      <h2 id="caribbean-title">Made in Jamaica, ready for the Caribbean</h2>
+      <div class="prose mt-s">
+        <p>Most AI tools assume a US-dollar credit card, a desktop computer and an English that is not the
+          one spoken at home. Automa was built in Jamaica, and it shows in three places.</p>
+      </div>
+
+      <div class="grid grid-3 mt-m">
+        <article class="card" data-reveal>
+          <h3>No card, no key</h3>
+          <p>The free models need no key, no account and no card. A first agent can start on them with
+            one tap &mdash; <em>Skip for now: start on the free models</em> &mdash; and you add paid keys
+            later only if you want them.</p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>One phone is enough</h3>
+          <p>The Automa server can run on the phone itself, inside Termux. No computer, no cloud bill:
+            the app, the agents&rsquo; server and your data all live on one Android phone.</p>
+        </article>
+        <article class="card" data-reveal>
+          <h3>An AI that talks like home</h3>
+          <p><strong>Moan</strong> speaks Patois first and switches to Standard Jamaican English for
+            formal documents and code. It knows Jamaica&rsquo;s history, government, courts, statutes,
+            economy and culture.</p>
+        </article>
+      </div>
+
+      <h3 class="mt-l" id="moan">Moan, Automa&rsquo;s Jamaican model</h3>
+      <div class="prose mt-s">
+        <p>Moan runs on Nemotron 3 Ultra with a Jamaica primer and a <strong>living knowledge
+          index</strong>. While Moan is in use, Automa keeps reading Jamaican sources &mdash; the
+          <em>Gleaner</em>, the <em>Observer</em>, JIS, the Office of the Prime Minister, Parliament,
+          the Bank of Jamaica and the Laws of Jamaica &mdash; into a local, searchable index. Every reply
+          gets the passages that match the question plus the newest news, with source, date and link.</p>
+        <p>Elsewhere in the Caribbean, the same agents search and read the web with sources, so a
+          question about Trinidad and Tobago, Barbados, Guyana or the Bahamas gets a researched, linked
+          answer too. Moan&rsquo;s built-in index is the Jamaica-specific part.</p>
+      </div>
+
+      <h3 class="mt-l">A Kingston bakery, run by three agents</h3>
+      <div class="prose mt-s">
+        <p>The screenshots on this page come from a sample organization: <strong>Yaad Bites</strong>, a
+          family bakery in Kingston selling patties and hardo bread, with the goal <em>Grow Yaad Bites
+          online</em>. It runs three agents. <strong>Moan</strong> is the Jamaican assistant, and
+          answered a Patois question about registering the business. <strong>Nova</strong>, the
+          marketing lead, checked patty and bread prices against the market and wrote the launch post
+          for the order page. <strong>Pixel</strong>, the brand designer, drew the logo.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="A day at Yaad Bites">
+        <figure class="shot"><img src="/assets/img/automa/06-moan-patois.webp" width="200" height="444" loading="lazy" decoding="async" alt="Moan answering in Jamaican Patois with a checklist for registering a small bakery in Kingston with the Companies Office of Jamaica"><figcaption><strong>Moan, in Patois</strong>Asked in Patois how to register a bakery, Moan answers in Patois.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/04-chat-web-search.webp" width="200" height="444" loading="lazy" decoding="async" alt="Nova answering a request for popular Kingston bakeries with a table of bakeries, popular items and typical prices"><figcaption><strong>Web search</strong>An agent searches the web and answers with a table.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/11b-task-reply.webp" width="200" height="444" loading="lazy" decoding="async" alt="Nova's finished reply on a task: two caption options for Instagram and WhatsApp"><figcaption><strong>Finished work</strong>The agent's reply lands on the task, ready to approve.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/07-image-generated.webp" width="200" height="444" loading="lazy" decoding="async" alt="Pixel's reply with a generated flat-style logo of a golden Jamaican beef patty for Yaad Bites"><figcaption><strong>A drawn logo</strong>The paired image model draws a logo from a description.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/48-settings.webp" width="200" height="444" loading="lazy" decoding="async" alt="Organization settings for Yaad Bites, a family bakery in Kingston"><figcaption><strong>Settings</strong>Name, goal, logo, budget and governance.</figcaption></figure>
+      </div>
+
+      <div class="prose mt-m">
+        <p>More AI built in Jamaica: <a href="/models/corx3-8/">CorX3.8-27B</a>, a 27B Jamaican Patois
+          assistant and the island&rsquo;s first large open-weight language model, and
+          <a href="/models/naturev1/">NatureV1</a>, a research model for Caribbean hurricanes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen tour -->
+  <section class="section-tight" id="tour" aria-labelledby="tour-title">
+    <div class="shell">
+      <h2 id="tour-title">Get started</h2>
+      <ol class="fact-list is-steps mt-m" data-reveal>
+        <li><strong>Install the APK</strong> &mdash; see <a href="#download">Download and install</a>.</li>
+        <li><strong>Connect.</strong> Enter a server address such as <code>http://192.168.1.20:3100</code>,
+          or tap <strong>Run Automa on this phone</strong> and the app sets up a server inside Termux,
+          with a progress bar for each step. A computer can also be linked over a USB cable or Wireless
+          debugging.</li>
+        <li><strong>Create an organization</strong> with a name and a goal.</li>
+        <li><strong>Hire your first agent.</strong> Pick a name, a role and a model, or tap
+          <strong>Skip for now: start on the free models</strong>.</li>
+        <li><strong>Say what you want done</strong> in Chats. The agent plans, creates tasks and asks
+          when it needs you.</li>
+        <li><strong>Take the tour.</strong> One card per section, with Skip at every step; run it again
+          any time from your profile.</li>
+      </ol>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Getting started">
+        <figure class="shot"><img src="/assets/img/automa/00-connect-screen.webp" width="200" height="444" loading="lazy" decoding="async" alt="Automa's connect screen: a server address field, Connect, and Run Automa on this phone through Termux"><figcaption><strong>Connect</strong>Point the app at a server, or run one on this phone.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/16-new-agent.webp" width="200" height="444" loading="lazy" decoding="async" alt="Meet your next agent: the hiring wizard asking for an agent name"><figcaption><strong>Hire an agent</strong>A short wizard: a name first, then the engine.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/51-organizations.webp" width="200" height="444" loading="lazy" decoding="async" alt="Organizations list with Fox Studio and Yaad Bites"><figcaption><strong>Organizations</strong>More than one company on one server.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/54-feature-tour.webp" width="200" height="444" loading="lazy" decoding="async" alt="Welcome to Automa: the first card of the 16-card feature tour"><figcaption><strong>The tour</strong>One card per section, skippable at every step.</figcaption></figure>
+      </div>
+
+      <h3 class="mt-l">Getting around</h3>
+      <div class="prose mt-s">
+        <p>A bottom tab bar &mdash; <strong>Home, Chats, +, Tasks, Files</strong> &mdash; stays in thumb
+          reach, a sidebar holds every section and the organization switcher, the bell opens the Inbox,
+          and your avatar opens the account sheet. Long-press the app icon for shortcuts: New chat, New
+          task, App Studio, Change server, Files. Every screen is edge-to-edge, keyboard-aware, and works
+          in portrait and landscape on phones, tablets, foldables and Chromebooks. Destructive actions
+          come with <strong>Undo</strong>, not &ldquo;are you sure?&rdquo; dialogs.</p>
+        <p><strong>Home</strong> is your day at a glance: what needs you, who is working right now,
+          what the free models saved, and live run activity.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Home">
+        <figure class="shot"><img src="/assets/img/automa/01-home.webp" width="200" height="444" loading="lazy" decoding="async" alt="Automa home screen: free models saved $0.30, Working late with two things that need you, and the Needs you list"><figcaption><strong>Home</strong>What needs you, who is working late, and what the free models saved.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/02-home-live.webp" width="200" height="444" loading="lazy" decoding="async" alt="Live agent runs list with Nova's finished runs on the launch post task"><figcaption><strong>Live agent runs</strong>Every run, active first, then the most recent.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chats -->
+  <section class="section-tight" id="chats" aria-labelledby="chats-title">
+    <div class="shell">
+      <h2 id="chats-title">Chats with your agents</h2>
+      <div class="prose mt-s">
+        <p>Talk to an agent like a teammate. Replies <strong>stream</strong> token by token; the
+          model&rsquo;s <strong>thinking</strong> streams into its own panel and folds away when the
+          answer starts. Tables wider than the screen scroll sideways. Source links show the site&rsquo;s
+          favicon. When a reply fails, the chat says why in plain words, and you can switch model and
+          send again.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Chats">
+        <figure class="shot"><img src="/assets/img/automa/03-chats.webp" width="200" height="444" loading="lazy" decoding="async" alt="Chats screen listing three agents, Moan, Nova and Pixel, each with its model, and a Hire an agent button"><figcaption><strong>Chats</strong>Every agent in one list, with its model and what it is doing.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/04-chat-web-search.webp" width="200" height="444" loading="lazy" decoding="async" alt="Nova answering a request for popular Kingston bakeries with a table of bakeries, popular items and typical prices"><figcaption><strong>Web search</strong>An agent searches the web and answers with a table.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/05-chat-sources-table.webp" width="200" height="444" loading="lazy" decoding="async" alt="A wide comparison table in a chat reply, scrolling sideways"><figcaption><strong>Sourced answers</strong>Wide tables scroll sideways; sources show their favicon.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/06-moan-patois.webp" width="200" height="444" loading="lazy" decoding="async" alt="Moan answering in Jamaican Patois with a checklist for registering a small bakery in Kingston with the Companies Office of Jamaica"><figcaption><strong>Moan, in Patois</strong>Asked in Patois how to register a bakery, Moan answers in Patois.</figcaption></figure>
+      </div>
+
+      <div class="prose mt-m">
+        <p><strong>Pictures.</strong> Ask any free chat model for a picture and its paired image model
+          draws it. Attach a photo and say what to change, and the model redraws it. Tap a picture to see
+          it full size or <strong>Download</strong> it to the phone; <strong>Draw again</strong> asks for
+          a fresh take.</p>
+        <p><strong>The model switcher</strong> in the chat header lists every provider with its key
+          status and the maker&rsquo;s logo, a <strong>Free</strong> filter, <strong>thinking
+          depth</strong> (Auto, Quick, Balanced, Deep, Deeper, Max), and switches for what a free agent
+          may do: <strong>web search &amp; reading, files &amp; commands, teammates &amp; tasks,
+          connected apps</strong>. A <strong>paired image model</strong> gives a chat model the power to
+          draw; a small &ldquo;Bonded&rdquo; mark shows the two makers&rsquo; logos together.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Pictures and models">
+        <figure class="shot"><img src="/assets/img/automa/07-image-generated.webp" width="200" height="444" loading="lazy" decoding="async" alt="Pixel's reply with a generated flat-style logo of a golden Jamaican beef patty for Yaad Bites"><figcaption><strong>A drawn logo</strong>The paired image model draws a logo from a description.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/08-model-switcher.webp" width="200" height="444" loading="lazy" decoding="async" alt="Model switcher sheet showing thinking depth, the agent's tool switches and SDXL Lightning bonded as the paired image model"><figcaption><strong>Model switcher</strong>Thinking depth, tool switches and a paired image model.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/09-model-switcher-free-models.webp" width="200" height="444" loading="lazy" decoding="async" alt="Free models list in the model switcher: Nemotron, DeepSeek V4.1 Flash, Gemma 4 and Qwen 3.8, each marked Free"><figcaption><strong>Free models</strong>The free list, each model marked Free with its status.</figcaption></figure>
+      </div>
+
+      <div class="prose mt-m">
+        <p><strong>Messages.</strong> Copy, retry, delete and thumbs up or down on the newest reply; press
+          and hold any other message for the same menu. Attach photos, screenshots, PDFs or any file with
+          <strong>+</strong>. Unsent drafts survive leaving the chat. &#8943; on a chat pins, moves or
+          deletes it.</p>
+        <p><strong>Slash commands:</strong> <code>/plan</code> (plan first; nothing runs until you say
+          so), <code>/ask</code> (answers only, no changes), <code>/auto</code>, <code>/model</code>,
+          <code>/think deep</code>, <code>/context</code>, <code>/stop</code>, <code>/clear</code>,
+          <code>/skills</code>, <code>/help</code>, <code>/new</code>.</p>
+        <p><strong>Notifications.</strong> When an agent finishes a reply, or an App Studio job ends, while
+          you are outside the app, a notification says so. Tap it to jump straight to that chat, task or
+          project.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Free models -->
+  <section class="section-tight" id="free-models" aria-labelledby="free-title">
+    <div class="shell">
+      <h2 id="free-title">Free AI models: no key, no account, no card</h2>
+      <div class="prose mt-s">
+        <p>Pick a free model in the switcher and the agent runs on it; your other models stay where they
+          are. Every model stays listed and says how it is doing &mdash; ready, busy, at today&rsquo;s
+          free limit and when it is back, or closed by its provider. Nothing is hidden.</p>
+      </div>
+
+      <div class="table-wrap mt-m" data-reveal>
+        <table>
+          <caption class="visually-hidden">The free models in Automa 1.9.7</caption>
+          <thead>
+            <tr><th scope="col">Kind</th><th scope="col">Models</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Chat</th>
+              <td>Moan (Jamaican, on Nemotron 3 Ultra) &middot; Nemotron 3 Ultra 550B &middot; Nemotron 3
+                Super 120B &middot; Nemotron 3 Nano Omni 30B Reasoning &middot; Nemotron 3.5 Lightning
+                &middot; Nemotron 3.5 Super VL &middot; Nemotron 3.5 Content Safety &middot; DeepSeek V4.1
+                Flash &middot; Gemma 4 31B &middot; Gemma 4 26B A4B &middot; Qwen 3.8 27B &middot; Qwen 3.8
+                27B Abliterated Cyber &middot; Inkling &middot; Inkling Small &middot; Flint v1.0 &middot;
+                North Mini Code &middot; Atria Dawn Preview &middot; Apodex 1.1 Mini &middot; LFM 2.5 2.6B
+                &middot; Xing 4.0 29B A4B &middot; Ternary Bonsai 27B &middot; Free Router, which sends each
+                question to an available free model</td>
+            </tr>
+            <tr>
+              <th scope="row">Image</th>
+              <td>SDXL Lightning (fast, the default pairing) &middot; SDXL Base 1.0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="mt-l">What a free agent can do</h3>
+      <div class="prose mt-s">
+        <p>Search the web across many results, read pages, crawl a site and download files; read, write,
+          edit and search files and run commands in its workspace; make real <strong>Excel
+          spreadsheets</strong> with formulas, <strong>PowerPoint decks</strong> with charts and pictures
+          and <strong>Word documents</strong>, and read the spreadsheets, documents, decks, PDFs and CSVs
+          you attach; draw with its paired image model; message teammates, hand off work, and create and
+          update tasks; and request the connected apps it needs. It knows its role, its teammates and your
+          name, and it keeps going through busy providers and dropped connections without ever switching
+          models behind your back.</p>
+        <p><strong>The Que engine</strong> sits under every free-model call: up to ten calls at once, at
+          most two at a time on any one model, a pool of app IDs that grows on rate limits, retries on
+          busy answers, a five-minute answer cache, conversations and batches. Many questions at once all
+          get answered instead of some failing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tasks -->
+  <section class="section-tight" id="tasks" aria-labelledby="tasks-title">
+    <div class="shell">
+      <h2 id="tasks-title">Tasks, approvals and the Inbox</h2>
+      <div class="prose mt-s">
+        <p>Everything the agents are doing, each one a thread you can read, steer and approve. A task has
+          <strong>one assignee</strong>, a parent and sub-tasks, blockers, comments with @mentions, a
+          <strong>plan document</strong>, attachments and work products, labels, a priority and a status
+          &mdash; backlog, to do, in progress, in review, blocked, done. The task page shows the live run
+          with the agent&rsquo;s thinking and tools, its cost and its full history. An agent can ask you a
+          question with options right in the task; pick one and it carries on. When it finishes, it asks
+          you to <strong>approve the result</strong>: approve to mark the task done, or send it back with
+          what to change.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Tasks">
+        <figure class="shot"><img src="/assets/img/automa/10-tasks.webp" width="200" height="444" loading="lazy" decoding="async" alt="Task list with to do, working, review and done counts and three tasks for the bakery"><figcaption><strong>Tasks</strong>Counts by status, filters, and every task with its owner.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/11-task-detail.webp" width="200" height="444" loading="lazy" decoding="async" alt="Task page for writing the launch post for the order page, with the brief and Nova's reply"><figcaption><strong>A task's thread</strong>The brief, the agent's work and the full history.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/11b-task-reply.webp" width="200" height="444" loading="lazy" decoding="async" alt="Nova's finished reply on a task: two caption options for Instagram and WhatsApp"><figcaption><strong>Finished work</strong>The agent's reply lands on the task, ready to approve.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/12-new-task.webp" width="200" height="444" loading="lazy" decoding="async" alt="New task sheet with title, assignee, project and description fields and a Create Task button"><figcaption><strong>New task</strong>Title, assignee, project and a description.</figcaption></figure>
+      </div>
+
+      <div class="prose mt-m">
+        <p><strong>Inbox and approvals.</strong> Decisions waiting on you: hires, budgets, plans, join
+          requests, failed runs and anything an agent got stuck on. Approve, decline or retry from the
+          phone. The bell shows the count and clears when tapped. The <strong>Decisions</strong> page
+          keeps the record of every automated and governed decision.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Inbox and decisions">
+        <figure class="shot"><img src="/assets/img/automa/13-inbox.webp" width="200" height="444" loading="lazy" decoding="async" alt="Inbox listing tasks that need attention, including one that needs recovery"><figcaption><strong>Inbox</strong>What needs you, with Retry on a run that failed.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/47-decisions.webp" width="200" height="444" loading="lazy" decoding="async" alt="Decisions screen listing a recovery and a blocked dependency for today"><figcaption><strong>Decisions</strong>The record of every automated and governed decision.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agents -->
+  <section class="section-tight" id="agents" aria-labelledby="agents-title">
+    <div class="shell">
+      <h2 id="agents-title">Agents and the org chart</h2>
+      <div class="prose mt-s">
+        <p>Each agent has a role and title, an engine and model with the maker&rsquo;s logo, a system
+          prompt and instructions, a budget, skills, tools and a manager. The agent page shows its live
+          runs, logs, progress, instructions and tools. Pause, change or offboard an agent any time.
+          <strong>New agent</strong> is a short wizard; the <strong>teams catalog</strong> installs a whole
+          team &mdash; a CEO with executives and engineers &mdash; in one go.</p>
+        <p><strong>Engines:</strong> Claude Code &middot; Anthropic API &middot; Codex &middot; Cursor
+          (local and cloud) &middot; Gemini CLI &middot; Grok &middot; Hermes &middot; Kimi &middot;
+          OpenCode &middot; OpenClaw gateway &middot; Pi &middot; <strong>Free models</strong> &middot;
+          metered API engines &middot; a REST or webhook engine for an agent you host elsewhere. On a phone,
+          a Claude agent answers through the Anthropic API with Claude Code&rsquo;s own tools running in
+          Termux.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Agents">
+        <figure class="shot"><img src="/assets/img/automa/14-agents.webp" width="200" height="444" loading="lazy" decoding="async" alt="Agents list with Moan, Nova and Pixel and counts of agents working, paused and needing attention"><figcaption><strong>Agents</strong>Your team, with who is working, paused or needs you.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/15-agent-detail.webp" width="200" height="444" loading="lazy" decoding="async" alt="Nova's agent page: latest run succeeded, role CMO, title Marketing lead, reporting to the board"><figcaption><strong>An agent's page</strong>Latest run, identity, role and runtime.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/17-org-chart.webp" width="200" height="444" loading="lazy" decoding="async" alt="Org chart for the organization with Moan, Nova and Pixel"><figcaption><strong>Org chart</strong>Who reports to whom, as a tree or a chart.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section-tight" id="projects" aria-labelledby="projects-title">
+    <div class="shell">
+      <h2 id="projects-title">Projects, goals and routines</h2>
+      <div class="prose mt-s">
+        <p><strong>Projects</strong> group tasks under one goal and keep their own workspace.
+          <strong>Goals</strong> are the top of the task tree, the &ldquo;why&rdquo; every task hangs from.
+          <strong>Routines</strong> run work on a schedule &mdash; a daily summary, a weekly review &mdash;
+          and each run is a task you can read. Pipelines chain stages of work, cases collect related work
+          into one file, and workspaces show where an agent&rsquo;s run happens, with its live service
+          ports.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Projects, goals and routines">
+        <figure class="shot"><img src="/assets/img/automa/18-projects.webp" width="200" height="444" loading="lazy" decoding="async" alt="Projects list with Launch the order page in progress"><figcaption><strong>Projects</strong>Tasks grouped under one goal.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/19-project-detail.webp" width="200" height="444" loading="lazy" decoding="async" alt="The Launch the order page project with its three tasks"><figcaption><strong>A project</strong>Its tasks, with filters and recovery flags.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/20-goals.webp" width="200" height="444" loading="lazy" decoding="async" alt="Goals screen with the company goal Grow Yaad Bites online marked active"><figcaption><strong>Goals</strong>The top of the task tree.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/21-routines.webp" width="200" height="444" loading="lazy" decoding="async" alt="Routines screen with a weekly orders summary routine"><figcaption><strong>Routines</strong>Recurring work that turns into auditable tasks.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Files -->
+  <section class="section-tight" id="files" aria-labelledby="files-title">
+    <div class="shell">
+      <h2 id="files-title">Artifacts and your phone&rsquo;s files</h2>
+      <div class="prose mt-s">
+        <p><strong>Artifacts</strong> are every file the agents produced, grouped by task, with a viewer
+          for text, images and code. Downloads go to <code>Downloads/Automa</code>.</p>
+        <p><strong>Files</strong> shares one folder on the phone with your agents. With
+          <strong>auto-send</strong> on, a file an agent asks for is sent without asking; otherwise the
+          request waits for you to pick a file or decline. Agents can send files back. Use
+          <strong>Share to Automa</strong> from any app&rsquo;s share sheet and the file waits on the Files
+          page until you confirm.</p>
+      </div>
+      <div class="callout mt-m" data-reveal>
+        <p><strong>Auto-send removes you from the loop &mdash; that is the feature and the risk.</strong>
+          With it off, every file leaves the phone because you tapped <em>Send</em>. With it on, anything
+          inside the shared folder can leave without a decision at the moment it happens. Share a folder
+          that exists for this, not your whole Documents tree.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Artifacts and files">
+        <figure class="shot"><img src="/assets/img/automa/25-artifacts.webp" width="200" height="444" loading="lazy" decoding="async" alt="Artifacts screen showing the generated Yaad Bites logo"><figcaption><strong>Artifacts</strong>Every file an agent made, grouped by task.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/26-files.webp" width="200" height="444" loading="lazy" decoding="async" alt="Files screen: connect this browser, file requests from agents, and Send a file"><figcaption><strong>Files</strong>Agents ask your phone for files; you approve or auto-send.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section-tight" id="skills" aria-labelledby="skills-title">
+    <div class="shell">
+      <h2 id="skills-title">Skills and connectors</h2>
+      <div class="prose mt-s">
+        <p><strong>Skills</strong> are what agents know how to do. Install them from the catalog or build
+          one in Skill Studio; a new skill is available from the agent&rsquo;s next run.
+          <strong>Connectors</strong> are the apps agents can reach: GitHub, Slack, Gmail, Notion and more.
+          You choose which agents get access, which accounts they use and which actions they may take
+          &mdash; three choices, not one switch. Connecting an app stays inside Automa.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Skills and connectors">
+        <figure class="shot"><img src="/assets/img/automa/27-skills.webp" width="200" height="444" loading="lazy" decoding="async" alt="Installed skills list including AgentMail and First task"><figcaption><strong>Skills</strong>What agents know how to do.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/28-connectors.webp" width="200" height="444" loading="lazy" decoding="async" alt="Connectors screen: give your agents the access they need, with Airtable and Anthropic connectors"><figcaption><strong>Connectors</strong>Gmail, GitHub, Notion, Slack and more, scoped per agent.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- App Studio -->
+  <section class="section-tight" id="app-studio" aria-labelledby="studio-title">
+    <div class="shell">
+      <h2 id="studio-title">App Studio: build apps from your phone</h2>
+      <div class="prose mt-s">
+        <p>Build, run and share apps with an AI pair, or a whole AI team, that writes the code and fixes
+          what breaks. No key needed: the free models work in the AI panel and for the editor&rsquo;s code
+          suggestions.</p>
+      </div>
+      <ul class="fact-list mt-m" data-reveal>
+        <li><strong>69 languages in 11 groups</strong>, with quick starts for a website, Python, a
+          full-stack app, React, Flask, Go, Rust, a mobile app and TypeScript.</li>
+        <li><strong>Describe your app</strong> in plain words and the assistant builds it from the first
+          message, or <strong>clone from GitHub</strong> by pasting a link.</li>
+        <li>On a phone each part is a tab: <strong>Files, Code, Console, Preview, AI, Stats, Team</strong>.
+          The editor saves on its own and suggests code as you type.</li>
+        <li><strong>Preview</strong> runs the app inside Automa, sandboxed. One tap opens a
+          <strong>public link</strong> anyone can open. Missing toolchains install on the device with
+          progress.</li>
+      </ul>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="App Studio">
+        <figure class="shot"><img src="/assets/img/automa/30-app-studio.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Studio home with quick starts for a website, Python and a full-stack app"><figcaption><strong>App Studio</strong>Build, run and share apps in 69 languages.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/31-studio-files.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Studio file tree with index.html, script.js and style.css"><figcaption><strong>Project files</strong>The file tree with each file's kind, size and age.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/32-studio-code.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Studio code editor showing index.html with AI suggest on"><figcaption><strong>The editor</strong>Code with AI suggestions as you type.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/33-studio-preview.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Studio preview running Hello, world with a Set up public links button"><figcaption><strong>Preview</strong>The app runs inside Automa; one tap makes a public link.</figcaption></figure>
+      </div>
+
+      <div class="prose mt-m">
+        <p><strong>The AI assistant</strong> reads and searches the files, writes and edits code, runs
+          commands and tests, starts and stops the app, reads the console, searches the web, and keeps
+          going until the job is done. It <strong>sees the page like you do</strong>: it opens the running
+          page at phone or desktop size, reads what is on screen, the console errors and the layout
+          trouble, fixes what it found and looks again.</p>
+        <p><strong>AI teams.</strong> Pick teammates in the model sheet and the lead model hands them work:
+          several at once, each with a role and the files it owns, talking to each other while they work.
+          The <strong>Stats</strong> tab shows a running clock, steps, files changed and every model at
+          work with live tokens, then the totals and what the free work would have cost.</p>
+        <p><strong>Undo and safety.</strong> Undo any change the assistant made, step by step. Checkpoints
+          are saved before every AI message, Stop is instant, and nothing is ever written outside the
+          project folder. <strong>Build together:</strong> invite people with a join code or link, for an
+          hour up to no limit. Guests see your code as you type, chat, send files and suggest changes you
+          review as a diff; they can&rsquo;t save files or reach the rest of Automa.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="App Studio AI">
+        <figure class="shot"><img src="/assets/img/automa/34-studio-ai.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Studio AI panel on a free model with thinking modes and suggested prompts"><figcaption><strong>The AI panel</strong>Describe what to build; it writes, runs and fixes it.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/35-studio-stats-live.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Studio Stats tab while the AI works: models, tokens, cost and steps"><figcaption><strong>Stats, live</strong>A team of models at work, with live tokens.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/35b-studio-stats-totals.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Studio Stats totals with tokens per model and the latest moves"><figcaption><strong>Stats, totals</strong>Tokens per model and what the work would have cost.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/36-studio-team.webp" width="200" height="444" loading="lazy" decoding="async" alt="Build together sheet for inviting people to an App Studio project"><figcaption><strong>Build together</strong>Invite friends by code or link to watch and suggest.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Terminals -->
+  <section class="section-tight" id="terminals" aria-labelledby="terminals-title">
+    <div class="shell">
+      <h2 id="terminals-title">Terminals and App Inspector</h2>
+      <div class="prose mt-s">
+        <p><strong>Terminals</strong> give you a real coding terminal on the device: Claude Code, Codex,
+          Gemini CLI, OpenCode and others in their full terminal UI, on a Debian layer the page sets up for
+          you. Wire a terminal to an agent so it works with that agent&rsquo;s key, pick a model per tool,
+          or open the <strong>free models chat</strong> with nothing to install.</p>
+        <p><strong>App Inspector</strong> takes an app on your phone, or any APK, apart: it decodes the
+          manifest, resources and code, shows the code as Java, lets you search, edit and ask Claude to
+          explain any file, and rebuilds a signed APK to your Downloads. It is for apps you made or are
+          allowed to analyze.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Terminals and App Inspector">
+        <figure class="shot"><img src="/assets/img/automa/37-terminals.webp" width="200" height="444" loading="lazy" decoding="async" alt="Terminals screen with a free models chat, Claude Code ready, Codex and Gemini CLI"><figcaption><strong>Terminals</strong>Claude Code, Codex and Gemini CLI on the device.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/38-app-inspector.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Inspector with an APK button and the list of apps on the phone"><figcaption><strong>App Inspector</strong>Decode an app, read it as Java, rebuild it.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Costs -->
+  <section class="section-tight" id="costs" aria-labelledby="costs-title">
+    <div class="shell">
+      <h2 id="costs-title">Costs, budgets and usage limits</h2>
+      <div class="prose mt-s">
+        <p>Every token is counted: agent runs, chats, App Studio replies and code suggestions land on Costs
+          <strong>by agent, by task and by month</strong>. The organization and each agent have a
+          <strong>budget</strong>, and a hard stop pauses spending at the limit. The <strong>usage
+          limits</strong> card shows how much of the free models&rsquo; monthly allowance is used and when
+          it renews, each free model&rsquo;s daily limit with a countdown, and Claude&rsquo;s session and
+          weekly limits when Claude Code is signed in. The free models card on Home and Costs shows what the
+          free work would have cost at paid prices.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Costs">
+        <figure class="shot"><img src="/assets/img/automa/39-costs.webp" width="200" height="444" loading="lazy" decoding="async" alt="Costs screen with free models saved and month-to-date filters"><figcaption><strong>Costs</strong>Every token counted, by agent, task and month.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/40-costs-usage-limits.webp" width="200" height="444" loading="lazy" decoding="async" alt="Usage limits card: monthly allowance for the free models and per-model availability"><figcaption><strong>Usage limits</strong>The free allowance and each model's daily limit.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search and audit -->
+  <section class="section-tight" id="audit" aria-labelledby="audit-title">
+    <div class="shell">
+      <h2 id="audit-title">Search, audit and the timeline</h2>
+      <div class="prose mt-s">
+        <p><strong>Search</strong> finds tasks, comments, plan documents, artifacts, agents and projects in
+          one place. <strong>Audit</strong> holds the log of everything that happened, who did it and when,
+          with the runs, costs and budgets behind it. The <strong>work timeline</strong> shows every
+          agent&rsquo;s runs side by side.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Search and audit">
+        <figure class="shot"><img src="/assets/img/automa/41-search.webp" width="200" height="444" loading="lazy" decoding="async" alt="Search screen: type to search organization memory"><figcaption><strong>Search</strong>Tasks, comments, plans, artifacts and agents in one search.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/43-audit.webp" width="200" height="444" loading="lazy" decoding="async" alt="Audit screen with activity filters for agents, users, actions and dates"><figcaption><strong>Audit</strong>Everything that happened, who did it and when.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/44-timeline.webp" width="200" height="444" loading="lazy" decoding="async" alt="Work timeline with runs, agents and run time"><figcaption><strong>Work timeline</strong>Every agent's runs side by side.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section class="section-tight" id="settings" aria-labelledby="settings-title">
+    <div class="shell">
+      <h2 id="settings-title">Settings and your profile</h2>
+      <div class="prose mt-s">
+        <p><strong>Organization settings:</strong> general (name, goal, logo, budget), members and access
+          (invites, roles, join requests), <strong>API keys</strong> &mdash; one place for the keys agents,
+          chats and App Studio run on, with a monthly spending limit &mdash; secrets, adapters,
+          environments, plugins and <strong>Experimental</strong> switches. The <strong>account
+          sheet</strong> shows your profile, your API balance, the tour, the dark theme and sign-out, and
+          <strong>About Automa</strong> keeps the full version history.</p>
+      </div>
+            <div class="shot-row mt-m" data-reveal role="group" aria-label="Settings">
+        <figure class="shot"><img src="/assets/img/automa/48-settings.webp" width="200" height="444" loading="lazy" decoding="async" alt="Organization settings for Yaad Bites, a family bakery in Kingston"><figcaption><strong>Settings</strong>Name, goal, logo, budget and governance.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/49-settings-api-keys.webp" width="200" height="444" loading="lazy" decoding="async" alt="API keys settings with a monthly spending limit and Add a key for Anthropic and OpenAI"><figcaption><strong>API keys</strong>One place for your keys, with a monthly limit.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/50-settings-experimental.webp" width="200" height="444" loading="lazy" decoding="async" alt="Experimental settings with Agent Chat switched on"><figcaption><strong>Experimental</strong>Opt into features still being evaluated.</figcaption></figure>
+        <figure class="shot"><img src="/assets/img/automa/52-account-sheet.webp" width="200" height="444" loading="lazy" decoding="async" alt="Account sheet with the board profile, balance and the Yaad Bites organization"><figcaption><strong>Account</strong>Your profile, balance and the organization sheet.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it is wired -->
+  <section class="section-tight" id="how" aria-labelledby="how-title">
+    <div class="shell">
+      <h2 id="how-title">How it is wired</h2>
+      <div class="prose mt-s">
         <p>Three parts, and it matters which one is where. The <strong>phone</strong> holds the app and
-          one shared folder. The <strong>server</strong> holds the agents, their tasks and their
+          one shared folder &mdash; the whole board UI ships inside the APK, so the layout is the same
+          whatever server it talks to. The <strong>server</strong> holds the agents, their tasks and their
           routines, and does the work. The <strong>connections</strong> are how the server reaches
-          services that are not yours to host — mail, code, docs, chat. Solid lines carry requests
-          outward; dashed lines are the three things that come back to you.</p>
+          services that are not yours to host. Solid lines carry work outward; dashed lines are the three
+          things that come back to you.</p>
       </div>
 
       <figure class="diagram mt-m" data-reveal>
@@ -326,8 +1096,8 @@
                aria-labelledby="au1-title au1-desc">
             <title id="au1-title">How Automa is wired: phone, agent server, and scoped connections</title>
             <desc id="au1-desc">On the left, the phone runs the Automa app and shares one folder. It
-              connects to an agent server on port 3100, which is either that same phone running under
-              Termux or a separate machine reachable over an HTTPS address. The server holds the
+              connects to an Automa server on port 3100, which is either that same phone running in
+              Termux or a computer or cloud machine. The server holds the
               agents, the task list and the routines, and reaches outward through per-agent scoped
               connections to services such as Gmail, GitHub, Notion, Slack and provider-hosted MCP
               endpoints. Three things flow back to the phone along dashed lines: approvals that need a
@@ -353,7 +1123,7 @@
             <rect class="dg-accent" x="16" y="128" width="3" height="150" rx="1.5"/>
             <text class="dg-tag"   x="36" y="152">Your phone</text>
             <text class="dg-title" x="36" y="174">Automa</text>
-            <text class="dg-sub"   x="36" y="194">Home &middot; Tasks &middot; + &middot; Files &middot; Inbox</text>
+            <text class="dg-sub"   x="36" y="194">Home &middot; Chats &middot; + &middot; Tasks &middot; Files</text>
             <text class="dg-sub"   x="36" y="212">one shared folder</text>
             <text class="dg-sub"   x="36" y="240">Sees what needs a human.</text>
             <text class="dg-sub"   x="36" y="256">Does not run the agents.</text>
@@ -364,11 +1134,11 @@
             <!-- server -->
             <rect class="dg-box-a" x="268" y="120" width="236" height="166" rx="12"/>
             <rect class="dg-accent" x="268" y="120" width="3" height="166" rx="1.5"/>
-            <text class="dg-tag"   x="288" y="144">Agent server</text>
+            <text class="dg-tag"   x="288" y="144">Automa server</text>
             <text class="dg-title" x="288" y="166">Port 3100</text>
             <text class="dg-sub"   x="288" y="188">Either:</text>
-            <text class="dg-sub"   x="288" y="206">&bull; this phone, under Termux</text>
-            <text class="dg-sub"   x="288" y="224">&bull; a machine on an HTTPS address</text>
+            <text class="dg-sub"   x="288" y="206">&bull; this phone, in Termux</text>
+            <text class="dg-sub"   x="288" y="224">&bull; a computer or cloud VM</text>
             <text class="dg-sub"   x="288" y="252">Holds the agents, the tasks</text>
             <text class="dg-sub"   x="288" y="268">and the routines.</text>
 
@@ -380,10 +1150,10 @@
             <rect class="dg-box" x="596" y="60" width="214" height="120" rx="11"/>
             <text class="dg-tag"   x="614" y="82">Agents</text>
             <text class="dg-title" x="614" y="104">Named roles</text>
-            <text class="dg-sub"   x="614" y="124">Ada &mdash; CEO</text>
-            <text class="dg-sub"   x="614" y="140">Grace &mdash; CTO</text>
-            <text class="dg-sub"   x="614" y="156">Linus &mdash; Engineer</text>
-            <text class="dg-sub"   x="614" y="172">Margaret &mdash; Designer</text>
+            <text class="dg-sub"   x="614" y="124">Moan &mdash; Jamaican assistant</text>
+            <text class="dg-sub"   x="614" y="140">Nova &mdash; Marketing lead</text>
+            <text class="dg-sub"   x="614" y="156">Pixel &mdash; Brand designer</text>
+            <text class="dg-sub"   x="614" y="172">free models or your own keys</text>
 
             <!-- tasks -->
             <rect class="dg-box" x="596" y="200" width="214" height="110" rx="11"/>
@@ -450,833 +1220,227 @@
           <span>The phone is the control surface, not the runtime</span>
         </div>
 
-        <figcaption>How Automa is wired. The app connects to an agent server on port 3100 — which may
-          be the phone itself under Termux. The server holds the agents and their work and reaches
+        <figcaption>How Automa is wired. The app connects to an Automa server on port 3100 — which may
+          be the phone itself, in Termux. The server holds the agents and their work and reaches
           outward through connections you scope per agent. Three things come back: approvals, file
           requests, and the inbox.</figcaption>
       </figure>
+    </div>
+  </section>
 
+  <!-- Termux -->
+  <section class="section-tight" id="termux" aria-labelledby="termux-title">
+    <div class="shell">
+      <h2 id="termux-title">Running Automa on the phone</h2>
+      <div class="prose mt-s">
+        <p>No computer needed. Install <strong>Termux</strong> from F-Droid, tap <strong>Run Automa on this
+          phone</strong> in the app, and paste the command Termux is given. The installer sets up Node.js
+          and PostgreSQL, the server and an <code>automa</code> command, then starts Automa on
+          <code>127.0.0.1:3100</code>, locked to the app. The first install downloads a few hundred
+          packages and takes 10 to 45 minutes; updates are much faster.</p>
+      </div>
       <div class="table-wrap mt-m" data-reveal>
         <table>
-          <caption class="visually-hidden">Where each part of Automa runs, and what it is responsible for</caption>
-          <thead>
-            <tr><th scope="col">Part</th><th scope="col">Where it runs</th><th scope="col">Responsible for</th><th scope="col">Keeps working if the phone sleeps</th></tr>
-          </thead>
+          <caption class="visually-hidden">Automa commands in Termux</caption>
+          <thead><tr><th scope="col">Command</th><th scope="col">What it does</th></tr></thead>
           <tbody>
-            <tr>
-              <th scope="row">Automa</th>
-              <td>The phone</td>
-              <td>Showing what needs a human; creating tasks; sending files</td>
-              <td>Not needed &mdash; it is only the control surface</td>
-            </tr>
-            <tr>
-              <th scope="row">Agent server</th>
-              <td>The phone under Termux, <em>or</em> a machine on an HTTPS address</td>
-              <td>Running the agents, the tasks and the routines</td>
-              <td>Only if the server is not the phone</td>
-            </tr>
-            <tr>
-              <th scope="row">Shared folder</th>
-              <td>The phone, always</td>
-              <td>The only files agents can ask for</td>
-              <td>Requests queue; the file goes when the phone is reachable</td>
-            </tr>
-            <tr>
-              <th scope="row">Connections</th>
-              <td>The provider, or a provider-hosted MCP server</td>
-              <td>Mail, code, docs, chat &mdash; scoped per agent</td>
-              <td>Yes</td>
-            </tr>
+            <tr><th scope="row"><code>automa run</code></th><td>Run in the foreground, restarting the server if it stops</td></tr>
+            <tr><th scope="row"><code>automa start</code> &middot; <code>stop</code> &middot; <code>status</code></th><td>Run in the background, stop it, check it</td></tr>
+            <tr><th scope="row"><code>automa update</code></th><td>Update the server; it backs up the database first</td></tr>
+            <tr><th scope="row"><code>automa backup</code> &middot; <code>restore</code></th><td>Save a database backup now, or put one back</td></tr>
+            <tr><th scope="row"><code>automa link</code></th><td>Hand the app key to the Automa app again</td></tr>
+            <tr><th scope="row"><code>automa adb link</code></th><td>Let agents drive the phone over adb: tap, type, screenshot</td></tr>
           </tbody>
         </table>
       </div>
-    </div>
-  </section>
-
-  <!-- The screens -->
-  <section class="section-tight" id="screens">
-    <div class="shell">
-      <h2>2. The app, screen by screen</h2>
-      <div class="prose">
-        <p>Eight screens, in the order you meet them. Every action sits in the bottom third where a
-          thumb reaches — <strong>Home, Tasks, a raised create button, Files, Inbox</strong> — and the
-          destructive ones undo rather than confirm.</p>
-      </div>
-
-      <div class="ph-grid mt-m" data-reveal>
-
-        <!-- ============ 1. Connect ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph1t ph1d">
-            <title id="ph1t">Automa: connect to your server</title>
-            <desc id="ph1d">A connect screen with a server address field reading 192.168.1.20 colon
-              3100, two choices below it — this phone under Termux, selected, or an HTTPS address —
-              a list of recently used addresses, and a Connect button.</desc>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <text class="ph-h" x="24" y="76">Connect</text>
-            <text class="ph-s" x="24" y="92">Point Automa at the server</text>
-            <text class="ph-s" x="24" y="104">running your company.</text>
-
-            <rect class="ph-card" x="20" y="118" width="260" height="48" rx="10"/>
-            <text class="ph-k" x="32" y="136">Server address</text>
-            <text class="ph-m" x="32" y="154">192.168.1.20:3100</text>
-
-            <rect class="ph-card-a" x="20" y="176" width="260" height="46" rx="10"/>
-            <circle class="ph-stroke" cx="38" cy="199" r="6.5"/>
-            <circle class="ph-accent" cx="38" cy="199" r="3.4"/>
-            <text class="ph-t" x="54" y="196">This phone (Termux)</text>
-            <text class="ph-s" x="54" y="210">The server runs here</text>
-
-            <rect class="ph-card" x="20" y="230" width="260" height="46" rx="10"/>
-            <circle class="ph-stroke" cx="38" cy="253" r="6.5"/>
-            <text class="ph-t" x="54" y="250">HTTPS address</text>
-            <text class="ph-s" x="54" y="264">A machine somewhere else</text>
-
-            <text class="ph-k" x="24" y="302">Recent</text>
-            <rect class="ph-card" x="20" y="312" width="260" height="36" rx="9"/>
-            <text class="ph-m" x="32" y="329">192.168.1.20:3100</text>
-            <text class="ph-s" x="32" y="341">2 minutes ago</text>
-            <rect class="ph-card" x="20" y="356" width="260" height="36" rx="9"/>
-            <text class="ph-m" x="32" y="373">10.0.0.14:3100</text>
-            <text class="ph-s" x="32" y="385">yesterday</text>
-            <rect class="ph-card" x="20" y="400" width="260" height="36" rx="9"/>
-            <text class="ph-m" x="32" y="417">nor.local:3100</text>
-            <text class="ph-s" x="32" y="429">last week</text>
-
-            <rect class="ph-accent" x="20" y="478" width="260" height="42" rx="21"/>
-            <text class="ph-btn-t" x="150" y="504">Connect</text>
-            <text class="ph-s ph-mid" x="150" y="538">Nothing is stored off the device.</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>Connect to your server</strong>Two ways in: the phone itself under
-            Termux, or a machine on an HTTPS address.</figcaption>
-        </figure>
-
-        <!-- ============ 2. Home ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph2t ph2d">
-            <title id="ph2t">Automa: home, what needs you</title>
-            <desc id="ph2d">A home screen headed Needs you, with four rows — inbox, approvals for
-              hires, budgets and plans, file requests where agents are waiting on a file, and agents,
-              who is working on what. Below is the agent roster showing Linus writing the Q4 product
-              roadmap, task NOR-3, finished five hours ago.</desc>
-            <defs><linearGradient id="au2g" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" class="ph-g0"/><stop offset="1" class="ph-g1"/></linearGradient></defs>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <text class="ph-h" x="24" y="76">Home</text>
-            <text class="ph-s" x="24" y="90">NOR &middot; 4 agents</text>
-            <path d="M266 58 c11 1 14 12 10 19 c-5 8 -18 9 -23 2 c-6 -8 -1 -22 13 -21z" fill="url(#au2g)"/>
-
-            <text class="ph-k" x="24" y="118">Needs you</text>
-
-            <rect class="ph-card" x="20" y="128" width="260" height="42" rx="10"/>
-            <text class="ph-t" x="34" y="146">Inbox</text>
-            <text class="ph-s" x="34" y="160">What finished, and what did not</text>
-            <circle class="ph-accent" cx="262" cy="149" r="9"/>
-            <text class="ph-btn-t" x="262" y="152" style="font-size:8.5px">3</text>
-
-            <rect class="ph-card-a" x="20" y="178" width="260" height="42" rx="10"/>
-            <rect class="ph-accent" x="20" y="178" width="3" height="42" rx="1.5"/>
-            <text class="ph-t" x="34" y="196">Approvals</text>
-            <text class="ph-s" x="34" y="210">Hires, budgets, plans</text>
-            <circle class="ph-accent" cx="262" cy="199" r="9"/>
-            <text class="ph-btn-t" x="262" y="202" style="font-size:8.5px">2</text>
-
-            <rect class="ph-card-a" x="20" y="228" width="260" height="42" rx="10"/>
-            <rect class="ph-accent" x="20" y="228" width="3" height="42" rx="1.5"/>
-            <text class="ph-t" x="34" y="246">File requests</text>
-            <text class="ph-s" x="34" y="260">Agents waiting on a file</text>
-            <circle class="ph-accent" cx="262" cy="249" r="9"/>
-            <text class="ph-btn-t" x="262" y="252" style="font-size:8.5px">1</text>
-
-            <rect class="ph-card" x="20" y="278" width="260" height="42" rx="10"/>
-            <text class="ph-t" x="34" y="296">Agents</text>
-            <text class="ph-s" x="34" y="310">Who is working on what</text>
-            <path class="ph-stroke" d="M258 293 l5 5 l-5 5"/>
-
-            <text class="ph-k" x="24" y="350">Agents</text>
-            <rect class="ph-card" x="20" y="360" width="260" height="76" rx="11"/>
-            <circle cx="44" cy="384" r="13" fill="url(#au2g)"/>
-            <text class="ph-t" x="66" y="381">Linus</text>
-            <text class="ph-s" x="66" y="394">Engineer &middot; Backend</text>
-            <path class="ph-hair" d="M32 404 H268"/>
-            <text class="ph-s" x="32" y="420">Write Q4 product roadmap</text>
-            <text class="ph-a" x="32" y="432">NOR-3</text>
-            <text class="ph-s ph-end" x="268" y="432">Finished 5h ago</text>
-
-            <rect class="ph-card" x="20" y="446" width="260" height="60" rx="11"/>
-            <circle cx="44" cy="470" r="13" fill="url(#au2g)"/>
-            <text class="ph-t" x="66" y="467">Ada</text>
-            <text class="ph-s" x="66" y="480">CEO</text>
-            <text class="ph-s" x="32" y="498">Waiting on your approval &middot; budget</text>
-
-            <path class="ph-hair" d="M9 542 H291"/>
-            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
-            <text class="ph-nav is-on" x="37" y="584">Home</text>
-            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
-            <text class="ph-nav" x="93" y="584">Tasks</text>
-            <circle class="ph-fab" cx="150" cy="558" r="17"/>
-            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
-            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
-            <text class="ph-nav" x="207" y="584">Files</text>
-            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
-            <text class="ph-nav" x="263" y="584">Inbox</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>Home: what needs you</strong>Four rows under one heading. Work an agent
-            can finish alone never appears here.</figcaption>
-        </figure>
-
-        <!-- ============ 3. Tasks ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph3t ph3d">
-            <title id="ph3t">Automa: tasks</title>
-            <desc id="ph3d">A task list with a search field and a list-or-board toggle. Tasks are
-              grouped by day under a Yesterday heading — fixing a login redirect bug on Android,
-              drafting the September expense report, collecting receipts, refreshing onboarding copy
-              and a weekly metrics digest — each with its owner and state.</desc>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <text class="ph-h" x="24" y="76">Tasks</text>
-
-            <rect class="ph-card" x="20" y="90" width="260" height="34" rx="17"/>
-            <circle class="ph-stroke" cx="40" cy="106" r="4.5"/>
-            <path class="ph-stroke" d="M43.5 109.5 l3 3"/>
-            <text class="ph-s" x="56" y="110">Search tasks, agents, tags</text>
-
-            <rect class="ph-card-a" x="20" y="134" width="130" height="26" rx="8"/>
-            <text class="ph-ghost-t" x="85" y="151">List</text>
-            <text class="ph-s ph-mid" x="215" y="151">Board</text>
-
-            <text class="ph-k" x="24" y="186">Yesterday</text>
-
-            <rect class="ph-card" x="20" y="196" width="260" height="46" rx="10"/>
-            <circle class="ph-accent" cx="34" cy="219" r="3.5"/>
-            <text class="ph-t" x="46" y="215">Fix login redirect bug</text>
-            <text class="ph-s" x="46" y="229">Linus &middot; In review</text>
-            <text class="ph-a ph-end" x="268" y="229">NOR-7</text>
-
-            <rect class="ph-card" x="20" y="250" width="260" height="46" rx="10"/>
-            <circle class="ph-stroke" cx="34" cy="273" r="3.5"/>
-            <text class="ph-t" x="46" y="269">Draft expense report</text>
-            <text class="ph-s" x="46" y="283">Ada &middot; Todo</text>
-            <text class="ph-a ph-end" x="268" y="283">NOR-8</text>
-
-            <rect class="ph-card-a" x="20" y="304" width="260" height="46" rx="10"/>
-            <rect class="ph-accent" x="20" y="304" width="3" height="46" rx="1.5"/>
-            <text class="ph-t" x="46" y="323">Collect September receipts</text>
-            <text class="ph-s" x="46" y="337">Waiting on a file from you</text>
-            <text class="ph-a ph-end" x="268" y="337">NOR-9</text>
-
-            <rect class="ph-card" x="20" y="358" width="260" height="46" rx="10"/>
-            <circle class="ph-stroke" cx="34" cy="381" r="3.5"/>
-            <text class="ph-t" x="46" y="377">Refresh onboarding copy</text>
-            <text class="ph-s" x="46" y="391">Margaret &middot; Done</text>
-            <text class="ph-a ph-end" x="268" y="391">NOR-10</text>
-
-            <rect class="ph-card" x="20" y="412" width="260" height="46" rx="10"/>
-            <circle class="ph-stroke" cx="34" cy="435" r="3.5"/>
-            <text class="ph-t" x="46" y="431">Weekly metrics digest</text>
-            <text class="ph-s" x="46" y="445">Routine &middot; Auto mode</text>
-            <text class="ph-a ph-end" x="268" y="445">NOR-11</text>
-
-            <text class="ph-s ph-mid" x="150" y="490">Swipe a row to move it. Undo, not confirm.</text>
-
-            <path class="ph-hair" d="M9 542 H291"/>
-            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
-            <text class="ph-nav" x="37" y="584">Home</text>
-            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
-            <text class="ph-nav is-on" x="93" y="584">Tasks</text>
-            <circle class="ph-fab" cx="150" cy="558" r="17"/>
-            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
-            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
-            <text class="ph-nav" x="207" y="584">Files</text>
-            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
-            <text class="ph-nav" x="263" y="584">Inbox</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>Tasks</strong>Grouped by day. Every row carries its owner, its state and
-            its tag — enough to answer &ldquo;where is that?&rdquo; without opening it.</figcaption>
-        </figure>
-
-        <!-- ============ 4. Connections ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph4t ph4d">
-            <title id="ph4t">Automa: connections</title>
-            <desc id="ph4d">A connections screen explaining that you choose which agents get access,
-              which accounts they use and which actions they can take. Rows list Gmail, GitHub,
-              Notion, Slack and Airtable, the last marked as a provider-hosted MCP server, each
-              showing how many agents hold it and at what permission.</desc>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <text class="ph-h" x="24" y="76">Connections</text>
-            <text class="ph-s" x="24" y="94">Give your agents the access they</text>
-            <text class="ph-s" x="24" y="106">need — and only that. Choose which</text>
-            <text class="ph-s" x="24" y="118">agents, which account, which actions.</text>
-
-            <rect class="ph-card" x="20" y="134" width="260" height="46" rx="10"/>
-            <rect class="ph-card-a" x="32" y="146" width="22" height="22" rx="6"/>
-            <text class="ph-a" x="39" y="161">G</text>
-            <text class="ph-t" x="64" y="154">Gmail</text>
-            <text class="ph-s" x="64" y="168">1 agent &middot; send &amp; read</text>
-            <text class="ph-a ph-end" x="268" y="161">Connected</text>
-
-            <rect class="ph-card" x="20" y="188" width="260" height="46" rx="10"/>
-            <rect class="ph-card-a" x="32" y="200" width="22" height="22" rx="6"/>
-            <text class="ph-a" x="39" y="215">GH</text>
-            <text class="ph-t" x="64" y="208">GitHub</text>
-            <text class="ph-s" x="64" y="222">2 agents &middot; write on one repo</text>
-            <text class="ph-a ph-end" x="268" y="215">Connected</text>
-
-            <rect class="ph-card" x="20" y="242" width="260" height="46" rx="10"/>
-            <rect class="ph-card-a" x="32" y="254" width="22" height="22" rx="6"/>
-            <text class="ph-a" x="39" y="269">N</text>
-            <text class="ph-t" x="64" y="262">Notion</text>
-            <text class="ph-s" x="64" y="276">1 agent &middot; read only</text>
-            <text class="ph-a ph-end" x="268" y="269">Connected</text>
-
-            <rect class="ph-card" x="20" y="296" width="260" height="46" rx="10"/>
-            <rect class="ph-card-a" x="32" y="308" width="22" height="22" rx="6"/>
-            <text class="ph-a" x="39" y="323">S</text>
-            <text class="ph-t" x="64" y="316">Slack</text>
-            <text class="ph-s" x="64" y="330">No agents yet</text>
-            <text class="ph-s ph-end" x="268" y="323">Connect</text>
-
-            <rect class="ph-card-a" x="20" y="350" width="260" height="58" rx="10"/>
-            <rect class="ph-accent" x="20" y="350" width="3" height="58" rx="1.5"/>
-            <rect class="ph-card" x="32" y="362" width="22" height="22" rx="6"/>
-            <text class="ph-a" x="39" y="377">A</text>
-            <text class="ph-t" x="64" y="370">Airtable</text>
-            <text class="ph-s" x="64" y="384">1 agent &middot; read &amp; append rows</text>
-            <text class="ph-k" x="32" y="400">Provider-hosted MCP</text>
-            <text class="ph-a ph-end" x="268" y="400">Connected</text>
-
-            <rect class="ph-dash" x="20" y="424" width="260" height="58" rx="10"/>
-            <text class="ph-k" x="32" y="442">Scope, per connection</text>
-            <text class="ph-s" x="32" y="459">Which agents &middot; which account</text>
-            <text class="ph-s" x="32" y="473">&middot; which actions. Not one switch.</text>
-
-            <path class="ph-hair" d="M9 542 H291"/>
-            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
-            <text class="ph-nav" x="37" y="584">Home</text>
-            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
-            <text class="ph-nav" x="93" y="584">Tasks</text>
-            <circle class="ph-fab" cx="150" cy="558" r="17"/>
-            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
-            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
-            <text class="ph-nav" x="207" y="584">Files</text>
-            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
-            <text class="ph-nav" x="263" y="584">Inbox</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>Connections</strong>Access is three choices, not one switch: which
-            agents, which account, which actions.</figcaption>
-        </figure>
-
-        <!-- ============ 5. New task ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph5t ph5d">
-            <title id="ph5t">Automa: the new task sheet</title>
-            <desc id="ph5d">A sheet slid up over the task list, headed NOR then New task. A text field
-              reads: collect receipts for the September expense report. Below it are fields for which
-              agent it is for and which company it is in, three chips — Todo, Upload and Auto mode —
-              and two buttons, Discard draft and Create task.</desc>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <!-- dimmed list behind -->
-            <rect class="ph-dim" x="24" y="66" width="70" height="9" rx="4" style="opacity:.28"/>
-            <rect class="ph-dim" x="20" y="88" width="260" height="30" rx="9" style="opacity:.16"/>
-            <rect class="ph-dim" x="20" y="126" width="260" height="30" rx="9" style="opacity:.16"/>
-            <rect class="ph-dim" x="20" y="164" width="260" height="30" rx="9" style="opacity:.16"/>
-
-            <!-- sheet -->
-            <path class="ph-card-a" d="M9 234 a24 24 0 0 1 24 -24 h234 a24 24 0 0 1 24 24 v376 h-282z"/>
-            <rect class="ph-dim" x="132" y="220" width="36" height="4" rx="2"/>
-            <text class="ph-k" x="32" y="250">NOR &rsaquo; New task</text>
-
-            <rect class="ph-card" x="24" y="262" width="252" height="66" rx="10"/>
-            <text class="ph-t" x="36" y="286">Collect receipts for the</text>
-            <text class="ph-t" x="36" y="302">September expense report</text>
-            <rect class="ph-accent" x="36" y="310" width="1.4" height="11"/>
-
-            <rect class="ph-card" x="24" y="340" width="122" height="44" rx="10"/>
-            <text class="ph-k" x="36" y="358">For</text>
-            <text class="ph-t" x="36" y="374">Ada</text>
-            <rect class="ph-card" x="154" y="340" width="122" height="44" rx="10"/>
-            <text class="ph-k" x="166" y="358">In</text>
-            <text class="ph-t" x="166" y="374">NOR</text>
-
-            <rect class="ph-card" x="24" y="398" width="58" height="26" rx="13"/>
-            <text class="ph-ghost-t" x="53" y="415">Todo</text>
-            <rect class="ph-card" x="90" y="398" width="66" height="26" rx="13"/>
-            <text class="ph-ghost-t" x="123" y="415">Upload</text>
-            <rect class="ph-card-a" x="164" y="398" width="88" height="26" rx="13"/>
-            <rect class="ph-accent" x="176" y="408" width="6" height="6" rx="3"/>
-            <text class="ph-ghost-t" x="215" y="415">Auto mode</text>
-
-            <text class="ph-s" x="24" y="448">Auto mode lets the agent pick its own</text>
-            <text class="ph-s" x="24" y="460">next step. You still hold the approvals.</text>
-
-            <rect class="ph-card" x="24" y="482" width="118" height="42" rx="21"/>
-            <text class="ph-ghost-t" x="83" y="508">Discard draft</text>
-            <rect class="ph-accent" x="158" y="482" width="118" height="42" rx="21"/>
-            <text class="ph-btn-t" x="217" y="508">Create task</text>
-
-            <text class="ph-k ph-mid" x="150" y="556">Both buttons in the thumb zone</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>New task</strong>One sheet, raised by the centre button. The two
-            decisions sit where the thumb already is.</figcaption>
-        </figure>
-
-        <!-- ============ 6. Files ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph6t ph6d">
-            <title id="ph6t">Automa: Device Files</title>
-            <desc id="ph6d">A files screen showing this device, a Pixel 8, connected so agents can
-              reach it. It is sharing a Documents folder of four files, with an auto-send requested
-              files switch turned on, and buttons to change the folder or stop sharing. Tabs read
-              Requests, Files, and Devices, and two pending requests are listed with a Send action.</desc>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <text class="ph-h" x="24" y="76">Files</text>
-
-            <rect class="ph-card-a" x="20" y="90" width="260" height="50" rx="10"/>
-            <rect class="ph-accent" x="20" y="90" width="3" height="50" rx="1.5"/>
-            <circle class="ph-accent" cx="38" cy="112" r="4"/>
-            <text class="ph-t" x="52" y="110">Pixel 8</text>
-            <text class="ph-s" x="52" y="124">Connected &middot; agents can reach</text>
-            <text class="ph-s" x="52" y="134">this phone</text>
-
-            <rect class="ph-card" x="20" y="150" width="260" height="88" rx="11"/>
-            <text class="ph-k" x="32" y="168">Sharing</text>
-            <text class="ph-t" x="32" y="185">Documents</text>
-            <text class="ph-s" x="32" y="198">4 files &middot; nothing outside it is visible</text>
-            <path class="ph-hair" d="M32 210 H268"/>
-            <text class="ph-t" x="32" y="228">Auto-send requested files</text>
-            <rect class="ph-accent" x="238" y="216" width="28" height="16" rx="8"/>
-            <circle cx="258" cy="224" r="6" fill="var(--paper)"/>
-
-            <rect class="ph-card" x="20" y="248" width="124" height="34" rx="17"/>
-            <text class="ph-ghost-t" x="82" y="269">Change folder</text>
-            <rect class="ph-card" x="156" y="248" width="124" height="34" rx="17"/>
-            <text class="ph-ghost-t" x="218" y="269">Stop sharing</text>
-
-            <text class="ph-ghost-t" x="58" y="312">Requests</text>
-            <rect class="ph-accent" x="26" y="320" width="64" height="2" rx="1"/>
-            <text class="ph-s ph-mid" x="150" y="312">Files (3)</text>
-            <text class="ph-s ph-mid" x="240" y="312">Devices (1)</text>
-            <path class="ph-hair" d="M20 321 H280"/>
-
-            <rect class="ph-card-a" x="20" y="334" width="260" height="48" rx="10"/>
-            <rect class="ph-accent" x="20" y="334" width="3" height="48" rx="1.5"/>
-            <text class="ph-t" x="34" y="353">Linus wants invoice-sept.pdf</text>
-            <text class="ph-s" x="34" y="367">2 minutes ago &middot; NOR-7</text>
-            <text class="ph-a ph-end" x="268" y="367">Send</text>
-
-            <rect class="ph-card" x="20" y="392" width="260" height="48" rx="10"/>
-            <text class="ph-t" x="34" y="411">Ada wants receipts-09.zip</text>
-            <text class="ph-s" x="34" y="425">Sent automatically &middot; 1h ago</text>
-            <text class="ph-s ph-end" x="268" y="425">Undo</text>
-
-            <rect class="ph-accent" x="20" y="464" width="260" height="42" rx="21"/>
-            <text class="ph-btn-t" x="150" y="490">Send a file</text>
-
-            <path class="ph-hair" d="M9 542 H291"/>
-            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
-            <text class="ph-nav" x="37" y="584">Home</text>
-            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
-            <text class="ph-nav" x="93" y="584">Tasks</text>
-            <circle class="ph-fab" cx="150" cy="558" r="17"/>
-            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
-            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
-            <text class="ph-nav is-on" x="207" y="584">Files</text>
-            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
-            <text class="ph-nav" x="263" y="584">Inbox</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>Files: agents pull files</strong>One shared folder, a request queue, and
-            an auto-send switch that takes you out of the loop.</figcaption>
-        </figure>
-
-        <!-- ============ 7. Routines ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph7t ph7d">
-            <title id="ph7t">Automa: routines, and the thumb zone</title>
-            <desc id="ph7d">A routines screen describing routines as recurring work definitions that
-              materialise into auditable execution tasks. The empty state reads: no routines yet, a
-              routine starts a task on a schedule, like a weekly report or a daily inbox sweep, with
-              a create routine button. The raised centre button of the bottom bar is ringed to show
-              the thumb zone.</desc>
-            <defs><linearGradient id="au7g" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" class="ph-g0"/><stop offset="1" class="ph-g1"/></linearGradient></defs>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <text class="ph-h" x="24" y="76">Routines</text>
-            <text class="ph-s" x="24" y="94">Recurring work definitions that</text>
-            <text class="ph-s" x="24" y="106">materialize into auditable</text>
-            <text class="ph-s" x="24" y="118">execution tasks.</text>
-
-            <rect class="ph-dash" x="20" y="140" width="260" height="184" rx="14"/>
-            <path d="M150 172 c19 0 26 16 22 29 c-4 14 -23 20 -34 12 c-13 -9 -12 -33 3 -40 c3 -1 6 -1 9 -1z" fill="url(#au7g)"/>
-            <text class="ph-h ph-mid" x="150" y="246">No routines yet</text>
-            <text class="ph-s ph-mid" x="150" y="266">A routine starts a task on a</text>
-            <text class="ph-s ph-mid" x="150" y="280">schedule, like a weekly report</text>
-            <text class="ph-s ph-mid" x="150" y="294">or a daily inbox sweep.</text>
-
-            <rect class="ph-accent" x="66" y="344" width="168" height="40" rx="20"/>
-            <path class="ph-fab-plus" d="M104 364 h12 M110 358 v12"/>
-            <text class="ph-btn-t" x="162" y="369">Create routine</text>
-
-            <text class="ph-k" x="24" y="420">Once it fires</text>
-            <rect class="ph-card" x="20" y="430" width="260" height="42" rx="10"/>
-            <text class="ph-t" x="34" y="448">It creates an ordinary task</text>
-            <text class="ph-s" x="34" y="462">Same list, same owner, same audit trail</text>
-
-            <circle class="ph-dash" cx="150" cy="558" r="25"/>
-            <text class="ph-k ph-mid" x="150" y="524">Thumb zone</text>
-
-            <path class="ph-hair" d="M9 542 H291"/>
-            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
-            <text class="ph-nav" x="37" y="584">Home</text>
-            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
-            <text class="ph-nav" x="93" y="584">Tasks</text>
-            <circle class="ph-fab" cx="150" cy="558" r="17"/>
-            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
-            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
-            <text class="ph-nav" x="207" y="584">Files</text>
-            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
-            <text class="ph-nav" x="263" y="584">Inbox</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>Create in the thumb zone</strong>Routines define recurring work. Every
-            create action lives on the raised centre button.</figcaption>
-        </figure>
-
-        <!-- ============ 8. Agents ============ -->
-        <figure class="ph-fig">
-          <svg viewBox="0 0 300 620" role="img" aria-labelledby="ph8t ph8d">
-            <title id="ph8t">Automa: agents</title>
-            <desc id="ph8d">An agents screen listing four agents in the company — Ada as chief
-              executive, Grace as chief technology officer, Linus as a backend engineer and Margaret
-              as a product designer — each with a Leave action, and a New agent button below.</desc>
-            <defs><linearGradient id="au8g" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" class="ph-g0"/><stop offset="1" class="ph-g1"/></linearGradient></defs>
-            <rect class="ph-body" x="1.5" y="1.5" width="297" height="617" rx="32"/>
-            <rect class="ph-screen" x="9" y="10" width="282" height="600" rx="24"/>
-            <rect class="ph-dim" x="128" y="20" width="44" height="5" rx="2.5"/>
-            <text class="ph-k" x="24" y="46">9:41</text>
-            <rect class="ph-dim" x="258" y="39" width="18" height="8" rx="2"/>
-
-            <text class="ph-h" x="24" y="76">Agents</text>
-            <text class="ph-s" x="24" y="92">4 in NOR &middot; roles, not personalities</text>
-
-            <rect class="ph-card" x="20" y="108" width="260" height="62" rx="11"/>
-            <circle cx="46" cy="139" r="14" fill="url(#au8g)"/>
-            <text class="ph-t" x="70" y="134">Ada</text>
-            <text class="ph-s" x="70" y="148">CEO</text>
-            <text class="ph-s" x="70" y="161">Sets direction, asks for approvals</text>
-            <rect class="ph-card-a" x="224" y="128" width="46" height="22" rx="11"/>
-            <text class="ph-s ph-mid" x="247" y="143">Leave</text>
-
-            <rect class="ph-card" x="20" y="180" width="260" height="62" rx="11"/>
-            <circle cx="46" cy="211" r="14" fill="url(#au8g)"/>
-            <text class="ph-t" x="70" y="206">Grace</text>
-            <text class="ph-s" x="70" y="220">CTO</text>
-            <text class="ph-s" x="70" y="233">Owns the technical plan</text>
-            <rect class="ph-card-a" x="224" y="200" width="46" height="22" rx="11"/>
-            <text class="ph-s ph-mid" x="247" y="215">Leave</text>
-
-            <rect class="ph-card" x="20" y="252" width="260" height="62" rx="11"/>
-            <circle cx="46" cy="283" r="14" fill="url(#au8g)"/>
-            <text class="ph-t" x="70" y="278">Linus</text>
-            <text class="ph-s" x="70" y="292">Engineer &middot; Backend</text>
-            <text class="ph-s" x="70" y="305">Holds write access on one repo</text>
-            <rect class="ph-card-a" x="224" y="272" width="46" height="22" rx="11"/>
-            <text class="ph-s ph-mid" x="247" y="287">Leave</text>
-
-            <rect class="ph-card" x="20" y="324" width="260" height="62" rx="11"/>
-            <circle cx="46" cy="355" r="14" fill="url(#au8g)"/>
-            <text class="ph-t" x="70" y="350">Margaret</text>
-            <text class="ph-s" x="70" y="364">Designer &middot; Product Designer</text>
-            <text class="ph-s" x="70" y="377">Reads the docs space, cannot edit</text>
-            <rect class="ph-card-a" x="224" y="344" width="46" height="22" rx="11"/>
-            <text class="ph-s ph-mid" x="247" y="359">Leave</text>
-
-            <rect class="ph-accent" x="76" y="408" width="148" height="40" rx="20"/>
-            <path class="ph-fab-plus" d="M106 428 h12 M112 422 v12"/>
-            <text class="ph-btn-t" x="166" y="433">New agent</text>
-
-            <text class="ph-s ph-mid" x="150" y="482">Leaving an agent is undoable,</text>
-            <text class="ph-s ph-mid" x="150" y="496">not confirmable.</text>
-
-            <path class="ph-hair" d="M9 542 H291"/>
-            <path class="ph-stroke" d="M32.5 566 l4.5-4.5 4.5 4.5 M34 565 v6 h6 v-6"/>
-            <text class="ph-nav is-on" x="37" y="584">Home</text>
-            <path class="ph-stroke" d="M88 562 h10 M88 566.5 h10 M88 571 h6.5"/>
-            <text class="ph-nav" x="93" y="584">Tasks</text>
-            <circle class="ph-fab" cx="150" cy="558" r="17"/>
-            <path class="ph-fab-plus" d="M150 551 v14 M143 558 h14"/>
-            <path class="ph-stroke" d="M202 562 h4.5 l1.5 2.2 h4.5 v7 h-10.5z"/>
-            <text class="ph-nav" x="207" y="584">Files</text>
-            <path class="ph-stroke" d="M258 562.5 h10.5 v8.5 h-10.5z M258 566.5 h3 l1.2 2 h1.5 l1.2-2 h3.6"/>
-            <text class="ph-nav" x="263" y="584">Inbox</text>
-            <rect class="ph-dim" x="118" y="596" width="64" height="3" rx="1.5"/>
-          </svg>
-          <figcaption><strong>Agents</strong>Four roles, each with its own scoped access. Add one, or
-            let one leave.</figcaption>
-        </figure>
-      </div>
-
-      <p class="mt-m" style="font-size:.82rem;color:var(--faint)">The screens above are drawn from the
-        build, not photographed from it — they are vector redraws, so they stay sharp and follow the
-        site&rsquo;s light and dark themes. Names, addresses and task titles are examples.</p>
-    </div>
-  </section>
-
-  <!-- Device Files -->
-  <section class="section-tight" id="device-files">
-    <div class="shell">
-      <h2>3. Device Files — the part worth reading twice</h2>
-      <div class="prose">
-        <p>Most agent tooling breaks at the same place: the agent needs a file, and the file is on your
-          phone. Automa makes that an explicit channel rather than a dead end. You share
-          <strong>one folder</strong>. The phone then shows up to the agents as a connected device, and
-          when an agent needs something it posts a request — which lands on the Files tab and on the
-          home screen under <em>Needs you</em>.</p>
-        <p>Nothing outside the folder you chose is visible. That is the boundary, and it is the only
-          one, so it is worth choosing narrowly.</p>
-      </div>
-
-      <div class="callout mt-m" data-reveal>
-        <p><strong>Auto-send removes you from the loop. That is the feature and that is the
-          risk.</strong> With the switch off, every file leaves the phone because you tapped
-          <em>Send</em>. With it on, a file an agent asks for goes without asking you — so anything
-          inside the shared folder can leave the device without a decision at the moment it
-          happens.</p>
-        <p>Share a folder that exists for this purpose, not your whole Documents tree, and leave
-          auto-send off until the folder is one you would be comfortable handing over wholesale. An
-          agent that can ask for a file can ask for any file in there.</p>
-      </div>
-
-      <div class="table-wrap mt-m" data-reveal>
-        <table>
-          <caption class="visually-hidden">What changes when auto-send is on or off</caption>
-          <thead>
-            <tr><th scope="col">&nbsp;</th><th scope="col">Auto-send off</th><th scope="col">Auto-send on</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">A file leaves when</th>
-              <td>You tap <em>Send</em> on the request</td>
-              <td>The agent asks for it</td>
-            </tr>
-            <tr>
-              <th scope="row">You find out</th>
-              <td>Before &mdash; it is a request</td>
-              <td>After &mdash; it is a log line, with <em>Undo</em></td>
-            </tr>
-            <tr>
-              <th scope="row">Agent is blocked</th>
-              <td>Until you look at your phone</td>
-              <td>Not at all</td>
-            </tr>
-            <tr>
-              <th scope="row">Reasonable when</th>
-              <td>Always</td>
-              <td>The shared folder holds nothing you would mind sending</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="prose mt-m">
+        <p>The app starts Automa for you when it isn&rsquo;t running and shows <strong>Automa is
+          starting</strong> over your page while the server comes up. Backups are made every hour while
+          Automa runs and before every update, and a restore never loses the database. Set Termux&rsquo;s
+          battery use to <strong>Unrestricted</strong>; with Termux:Boot, Automa starts when the phone
+          boots.</p>
       </div>
     </div>
   </section>
 
-  <!-- Tasks and routines -->
-  <section class="section-tight" id="work">
+  <!-- Security -->
+  <section class="section-tight" id="security" aria-labelledby="security-title">
     <div class="shell">
-      <h2>4. Tasks, routines and approvals</h2>
-      <div class="prose">
-        <p>Three objects, kept deliberately separate.</p>
-        <ul>
-          <li><strong>A task</strong> is one unit of work with one owner and one state. It carries a
-            tag like <code>NOR-7</code>, an agent, and where it has got to. Created by you from the
-            centre button, or by a routine, or by an agent that decided it needed one.</li>
-          <li><strong>A routine</strong> is a recurring <em>definition</em>, not the work. When it
-            fires it materialises an ordinary execution task — same list, same owner, same audit
-            trail. A weekly report is a routine; each Monday&rsquo;s report is a task.</li>
-          <li><strong>An approval</strong> is a task that has stopped and is waiting on a human.
-            Hires, budgets, plans. Nothing proceeds past one until you answer it, which is the point:
-            the phone is where that answer is cheap to give.</li>
-        </ul>
-        <p><strong>Auto mode</strong> sits on a task, not on the company. A task in auto mode lets its
-          agent choose its own next step; the approvals it runs into still come to you. There is no
-          global switch that turns supervision off.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Design -->
-  <section class="section-tight" id="design">
-    <div class="shell">
-      <h2>5. Built for one hand</h2>
-      <div class="prose">
-        <p>The interface rules are short, and they are the reason the app feels different from a
-          dashboard shrunk to phone width.</p>
-      </div>
-
+      <h2 id="security-title">Security and privacy</h2>
       <ul class="fact-list mt-m" data-reveal>
-        <li><strong>Every action lives in the thumb zone.</strong> The five-slot bottom bar — Home,
-          Tasks, a raised create button, Files, Inbox — and both buttons of every sheet sit in the
-          bottom third of the screen.</li>
-        <li><strong>One create button.</strong> Tasks, routines and agents are all made from the same
-          raised centre control, so there is never a hunt for the right plus.</li>
-        <li><strong>Undo, not confirm.</strong> Destructive actions happen and offer a way back,
-          rather than stopping to ask. Leaving an agent, sending a file and moving a task all work
-          this way.</li>
-        <li><strong>Haptics carry the state change.</strong> A send, an approval and an undo each feel
-          different, so you do not have to read a toast to know what happened.</li>
-        <li><strong>One mascot, many moods.</strong> A single gradient character covers empty states
-          and confirmations instead of a set of unrelated illustrations.</li>
-        <li><strong>The home screen is a filter, not a summary.</strong> It answers one question —
-          what needs you — and leaves everything else to the tabs.</li>
+        <li><strong>Your data stays with you.</strong> Organizations, tasks, chats and files live on your
+          own Automa server. The app talks to the server you connect it to, and to Google only for sign-in
+          and push notifications when those are set up. Free-model requests go from your server to the
+          free AI service Automa uses.</li>
+        <li><strong>Locked to the app.</strong> On a phone, Automa answers only the Automa app, with a key
+          the installer makes; the app proves the server holds that key before ever sending it, and never
+          sends it to another program on the phone.</li>
+        <li><strong>Agents see only what they should.</strong> Agents and terminals never see the
+          server&rsquo;s database password or sign-in secret, every organization&rsquo;s data is kept
+          separate, and keys saved in App Studio are encrypted on your server.</li>
+        <li><strong>Sandboxed previews.</strong> App Studio previews can&rsquo;t act as you or reach the
+          rest of Automa, and free agents&rsquo; web tools never reach private or local addresses.</li>
+        <li><strong>Governed by you.</strong> Hires, budgets and plans wait for your approval; budgets stop
+          spending; invites can&rsquo;t give more than the person who made them has.</li>
+        <li><strong>Hard to tamper with.</strong> Release builds are signed and obfuscated, and signing keys
+          never ship in the APK.</li>
       </ul>
     </div>
   </section>
 
-  <!-- What it is not -->
-  <section class="section-tight" id="not">
+  <!-- Download -->
+  <section class="section-tight" id="download" aria-labelledby="download-title">
     <div class="shell">
-      <h2>6. What Automa is not</h2>
-
-      <div class="callout" data-reveal>
-        <p><strong>It is not the agents, and it is not a model.</strong> Automa does not contain an
-          AI. It talks to a server that runs the agents; if that server is off, the app has nothing to
-          show. Whether the agents are any good is a question about the server and the models behind
-          it, not about this app.</p>
-        <p><strong>It is not a claim that this replaces a company.</strong> The words &ldquo;CEO&rdquo;
-          and &ldquo;CTO&rdquo; in the app are role labels that decide what an agent may touch. They
-          are scoping, not seniority.</p>
+      <h2 id="download-title">Download and install</h2>
+      <div class="prose mt-s">
+        <p><strong>You need</strong> Android 8.0 or newer, about 100 MB of storage, and internet for the
+          AI features.</p>
       </div>
-
-      <h3 class="mt-m">Current limits, stated plainly</h3>
-      <div class="prose">
-        <ul>
-          <li><strong>Android only.</strong> There is no iOS build and no desktop build.</li>
-          <li><strong>No public download link on this page yet.</strong> This page describes the app;
-            it is not a store listing.</li>
-          <li><strong>The server is yours to run.</strong> Automa does not host anything for you — you
-            point it at an address, on this phone under Termux or on a machine over HTTPS.</li>
-          <li><strong>If the server is the phone, the company sleeps when the phone does.</strong>
-            Work carries on overnight only if the server is somewhere else.</li>
-          <li><strong>One shared folder, not a file browser.</strong> Agents see the folder you chose
-            and nothing else — which is the safety property, and also the limitation.</li>
-          <li><strong>No published benchmarks or reliability numbers.</strong> Nothing on this page is
-            a performance claim, because none have been measured.</li>
-        </ul>
+      <ol class="fact-list is-steps mt-m" data-reveal>
+        <li><strong>Get the APK</strong>, <code>Automa-1.9.7.apk</code>, from the release zip.</li>
+        <li><strong>Copy it to the phone and open it.</strong> If Android asks, allow <em>Install unknown
+          apps</em> for the app you opened it with.</li>
+        <li><strong>Tap Install</strong>, or Update. Every release from 1.8.2 on is signed with the same
+          key, so a new version installs over the old one and keeps your sign-in, settings and data.</li>
+        <li><strong>If your server runs on the phone</strong>, run <code>automa update</code> in Termux
+          after updating the app so the server matches it.</li>
+      </ol>
+      <div class="callout mt-m" data-reveal>
+        <p><strong>Coming soon on APKPure.</strong> Automa will be listed on APKPure with the same signed
+          build, so updates arrive on their own. Until then the release zip is the download &mdash; email
+          <a href="mailto:lkk89002@gmail.com">lkk89002@gmail.com</a> or use the
+          <a href="/contact/">contact page</a> to get it. There is no Automa cloud account to create,
+          ever.</p>
       </div>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section-tight" id="faq">
+  <!-- What's new -->
+  <section class="section-tight" id="whats-new" aria-labelledby="new-title">
     <div class="shell">
-      <h2>7. Questions</h2>
+      <h2 id="new-title">What&rsquo;s new</h2>
+      <div class="prose mt-s">
+        <p><strong>1.9.7</strong>, 3 November 2026. Coming back to the app stays on your page: your
+          phone&rsquo;s Automa is checked a few times before the connect screen, &ldquo;Automa is
+          starting&rdquo; shows over the page while it starts, a connect request from Termux keeps the open
+          board, and the page you were on comes back after Android ended the app in the background.
+          Deleting a chat while the AI is replying stops the reply at once and never waits more than ten
+          seconds.</p>
+      </div>
+      <div class="table-wrap mt-m" data-reveal>
+        <table>
+          <caption class="visually-hidden">Automa release history</caption>
+          <thead><tr><th scope="col">Version</th><th scope="col">Date</th><th scope="col">Highlights</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1.9.7</th><td>3 Nov 2026</td><td>Stays on your page when you come back; deleting a chat stops a reply at once</td></tr>
+            <tr><th scope="row">1.9.6</th><td>2 Nov 2026</td><td>A full audit of 16 areas with every confirmed finding fixed: the app proves the server holds its key, agents never see server secrets, connectors sign in inside the app, agent budgets enforced</td></tr>
+            <tr><th scope="row">1.9.5</th><td>30 Oct 2026</td><td>Notifications when a reply or App Studio job finishes while you&rsquo;re away; live Stats tab; the AI looks at the page like you do</td></tr>
+            <tr><th scope="row">1.9.4</th><td>30 Oct 2026</td><td>App Studio teams with a shared team chat and per-model token shares</td></tr>
+            <tr><th scope="row">1.9.3</th><td>30 Oct 2026</td><td>A growing pool spreads free-model requests, so many people asking at once all get answers</td></tr>
+            <tr><th scope="row">1.9.2</th><td>29 Oct 2026</td><td>Server updates on the phone switch over only when complete; a failed update leaves Automa running</td></tr>
+            <tr><th scope="row">1.9.1</th><td>28 Oct 2026</td><td>Usage limits on Costs; failed replies say why; Moan&rsquo;s facts brought up to date</td></tr>
+            <tr><th scope="row">1.9.0</th><td>28 Oct 2026</td><td>The Que engine under every free-model call; App Studio with no key</td></tr>
+            <tr><th scope="row">1.8.8</th><td>27 Oct 2026</td><td>Moan, the Jamaican model; free agents make spreadsheets, decks and documents</td></tr>
+            <tr><th scope="row">1.8.7</th><td>27 Oct 2026</td><td>Free agents keep their model and recover in place; maker logos on agents</td></tr>
+            <tr><th scope="row">1.8.6</th><td>26 Oct 2026</td><td>Free chat agents paired with SDXL Lightning, and draw when asked</td></tr>
+            <tr><th scope="row">1.8.5</th><td>26 Oct 2026</td><td>Start on the free models without a key; a database backup before every update</td></tr>
+            <tr><th scope="row">1.8.4</th><td>26 Oct 2026</td><td>Free models in chat that stream, think, search, use tools and draw</td></tr>
+            <tr><th scope="row">1.8.2&ndash;1.8.3</th><td>26 Oct 2026</td><td>Ask Claude from any app; <code>automa update</code>; one signing key from here on</td></tr>
+            <tr><th scope="row">1.8.0&ndash;1.8.1</th><td>24 Oct 2026</td><td>Terminals, App Inspector and your API balance</td></tr>
+            <tr><th scope="row">1.7.0</th><td>24 Oct 2026</td><td>Claude agents with Claude Code&rsquo;s tools on phones; thinking modes</td></tr>
+            <tr><th scope="row">1.6.x</th><td>22 Oct 2026</td><td>Live replies with visible thinking; token and cost counts everywhere</td></tr>
+            <tr><th scope="row">1.5.0</th><td>21 Oct 2026</td><td>Slash commands, app shortcuts, the offline sheet</td></tr>
+            <tr><th scope="row">1.4.x</th><td>10 Oct 2026</td><td>App Studio; the app locked to its own Automa; the tour</td></tr>
+            <tr><th scope="row">1.3.0</th><td>29 Sep 2026</td><td>Run Automa on the phone; drag-to-connect org chart</td></tr>
+            <tr><th scope="row">1.1.0&ndash;1.2.0</th><td>28 Sep 2026</td><td>Continue with Google, push notifications, the org chart on phones</td></tr>
+            <tr><th scope="row">1.0.0</th><td>27 Sep 2026</td><td>The first Automa for Android</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Limits -->
+  <section class="section-tight" id="limits" aria-labelledby="limits-title">
+    <div class="shell">
+      <h2 id="limits-title">Limits, stated plainly</h2>
+      <ul class="fact-list mt-m" data-reveal>
+        <li><strong>Android only.</strong> Android 8.0 or newer, on phones, tablets, foldables and
+          Chromebooks. There is no iPhone build.</li>
+        <li><strong>The AI needs internet.</strong> With the server on the phone, Automa itself keeps
+          working offline; the AI features do not.</li>
+        <li><strong>Free models have limits.</strong> Each has a daily limit, they share a monthly
+          allowance, and a provider can be busy or close a model. Automa shows which, and when it is back.</li>
+        <li><strong>Some engines can&rsquo;t run on a phone.</strong> Codex agents can&rsquo;t, and say so;
+          other runtimes must be installed in Termux. Claude Code&rsquo;s desktop engine doesn&rsquo;t run
+          in Termux, so on a phone Claude agents use the Anthropic API with Claude Code&rsquo;s tools.</li>
+        <li><strong>Moan&rsquo;s index is Jamaican.</strong> For the rest of the Caribbean, agents research
+          the web instead.</li>
+        <li><strong>App Inspector</strong> is for apps you made or are authorized to analyze.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-tight" id="faq" aria-labelledby="faq-title">
+    <div class="shell">
+      <h2 id="faq-title">Questions people ask</h2>
       <div class="faq mt-m">
         <details>
           <summary>What is Automa?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>An Android app built by Nathan at CorX Labs in Jamaica. It is the
-            control surface for a company of AI agents: the agents run on a server, and the phone is
-            where you see what they are doing, approve the things that need a human, and hand over the
-            files they ask for. It is not the model and not the agent runtime — it is the thing you
-            hold.</p></div>
+          <div class="faq-body"><p>Automa is an Android app, made in Jamaica by Nathan at CorX Labs, that runs a whole company of AI agents for you. You hire agents, give them roles, chat with them like teammates, hand them tasks, let them build and run apps, draw pictures, search the web and work with your files &mdash; and you approve anything that matters. The agents work on an Automa server you control: your computer, a cloud machine, or the phone itself inside the free Termux app.</p></div>
         </details>
         <details>
-          <summary>Do I need a server?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Yes — Automa is a client, and it connects to an agent server by
-            address, on port <code>3100</code> by default. There are two ways to get one. The server
-            can run on the phone itself under <strong>Termux</strong>, in which case the phone is both
-            server and client. Or it can run on another machine reachable over an
-            <strong>HTTPS address</strong>, which is what you want if the work should carry on while
-            the phone is asleep.</p></div>
+          <summary>Do I need an API key or a credit card?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>No. Pick a free model and start: Automa&rsquo;s free models need no key, no account and no card. Add keys later under Settings &rarr; API keys if you want Claude, GPT, Gemini or another paid model, and set a monthly spending limit so nothing overspends.</p></div>
         </details>
         <details>
-          <summary>What does the home screen show?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Only what needs a human. Four rows under one heading that says
-            <em>Needs you</em>: the inbox, approvals waiting on you for hires, budgets and plans, file
-            requests where an agent is blocked on a file, and agents — who is working on what. Below
-            that is the roster, with the task each agent is on and when it last finished something.
-            Anything an agent can do without you stays off that screen.</p></div>
+          <summary>Do I need a computer?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>No. Tap Run Automa on this phone and the server runs inside Termux on the phone. A computer, a virtual machine or a cloud machine works too, and is what you want if the agents should keep working while the phone sleeps.</p></div>
         </details>
         <details>
-          <summary>How does an agent get a file off my phone?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Through Device Files. You share one folder — Documents, say — and
-            the phone appears to the agents as a connected device. When an agent needs a file it posts
-            a request; the request shows up on the Files tab and on the home screen, and you send it.
-            Nothing outside the folder you picked is visible to the agents.</p></div>
+          <summary>Is there an AI that speaks Jamaican Patois?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. Moan is Automa&rsquo;s own Jamaican model, free with no key. It answers in Patois first and in Standard Jamaican English for formal documents and code, carries a primer on Jamaica&rsquo;s history, government, courts, statutes, economy and culture, and keeps a living index of Jamaican sources &mdash; the Gleaner, the Observer, JIS, the Office of the Prime Minister, Parliament, the Bank of Jamaica and the Laws of Jamaica &mdash; so its replies cite source, date and link.</p></div>
         </details>
         <details>
-          <summary>Should I turn auto-send on?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Only once you know what it changes. Off, every file leaves because
-            you tapped <em>Send</em>. On, a file an agent asks for is sent without asking you — so
-            anything in the shared folder can leave the phone without a decision at the moment it
-            happens. That is the feature and it is also the risk. Share a narrow folder that exists
-            for this, not your whole Documents tree, and leave the switch off until that folder is one
-            you would be comfortable handing over wholesale.</p></div>
+          <summary>Can I use Automa elsewhere in the Caribbean?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Automa itself is not tied to Jamaica: you install the APK yourself and the agents run on a server you control. Free agents search and read the web with sources, so research about Trinidad and Tobago, Barbados, Guyana, the Bahamas or anywhere else works the same way. Moan&rsquo;s built-in knowledge index is the Jamaica-specific part.</p></div>
         </details>
         <details>
-          <summary>What is a routine, and how is it different from a task?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>A routine is a recurring work <em>definition</em> — deliberately not
-            the work. When it fires it materialises an ordinary execution task: one that appears in the
-            task list, is attributed to an agent, and leaves the same audit trail as a task you made
-            by hand. A weekly report or a daily inbox sweep is a routine; each Monday&rsquo;s report is
-            a task.</p></div>
+          <summary>Which AI models does Automa work with?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Twenty-plus free chat models and two free image models with no key &mdash; including Moan, Nemotron 3 Ultra, DeepSeek V4.1 Flash, Gemma 4 and Qwen 3.8, plus SDXL Lightning and SDXL Base for pictures. With your own keys or subscriptions it runs Claude, GPT, Gemini, DeepSeek, Grok and Kimi, and engines such as Claude Code, Codex, Cursor, Gemini CLI, OpenCode and any OpenAI-compatible endpoint.</p></div>
         </details>
         <details>
-          <summary>How is an agent&rsquo;s access to Gmail or GitHub scoped?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Three separate choices per connection, not one on-off switch: which
-            agents get access, which account they use, and which actions they may take. An engineer
-            agent can hold write access on one repository while the rest of the company has none; a
-            designer agent can read a docs space without being able to change it. Alongside
-            first-party connections, Automa also lists <strong>provider-hosted MCP</strong> servers —
-            Airtable, for instance — scoped exactly the same way.</p></div>
+          <summary>Can Automa make pictures, spreadsheets and documents?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. A free chat model paired with an image model draws pictures and logos, and redraws an attached photo with the change you ask for. Free agents also make real Excel spreadsheets with formulas, PowerPoint decks with charts and pictures, and Word documents, and read the files you attach.</p></div>
         </details>
         <details>
-          <summary>Can I download it, and is there an iOS version?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Automa is Android-only, and there is no public download link on this
-            page yet — this page describes what the app is and how it works rather than shipping it.
-            There is no iOS or desktop build. If you want to try it,
-            <a href="/contact/">get in touch</a>.</p></div>
+          <summary>Can I build apps on my phone with Automa?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes, in App Studio: 69 languages, an AI pair or a whole AI team that writes the code and fixes what breaks, a sandboxed preview, a public link in one tap, undo for every AI change, and friends invited by code or link. It works on the free models with no key.</p></div>
+        </details>
+        <details>
+          <summary>What happens offline?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>With the server on the phone, Automa itself keeps working offline. The AI features need internet. When the phone loses the network, a sheet says so and counts down to the next try, and what you typed is kept.</p></div>
+        </details>
+        <details>
+          <summary>Is there an account, and where is my data?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>There is no Automa cloud account. Your organizations, tasks, chats and files live on your own Automa server, and sign-in exists only on that server, when you turn it on. Free-model requests go from your server to the free AI service Automa uses.</p></div>
+        </details>
+        <details>
+          <summary>Can other people use my organization?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. Invite members with roles; an invite can&rsquo;t give more than the person who made it has. App Studio projects can be shared with friends by join code or link.</p></div>
+        </details>
+        <details>
+          <summary>Is there an iPhone version?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>No. Automa is for Android 8.0 or newer, on phones, tablets, foldables and Chromebooks.</p></div>
+        </details>
+        <details>
+          <summary>How do I download Automa?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Automa 1.9.7 is a signed APK, distributed in the release zip; email lkk89002@gmail.com to get it. It is coming soon to APKPure with the same signed build, so updates can arrive on their own. Every release from 1.8.2 on installs over the previous one and keeps your data.</p></div>
+        </details>
+        <details>
+          <summary>Who made Automa?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Nathan, the 14-year-old founder of CorX Labs in Jamaica, who also built the CorX language models and NatureV1. Automa builds on an MIT-licensed open-source control plane for AI agents.</p></div>
         </details>
       </div>
     </div>
@@ -1285,12 +1449,12 @@
   <section class="section-tight">
     <div class="shell">
       <div class="cta-band" data-reveal>
-        <p class="eyebrow is-plain" style="justify-content:center">Automa</p>
-        <h2 class="mt-s">The company runs on a server. You carry the decisions.</h2>
-        <p>Approvals, file requests and an inbox — the three things that actually need a person — on
-          the device that is already in your hand. Android, built in Jamaica.</p>
+        <p class="eyebrow is-plain" style="justify-content:center">Automa 1.9.7</p>
+        <h2 class="mt-s">Your AI company, in your pocket.</h2>
+        <p>Hire agents, hand them work and approve what matters &mdash; on free models with no key, from
+          one Android phone. Made in Jamaica by CorX Labs.</p>
         <div class="btn-row">
-          <a class="btn btn-primary" href="/contact/">Ask about Automa</a>
+          <a class="btn btn-primary" href="#download">Get Automa</a>
           <a class="btn btn-ghost" href="/models/">See everything we have built</a>
         </div>
       </div>
