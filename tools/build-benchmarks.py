@@ -338,6 +338,12 @@ def build_hub():
          "in this industry are self-reported, and the scaffolding around a model can move a "
          "score by more than the difference between two models. Use them to build a "
          "shortlist, then test the shortlist on your own task."),
+        ("Can I reuse this data?",
+         "Yes. The index is published under the Creative Commons Attribution 4.0 licence "
+         "(CC BY 4.0): you can copy, share and build on it, including commercially, as long "
+         "as you credit CorX Labs and link to corx-labs.com/benchmarks/. The full table is "
+         "also available as <a href=\"/assets/data/models.json\">one JSON file</a>. Each "
+         "score remains a figure published by the lab that built the model."),
         ("How often is this updated?",
          "Each model row records the month it was last checked against its sources. New "
          "models are added as they are released. If you spot a figure that is out of date "
@@ -596,9 +602,15 @@ def build_hub():
                 "keywords": ["AI model comparison", "LLM benchmarks", "MMLU-Pro",
                              "GPQA Diamond", "SWE-bench Verified", "context window",
                              "token pricing"],
-                "creator": {"@id": SITE + "/#organization"},
+                "creator": {"@type": "Organization", "@id": SITE + "/#organization",
+                            "name": "CorX Labs", "url": SITE + "/"},
+                "publisher": {"@type": "Organization", "@id": SITE + "/#organization",
+                              "name": "CorX Labs", "url": SITE + "/"},
+                "license": "https://creativecommons.org/licenses/by/4.0/",
                 "isAccessibleForFree": True,
                 "dateModified": UPDATED,
+                "distribution": [{"@type": "DataDownload", "encodingFormat": "application/json",
+                                  "contentUrl": SITE + "/assets/data/models.json"}],
                 "variableMeasured": [b["name"] for b in BENCHMARKS],
             },
             {

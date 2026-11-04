@@ -96,10 +96,27 @@
         "token pricing"
       ],
       "creator": {
-        "@id": "https://corx-labs.com/#organization"
+        "@type": "Organization",
+        "@id": "https://corx-labs.com/#organization",
+        "name": "CorX Labs",
+        "url": "https://corx-labs.com/"
       },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://corx-labs.com/#organization",
+        "name": "CorX Labs",
+        "url": "https://corx-labs.com/"
+      },
+      "license": "https://creativecommons.org/licenses/by/4.0/",
       "isAccessibleForFree": true,
       "dateModified": "2026-11-04",
+      "distribution": [
+        {
+          "@type": "DataDownload",
+          "encodingFormat": "application/json",
+          "contentUrl": "https://corx-labs.com/assets/data/models.json"
+        }
+      ],
       "variableMeasured": [
         "MMLU-Pro",
         "GPQA Diamond",
@@ -152,6 +169,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "No. Every score here is a published figure from the lab that built the model or from a public leaderboard, collected and put in one table. Most benchmark numbers in this industry are self-reported, and the scaffolding around a model can move a score by more than the difference between two models. Use them to build a shortlist, then test the shortlist on your own task."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I reuse this data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The index is published under the Creative Commons Attribution 4.0 licence (CC BY 4.0): you can copy, share and build on it, including commercially, as long as you credit CorX Labs and link to corx-labs.com/benchmarks/. The full table is also available as one JSON file. Each score remains a figure published by the lab that built the model."
           }
         },
         {
@@ -600,7 +625,7 @@
         <p class="eyebrow">Questions</p>
         <h2 id="faq-title">Common questions</h2>
       </div>
-      <div class="faq"><details><summary>What is the best AI model right now?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>There is no single answer, which is why this page is a table rather than a ranking. The frontier models — GPT-5, Claude Opus 4.5, Gemini 3 Pro and Grok 4 — trade places depending on the test: reasoning benchmarks like GPQA Diamond, agentic coding benchmarks like SWE-bench Verified, and human preference on LMArena all pick different winners. Sort the table by the column that matches the work you are actually doing.</p></div></details><details><summary>Which AI model is cheapest?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Among capable models, the open-weight ones hosted by third parties are usually cheapest — DeepSeek, Qwen, GLM and gpt-oss all sit far below the frontier proprietary models. Sort by <em>In / M</em> or <em>Out / M</em> to see the current order. Note that reasoning models generate many more output tokens than their price per token suggests, so a cheap reasoning model can cost more per answer than an expensive non-reasoning one.</p></div></details><details><summary>What does open weights mean?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>The lab has published the trained parameters, so you can download the model and run it on your own hardware. It does not necessarily mean the training data or code is public, and it does not always mean unrestricted commercial use — the Licence column records the actual terms, which range from Apache 2.0 and MIT through to non-commercial and custom community licences.</p></div></details><details><summary>Did CorX Labs run these benchmarks?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>No. Every score here is a published figure from the lab that built the model or from a public leaderboard, collected and put in one table. Most benchmark numbers in this industry are self-reported, and the scaffolding around a model can move a score by more than the difference between two models. Use them to build a shortlist, then test the shortlist on your own task.</p></div></details><details><summary>How often is this updated?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Each model row records the month it was last checked against its sources. New models are added as they are released. If you spot a figure that is out of date or wrong, <a href="/contact/">tell us</a> and it will be corrected.</p></div></details><details><summary>Can I compare more than two models?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Yes. Tick the boxes in the leaderboard and press Compare, or open the <a href="/benchmarks/compare/">comparison tool</a> and add up to four models side by side.</p></div></details></div>
+      <div class="faq"><details><summary>What is the best AI model right now?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>There is no single answer, which is why this page is a table rather than a ranking. The frontier models — GPT-5, Claude Opus 4.5, Gemini 3 Pro and Grok 4 — trade places depending on the test: reasoning benchmarks like GPQA Diamond, agentic coding benchmarks like SWE-bench Verified, and human preference on LMArena all pick different winners. Sort the table by the column that matches the work you are actually doing.</p></div></details><details><summary>Which AI model is cheapest?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Among capable models, the open-weight ones hosted by third parties are usually cheapest — DeepSeek, Qwen, GLM and gpt-oss all sit far below the frontier proprietary models. Sort by <em>In / M</em> or <em>Out / M</em> to see the current order. Note that reasoning models generate many more output tokens than their price per token suggests, so a cheap reasoning model can cost more per answer than an expensive non-reasoning one.</p></div></details><details><summary>What does open weights mean?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>The lab has published the trained parameters, so you can download the model and run it on your own hardware. It does not necessarily mean the training data or code is public, and it does not always mean unrestricted commercial use — the Licence column records the actual terms, which range from Apache 2.0 and MIT through to non-commercial and custom community licences.</p></div></details><details><summary>Did CorX Labs run these benchmarks?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>No. Every score here is a published figure from the lab that built the model or from a public leaderboard, collected and put in one table. Most benchmark numbers in this industry are self-reported, and the scaffolding around a model can move a score by more than the difference between two models. Use them to build a shortlist, then test the shortlist on your own task.</p></div></details><details><summary>Can I reuse this data?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Yes. The index is published under the Creative Commons Attribution 4.0 licence (CC BY 4.0): you can copy, share and build on it, including commercially, as long as you credit CorX Labs and link to corx-labs.com/benchmarks/. The full table is also available as <a href="/assets/data/models.json">one JSON file</a>. Each score remains a figure published by the lab that built the model.</p></div></details><details><summary>How often is this updated?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Each model row records the month it was last checked against its sources. New models are added as they are released. If you spot a figure that is out of date or wrong, <a href="/contact/">tell us</a> and it will be corrected.</p></div></details><details><summary>Can I compare more than two models?<span class="plus" aria-hidden="true">+</span></summary><div class="faq-body"><p>Yes. Tick the boxes in the leaderboard and press Compare, or open the <a href="/benchmarks/compare/">comparison tool</a> and add up to four models side by side.</p></div></details></div>
     </div>
   </section>
 
