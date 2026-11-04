@@ -15,7 +15,7 @@ weights. Where a model builds on an existing open base instead — as CorX3.8-27
 states that plainly rather than presenting it as from scratch.
 
 Slogan: "Architecting the future." Positioning: "from the ground up."
-Founder: Nathan, a solo developer and independent AI researcher from Jamaica.
+Founder: Nathan Lyttle, a solo developer and independent AI researcher from Jamaica.
 Contact: lkk89002@gmail.com
 Website: https://corx-labs.com/
 Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
@@ -393,10 +393,12 @@ DEVELOPERS
 
 CorX Labs is a one-person research lab.
 
-Nathan — Founder and AI Researcher. A 14-year-old developer from Jamaica. He designed the
+Nathan Lyttle — Founder and AI Researcher. A 14-year-old developer from Jamaica. He designed the
 architecture, trained the tokenizer, wrote the pretraining and fine-tuning pipelines, curated the
 data and ran every training job, solo, on a single GPU, from random weights. There is no team
 behind CorX1.5 and no base model underneath it.
+
+Profile, quick facts and bios: https://corx-labs.com/nathan/
 
 Journey:
 - Age 12 — built a chatbot on top of Gemini's API and customised its behaviour. Useful, but it was

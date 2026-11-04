@@ -19,7 +19,7 @@
       <link>https://corx-labs.com/blog/automa-is-out/</link>
       <guid isPermaLink="true">https://corx-labs.com/blog/automa-is-out/</guid>
       <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Release</category>
       <description><![CDATA[
         <p>Meet Automa 1.9.7, an Android app, made in Jamaica, that runs a whole company of AI
@@ -39,7 +39,7 @@
       <link>https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/</link>
       <guid isPermaLink="true">https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/</guid>
       <pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Build notes</category>
       <description><![CDATA[
         <p>NatureV1 is an open-source AI weather and hurricane model, built in Jamaica in about a week
@@ -54,7 +54,7 @@
       <link>https://corx-labs.com/models/naturev1/</link>
       <guid isPermaLink="false">https://corx-labs.com/models/naturev1/#released-2026-10-17</guid>
       <pubDate>Sat, 17 Oct 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Weather model</category>
       <description><![CDATA[
         <p>NatureV1's first full run is complete, and every result was measured on data it never
@@ -77,7 +77,7 @@
       <link>https://corx-labs.com/models/naturev1/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/naturev1/</guid>
       <pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Weather model</category>
       <description><![CDATA[
         <p>NatureV1 is an 89.18M-parameter probabilistic model of the atmosphere. It forecasts global
@@ -97,7 +97,7 @@
       <link>https://corx-labs.com/automa/</link>
       <guid isPermaLink="true">https://corx-labs.com/automa/</guid>
       <pubDate>Mon, 28 Sep 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>App</category>
       <description><![CDATA[
         <p>Automa is an Android app for running a company of AI agents from a phone. The agents run on
@@ -112,7 +112,7 @@
       <link>https://corx-labs.com/models/helix/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/helix/</guid>
       <pubDate>Mon, 14 Sep 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Architecture</category>
       <description><![CDATA[
         <p>HELIX is a sequence architecture that scales linearly in context length while keeping exact
@@ -128,7 +128,7 @@
       <link>https://corx-labs.com/models/corx3-8/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/corx3-8/</guid>
       <pubDate>Tue, 19 Aug 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Language model</category>
       <description><![CDATA[
         <p>CorX3.8-27B is a 27-billion-parameter Jamaican Patois-speaking assistant, third in the
@@ -147,7 +147,7 @@
       <link>https://corx-labs.com/models/tristream-svs/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/tristream-svs/</guid>
       <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Singing voice synthesis</category>
       <description><![CDATA[
         <p>TriStream-SVS is a 321.8M parameter singing voice synthesis model that builds the
@@ -166,7 +166,7 @@
       <link>https://corx-labs.com/blog/3-billion-tokens-one-gpu/</link>
       <guid isPermaLink="true">https://corx-labs.com/blog/3-billion-tokens-one-gpu/</guid>
       <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Technical breakdown</category>
       <description><![CDATA[
         <p>Everyone asks how 3 billion training tokens fit on a single GPU. They never had to.
@@ -195,7 +195,7 @@
       <link>https://corx-labs.com/models/corx1-5/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/corx1-5/</guid>
       <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
-      <dc:creator>Nathan</dc:creator>
+      <dc:creator>Nathan Lyttle</dc:creator>
       <category>Language model</category>
       <description><![CDATA[
         <p>CorX1.5 is an open-source language model with roughly 158 million parameters, built
