@@ -41,7 +41,7 @@ from bm_common import (  # noqa: E402
 from model_catalog import COMPARISONS, MODELS, validate  # noqa: E402
 
 OUT = os.path.join(ROOT, "benchmarks")
-UPDATED = "2026-10-29"
+UPDATED = "2026-11-04"
 
 
 # ===========================================================================
@@ -67,6 +67,30 @@ def fit(*candidates, limit=155):
             return c
     c = candidates[-1]
     return c[:limit - 1].rsplit(" ", 1)[0].rstrip(",;:") + "\u2026"
+
+
+# Benchmarks people search for by name, most decision-relevant first. Used to
+# put a model's own published numbers in its search snippet.
+SNIPPET_ORDER = ("gpqa", "swe", "swe_pro", "tbench", "tbench21", "tbench20", "mmlu_pro", "aime",
+                 "lcb", "mmmu", "math", "humaneval", "ifeval", "frontier", "arena")
+
+
+def headline_scores(m, n):
+    b = m.get("b", {})
+    names = {x["key"]: x["name"] for x in BENCHMARKS}
+    return ["%s %s" % (names[k], fmt_score(k, b[k])) for k in SNIPPET_ORDER if b.get(k) is not None][:n]
+
+
+def shared_bench_phrase(a, b, n):
+    """' on X, Y and Z' for benchmarks both models report, or '' when they share none."""
+    names = {x["key"]: x["name"] for x in BENCHMARKS}
+    shared = [names[k] for k in SNIPPET_ORDER
+              if a.get("b", {}).get(k) is not None and b.get("b", {}).get(k) is not None][:n]
+    if not shared:
+        return ""
+    if len(shared) == 1:
+        return " on " + shared[0]
+    return " on " + ", ".join(shared[:-1]) + " and " + shared[-1]
 
 
 def fit_title(*candidates):
@@ -590,13 +614,14 @@ def build_hub():
     }
 
     write("/benchmarks/", page(
-        "AI Model Benchmarks — Compare %d Models Side by Side" % n_models,
-        fit("Compare %d AI models from %d labs: context window, price per million tokens, "
-            "licence and published scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench "
-            "Verified. Free, sortable, and clear about what has not been measured."
+        fit_title("AI Model Benchmarks %s — Compare %d Models Side by Side" % (UPDATED[:4], n_models),
+                  "AI Model Benchmarks %s — Compare %d Models" % (UPDATED[:4], n_models),
+                  "AI Model Benchmarks — Compare %d Models Side by Side" % n_models),
+        fit("Compare %d AI models from %d labs — GPT, Claude, Gemini, DeepSeek, Qwen and more: price, "
+            "context and published GPQA, SWE-bench and Terminal-Bench scores."
             % (n_models, n_companies),
             "Compare %d AI models from %d labs: context window, price, licence and published "
-            "scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified."
+            "scores on GPQA Diamond, SWE-bench and Terminal-Bench."
             % (n_models, n_companies)),
         SITE + "/benchmarks/", body, jsonld=ld,
         scripts=["/assets/js/benchmarks.js"]))
@@ -864,6 +889,9 @@ def build_model(m):
         desc_bits.append("%s per million input tokens" % fmt_price(m["pin"]))
     desc_bits.append("open weights" if is_open(m) else "proprietary")
     lead = "%s by %s: %s." % (m["name"], co["name"], ", ".join(desc_bits))
+    top = headline_scores(m, 2)
+    if top:
+        lead += " " + "; ".join(top) + "."
     meta_desc = fit(lead + " Published benchmark scores, full specification and side-by-side comparisons.",
                     lead + " Published benchmark scores, specs and comparisons.",
                     lead + " Benchmarks, specs and comparisons.",
@@ -1093,10 +1121,10 @@ def verdict(a, b):
         price_txt = ("On a 3:1 input-to-output mix, %s costs %s per million tokens against "
                      "%s for %s — %s. %s"
                      % (cheap["name"], fmt_price(cc), fmt_price(dc), dear["name"],
-                        ("about %.1f&times; less" % ratio) if ratio >= 1.15 else "a small difference",
+                        ("about %.1f\u00d7 less" % ratio) if ratio >= 1.15 else "a small difference",
                         "Remember that a reasoning model bills its thinking as output, so "
                         "cost per answer can diverge much further than cost per token."
-                        if (a.get("reason") or b.get("reason")) else ""))
+                        if (a.get("reason") or b.get("reason")) else "")).strip()
 
     # Practical
     notes = []
@@ -1108,7 +1136,7 @@ def verdict(a, b):
                      % (opener["name"], licence_of(opener)))
     if a.get("ctx") and b.get("ctx") and a["ctx"] != b["ctx"]:
         big, small = ((a, b) if a["ctx"] > b["ctx"] else (b, a))
-        notes.append("<strong>%s takes %s tokens</strong> of context against %s — %.1f&times; "
+        notes.append("<strong>%s takes %s tokens</strong> of context against %s — %.1f\u00d7 "
                      "more room for long documents or a large codebase."
                      % (big["name"], fmt_tokens(big["ctx"]), fmt_tokens(small["ctx"]),
                         big["ctx"] / small["ctx"]))
@@ -1301,10 +1329,11 @@ def build_comparison(a_slug, b_slug):
                   "%s Benchmarks" % title_pair,
                   title_pair),
         fit("%s or %s? Compare context window, price per million tokens, licence and published "
-            "scores on MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified, side by side."
-            % (a["name"], b["name"]),
-            "%s or %s? Compare context window, price, licence and published scores on "
-            "MMLU-Pro, GPQA Diamond, AIME and SWE-bench Verified." % (a["name"], b["name"]),
+            "scores%s, side by side." % (a["name"], b["name"], shared_bench_phrase(a, b, 3)),
+            "%s or %s? Compare context window, price, licence and published scores%s."
+            % (a["name"], b["name"], shared_bench_phrase(a, b, 3)),
+            "%s or %s? Compare context window, price, licence and published scores%s."
+            % (a["name"], b["name"], shared_bench_phrase(a, b, 2)),
             "%s or %s? Compare context window, price, licence and published benchmark scores "
             "side by side." % (a["name"], b["name"]),
             "%s vs %s: context window, price, licence and benchmark scores."
@@ -1658,7 +1687,8 @@ def build_leaderboard():
     ]}
 
     write("/benchmarks/leaderboard/", page(
-        "AI Model Leaderboard — Top Models in Every Field",
+        fit_title("Best AI Models of %s — Leaderboard by Field" % UPDATED[:4],
+                  "AI Model Leaderboard — Top Models in Every Field"),
         fit("Which AI models lead at reasoning, maths, coding, knowledge, multimodal, instruction "
             "following and human preference. Ranked from published benchmark figures across %d models "
             "from %d labs." % (len(MODELS), len(COMPANIES)),

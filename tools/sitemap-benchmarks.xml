@@ -1,6 +1,6 @@
   <url>
     <loc>https://corx-labs.com/benchmarks/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/"/>
@@ -8,7 +8,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/leaderboard/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/leaderboard/"/>
@@ -16,7 +16,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/"/>
@@ -24,7 +24,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/mmlu_pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/mmlu_pro/"/>
@@ -32,7 +32,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/gpqa/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/gpqa/"/>
@@ -40,7 +40,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/aime/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/aime/"/>
@@ -48,7 +48,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/math/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/math/"/>
@@ -56,7 +56,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/swe/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/swe/"/>
@@ -64,7 +64,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/swe_pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/swe_pro/"/>
@@ -72,7 +72,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/tbench20/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/tbench20/"/>
@@ -80,7 +80,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/tbench21/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/tbench21/"/>
@@ -88,7 +88,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/frontier/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/frontier/"/>
@@ -96,7 +96,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/tbench/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/tbench/"/>
@@ -104,7 +104,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/lcb/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/lcb/"/>
@@ -112,7 +112,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/humaneval/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/humaneval/"/>
@@ -120,7 +120,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/mmmu/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/mmmu/"/>
@@ -128,7 +128,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/ifeval/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/ifeval/"/>
@@ -136,7 +136,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/tests/arena/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/tests/arena/"/>
@@ -144,7 +144,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/openai/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/openai/"/>
@@ -152,7 +152,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/anthropic/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/anthropic/"/>
@@ -160,7 +160,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/google/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/google/"/>
@@ -168,7 +168,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/meta/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/meta/"/>
@@ -176,7 +176,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/mistral/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/mistral/"/>
@@ -184,7 +184,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/deepseek/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/deepseek/"/>
@@ -192,7 +192,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/alibaba/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/alibaba/"/>
@@ -200,7 +200,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/xai/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/xai/"/>
@@ -208,7 +208,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/amazon/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/amazon/"/>
@@ -216,7 +216,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/microsoft/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/microsoft/"/>
@@ -224,7 +224,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/cohere/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/cohere/"/>
@@ -232,7 +232,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/ai21/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/ai21/"/>
@@ -240,7 +240,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/moonshot/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/moonshot/"/>
@@ -248,7 +248,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/zai/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/zai/"/>
@@ -256,7 +256,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/minimax/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/minimax/"/>
@@ -264,7 +264,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/nvidia/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/nvidia/"/>
@@ -272,7 +272,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/allenai/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/allenai/"/>
@@ -280,7 +280,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/01ai/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/01ai/"/>
@@ -288,7 +288,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/reka/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/reka/"/>
@@ -296,7 +296,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/liquid/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/liquid/"/>
@@ -304,7 +304,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/perplexity/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/perplexity/"/>
@@ -312,7 +312,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/baidu/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/baidu/"/>
@@ -320,7 +320,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/tencent/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/tencent/"/>
@@ -328,7 +328,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/bytedance/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/bytedance/"/>
@@ -336,7 +336,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/stepfun/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/stepfun/"/>
@@ -344,7 +344,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/ibm/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/ibm/"/>
@@ -352,7 +352,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/databricks/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/databricks/"/>
@@ -360,7 +360,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/nous/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/nous/"/>
@@ -368,7 +368,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/upstage/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/upstage/"/>
@@ -376,7 +376,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/inception/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/inception/"/>
@@ -384,7 +384,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/tii/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/tii/"/>
@@ -392,7 +392,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/salesforce/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/salesforce/"/>
@@ -400,7 +400,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/snowflake/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/snowflake/"/>
@@ -408,7 +408,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/writer/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/writer/"/>
@@ -416,7 +416,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/lgai/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/lgai/"/>
@@ -424,7 +424,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/naver/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/naver/"/>
@@ -432,7 +432,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/sarvam/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/sarvam/"/>
@@ -440,7 +440,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/inclusion/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/inclusion/"/>
@@ -448,7 +448,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/openbmb/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/openbmb/"/>
@@ -456,7 +456,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/rednote/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/rednote/"/>
@@ -464,7 +464,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/apple/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/apple/"/>
@@ -472,7 +472,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/companies/corx/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/companies/corx/"/>
@@ -480,7 +480,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-6-astra/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-6-astra/"/>
@@ -488,7 +488,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-6-1-sol/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-6-1-sol/"/>
@@ -496,7 +496,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-6-luna/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-6-luna/"/>
@@ -504,7 +504,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5-6-sol/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5-6-sol/"/>
@@ -512,7 +512,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5-6-terra/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5-6-terra/"/>
@@ -520,7 +520,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5-6-luna/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5-6-luna/"/>
@@ -528,7 +528,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5-5/"/>
@@ -536,7 +536,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5-2/"/>
@@ -544,7 +544,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5/"/>
@@ -552,7 +552,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5-mini/"/>
@@ -560,7 +560,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-5-nano/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-5-nano/"/>
@@ -568,7 +568,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/o3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/o3/"/>
@@ -576,7 +576,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/o4-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/o4-mini/"/>
@@ -584,7 +584,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/o3-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/o3-mini/"/>
@@ -592,7 +592,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/o1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/o1/"/>
@@ -600,7 +600,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-4-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-4-1/"/>
@@ -608,7 +608,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-4-1-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-4-1-mini/"/>
@@ -616,7 +616,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-4-1-nano/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-4-1-nano/"/>
@@ -624,7 +624,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-4o/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-4o/"/>
@@ -632,7 +632,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-4o-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-4o-mini/"/>
@@ -640,7 +640,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-oss-120b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-oss-120b/"/>
@@ -648,7 +648,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-oss-20b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-oss-20b/"/>
@@ -656,7 +656,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-opus-4-8/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-opus-4-8/"/>
@@ -664,7 +664,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-opus-4-7/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-opus-4-7/"/>
@@ -672,7 +672,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-opus-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-opus-4-6/"/>
@@ -680,7 +680,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-sonnet-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-sonnet-4-6/"/>
@@ -688,7 +688,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-opus-4-5/"/>
@@ -696,7 +696,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-sonnet-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-sonnet-4-5/"/>
@@ -704,7 +704,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-haiku-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-haiku-4-5/"/>
@@ -712,7 +712,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-opus-4-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-opus-4-1/"/>
@@ -720,7 +720,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-sonnet-4/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-sonnet-4/"/>
@@ -728,7 +728,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-3-7-sonnet/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-3-7-sonnet/"/>
@@ -736,7 +736,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-3-5-sonnet/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-3-5-sonnet/"/>
@@ -744,7 +744,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-3-5-haiku/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-3-5-haiku/"/>
@@ -752,7 +752,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-3-opus/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-3-opus/"/>
@@ -760,7 +760,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-3-8-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-3-8-flash/"/>
@@ -768,7 +768,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-3-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-3-5-flash/"/>
@@ -776,7 +776,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-3-1-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-3-1-pro/"/>
@@ -784,7 +784,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-3-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-3-flash/"/>
@@ -792,7 +792,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-3-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-3-pro/"/>
@@ -800,7 +800,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-2-5-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-2-5-pro/"/>
@@ -808,7 +808,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-2-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-2-5-flash/"/>
@@ -816,7 +816,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-2-5-flash-lite/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-2-5-flash-lite/"/>
@@ -824,7 +824,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-2-0-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-2-0-flash/"/>
@@ -832,7 +832,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-1-5-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-1-5-pro/"/>
@@ -840,7 +840,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemma-3-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemma-3-27b/"/>
@@ -848,7 +848,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemma-3-12b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemma-3-12b/"/>
@@ -856,7 +856,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemma-3-4b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemma-3-4b/"/>
@@ -864,7 +864,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-4-maverick/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-4-maverick/"/>
@@ -872,7 +872,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-4-scout/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-4-scout/"/>
@@ -880,7 +880,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-3-70b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-3-70b/"/>
@@ -888,7 +888,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-1-405b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-1-405b/"/>
@@ -896,7 +896,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-1-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-1-8b/"/>
@@ -904,7 +904,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-2-90b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-2-90b/"/>
@@ -912,7 +912,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-2-3b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-2-3b/"/>
@@ -920,7 +920,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mistral-large-4/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mistral-large-4/"/>
@@ -928,7 +928,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mistral-medium-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mistral-medium-3/"/>
@@ -936,7 +936,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mistral-large-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mistral-large-2/"/>
@@ -944,7 +944,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/magistral-medium/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/magistral-medium/"/>
@@ -952,7 +952,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/magistral-small/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/magistral-small/"/>
@@ -960,7 +960,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mistral-small-3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mistral-small-3-2/"/>
@@ -968,7 +968,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/devstral-medium/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/devstral-medium/"/>
@@ -976,7 +976,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/codestral-2508/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/codestral-2508/"/>
@@ -984,7 +984,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/ministral-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/ministral-8b/"/>
@@ -992,7 +992,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mixtral-8x22b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mixtral-8x22b/"/>
@@ -1000,7 +1000,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/pixtral-large/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/pixtral-large/"/>
@@ -1008,7 +1008,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-v4-1-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-v4-1-flash/"/>
@@ -1016,7 +1016,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-v4-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-v4-pro/"/>
@@ -1024,7 +1024,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-v3-2/"/>
@@ -1032,7 +1032,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-v3-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-v3-1/"/>
@@ -1040,7 +1040,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-r1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-r1/"/>
@@ -1048,7 +1048,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-v3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-v3/"/>
@@ -1056,7 +1056,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-8-max/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-8-max/"/>
@@ -1064,7 +1064,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-8-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-8-27b/"/>
@@ -1072,7 +1072,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-5-397b-a17b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-5-397b-a17b/"/>
@@ -1080,7 +1080,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-max/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-max/"/>
@@ -1088,7 +1088,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-235b-a22b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-235b-a22b/"/>
@@ -1096,7 +1096,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-coder-480b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-coder-480b/"/>
@@ -1104,7 +1104,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-32b/"/>
@@ -1112,7 +1112,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-30b-a3b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-30b-a3b/"/>
@@ -1120,7 +1120,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwq-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwq-32b/"/>
@@ -1128,7 +1128,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen2-5-72b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen2-5-72b/"/>
@@ -1136,7 +1136,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen2-5-coder-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen2-5-coder-32b/"/>
@@ -1144,7 +1144,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen2-5-vl-72b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen2-5-vl-72b/"/>
@@ -1152,7 +1152,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/grok-4-7/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/grok-4-7/"/>
@@ -1160,7 +1160,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/grok-4/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/grok-4/"/>
@@ -1168,7 +1168,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/grok-4-fast/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/grok-4-fast/"/>
@@ -1176,7 +1176,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/grok-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/grok-3/"/>
@@ -1184,7 +1184,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/grok-3-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/grok-3-mini/"/>
@@ -1192,7 +1192,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/grok-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/grok-2/"/>
@@ -1200,7 +1200,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/nova-premier/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/nova-premier/"/>
@@ -1208,7 +1208,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/nova-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/nova-pro/"/>
@@ -1216,7 +1216,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/nova-lite/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/nova-lite/"/>
@@ -1224,7 +1224,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/nova-micro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/nova-micro/"/>
@@ -1232,7 +1232,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/phi-4/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/phi-4/"/>
@@ -1240,7 +1240,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/phi-4-reasoning-plus/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/phi-4-reasoning-plus/"/>
@@ -1248,7 +1248,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/phi-4-multimodal/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/phi-4-multimodal/"/>
@@ -1256,7 +1256,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/command-a/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/command-a/"/>
@@ -1264,7 +1264,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/command-r-plus/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/command-r-plus/"/>
@@ -1272,7 +1272,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/command-r7b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/command-r7b/"/>
@@ -1280,7 +1280,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/jamba-1-6-large/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/jamba-1-6-large/"/>
@@ -1288,7 +1288,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/jamba-1-6-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/jamba-1-6-mini/"/>
@@ -1296,7 +1296,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/kimi-k2-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/kimi-k2-6/"/>
@@ -1304,7 +1304,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/kimi-k3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/kimi-k3/"/>
@@ -1312,7 +1312,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/kimi-k2-thinking/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/kimi-k2-thinking/"/>
@@ -1320,7 +1320,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/kimi-k2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/kimi-k2/"/>
@@ -1328,7 +1328,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/glm-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/glm-5/"/>
@@ -1336,7 +1336,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/glm-5-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/glm-5-3/"/>
@@ -1344,7 +1344,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/glm-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/glm-4-6/"/>
@@ -1352,7 +1352,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/glm-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/glm-4-5/"/>
@@ -1360,7 +1360,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/glm-4-5-air/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/glm-4-5-air/"/>
@@ -1368,7 +1368,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/minimax-m3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/minimax-m3/"/>
@@ -1376,7 +1376,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/minimax-m2-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/minimax-m2-5/"/>
@@ -1384,7 +1384,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/minimax-m2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/minimax-m2/"/>
@@ -1392,7 +1392,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/minimax-m1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/minimax-m1/"/>
@@ -1400,7 +1400,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/nemotron-ultra-253b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/nemotron-ultra-253b/"/>
@@ -1408,7 +1408,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/nemotron-super-49b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/nemotron-super-49b/"/>
@@ -1416,7 +1416,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/olmo-2-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/olmo-2-32b/"/>
@@ -1424,7 +1424,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/molmo-72b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/molmo-72b/"/>
@@ -1432,7 +1432,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/yi-large/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/yi-large/"/>
@@ -1440,7 +1440,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/yi-1-5-34b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/yi-1-5-34b/"/>
@@ -1448,7 +1448,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/reka-flash-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/reka-flash-3/"/>
@@ -1456,7 +1456,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/reka-core/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/reka-core/"/>
@@ -1464,7 +1464,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/lfm2-8b-a1b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/lfm2-8b-a1b/"/>
@@ -1472,7 +1472,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/sonar-reasoning-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/sonar-reasoning-pro/"/>
@@ -1480,7 +1480,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/sonar-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/sonar-pro/"/>
@@ -1488,7 +1488,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/r1-1776/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/r1-1776/"/>
@@ -1496,7 +1496,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/ernie-4-5-300b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/ernie-4-5-300b/"/>
@@ -1504,7 +1504,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/ernie-x1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/ernie-x1/"/>
@@ -1512,7 +1512,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/hunyuan-a13b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/hunyuan-a13b/"/>
@@ -1520,7 +1520,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/seed-oss-36b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/seed-oss-36b/"/>
@@ -1528,7 +1528,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/step-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/step-3/"/>
@@ -1536,7 +1536,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/granite-3-3-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/granite-3-3-8b/"/>
@@ -1544,7 +1544,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/dbrx/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/dbrx/"/>
@@ -1552,7 +1552,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/solar-pro-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/solar-pro-2/"/>
@@ -1560,7 +1560,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/hermes-4-405b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/hermes-4-405b/"/>
@@ -1568,7 +1568,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mercury-coder/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mercury-coder/"/>
@@ -1576,7 +1576,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-opus-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-opus-5-5/"/>
@@ -1584,7 +1584,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-sonnet-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-sonnet-5-5/"/>
@@ -1592,7 +1592,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-haiku-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-haiku-5-5/"/>
@@ -1600,7 +1600,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-opus-5/"/>
@@ -1608,7 +1608,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-sonnet-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-sonnet-5/"/>
@@ -1616,7 +1616,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-fable-5-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-fable-5-1/"/>
@@ -1624,7 +1624,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-fable-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-fable-5/"/>
@@ -1632,7 +1632,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-mythos-5-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-mythos-5-1/"/>
@@ -1640,7 +1640,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/claude-mythos-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/claude-mythos-5/"/>
@@ -1648,7 +1648,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-4-turbo/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-4-turbo/"/>
@@ -1656,7 +1656,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gpt-3-5-turbo/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gpt-3-5-turbo/"/>
@@ -1664,7 +1664,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/o1-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/o1-mini/"/>
@@ -1672,7 +1672,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-2-0-flash-lite/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-2-0-flash-lite/"/>
@@ -1680,7 +1680,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemini-1-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemini-1-5-flash/"/>
@@ -1688,7 +1688,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemma-2-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemma-2-27b/"/>
@@ -1696,7 +1696,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/gemma-2-9b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/gemma-2-9b/"/>
@@ -1704,7 +1704,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-1-70b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-1-70b/"/>
@@ -1712,7 +1712,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-2-11b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-2-11b/"/>
@@ -1720,7 +1720,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/llama-3-2-1b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/llama-3-2-1b/"/>
@@ -1728,7 +1728,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-14b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-14b/"/>
@@ -1736,7 +1736,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-8b/"/>
@@ -1744,7 +1744,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen3-4b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen3-4b/"/>
@@ -1752,7 +1752,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen2-5-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen2-5-32b/"/>
@@ -1760,7 +1760,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/qwen2-5-7b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/qwen2-5-7b/"/>
@@ -1768,7 +1768,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-r1-distill-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-r1-distill-32b/"/>
@@ -1776,7 +1776,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-r1-distill-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-r1-distill-8b/"/>
@@ -1784,7 +1784,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/deepseek-coder-v2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/deepseek-coder-v2/"/>
@@ -1792,7 +1792,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mistral-nemo/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mistral-nemo/"/>
@@ -1800,7 +1800,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/mistral-7b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/mistral-7b/"/>
@@ -1808,7 +1808,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/grok-code-fast-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/grok-code-fast-1/"/>
@@ -1816,7 +1816,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/glm-4-9b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/glm-4-9b/"/>
@@ -1824,7 +1824,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/kimi-dev-72b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/kimi-dev-72b/"/>
@@ -1832,7 +1832,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/hunyuan-large/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/hunyuan-large/"/>
@@ -1840,7 +1840,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/nemotron-nano-9b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/nemotron-nano-9b/"/>
@@ -1848,7 +1848,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/olmo-2-13b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/olmo-2-13b/"/>
@@ -1856,7 +1856,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/phi-3-5-moe/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/phi-3-5-moe/"/>
@@ -1864,7 +1864,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/falcon-3-10b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/falcon-3-10b/"/>
@@ -1872,7 +1872,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/falcon-h1-34b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/falcon-h1-34b/"/>
@@ -1880,7 +1880,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/falcon-180b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/falcon-180b/"/>
@@ -1888,7 +1888,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/xlam-2-70b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/xlam-2-70b/"/>
@@ -1896,7 +1896,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/arctic/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/arctic/"/>
@@ -1904,7 +1904,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/palmyra-x5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/palmyra-x5/"/>
@@ -1912,7 +1912,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/exaone-4-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/exaone-4-32b/"/>
@@ -1920,7 +1920,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/hyperclova-x-seed-14b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/hyperclova-x-seed-14b/"/>
@@ -1928,7 +1928,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/sarvam-m/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/sarvam-m/"/>
@@ -1936,7 +1936,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/ling-1t/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/ling-1t/"/>
@@ -1944,7 +1944,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/minicpm4-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/minicpm4-8b/"/>
@@ -1952,7 +1952,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/dots-llm1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/dots-llm1/"/>
@@ -1960,7 +1960,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/openelm-3b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/openelm-3b/"/>
@@ -1968,7 +1968,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/corx3-8-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/corx3-8-27b/"/>
@@ -1976,7 +1976,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/tristream-svs/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/tristream-svs/"/>
@@ -1984,7 +1984,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/models/corx1-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/models/corx1-5/"/>
@@ -1992,7 +1992,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-vs-claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-vs-claude-opus-4-5/"/>
@@ -2000,7 +2000,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-vs-gemini-3-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-vs-gemini-3-pro/"/>
@@ -2008,7 +2008,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-4-5-vs-gemini-3-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-4-5-vs-gemini-3-pro/"/>
@@ -2016,7 +2016,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-gpt-5/"/>
@@ -2024,7 +2024,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-gemini-2-5-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-gemini-2-5-pro/"/>
@@ -2032,7 +2032,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-claude-opus-4-5/"/>
@@ -2040,7 +2040,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-claude-haiku-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-4-5-vs-claude-haiku-4-5/"/>
@@ -2048,7 +2048,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-vs-gpt-5-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-vs-gpt-5-mini/"/>
@@ -2056,7 +2056,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-mini-vs-claude-haiku-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-mini-vs-claude-haiku-4-5/"/>
@@ -2064,7 +2064,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemini-2-5-pro-vs-gemini-3-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemini-2-5-pro-vs-gemini-3-pro/"/>
@@ -2072,7 +2072,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemini-2-5-flash-vs-gpt-5-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemini-2-5-flash-vs-gpt-5-mini/"/>
@@ -2080,7 +2080,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/grok-4-vs-gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/grok-4-vs-gpt-5/"/>
@@ -2088,7 +2088,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/grok-4-vs-claude-opus-4-5/"/>
@@ -2096,7 +2096,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-v3-2-vs-gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-v3-2-vs-gpt-5/"/>
@@ -2104,7 +2104,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-v3-2-vs-claude-sonnet-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-v3-2-vs-claude-sonnet-4-5/"/>
@@ -2112,7 +2112,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-r1-vs-gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-r1-vs-gpt-5/"/>
@@ -2120,7 +2120,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-r1-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-r1-vs-deepseek-v3-2/"/>
@@ -2128,7 +2128,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k2-thinking-vs-claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k2-thinking-vs-claude-opus-4-5/"/>
@@ -2136,7 +2136,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k2-thinking-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k2-thinking-vs-deepseek-v3-2/"/>
@@ -2144,7 +2144,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-4-6-vs-claude-sonnet-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-4-6-vs-claude-sonnet-4-5/"/>
@@ -2152,7 +2152,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-4-6-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-4-6-vs-deepseek-v3-2/"/>
@@ -2160,7 +2160,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-235b-a22b-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-235b-a22b-vs-deepseek-v3-2/"/>
@@ -2168,7 +2168,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-coder-480b-vs-claude-sonnet-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-coder-480b-vs-claude-sonnet-4-5/"/>
@@ -2176,7 +2176,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-coder-480b-vs-glm-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-coder-480b-vs-glm-4-6/"/>
@@ -2184,7 +2184,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/llama-4-maverick-vs-deepseek-v3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/llama-4-maverick-vs-deepseek-v3/"/>
@@ -2192,7 +2192,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/llama-4-maverick-vs-qwen3-235b-a22b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/llama-4-maverick-vs-qwen3-235b-a22b/"/>
@@ -2200,7 +2200,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/llama-3-3-70b-vs-qwen2-5-72b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/llama-3-3-70b-vs-qwen2-5-72b/"/>
@@ -2208,7 +2208,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/minimax-m2-vs-glm-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/minimax-m2-vs-glm-4-6/"/>
@@ -2216,7 +2216,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-oss-120b-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-oss-120b-vs-deepseek-v3-2/"/>
@@ -2224,7 +2224,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-oss-120b-vs-qwen3-235b-a22b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-oss-120b-vs-qwen3-235b-a22b/"/>
@@ -2232,7 +2232,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-oss-20b-vs-qwen3-30b-a3b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-oss-20b-vs-qwen3-30b-a3b/"/>
@@ -2240,7 +2240,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/mistral-medium-3-vs-gpt-4-1-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/mistral-medium-3-vs-gpt-4-1-mini/"/>
@@ -2248,7 +2248,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/mistral-small-3-2-vs-gemma-3-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/mistral-small-3-2-vs-gemma-3-27b/"/>
@@ -2256,7 +2256,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemma-3-27b-vs-qwen3-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemma-3-27b-vs-qwen3-32b/"/>
@@ -2264,7 +2264,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemma-3-27b-vs-llama-3-3-70b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemma-3-27b-vs-llama-3-3-70b/"/>
@@ -2272,7 +2272,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/phi-4-vs-gemma-3-12b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/phi-4-vs-gemma-3-12b/"/>
@@ -2280,7 +2280,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-4o-vs-claude-3-5-sonnet/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-4o-vs-claude-3-5-sonnet/"/>
@@ -2288,7 +2288,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-4o-vs-gpt-4-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-4o-vs-gpt-4-1/"/>
@@ -2296,7 +2296,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-4o-mini-vs-gemini-2-0-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-4o-mini-vs-gemini-2-0-flash/"/>
@@ -2304,7 +2304,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/o3-vs-gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/o3-vs-gpt-5/"/>
@@ -2312,7 +2312,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/o4-mini-vs-gpt-5-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/o4-mini-vs-gpt-5-mini/"/>
@@ -2320,7 +2320,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-3-7-sonnet-vs-claude-sonnet-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-3-7-sonnet-vs-claude-sonnet-4-5/"/>
@@ -2328,7 +2328,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/command-a-vs-llama-3-3-70b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/command-a-vs-llama-3-3-70b/"/>
@@ -2336,7 +2336,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/nova-pro-vs-gpt-4o/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/nova-pro-vs-gpt-4o/"/>
@@ -2344,7 +2344,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwq-32b-vs-qwen3-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwq-32b-vs-qwen3-32b/"/>
@@ -2352,7 +2352,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/grok-4-fast-vs-gemini-2-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/grok-4-fast-vs-gemini-2-5-flash/"/>
@@ -2360,7 +2360,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-4-1-vs-gemini-2-5-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-4-1-vs-gemini-2-5-pro/"/>
@@ -2368,7 +2368,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-haiku-4-5-vs-gemini-2-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-haiku-4-5-vs-gemini-2-5-flash/"/>
@@ -2376,7 +2376,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-gemma-3-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-gemma-3-27b/"/>
@@ -2384,7 +2384,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-qwen3-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-qwen3-32b/"/>
@@ -2392,7 +2392,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-mistral-small-3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-mistral-small-3-2/"/>
@@ -2400,7 +2400,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-qwen2-5-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-qwen2-5-32b/"/>
@@ -2408,7 +2408,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-llama-3-3-70b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-llama-3-3-70b/"/>
@@ -2416,7 +2416,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-gpt-oss-20b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-gpt-oss-20b/"/>
@@ -2424,7 +2424,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-corx1-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-corx1-5/"/>
@@ -2432,7 +2432,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx1-5-vs-llama-3-2-1b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx1-5-vs-llama-3-2-1b/"/>
@@ -2440,7 +2440,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx1-5-vs-gemma-3-4b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx1-5-vs-gemma-3-4b/"/>
@@ -2448,7 +2448,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-5-vs-claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-5-vs-claude-opus-4-5/"/>
@@ -2456,7 +2456,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-5-vs-claude-sonnet-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-5-vs-claude-sonnet-4-5/"/>
@@ -2464,7 +2464,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-fable-5-1-vs-claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-fable-5-1-vs-claude-opus-5/"/>
@@ -2472,7 +2472,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-fable-5-vs-claude-fable-5-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-fable-5-vs-claude-fable-5-1/"/>
@@ -2480,7 +2480,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-mythos-5-vs-claude-mythos-5-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-mythos-5-vs-claude-mythos-5-1/"/>
@@ -2488,7 +2488,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-mythos-5-vs-claude-fable-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-mythos-5-vs-claude-fable-5/"/>
@@ -2496,7 +2496,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-mythos-5-1-vs-claude-fable-5-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-mythos-5-1-vs-claude-fable-5-1/"/>
@@ -2504,7 +2504,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-mythos-5-vs-claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-mythos-5-vs-claude-opus-5/"/>
@@ -2512,7 +2512,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-5-vs-gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-5-vs-gpt-5/"/>
@@ -2520,7 +2520,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-5-vs-gemini-3-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-5-vs-gemini-3-pro/"/>
@@ -2528,7 +2528,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-5-vs-gpt-5-mini/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-5-vs-gpt-5-mini/"/>
@@ -2536,7 +2536,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-fable-5-1-vs-claude-fable-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-fable-5-1-vs-claude-fable-5/"/>
@@ -2544,7 +2544,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-fable-5-1-vs-gemini-3-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-fable-5-1-vs-gemini-3-pro/"/>
@@ -2552,7 +2552,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-mythos-5-1-vs-claude-mythos-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-mythos-5-1-vs-claude-mythos-5/"/>
@@ -2560,7 +2560,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-5-3-vs-kimi-k3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-5-3-vs-kimi-k3/"/>
@@ -2568,7 +2568,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-5-3-vs-claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-5-3-vs-claude-opus-5/"/>
@@ -2576,7 +2576,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k3-vs-claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k3-vs-claude-opus-5/"/>
@@ -2584,7 +2584,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k3-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k3-vs-deepseek-v3-2/"/>
@@ -2592,7 +2592,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-5-3-vs-glm-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-5-3-vs-glm-4-6/"/>
@@ -2600,7 +2600,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-5-3-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-5-3-vs-deepseek-v3-2/"/>
@@ -2608,7 +2608,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k3-vs-kimi-k2-thinking/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k3-vs-kimi-k2-thinking/"/>
@@ -2616,7 +2616,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k3-vs-glm-5-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k3-vs-glm-5-3/"/>
@@ -2624,7 +2624,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/llama-3-1-70b-vs-llama-3-3-70b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/llama-3-1-70b-vs-llama-3-3-70b/"/>
@@ -2632,7 +2632,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-14b-vs-gemma-3-12b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-14b-vs-gemma-3-12b/"/>
@@ -2640,7 +2640,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-8b-vs-llama-3-1-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-8b-vs-llama-3-1-8b/"/>
@@ -2648,7 +2648,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-4b-vs-gemma-3-4b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-4b-vs-gemma-3-4b/"/>
@@ -2656,7 +2656,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-r1-distill-32b-vs-qwq-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-r1-distill-32b-vs-qwq-32b/"/>
@@ -2664,7 +2664,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/mistral-nemo-vs-llama-3-1-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/mistral-nemo-vs-llama-3-1-8b/"/>
@@ -2672,7 +2672,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/mistral-7b-vs-qwen2-5-7b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/mistral-7b-vs-qwen2-5-7b/"/>
@@ -2680,7 +2680,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/grok-code-fast-1-vs-qwen3-coder-480b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/grok-code-fast-1-vs-qwen3-coder-480b/"/>
@@ -2688,7 +2688,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/nemotron-nano-9b-vs-qwen3-8b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/nemotron-nano-9b-vs-qwen3-8b/"/>
@@ -2696,7 +2696,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/exaone-4-32b-vs-qwen3-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/exaone-4-32b-vs-qwen3-32b/"/>
@@ -2704,7 +2704,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-4-turbo-vs-gpt-4o/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-4-turbo-vs-gpt-4o/"/>
@@ -2712,7 +2712,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemini-1-5-pro-vs-gemini-2-5-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemini-1-5-pro-vs-gemini-2-5-pro/"/>
@@ -2720,7 +2720,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemma-2-27b-vs-gemma-3-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemma-2-27b-vs-gemma-3-27b/"/>
@@ -2728,7 +2728,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/phi-4-vs-qwen3-14b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/phi-4-vs-qwen3-14b/"/>
@@ -2736,7 +2736,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/falcon-h1-34b-vs-qwen3-32b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/falcon-h1-34b-vs-qwen3-32b/"/>
@@ -2744,7 +2744,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k2-vs-kimi-k2-thinking/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k2-vs-kimi-k2-thinking/"/>
@@ -2752,7 +2752,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-claude-opus-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-claude-opus-5-5/"/>
@@ -2760,7 +2760,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-claude-fable-5-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-claude-fable-5-1/"/>
@@ -2768,7 +2768,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-gemini-3-8-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-gemini-3-8-flash/"/>
@@ -2776,7 +2776,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-gpt-5-6-sol/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-6-astra-vs-gpt-5-6-sol/"/>
@@ -2784,7 +2784,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-6-1-sol-vs-claude-sonnet-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-6-1-sol-vs-claude-sonnet-5-5/"/>
@@ -2792,7 +2792,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-6-1-sol-vs-grok-4-7/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-6-1-sol-vs-grok-4-7/"/>
@@ -2800,7 +2800,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-6-luna-vs-claude-haiku-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-6-luna-vs-claude-haiku-5-5/"/>
@@ -2808,7 +2808,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-6-sol-vs-claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-6-sol-vs-claude-opus-5/"/>
@@ -2816,7 +2816,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-6-sol-vs-gpt-5-6-terra/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-6-sol-vs-gpt-5-6-terra/"/>
@@ -2824,7 +2824,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-6-luna-vs-gemini-3-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-6-luna-vs-gemini-3-5-flash/"/>
@@ -2832,7 +2832,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-5-vs-claude-opus-4-7/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-5-vs-claude-opus-4-7/"/>
@@ -2840,7 +2840,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-5-vs-gemini-3-1-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-5-vs-gemini-3-1-pro/"/>
@@ -2848,7 +2848,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-2-vs-gpt-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-2-vs-gpt-5/"/>
@@ -2856,7 +2856,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gpt-5-2-vs-claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gpt-5-2-vs-claude-opus-4-5/"/>
@@ -2864,7 +2864,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-5-5-vs-claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-5-5-vs-claude-opus-5/"/>
@@ -2872,7 +2872,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-5-5-vs-claude-fable-5-1/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-5-5-vs-claude-fable-5-1/"/>
@@ -2880,7 +2880,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-5-5-vs-claude-sonnet-5-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-5-5-vs-claude-sonnet-5-5/"/>
@@ -2888,7 +2888,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-5-5-vs-claude-sonnet-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-5-5-vs-claude-sonnet-5/"/>
@@ -2896,7 +2896,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-haiku-5-5-vs-claude-haiku-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-haiku-5-5-vs-claude-haiku-4-5/"/>
@@ -2904,7 +2904,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-4-8-vs-claude-opus-4-7/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-4-8-vs-claude-opus-4-7/"/>
@@ -2912,7 +2912,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-4-8-vs-claude-opus-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-4-8-vs-claude-opus-5/"/>
@@ -2920,7 +2920,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-4-7-vs-claude-opus-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-4-7-vs-claude-opus-4-6/"/>
@@ -2928,7 +2928,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-4-6-vs-claude-opus-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-4-6-vs-claude-opus-4-5/"/>
@@ -2936,7 +2936,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-opus-4-6-vs-gemini-3-1-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-opus-4-6-vs-gemini-3-1-pro/"/>
@@ -2944,7 +2944,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/claude-sonnet-4-6-vs-claude-sonnet-4-5/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/claude-sonnet-4-6-vs-claude-sonnet-4-5/"/>
@@ -2952,7 +2952,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemini-3-8-flash-vs-gemini-3-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemini-3-8-flash-vs-gemini-3-5-flash/"/>
@@ -2960,7 +2960,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemini-3-8-flash-vs-deepseek-v4-1-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemini-3-8-flash-vs-deepseek-v4-1-flash/"/>
@@ -2968,7 +2968,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemini-3-1-pro-vs-gemini-3-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemini-3-1-pro-vs-gemini-3-pro/"/>
@@ -2976,7 +2976,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/gemini-3-flash-vs-gemini-2-5-flash/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/gemini-3-flash-vs-gemini-2-5-flash/"/>
@@ -2984,7 +2984,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-v4-1-flash-vs-deepseek-v4-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-v4-1-flash-vs-deepseek-v4-pro/"/>
@@ -2992,7 +2992,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-v4-pro-vs-deepseek-v3-2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-v4-pro-vs-deepseek-v3-2/"/>
@@ -3000,7 +3000,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/deepseek-v4-1-flash-vs-qwen3-8-max/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/deepseek-v4-1-flash-vs-qwen3-8-max/"/>
@@ -3008,7 +3008,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-8-max-vs-qwen3-max/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-8-max-vs-qwen3-max/"/>
@@ -3016,7 +3016,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-8-max-vs-kimi-k3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-8-max-vs-kimi-k3/"/>
@@ -3024,7 +3024,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-8-max-vs-glm-5-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-8-max-vs-glm-5-3/"/>
@@ -3032,7 +3032,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-qwen3-8-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/corx3-8-27b-vs-qwen3-8-27b/"/>
@@ -3040,7 +3040,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-8-27b-vs-gemma-3-27b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-8-27b-vs-gemma-3-27b/"/>
@@ -3048,7 +3048,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/qwen3-5-397b-a17b-vs-qwen3-235b-a22b/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/qwen3-5-397b-a17b-vs-qwen3-235b-a22b/"/>
@@ -3056,7 +3056,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/mistral-large-4-vs-deepseek-v4-pro/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/mistral-large-4-vs-deepseek-v4-pro/"/>
@@ -3064,7 +3064,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/mistral-large-4-vs-kimi-k3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/mistral-large-4-vs-kimi-k3/"/>
@@ -3072,7 +3072,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k2-6-vs-kimi-k2-thinking/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k2-6-vs-kimi-k2-thinking/"/>
@@ -3080,7 +3080,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/kimi-k2-6-vs-kimi-k3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/kimi-k2-6-vs-kimi-k3/"/>
@@ -3088,7 +3088,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/minimax-m3-vs-minimax-m2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/minimax-m3-vs-minimax-m2/"/>
@@ -3096,7 +3096,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/minimax-m2-5-vs-minimax-m2/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/minimax-m2-5-vs-minimax-m2/"/>
@@ -3104,7 +3104,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/grok-4-7-vs-grok-4/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/grok-4-7-vs-grok-4/"/>
@@ -3112,7 +3112,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-5-vs-glm-4-6/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-5-vs-glm-4-6/"/>
@@ -3120,7 +3120,7 @@
   </url>
   <url>
     <loc>https://corx-labs.com/benchmarks/compare/glm-5-vs-glm-5-3/</loc>
-    <lastmod>2026-10-29</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/benchmarks/compare/glm-5-vs-glm-5-3/"/>
