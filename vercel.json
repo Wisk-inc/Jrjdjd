@@ -302,6 +302,16 @@
       "source": "/automa",
       "destination": "/automa/",
       "permanent": true
+    },
+    {
+      "source": "/nathan",
+      "destination": "/nathan/",
+      "permanent": true
+    },
+    {
+      "source": "/nathan-lyttle",
+      "destination": "/nathan/",
+      "permanent": true
     }
   ],
   "headers": [

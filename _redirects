@@ -52,6 +52,8 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /helix               /models/helix/         301
 /helix-lm            /models/helix/         301
 /automa              /automa/               301
+/nathan              /nathan/               301
+/nathan-lyttle       /nathan/               301
 
 /benchmark           /benchmarks/           301
 /benchmarks          /benchmarks/           301

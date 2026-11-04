@@ -222,7 +222,7 @@
 
   <url>
     <loc>https://corx-labs.com/developers/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/developers/"/>
@@ -230,6 +230,19 @@
     <image:image>
       <image:loc>https://corx-labs.com/assets/img/og-developers.jpg</image:loc>
       <image:title>The developers behind CorX1.5</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://corx-labs.com/nathan/</loc>
+    <lastmod>2026-11-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/nathan/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/nathan/"/>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/og-nathan.jpg</image:loc>
+      <image:title>Nathan Lyttle, founder of CorX Labs, building AI from Jamaica</image:title>
     </image:image>
   </url>
 

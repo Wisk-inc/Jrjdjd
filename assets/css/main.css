@@ -893,19 +893,22 @@ td { color: var(--muted); }
   color: var(--faint);
 }
 .announce .prose { margin-top: 14px; }
-.announce blockquote {
+.announce blockquote,
+blockquote.pull {
   margin: 26px 0 0;
   padding-left: 22px;
   border-left: 2px solid var(--espresso);
   max-width: 62ch;
 }
-.announce blockquote p {
+.announce blockquote p,
+blockquote.pull p {
   font-family: var(--serif);
   font-size: clamp(1.15rem, 2vw, 1.45rem);
   line-height: 1.35;
   color: var(--ink-strong);
 }
-.announce blockquote cite {
+.announce blockquote cite,
+blockquote.pull cite {
   display: block;
   margin-top: 12px;
   font-family: var(--sans);
