@@ -614,9 +614,7 @@ def build_hub():
     }
 
     write("/benchmarks/", page(
-        fit_title("AI Model Benchmarks %s — Compare %d Models Side by Side" % (UPDATED[:4], n_models),
-                  "AI Model Benchmarks %s — Compare %d Models" % (UPDATED[:4], n_models),
-                  "AI Model Benchmarks — Compare %d Models Side by Side" % n_models),
+        "AI Model Benchmarks — Compare %d Models Side by Side" % n_models,
         fit("Compare %d AI models from %d labs — GPT, Claude, Gemini, DeepSeek, Qwen and more: price, "
             "context and published GPQA, SWE-bench and Terminal-Bench scores."
             % (n_models, n_companies),
@@ -1687,8 +1685,7 @@ def build_leaderboard():
     ]}
 
     write("/benchmarks/leaderboard/", page(
-        fit_title("Best AI Models of %s — Leaderboard by Field" % UPDATED[:4],
-                  "AI Model Leaderboard — Top Models in Every Field"),
+        "AI Model Leaderboard — Top Models in Every Field",
         fit("Which AI models lead at reasoning, maths, coding, knowledge, multimodal, instruction "
             "following and human preference. Ranked from published benchmark figures across %d models "
             "from %d labs." % (len(MODELS), len(COMPANIES)),
