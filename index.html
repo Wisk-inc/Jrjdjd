@@ -171,16 +171,16 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
     {
       "@type": "NewsArticle",
       "@id": "https://corx-labs.com/#announcement",
-      "headline": "CorX Labs has built five open-source AI models in Jamaica, including the island's first large language model and a hurricane model",
-      "description": "CorX Labs, an independent AI research lab in Jamaica, has built five open-source AI models. Four are released with trained weights: CorX3.8-27B, a 27-billion-parameter Jamaican Patois-speaking assistant and the island's first large open-weight LLM; CorX1.5, a 158-million-parameter language model trained entirely from scratch; TriStream-SVS, a 321.8-million-parameter singing voice synthesis model; and NatureV1, an 89-million-parameter weather and hurricane research model whose hurricane track beats physics-only steering at every lead on held-out seasons. HELIX is a linear-scaling sequence architecture with a tested reference implementation and no trained checkpoints. The lab also makes Automa, an Android app for running a company of AI agents from a phone.",
+      "headline": "CorX Labs releases Automa, an AI agents app for Android, alongside five open-source AI models built in Jamaica",
+      "description": "CorX Labs, an independent AI research lab in Jamaica, has released Automa 1.9.7, an Android app that runs a whole company of AI agents from a phone on free AI models with no key, account or card, including Moan, a Jamaican model that answers in Patois. It joins the five open-source AI models the lab has built: CorX3.8-27B, a 27-billion-parameter Jamaican Patois-speaking assistant and the island's first large open-weight LLM; CorX1.5, a 158-million-parameter language model trained entirely from scratch; TriStream-SVS, a 321.8-million-parameter singing voice synthesis model; NatureV1, an 89-million-parameter weather and hurricane research model; and HELIX, a linear-scaling sequence architecture.",
       "url": "https://corx-labs.com/#announcement",
       "mainEntityOfPage": { "@id": "https://corx-labs.com/#webpage" },
       "datePublished": "2026-08-01",
-      "dateModified": "2026-10-24",
+      "dateModified": "2026-11-04",
       "inLanguage": "en",
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan", "url": "https://corx-labs.com/developers/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
-      "image": "https://corx-labs.com/assets/img/og-default.jpg",
+      "image": ["https://corx-labs.com/assets/img/og-automa-1-9-7.jpg", "https://corx-labs.com/assets/img/og-default.jpg"],
       "about": [
         { "@id": "https://corx-labs.com/models/corx3-8/#model" },
         { "@id": "https://corx-labs.com/models/corx1-5/#model" },
@@ -452,7 +452,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <a class="btn btn-ghost" href="/models/">Explore our models</a>
       </div>
       <div class="hero-meta">
-        <span><i class="dot" aria-hidden="true"></i> CorX1.5 &middot; 158M parameters</span>
+        <span><i class="dot" aria-hidden="true"></i> New: <a href="/automa/" style="color:var(--ink-strong);text-decoration:underline;text-underline-offset:3px">Automa 1.9.7, an AI agents app</a></span>
+        <span>CorX1.5 &middot; 158M parameters</span>
         <span>Apache 2.0 licensed</span>
         <span>Trained from scratch on a single GPU</span>
       </div>
@@ -467,15 +468,16 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       <article class="announce" data-reveal>
         <p class="announce-tag"><i class="dot" aria-hidden="true"></i> Announcement</p>
 
-        <h2 id="announce-title">CorX Labs has built five open-source AI models in Jamaica,
-          including the island's first large language model and a hurricane model.</h2>
+        <h2 id="announce-title">CorX Labs releases Automa, an AI agents app for Android, alongside
+          five open-source AI models built in Jamaica.</h2>
 
-        <p class="dateline">Jamaica &middot; First released <time datetime="2026-08-28">28 August 2026</time> &middot; Updated <time datetime="2026-10-17">17 October 2026</time></p>
+        <p class="dateline">Jamaica &middot; First released <time datetime="2026-08-28">28 August 2026</time> &middot; Updated <time datetime="2026-11-04">4 November 2026</time></p>
 
         <div class="prose">
           <p><strong>CorX Labs</strong>, an independent artificial intelligence research lab and
-            research station based in Jamaica, has built five open-source AI models. Four are
-            released with trained weights: <strong>CorX3.8-27B</strong>, a 27-billion-parameter
+            research station based in Jamaica, has released <strong>Automa 1.9.7</strong>, an Android
+            app that runs a whole company of AI agents from a phone. It joins the five open-source AI
+            models the lab has built. Four are released with trained weights: <strong>CorX3.8-27B</strong>, a 27-billion-parameter
             Jamaican Patois-speaking assistant and the island's first large open-weight LLM;
             <strong>CorX1.5</strong>, a 158-million-parameter language model designed and trained
             entirely from scratch; <strong>TriStream-SVS</strong>, a 321.8-million-parameter singing
@@ -483,10 +485,23 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
             hurricane model.</p>
 
           <p>The fifth, <strong>HELIX</strong>, is a linear-scaling sequence architecture published as
-            code. The lab also makes <strong>Automa</strong>, an Android app that runs a company of AI
-            agents from a phone &mdash; on free AI models with no key, including Moan, a Jamaican model
-            that speaks Patois. It is one of the first AI agent apps built in Jamaica, and a free APK
-            download. All of it is the work of a single developer.</p>
+            code. All of it, Automa included, is the work of a single developer.</p>
+
+          <h3>Automa — an AI company in your pocket</h3>
+
+          <p>Automa is an Android app for hiring AI agents, chatting with them like teammates, handing
+            them tasks and approving what matters: hires, budgets and plans wait for a yes, and every
+            token is counted against a budget. It runs on twenty-plus free chat models and two free
+            image models with no key, no account and no card, or on the user&rsquo;s own Claude, GPT,
+            Gemini, DeepSeek and Grok keys. Its agents search the web with sources, draw pictures, make
+            real Excel, PowerPoint and Word files, and build apps in 69 languages in App Studio.</p>
+
+          <p>The free models include <strong>Moan</strong>, Automa&rsquo;s own Jamaican model, which
+            answers in Patois first and reads Jamaican news, law and government sources into a live
+            index so its replies cite source, date and link. The server the agents work on can run on
+            the phone itself, in Termux, so one Android phone is the whole setup. Automa is one of the
+            first AI agent apps built in Jamaica; version 1.9.7 is a free 22.9&nbsp;MB APK for
+            Android 8.0 or newer, with an APKPure listing pending review.</p>
 
           <h3>CorX3.8-27B — a model that speaks Patois</h3>
 
@@ -613,11 +628,12 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         </div>
 
         <div class="btn-row mt-m">
-          <a class="btn btn-primary" href="/models/corx3-8/">CorX3.8-27B model card</a>
-          <a class="btn btn-ghost" href="/models/corx1-5/">CorX1.5 model card</a>
-          <a class="btn btn-ghost" href="/models/tristream-svs/">TriStream-SVS model card</a>
+          <a class="btn btn-primary" href="/automa/">See Automa</a>
+          <a class="btn btn-ghost" href="/downloads/Automa-1.9.7.apk" download="Automa-1.9.7.apk" type="application/vnd.android.package-archive">Download the APK</a>
+          <a class="btn btn-ghost" href="/models/corx3-8/">CorX3.8-27B model card</a>
           <a class="btn btn-ghost" href="/models/naturev1/">NatureV1 model card</a>
-          <a class="btn btn-ghost" href="/blog/3-billion-tokens-one-gpu/">How CorX1.5 was trained</a>
+          <a class="btn btn-ghost" href="/models/tristream-svs/">TriStream-SVS model card</a>
+          <a class="btn btn-ghost" href="/models/corx1-5/">CorX1.5 model card</a>
         </div>
       </article>
     </div>
