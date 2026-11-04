@@ -36,6 +36,14 @@
   Cache-Control: no-cache
   X-Robots-Tag: noindex
 
+# The Automa app. Served as an Android package and always downloaded, never
+# rendered; kept out of search results (the /automa/ page is what should rank).
+/downloads/*
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment
+  Cache-Control: public, max-age=86400
+  X-Robots-Tag: noindex
+
 # Crawler-facing files should never be served stale for long.
 /sitemap.xml
   Cache-Control: public, max-age=3600

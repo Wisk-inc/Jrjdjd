@@ -48,6 +48,15 @@
     Cache-Control = "no-cache"
     X-Robots-Tag = "noindex"
 
+# The Automa app: always downloaded, never rendered, never indexed.
+[[headers]]
+  for = "/downloads/*"
+  [headers.values]
+    Content-Type = "application/vnd.android.package-archive"
+    Content-Disposition = "attachment"
+    Cache-Control = "public, max-age=86400"
+    X-Robots-Tag = "noindex"
+
 # For AI assistants, not search results.
 [[headers]]
   for = "/llms.txt"
