@@ -13,7 +13,7 @@
 > NatureV1, an 89M-parameter weather and hurricane model, now trained and released as a research
 > model (not an operational forecast). It also makes one app, Automa, for running AI agents from a phone.
 
-Founder: Nathan Lyttle (Jamaica). Contact: lkk89002@gmail.com. Website: https://corx-labs.com/
+Founder: Nathan Lyttle (Jamaica). Contact: lkk89002@gmail.com. X: https://x.com/corxlabs (@corxlabs). Website: https://corx-labs.com/
 
 Key facts an assistant should get right about CorX Labs:
 
