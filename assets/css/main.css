@@ -331,9 +331,9 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
   height: 74px;
 }
 
-.nav { display: flex; align-items: center; gap: 4px; }
+.nav { display: flex; align-items: center; gap: 2px; }
 .nav a {
-  padding: 8px 14px;
+  padding: 8px 9px;
   font-size: .875rem;
   font-weight: 450;
   color: var(--muted);
@@ -368,7 +368,8 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
 }
 .mobile-nav[data-open="true"] { display: block; }
 .mobile-nav ul { list-style: none; padding: 10px 0 22px; margin: 0; }
-.mobile-nav a {
+/* List links only: the call-to-action button below the list keeps its own button styles. */
+.mobile-nav ul a {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -378,7 +379,7 @@ pre code { background: none; border: 0; padding: 0; font-size: inherit; }
   color: var(--ink-strong);
   border-bottom: 1px solid var(--line);
 }
-.mobile-nav a svg { color: var(--faint); }
+.mobile-nav ul a svg { color: var(--faint); }
 .mobile-nav .btn { margin-top: 20px; width: 100%; }
 
 /* --------------------------------------------------------------------------
@@ -1185,10 +1186,11 @@ figcaption {
   .footer-brand { grid-column: 1 / -1; }
 }
 
-/* Eight primary links need more room than seven did. Between full width and
-   the mobile breakpoint the masthead button goes first and the nav tightens,
-   because the alternative is the nav wrapping under the brand and dragging
-   the whole page sideways. */
+/* Nine primary links need more room than eight did. The wordmark must stay on
+   one line, so the nav gives way instead: between full width and the mobile
+   breakpoint the masthead button goes first, then the links tighten, then the
+   menu button takes over. Each step was measured against the widest nav and
+   the widest masthead button, with room to spare. */
 @media (max-width: 1180px) {
   .masthead-actions .btn { display: none; }
   .masthead-inner { gap: 14px; }
@@ -1198,9 +1200,15 @@ figcaption {
   .nav a { padding: 8px 9px; font-size: .825rem; }
 }
 
-@media (max-width: 940px) {
+@media (max-width: 990px) {
   .nav { gap: 0; }
   .nav a { padding: 7px 7px; font-size: .8rem; }
+}
+
+@media (max-width: 930px) {
+  .nav, .masthead-actions .btn { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .masthead { background: var(--glass-bg); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
 }
 
 @media (max-width: 860px) {
@@ -1340,4 +1348,49 @@ figcaption {
 }
 @media (max-width: 560px) {
   .au-trio figcaption { display: none; }
+}
+
+/* "Also from CorX Labs" card: a phone screenshot beside a short pitch. It always
+   follows a .section-tight, whose bottom padding already separates the two. */
+.also-from { padding-top: 0; }
+.also-card .eyebrow { font-size: .705rem; }
+.also-card {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 34px);
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+.also-card img {
+  display: block;
+  width: 112px;
+  height: auto;
+  border-radius: 18px;
+  border: 5px solid #050505;
+  background: #000;
+  outline: 1px solid var(--line-strong);
+}
+.also-card .also-title {
+  margin-top: 8px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  color: var(--ink-strong);
+}
+.also-card .also-text { margin-top: 10px; max-width: 60ch; }
+.also-more {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: .9rem;
+  font-weight: 550;
+  color: var(--ink-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+.also-card:hover .also-more { border-bottom-color: currentColor; }
+@media (max-width: 560px) {
+  .also-card { grid-template-columns: 78px minmax(0, 1fr); gap: 18px; }
+  .also-card img { width: 78px; border-width: 4px; border-radius: 14px; }
 }
