@@ -211,6 +211,7 @@ FOOTER = """<footer class="site-footer">
           <li><a href="/developers/">Developers</a></li>
           <li><a href="/about/">About us</a></li>
           <li><a href="/contact/">Contact</a></li>
+          <li><a href="https://x.com/corxlabs" rel="noopener" target="_blank">Follow us on X</a></li>
         </ul>
       </nav>
     </div>
@@ -259,6 +260,7 @@ def page(title, description, canonical, body, jsonld=None, og_image="og-benchmar
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="%(title)s">
 <meta name="twitter:description" content="%(desc)s">
 <meta name="twitter:image" content="%(site)s/assets/img/%(og)s">

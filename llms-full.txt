@@ -16,6 +16,7 @@ states that plainly rather than presenting it as from scratch.
 
 Slogan: "Architecting the future." Positioning: "from the ground up."
 Founder: Nathan Lyttle, a solo developer and independent AI researcher from Jamaica.
+X (formerly Twitter): https://x.com/corxlabs (@corxlabs)
 Contact: lkk89002@gmail.com
 Website: https://corx-labs.com/
 Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
