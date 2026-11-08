@@ -24,6 +24,7 @@ NAV = [
     ("/chat/", "Chat"),
     ("/documentation/", "Documentation"),
     ("/models/", "Our Products"),
+    ("/automa/", "Automa"),
     ("/benchmarks/", "Benchmarks"),
     ("/blog/", "Blog"),
     ("/developers/", "Developers"),

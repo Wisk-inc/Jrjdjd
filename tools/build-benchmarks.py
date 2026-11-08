@@ -633,8 +633,25 @@ def build_hub():
             "Compare %d AI models from %d labs: context window, price, licence and published "
             "scores on GPQA Diamond, SWE-bench and Terminal-Bench."
             % (n_models, n_companies)),
-        SITE + "/benchmarks/", body, jsonld=ld,
+        SITE + "/benchmarks/", body + AUTOMA_PLUG, jsonld=ld,
         scripts=["/assets/js/benchmarks.js"]))
+
+
+AUTOMA_PLUG = '''
+  <section class="section-tight also-from" aria-labelledby="also-automa">
+    <div class="shell">
+      <a class="card also-card" href="/automa/" data-reveal>
+        <img src="/assets/img/automa/01-home.webp" alt="Automa&rsquo;s home screen on an Android phone" width="200" height="444" loading="lazy" decoding="async">
+        <div>
+          <p class="eyebrow is-plain">Also from CorX Labs</p>
+          <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
+          <p class="also-text">Put these models to work: Automa runs a team of AI agents on twenty-plus free chat models with no API key, or on your own Claude, GPT and Gemini keys.</p>
+          <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
+        </div>
+      </a>
+    </div>
+  </section>
+'''
 
 
 def _strip_tags(s):
