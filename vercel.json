@@ -4,6 +4,11 @@
   "trailingSlash": true,
   "redirects": [
     {
+      "source": "/downloads/Automa-1.9.7.apk",
+      "destination": "/downloads/Automa-1.9.8.apk",
+      "permanent": false
+    },
+    {
       "source": "/docs",
       "destination": "/documentation/",
       "permanent": true
