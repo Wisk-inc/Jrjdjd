@@ -69,4 +69,7 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /llm-benchmarks      /benchmarks/           301
 /ai-models           /benchmarks/           301
 
+# Links to an older Automa APK get the current one.
+/downloads/Automa-1.9.7.apk  /downloads/Automa-1.9.8.apk  302!
+
 /*                   /404.html              404
