@@ -72,12 +72,15 @@ export default async function handler(request) {
     origin: '*'
   }).toString();
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10000);
   try {
     const res = await fetch(api, {
       headers: {
         accept: 'application/json',
         'user-agent': 'CorX-Chat/1.0 (https://corx-labs.com/chat/)'
-      }
+      },
+      signal: controller.signal
     });
     if (!res.ok) return json({ error: `Image search returned ${res.status}`, results: [] }, 502);
     const data = await res.json();
@@ -85,6 +88,9 @@ export default async function handler(request) {
     if (!results.length) return json({ query, error: 'No usable images found.', results: [] });
     return json({ query, results });
   } catch (err) {
-    return json({ error: String(err?.message || err), results: [] }, 502);
+    const aborted = err && err.name === 'AbortError';
+    return json({ error: aborted ? 'Image search timed out.' : String(err?.message || err), results: [] }, 502);
+  } finally {
+    clearTimeout(timer);
   }
 }

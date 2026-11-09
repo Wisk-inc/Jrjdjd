@@ -5,7 +5,8 @@
    terminal's network access real rather than CORS-limited.
 
    Guards: https/http only, no credentials forwarded, private and
-   loopback addresses refused, response size capped. */
+   loopback addresses refused (IPv4 and IPv6, on the first address and on
+   every redirect), response size capped. */
 
 export const config = { runtime: 'edge' };
 
@@ -18,18 +19,47 @@ const json = (body, status = 200) =>
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }
   });
 
+const MAX_REDIRECTS = 5;
+const METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
+
 /* Block anything that would let the sandbox poke at infrastructure rather
-   than the public web. */
-const isBlockedHost = (hostname) => {
-  const h = hostname.toLowerCase();
-  if (h === 'localhost' || h.endsWith('.localhost') || h.endsWith('.internal')) return true;
-  if (h === '::1' || h === '0.0.0.0') return true;
-  if (/^127\./.test(h) || /^10\./.test(h) || /^192\.168\./.test(h)) return true;
-  if (/^172\.(1[6-9]|2\d|3[01])\./.test(h)) return true;
-  if (/^169\.254\./.test(h)) return true;         // link-local / cloud metadata
-  if (/^\[?fd[0-9a-f]{2}:/i.test(h)) return true; // unique local IPv6
+   than the public web. `hostname` comes from the URL parser, which has
+   already turned decimal, hex and octal IPv4 spellings into a dotted quad
+   and wraps an IPv6 literal in square brackets. */
+const isBlockedV4 = ([a, b]) =>
+  a === 0 || a === 10 || a === 127 ||        // this network, private, loopback
+  (a === 100 && b >= 64 && b <= 127) ||      // carrier-grade NAT
+  (a === 169 && b === 254) ||                // link-local / cloud metadata
+  (a === 172 && b >= 16 && b <= 31) ||       // private
+  (a === 192 && b === 168) ||                // private
+  (a === 198 && (b === 18 || b === 19)) ||   // benchmarking range
+  a >= 224;                                  // multicast and reserved
+
+const isBlockedV6 = (h) => {
+  if (h === '::' || h === '::1') return true;        // unspecified, loopback
+  if (/^f[cd][0-9a-f]{2}:/.test(h)) return true;    // unique local, fc00::/7
+  if (/^fe[89ab][0-9a-f]:/.test(h)) return true;    // link-local, fe80::/10
+  if (h.startsWith('ff')) return true;               // multicast
+  // An IPv4 address carried inside IPv6: mapped (::ffff:), NAT64 (64:ff9b::)
+  // or the old "compatible" form (::a.b.c.d). The parser prints the last 32
+  // bits as two hex groups, so read them back as the four octets.
+  const v4 = h.match(/^(?:::ffff:|64:ff9b::|::)([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+  if (v4) {
+    const hi = parseInt(v4[1], 16); const lo = parseInt(v4[2], 16);
+    return isBlockedV4([hi >> 8, hi & 255, lo >> 8, lo & 255]);
+  }
   return false;
 };
+
+export const isBlockedHost = (hostname) => {
+  const h = String(hostname).toLowerCase().replace(/\.$/, '');
+  if (h.startsWith('[') && h.endsWith(']')) return isBlockedV6(h.slice(1, -1));
+  if (h === 'localhost' || h.endsWith('.localhost') || h.endsWith('.internal') || h.endsWith('.local')) return true;
+  const quad = h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  return quad ? isBlockedV4(quad.slice(1).map(Number)) : false;
+};
+
+const isAllowedTarget = (u) => (u.protocol === 'https:' || u.protocol === 'http:') && !isBlockedHost(u.hostname);
 
 export default async function handler(request) {
   if (request.method !== 'POST') return json({ error: 'Use POST.' }, 405);
@@ -40,6 +70,7 @@ export default async function handler(request) {
   } catch {
     return json({ error: 'Body must be JSON.' }, 400);
   }
+  if (!payload || typeof payload !== 'object') return json({ error: 'Body must be a JSON object.' }, 400);
 
   let target;
   try {
@@ -56,6 +87,7 @@ export default async function handler(request) {
   }
 
   const method = String(payload.method || 'GET').toUpperCase();
+  if (!METHODS.includes(method)) return json({ error: `Method ${method.slice(0, 20)} is not allowed.` }, 400);
   const headers = new Headers();
   // Only a safe subset of caller headers is forwarded.
   const allowed = ['accept', 'content-type', 'user-agent'];
@@ -69,13 +101,47 @@ export default async function handler(request) {
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    const res = await fetch(target.toString(), {
-      method,
-      headers,
-      body: ['GET', 'HEAD'].includes(method) ? undefined : (payload.body ?? undefined),
-      redirect: 'follow',
-      signal: controller.signal
-    });
+    /* Redirects are followed by hand so that every hop passes the same checks
+       as the first address: a public page must not be able to bounce the
+       sandbox onto a private one. */
+    let current = target;
+    let hopMethod = method;
+    let hopBody;
+    if (!['GET', 'HEAD'].includes(method) && payload.body != null) {
+      hopBody = typeof payload.body === 'string' ? payload.body : JSON.stringify(payload.body);
+    }
+    let res;
+    for (let hop = 0; ; hop++) {
+      res = await fetch(current.toString(), {
+        method: hopMethod,
+        headers,
+        body: hopBody,
+        redirect: 'manual',
+        signal: controller.signal
+      });
+      const location = res.status >= 300 && res.status < 400 ? res.headers.get('location') : null;
+      if (!location) break;
+      let next;
+      try {
+        next = new URL(location, current);
+      } catch {
+        break;
+      }
+      if (hop >= MAX_REDIRECTS) {
+        return json({ status: 0, url: next.toString(), headers: {}, body: '', error: 'Too many redirects.' });
+      }
+      if (!isAllowedTarget(next)) {
+        return json({ status: 0, url: next.toString(), headers: {}, body: '', error: 'Redirected to a host that is not reachable from the sandbox.' });
+      }
+      // As browsers do: 303 always becomes a GET, 301 and 302 turn a POST into
+      // a GET, and 307 and 308 keep the method and body.
+      if (res.status === 303 || ((res.status === 301 || res.status === 302) && hopMethod === 'POST')) {
+        hopMethod = 'GET';
+        hopBody = undefined;
+      }
+      await res.body?.cancel().catch(() => {});
+      current = next;
+    }
 
     const reader = res.body?.getReader();
     let received = 0;
@@ -112,7 +178,7 @@ export default async function handler(request) {
 
     return json({
       status: res.status,
-      url: res.url || target.toString(),
+      url: current.toString(),
       headers: outHeaders,
       truncated: received > MAX_BYTES,
       body: new TextDecoder('utf-8', { fatal: false }).decode(merged)
