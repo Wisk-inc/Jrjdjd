@@ -26,7 +26,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
-<meta property="article:modified_time" content="2026-08-19T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-09T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="CorX3.8-27B — Jamaica's First Large Open-Weight LLM">
@@ -39,9 +39,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
 
@@ -103,7 +102,7 @@
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "mainEntity": { "@id": "https://corx-labs.com/models/corx3-8/#model" },
       "inLanguage": "en",
-      "dateModified": "2026-08-19",
+      "dateModified": "2026-11-09",
       "breadcrumb": { "@id": "https://corx-labs.com/models/corx3-8/#breadcrumb" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
@@ -427,6 +426,38 @@ print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
       <p class="mt-m" data-reveal style="font-size:.9rem;color:var(--muted)">Runs in 4-bit on a
         single ~24GB GPU; full bf16 needs ~56GB. Apache 2.0, inherited from the base model, with
         attribution to Qwen retained as the licence requires.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-tight" id="faq" aria-labelledby="faq-title">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Questions</p>
+        <h2 id="faq-title">Questions people ask.</h2>
+      </div>
+      <div class="faq mt-m">
+        <details>
+          <summary>What is CorX3.8-27B?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>CorX3.8-27B is a 27-billion-parameter conversational language model from CorX Labs in Jamaica. It is a Jamaican Patois-speaking assistant that answers directly, holds boundaries and carries everyday Jamaican cultural reference, while keeping the general reasoning, coding and mathematics ability of its base model. It is fine-tuned from the open-weight Qwen3.8-27B base under Apache 2.0, fully merged and standalone.</p></div>
+        </details>
+        <details>
+          <summary>Is CorX3.8 trained from scratch?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>No. Unlike <a href="/models/corx1-5/">CorX1.5</a>, which was trained from random weights, CorX3.8 is a fine-tune of an existing open-weight base model, Qwen3.8-27B, released under Apache 2.0. The underlying reasoning comes from that base; CorX Labs added the Jamaican voice, the direct register and the cultural grounding.</p></div>
+        </details>
+        <details>
+          <summary>Does CorX3.8 know specific Jamaican facts like addresses or laws?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Not reliably. CorX3.8 has a Patois voice and common cultural reference, but it does not dependably know specific facts such as street addresses, current laws, exam schedules, prices or business regulations. For those, pair it with the <a href="#grounding">recommended retrieval layer</a>, which grounds answers on real Jamaican sources and says plainly when something is not in its references — do not trust its unaided recall.</p></div>
+        </details>
+        <details>
+          <summary>What hardware does CorX3.8-27B need?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>It runs in 4-bit quantisation on a single GPU with roughly 24GB of memory. Full bf16 precision needs about 56GB. The weights are fully merged, so there is no adapter step and no separate base-model download.</p></div>
+        </details>
+        <details>
+          <summary>What licence is CorX3.8 released under?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Apache 2.0, inherited from the Qwen3.8-27B base model, with attribution to Qwen retained as the licence requires. The weights are open, so anyone can run, study and build on it.</p></div>
+        </details>
+      </div>
     </div>
   </section>
 

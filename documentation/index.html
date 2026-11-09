@@ -39,9 +39,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
 
@@ -57,6 +56,7 @@
       "description": "Full documentation for CorX Labs and CorX1.5: the lab, the website, the model architecture, the three-stage training pipeline, the safety layer, and how to load the model.",
       "url": "https://corx-labs.com/documentation/",
       "mainEntityOfPage": { "@id": "https://corx-labs.com/documentation/#webpage" },
+      "image": "https://corx-labs.com/assets/img/og-documentation.jpg",
       "inLanguage": "en",
       "datePublished": "2026-08-01",
       "dateModified": "2026-08-01",
@@ -120,7 +120,7 @@
         },
         {
           "@type": "Question",
-          "name": "Should CorX1.5 be used in production?",
+          "name": "Should I use CorX1.5 in production?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "No. CorX1.5 is an independent research and learning project. It should not be relied on for broad factual knowledge, complex multi-step maths, or any production or safety-critical use."
@@ -142,6 +142,7 @@
       <span class="brand-name">CorX Labs</span>
     </a>
     <nav class="nav" aria-label="Primary">
+      <a href="/chat/">Chat</a>
       <a href="/documentation/" aria-current="page">Documentation</a>
       <a href="/models/">Our Products</a>
       <a href="/automa/">Automa</a>
@@ -421,26 +422,26 @@ python inference.py</code></pre>
           <h2>8. FAQ</h2>
           <div class="faq mt-m">
             <details open>
-              <summary>Can I load it with <code style="font-size:.7em">AutoModel</code>?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <summary>Can I load CorX1.5 with <code style="font-size:.7em">AutoModel.from_pretrained()</code>?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>No. CorX1.5 uses a custom architecture and is not compatible
                 with <code>AutoModel.from_pretrained()</code> out of the box. Load it with the model
                 definition included in the Hugging Face repository (<code>modeling_corx.py</code> or
                 the provided inference script) alongside the checkpoint and tokenizer files.</p></div>
             </details>
             <details>
-              <summary>What are role embeddings?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <summary>What are role embeddings in CorX1.5?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>Role embeddings are a learned signal that marks every token as
                 user, assistant or raw text at the architecture level, so the model always knows
                 whose turn it is. Most models infer this only from special tokens in the text
                 stream.</p></div>
             </details>
             <details>
-              <summary>What licence is CorX1.5 under?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <summary>What licence is CorX1.5 released under?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>Apache 2.0 — commercial use, modification and redistribution are
                 all permitted with attribution.</p></div>
             </details>
             <details>
-              <summary>Should I use it in production?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <summary>Should I use CorX1.5 in production?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>No. CorX1.5 is an independent research and learning project. It
                 should not be relied on for broad factual knowledge, complex multi-step maths, or any
                 production or safety-critical use.</p></div>

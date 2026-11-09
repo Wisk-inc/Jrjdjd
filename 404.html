@@ -12,9 +12,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
 </head>
@@ -27,17 +26,41 @@
       <span class="mark" aria-hidden="true">C</span>
       <span class="brand-name">CorX Labs</span>
     </a>
+
     <nav class="nav" aria-label="Primary">
+      <a href="/chat/">Chat</a>
       <a href="/documentation/">Documentation</a>
       <a href="/models/">Our Products</a>
+      <a href="/automa/">Automa</a>
       <a href="/benchmarks/">Benchmarks</a>
       <a href="/blog/">Blog</a>
       <a href="/developers/">Developers</a>
       <a href="/about/">About Us</a>
       <a href="/contact/">Contact</a>
     </nav>
+
     <div class="masthead-actions">
       <a class="btn btn-primary btn-sm" href="/">Back home</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="mobile-nav" data-open="false">
+    <div class="shell">
+      <ul>
+        <li><a href="/chat/">Chat</a></li>
+        <li><a href="/documentation/">Documentation</a></li>
+        <li><a href="/models/">Our Products</a></li>
+        <li><a href="/automa/">Automa</a></li>
+        <li><a href="/benchmarks/">Benchmarks</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/developers/">Developers</a></li>
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary" href="/">Back home</a>
     </div>
   </div>
 </header>
@@ -49,27 +72,39 @@
       <p class="eyebrow">Error 404</p>
       <h1>This page doesn't exist.</h1>
       <p class="lede">The address you followed isn't part of corx-labs.com — or it moved. Here is
-        everything that does exist.</p>
+        what does exist.</p>
       <div class="btn-row">
-        <a class="btn btn-primary" href="/documentation/">Documentation</a>
-        <a class="btn btn-ghost" href="/">Homepage</a>
+        <a class="btn btn-primary" href="/">Homepage</a>
+        <a class="btn btn-ghost" href="/models/">Our products</a>
       </div>
     </div>
   </section>
 
   <div class="shell"><hr class="rule"></div>
 
-  <section class="section-tight">
+  <section class="section-tight" aria-labelledby="go-title">
     <div class="shell">
+      <h2 id="go-title" class="visually-hidden">Where to go instead</h2>
       <div class="grid grid-3">
         <a class="card" href="/models/">
-          <h2 class="visually-hidden">Where to go instead</h2>
           <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Our products</h3>
-          <p style="margin-top:8px">Every model CorX Labs has released.</p>
+          <p style="margin-top:8px">Five open-source AI models and one app, all built in Jamaica.</p>
         </a>
-        <a class="card" href="/models/corx1-5/">
-          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">CorX1.5</h3>
-          <p style="margin-top:8px">Our 158M parameter model, built from scratch.</p>
+        <a class="card" href="/automa/">
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Automa</h3>
+          <p style="margin-top:8px">An Android app that runs a company of AI agents from your phone.</p>
+        </a>
+        <a class="card" href="/chat/">
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Chat with CorX3.8</h3>
+          <p style="margin-top:8px">Talk to our Jamaican Patois-speaking model in your browser.</p>
+        </a>
+        <a class="card" href="/benchmarks/">
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Benchmarks</h3>
+          <p style="margin-top:8px">Compare AI models from every major lab, side by side.</p>
+        </a>
+        <a class="card" href="/blog/">
+          <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Blog</h3>
+          <p style="margin-top:8px">Notes from the lab: how the models were built.</p>
         </a>
         <a class="card" href="/about/">
           <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">About us</h3>

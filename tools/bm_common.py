@@ -224,10 +224,29 @@ FOOTER = """<footer class="site-footer">
 </footer>"""
 
 
-def page(title, description, canonical, body, jsonld=None, og_image="og-benchmarks.jpg",
+# The benchmarks share card says how many models the index holds, so the count
+# is part of its file name. A new count asks for a new card (see
+# tools/generate-brand-assets.py) instead of leaving a stale number in every
+# link preview, and the new address gets past year-long image caches.
+OG_BENCHMARKS = "og-benchmarks-%d.jpg" % len(BY_SLUG)
+
+# What each share card shows, for people who cannot see it.
+OG_ALT = {
+    OG_BENCHMARKS: "Compare %d AI models, side by side \u2014 the CorX Labs benchmark index" % len(BY_SLUG),
+    "og-compare.jpg": "Any two AI models, row by row \u2014 CorX Labs head-to-head comparisons",
+    "og-model.jpg": "Specs, pricing and benchmarks \u2014 a CorX Labs model card",
+    "og-models.jpg": "Open-source models released by CorX Labs",
+}
+
+
+def page(title, description, canonical, body, jsonld=None, og_image=None,
          extra_head="", scripts=(), current="/benchmarks/", robots=None):
     """One complete HTML document, with the same head contract as the rest of
     the site so nothing about SEO is special-cased for this section."""
+    og_image = og_image or OG_BENCHMARKS
+    if not os.path.isfile(os.path.join(ROOT, "assets", "img", og_image)):
+        sys.exit("Share image assets/img/%s is missing. Make it with:\n"
+                 "  python3 tools/generate-brand-assets.py %s" % (og_image, og_image))
     ld = ""
     if jsonld:
         ld = '\n<script type="application/ld+json">\n%s\n</script>' % json.dumps(
@@ -260,11 +279,13 @@ def page(title, description, canonical, body, jsonld=None, og_image="og-benchmar
 <meta property="og:image" content="%(site)s/assets/img/%(og)s">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="%(og_alt)s">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="%(title)s">
 <meta name="twitter:description" content="%(desc)s">
 <meta name="twitter:image" content="%(site)s/assets/img/%(og)s">
+<meta name="twitter:image:alt" content="%(og_alt)s">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
@@ -272,9 +293,8 @@ def page(title, description, canonical, body, jsonld=None, og_image="og-benchmar
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <link rel="stylesheet" href="/assets/css/benchmarks.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>%(extra_head)s%(ld)s
@@ -295,7 +315,7 @@ def page(title, description, canonical, body, jsonld=None, og_image="og-benchmar
 </html>
 """ % {
         "title": esc(title), "desc": esc(description), "canonical": esc(canonical),
-        "robots": robots_tag, "site": SITE, "og": og_image, "ld": ld,
+        "robots": robots_tag, "site": SITE, "og": og_image, "og_alt": esc(OG_ALT[og_image]), "ld": ld,
         "extra_head": extra_head, "masthead": masthead(current),
         "body": body, "footer": FOOTER, "scripts": script_tags,
     }

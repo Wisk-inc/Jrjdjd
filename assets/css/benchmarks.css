@@ -255,17 +255,36 @@
 .bm-table th[aria-sort="descending"] { color: var(--ink-strong); }
 .bm-table th[aria-sort="ascending"] .lbl::after { opacity: 1; }
 .bm-table th[aria-sort="descending"] .lbl::after { opacity: 1; rotate: 180deg; }
+/* The button is the control, so it fills the header cell and carries the
+   cell's padding: the whole cell sorts, not only the letters in it. */
+.bm-table thead th[aria-sort] { padding: 0; }
 .bm-table th[aria-sort] button {
   all: unset;
+  box-sizing: border-box;
   cursor: pointer;
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 11px 14px;
 }
-.bm-table th button:focus-visible { outline: 2px solid var(--espresso); outline-offset: 3px; }
+.bm-table th.bm-num[aria-sort] button { justify-content: flex-end; }
+.bm-table th button:focus-visible { outline: 2px solid var(--espresso); outline-offset: -3px; }
 
-/* Compare checkbox column */
+/* Compare checkbox column. The label fills the cell, so a thumb only has to
+   hit the cell, not a 16-pixel box. */
 .bm-pick { width: 44px; }
+.bm-table td.bm-pick { padding: 0; }
+.bm-pick-hit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 11px 13px;
+  cursor: pointer;
+}
 .bm-pick input {
-  width: 16px; height: 16px;
+  width: 18px; height: 18px;
   accent-color: var(--espresso);
   cursor: pointer;
   margin: 0;

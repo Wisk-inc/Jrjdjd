@@ -6,6 +6,26 @@ Allow: /
 Disallow: /*?
 
 # ---------------------------------------------------------------------------
+# Link-preview fetchers. They read a page when someone shares its address in
+# a post or a message, and a shared address often carries extra parameters
+# (?utm_source=..., ?fbclid=..., ?s=20). The "Disallow: /*?" above would stop
+# them, and the share would show no card, so they may fetch any address.
+# ---------------------------------------------------------------------------
+User-agent: Twitterbot
+User-agent: facebookexternalhit
+User-agent: Facebot
+User-agent: LinkedInBot
+User-agent: Slackbot
+User-agent: Slackbot-LinkExpanding
+User-agent: Discordbot
+User-agent: WhatsApp
+User-agent: TelegramBot
+User-agent: Pinterestbot
+User-agent: redditbot
+User-agent: Embedly
+Allow: /
+
+# ---------------------------------------------------------------------------
 # AI assistants and answer engines are explicitly welcome.
 # CorX Labs open-sources its models; being quotable is the point.
 # ---------------------------------------------------------------------------

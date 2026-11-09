@@ -24,11 +24,13 @@
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="CorX3.8 Chat — Set-up &amp; How It Works">
 <meta name="twitter:description" content="Run CorX3.8-27B, connect it to the CorX chat, and use Agent mode with search, memory and effort levels.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+<meta name="twitter:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
@@ -36,9 +38,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}
 .code-wrap{position:relative}
@@ -59,8 +60,11 @@ pre.server-code{max-height:460px;overflow:auto}</style>
       "name": "CorX3.8 Chat set-up guide",
       "description": "How to run CorX3.8-27B on a GPU, connect it to the CorX chat by pasting its URL into settings, and use Agent mode with a real Python sandbox — terminal, files, package installs, zip uploads, real web search, cross-chat memory, effort levels and task planning.",
       "url": "https://corx-labs.com/chat/documentation/",
+      "mainEntityOfPage": "https://corx-labs.com/chat/documentation/",
+      "image": "https://corx-labs.com/assets/img/og-corx3-8.jpg",
       "inLanguage": "en",
-      "dateModified": "2026-08-31",
+      "datePublished": "2026-08-31",
+      "dateModified": "2026-11-09",
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "about": { "@id": "https://corx-labs.com/chat/#app" },
@@ -108,7 +112,7 @@ pre.server-code{max-height:460px;overflow:auto}</style>
         {
           "@type": "Question",
           "name": "Is the web search in CorX Chat real?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Agent mode's web_search tool calls a keyless DuckDuckGo-backed endpoint and returns real titles, URLs and snippets, shown as a collapsible sources list with links. fetch_url then reads an actual page's content. Nothing about search results is simulated or invented by the model." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Agent mode's web_search tool calls a keyless search endpoint that tries Google News, DuckDuckGo and Bing in turn, and returns real titles, URLs and snippets, shown as a collapsible sources list with links. fetch_url then reads an actual page's content. Nothing about search results is simulated or invented by the model." }
         },
         {
           "@type": "Question",
@@ -158,6 +162,7 @@ pre.server-code{max-height:460px;overflow:auto}</style>
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/developers/">Developers</a></li>
         <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
       </ul>
       <a class="btn btn-primary" href="/chat/">Open the chat</a>
     </div>
@@ -761,7 +766,7 @@ while True:
             every chat in this tab &mdash; click one to edit, save or delete), and <strong>Plan</strong>
             (the live checklist).</p>
           <p style="font-size:.92rem;margin-top:12px">A real web search runs through
-            <code>/api/search</code> (DuckDuckGo, no key) with a sliding row of site logos while it
+            <code>/api/search</code> (Google News, DuckDuckGo and Bing in turn, no key) with a sliding row of site logos while it
             searches, then a <strong>Searched the web</strong> dropdown you can open to see every link
             and snippet. <code>/api/fetch</code> reads a page's actual content, including any code
             shown on it.</p>
@@ -4740,6 +4745,37 @@ if KEEP_ALIVE and url:
     except KeyboardInterrupt:
         print("\nStopped watching. The server is still running at " + current)
         print("Re-run this cell to watch it again, or check " + LOG_PATH)</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" id="faq" aria-labelledby="faq-title">
+    <div class="shell">
+      <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2 id="faq-title">Questions people ask.</h2>
+      </div>
+      <div class="faq mt-m">
+        <details>
+          <summary>Why does the chat go offline after a while?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>The default set-up uses a Cloudflare quick tunnel, whose URL is ephemeral: it changes every time the notebook restarts, and the notebook itself recycles after a period. When that happens the old URL stops working. Re-run the server cell to get a new URL and paste it into the chat settings. For a stable public chat, host the model on a persistent GPU behind a fixed domain.</p></div>
+        </details>
+        <details>
+          <summary>Is an API key needed?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>No, not by default. The server runs keyless (<code>NO_AUTH = True</code>), so the chat connects with no key. If you set <code>NO_AUTH = False</code> and an <code>API_KEY</code> on the server, put the same key in the chat settings.</p></div>
+        </details>
+        <details>
+          <summary>Where does the agent&rsquo;s code actually run?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>In your own browser tab. Agent mode runs a real Python sandbox (CPython compiled to WebAssembly) locally, so files, package installs and code execution happen on your machine, not on the model server. The model only decides what to run; you can watch every command in the Terminal panel.</p></div>
+        </details>
+        <details>
+          <summary>Is the web search in CorX Chat real?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Yes. Agent mode&rsquo;s <code>web_search</code> tool calls a keyless search endpoint that tries Google News, DuckDuckGo and Bing in turn, and returns real titles, URLs and snippets, shown as a collapsible sources list with links. <code>fetch_url</code> then reads an actual page&rsquo;s content. Nothing about search results is simulated or invented by the model.</p></div>
+        </details>
+        <details>
+          <summary>What does the Effort setting actually change?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Real request parameters: the token budget per reply, how many tool-call rounds the agent gets before it must stop, how many search results it pulls back, and how strongly the system prompt tells it to think step by step, verify its work and search when unsure. Higher effort takes longer and uses more tokens on purpose.</p></div>
+        </details>
       </div>
     </div>
   </section>
