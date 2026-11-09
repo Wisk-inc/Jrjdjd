@@ -93,8 +93,8 @@ for large previews and AI citations), Open Graph + Twitter cards with **a custom
 image per page**, and `article:modified_time`.
 
 **Performance & Core Web Vitals** — zero JS dependencies, one stylesheet, deferred script, inline
-critical background colour to kill the flash of white, `preconnect` to the font hosts,
-hover-intent prefetch of internal pages, immutable cache headers on images, and
+critical background colour to kill the flash of white, self-hosted fonts (preloaded, no third-party
+font host), hover-intent prefetch of internal pages, immutable cache headers on images and fonts, and
 `prefers-reduced-motion` support.
 
 **Trust signals** — HSTS, CSP, `X-Content-Type-Options`, `Referrer-Policy` and `Permissions-Policy`
@@ -212,13 +212,20 @@ apex (the redirect rules assume apex is canonical).
 
 ```bash
 pip install pillow
-curl -L -o cormorant.ttf \
+curl -L -o tools/cormorant.ttf \
   "https://raw.githubusercontent.com/google/fonts/main/ofl/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf"
-python3 tools/generate-brand-assets.py   # expects cormorant.ttf beside it
+python3 tools/generate-brand-assets.py                 # everything: icons, wordmark, every card
+python3 tools/generate-brand-assets.py og-helix.jpg    # only the cards named
 ```
 
-Regenerates every favicon, app icon, the wordmark and all six social cards from the same source of
-truth, so the brand never drifts.
+Regenerates the favicons, app icons, the wordmark and the social cards from the same source of
+truth, so the brand never drifts. `CORMORANT_TTF=/path/to/font.ttf` points it at the font if it is
+somewhere else, and `OUT_DIR=/some/folder` writes there instead of `assets/img/`, so a fresh render
+can be compared with the committed one first.
+
+The benchmarks card quotes how many models the index holds, so the count is part of its file name
+(`og-benchmarks-189.jpg`). When the catalogue grows, `tools/build-benchmarks.py` stops and names
+the card to generate, and the old one can then be deleted.
 
 ---
 

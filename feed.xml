@@ -6,13 +6,31 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Wed, 04 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 09 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.8 — fixes under the hood</title>
+      <link>https://corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.8</guid>
+      <pubDate>Sun, 08 Nov 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.8 is out. Automa on the phone now starts even when an old queued run
+        can&rsquo;t be verified, cancelling a queued run no longer stalls the scheduler for 30 seconds,
+        and web search falls back to Bing when DuckDuckGo refuses. Free-model agents hand a task back
+        for your review after answering, and drop a tool that fails three times in a row.
+        <a href="https://corx-labs.com/downloads/Automa-1.9.8.apk">Download the APK</a> (23.9 MB); it
+        installs over 1.9.7 and keeps your data. <a href="https://corx-labs.com/automa/#whats-new">Every
+        release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Meet Automa: An AI Agents App Made in Jamaica</title>

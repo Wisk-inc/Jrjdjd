@@ -27,7 +27,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="3 billion tokens. One GPU. A technical breakdown from CorX Labs.">
 <meta property="article:published_time" content="2026-08-01T00:00:00Z">
-<meta property="article:modified_time" content="2026-08-01T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-09T00:00:00Z">
 <meta property="article:author" content="Nathan Lyttle">
 <meta property="article:section" content="Machine learning">
 <meta property="article:tag" content="language model training">
@@ -46,9 +46,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
 
@@ -67,7 +66,7 @@
       "isPartOf": { "@id": "https://corx-labs.com/blog/#blog" },
       "inLanguage": "en",
       "datePublished": "2026-08-01",
-      "dateModified": "2026-08-01",
+      "dateModified": "2026-11-09",
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "image": {
@@ -117,7 +116,7 @@
         },
         {
           "@type": "Question",
-          "name": "How much GPU memory does a 158M parameter model need to train?",
+          "name": "How much VRAM does a 158M-parameter model need to train?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "For 157.8M parameters in fp32 with the Adam optimiser: about 0.63 GB of weights, 0.63 GB of gradients and 1.26 GB of Adam moment state, for roughly 2.5 GB before activations. Switching Adam to an 8-bit implementation cuts the moment state from 1.26 GB to about 0.32 GB, bringing the total to roughly 1.6 GB."
@@ -125,10 +124,18 @@
         },
         {
           "@type": "Question",
-          "name": "How large is a 3 billion token dataset on disk?",
+          "name": "How big is 3 billion tokens on disk?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "If the tokenizer vocabulary is under 65,536 entries, every token fits in a uint16, so 3 billion tokens is exactly 6 GB on disk. CorX1.5 uses a 32,768-token vocabulary, which fits comfortably. Storing the same tokens as int32 would double the file to 12 GB and double the read bandwidth needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Could I do this with a smaller GPU?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Almost certainly, at this model size — drop the micro-batch, raise the accumulation steps to keep the effective batch the same, and turn on 8-bit Adam and gradient checkpointing. The run gets slower, not impossible. Memory sets what you can train; throughput sets how long you wait."
           }
         },
         {
@@ -594,14 +601,14 @@ scheduler.step()</code></pre>
           <h2>FAQ</h2>
           <div class="faq mt-m">
             <details open>
-              <summary>Do 3 billion tokens have to fit in GPU memory?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <summary>Do 3 billion training tokens have to fit in GPU memory?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>No. Tokens stream through the GPU a batch at a time. What has to
                 fit is the weights, gradients, optimiser state and the activations for one micro-batch.
                 The full corpus lives on disk as a flat binary and is read through a memory map, so
                 dataset size is a disk and throughput question, not a VRAM one.</p></div>
             </details>
             <details>
-              <summary>How much VRAM does a 158M model need to train?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <summary>How much VRAM does a 158M-parameter model need to train?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>About 2.5 GB of model and optimiser state in fp32 with Adam, or
                 roughly 1.6 GB with an 8-bit optimiser — plus activation memory, which depends on your
                 micro-batch and sequence length and is the part you actually tune.</p></div>
@@ -618,6 +625,10 @@ scheduler.step()</code></pre>
                 raise the accumulation steps to keep the effective batch the same, and turn on 8-bit
                 Adam and gradient checkpointing. The run gets slower, not impossible. Memory sets what
                 you <em>can</em> train; throughput sets how long you wait.</p></div>
+            </details>
+            <details>
+              <summary>What is gradient accumulation and why does it matter on one GPU?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+              <div class="faq-body"><p>Gradient accumulation runs several small forward and backward passes and sums their gradients before a single optimiser step. It separates the batch size that memory has to hold from the batch size the optimiser sees, so a GPU that can only fit 8 sequences at a time can still train with an effective batch of hundreds of sequences.</p></div>
             </details>
           </div>
         </section>

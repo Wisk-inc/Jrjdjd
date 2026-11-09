@@ -217,8 +217,8 @@ def leaderboard_rows(models, checkbox=True):
             data[key] = m.get("b", {}).get(key, "")
         attrs = " ".join('data-%s="%s"' % (k, esc(v)) for k, v in data.items())
 
-        pick = ('<td class="bm-pick"><input type="checkbox" class="bm-pick-input" '
-                'value="%s" aria-label="Add %s to comparison"></td>'
+        pick = ('<td class="bm-pick"><label class="bm-pick-hit"><input type="checkbox" class="bm-pick-input" '
+                'value="%s" aria-label="Add %s to comparison"></label></td>'
                 % (esc(m["slug"]), esc(m["name"]))) if checkbox else ""
 
         cells = [
@@ -795,7 +795,10 @@ def build_model(m):
     if m.get("local"):
         links.append('<a class="btn btn-primary" href="%s">Full model page %s</a>'
                      % (m["local"], ICON_ARROW))
-    if co.get("site"):
+    if co.get("site") and "https://" + co["site"] == SITE:
+        # Our own models: the maker's site is this one, so stay in the tab.
+        links.append('<a class="btn btn-ghost" href="/">%s %s</a>' % (esc(co["name"]), ICON_ARROW))
+    elif co.get("site"):
         links.append('<a class="btn btn-ghost" href="https://%s" rel="noopener" target="_blank">'
                      '%s %s</a>' % (esc(co["site"]), esc(co["name"]), ICON_EXTERNAL))
 

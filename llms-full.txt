@@ -325,7 +325,7 @@ quick tunnel, it is editable in the chat's Settings dialog and persists in the b
   .zip archives) are staged into the sandbox; the agent uses Python's zipfile module to read or edit
   them — there is no separate "zip tool", it is just real Python with real files.
   Shared across every conversation in the tab: one sandbox, one filesystem.
-- Real web search via /api/search (DuckDuckGo HTML, no key) and real page fetches via /api/fetch (an
+- Real web search via /api/search (Google News, then DuckDuckGo, then Bing; no key) and real page fetches via /api/fetch (an
   SSRF-guarded proxy), so the browser is not blocked by CORS. A search shows a sliding strip of site
   favicons while it runs, then a collapsible sources list with links and snippets.
 - search_memory: the agent can grep the user's OTHER saved conversations in this browser for

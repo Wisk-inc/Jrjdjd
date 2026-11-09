@@ -22,16 +22,16 @@
 <meta property="og:url" content="https://corx-labs.com/models/helix/">
 <meta property="og:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
 <meta property="og:description" content="Hierarchical Episodic Linear IndeX. Three mixers braided over one residual stream — a local window, a delta-rule recurrent state, and a top-k index over a landmark tree — for linear cost without losing exact recall.">
-<meta property="og:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+<meta property="og:image" content="https://corx-labs.com/assets/img/og-helix.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="HELIX — linear scaling, exact recall">
-<meta property="article:modified_time" content="2026-09-14T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-09T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
 <meta name="twitter:description" content="A sequence architecture that separates memory capacity from memory bandwidth: O(1) hot state, O(log N) probes, and recall that survives past the local window.">
-<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-default.jpg">
+<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-helix.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
@@ -39,9 +39,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
 
@@ -101,7 +100,7 @@
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "mainEntity": { "@id": "https://corx-labs.com/models/helix/#architecture" },
       "inLanguage": "en",
-      "dateModified": "2026-09-14",
+      "dateModified": "2026-11-09",
       "breadcrumb": { "@id": "https://corx-labs.com/models/helix/#breadcrumb" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
@@ -135,7 +134,7 @@
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "datePublished": "2026-09-14",
-      "dateModified": "2026-09-14",
+      "dateModified": "2026-11-09",
       "inLanguage": "en",
       "isPartOf": { "@id": "https://corx-labs.com/models/helix/#webpage" },
       "proficiencyLevel": "Expert"
@@ -163,7 +162,7 @@
         },
         {
           "@type": "Question",
-          "name": "What does O(1) hot state and O(log N) probes mean?",
+          "name": "What exactly is O(1) in HELIX, and what isn't?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Hot state is what a decoding step must keep live: for HELIX that is a window-sized ring buffer, one delta-rule matrix and two convolution states per head, all fixed-size regardless of context length. The key/value history and landmark tree grow with N but are append-only, never rewritten, and can sit in cold memory. A step reads only O(index_topk x block_size + index_branching x log N) of that. It is explicitly not O(1) total memory, which is impossible for anything that can quote an exact name from a million tokens back."
@@ -171,7 +170,7 @@
         },
         {
           "@type": "Question",
-          "name": "How does the landmark index stay causal?",
+          "name": "How does the HELIX index stay causal if summaries are shared?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Two rules. A node is eligible for query block J only if the entire span it summarises ends at or before J, so a summary is never consulted by a query it partly describes — which also means a landmark is computed once and reused by every later query. And routing for block J comes from the hidden state at the end of block J-1, which is strictly past for every token in block J, so one gather serves the whole block. Anything routing could not anticipate within that block is covered exactly by the local strand."
@@ -187,7 +186,7 @@
         },
         {
           "@type": "Question",
-          "name": "How much faster is HELIX than full attention?",
+          "name": "Is HELIX faster than attention?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "On the published measurements, HELIX forms a constant 8,192 attention pairs per token at every context length, fitting N^1.00, while full attention fits N^2.00. At 32,768 tokens that is 32 times fewer pairs and 1.6 times faster wall-clock — and that comparison runs unfused reference PyTorch against a fused SDPA kernel, so the constant factor is working against HELIX, not for it. At 4,096 tokens full attention is still the faster of the two."
@@ -195,10 +194,18 @@
         },
         {
           "@type": "Question",
-          "name": "Does the index strand actually matter?",
+          "name": "Does the index strand actually earn its place?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "That is the one result the recall experiment establishes. On multi-query associative recall with bindings placed well outside the local window, HELIX scores 30.8 percent against 6.0 percent for the same model with the index strand removed — a gap of roughly 21 standard errors, with chance at 6.2 percent. Without the index the model sits at chance, because its window cannot see the bindings and its recurrent state cannot hold them. Against full attention at 32.0 percent, HELIX is a tie rather than a win: 1.2 points with a 1.7-point standard error."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where does HELIX fall short?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One retrieval serves a whole query block, so index_topk has to cover everything a block_size span might ask for. Routing is one block stale, so the index cannot react to the token being generated right now. Landmarks are pooled from keys that already carry their rotary phase, so routing is not purely content-addressed. Left padding shifts the block grid and so is not bit-identical to an unpadded run. And there is no fused kernel yet."
           }
         },
         {
@@ -890,7 +897,7 @@ helix recall    # train with and without the index strand, and compare</code></p
       <h2>7. Questions</h2>
       <div class="faq mt-m">
         <details>
-          <summary>What is HELIX, in one paragraph?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <summary>What is HELIX?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>Hierarchical Episodic Linear IndeX — a sequence architecture that
             scales linearly in context length while keeping the exact long-range recall that
             attention is good at. Every block braids three mixers over the same residual stream: a
@@ -909,7 +916,7 @@ helix recall    # train with and without the index strand, and compare</code></p
             any single token touches stays bounded.</p></div>
         </details>
         <details>
-          <summary>What exactly is O(1), and what isn&rsquo;t?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <summary>What exactly is O(1) in HELIX, and what isn&rsquo;t?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>The <em>hot</em> state is O(1): a window-sized ring buffer, one
             delta-rule matrix and two convolution states per head, all fixed-size whatever the
             context length. The key/value history and landmark tree are O(N) — but append-only,
@@ -919,7 +926,7 @@ helix recall    # train with and without the index strand, and compare</code></p
             anything that can quote an exact name from a million tokens back.</p></div>
         </details>
         <details>
-          <summary>How does the index stay causal if summaries are shared?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <summary>How does the HELIX index stay causal if summaries are shared?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>A node is eligible for query block <em>J</em> only if the entire
             span it summarises ends at or before <em>J</em> — so a summary is never consulted by a
             query it partly describes, which is also what lets a landmark be computed once and reused
@@ -929,14 +936,14 @@ helix recall    # train with and without the index strand, and compare</code></p
             anticipate inside that block is covered exactly by the local strand.</p></div>
         </details>
         <details>
-          <summary>Has it been trained on real text?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <summary>Has HELIX been trained on real text?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>No. There are no trained checkpoints and no language-quality
             numbers of any kind. The published results cover complexity, causality and recall
             mechanics only. Whether HELIX is actually <em>better</em> than the alternatives is an
             open question that needs real training runs on real hardware to answer.</p></div>
         </details>
         <details>
-          <summary>Is it faster than attention?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <summary>Is HELIX faster than attention?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>At long context, on the measurements published: 32&times; fewer
             attention pairs and 1.6&times; faster wall-clock at 32k tokens, with HELIX running
             unfused reference PyTorch against a fused SDPA kernel. At 4k tokens attention is still
@@ -951,13 +958,17 @@ helix recall    # train with and without the index strand, and compare</code></p
             Against full attention at 32.0% it is a tie, not a win.</p></div>
         </details>
         <details>
-          <summary>Where does it fall short?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <summary>Where does HELIX fall short?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>One retrieval serves a whole query block, so
             <code>index_topk</code> has to cover everything a <code>block_size</code> span might ask
             for. Routing is one block stale, so the index cannot react to the token being generated
             right now. Landmarks are pooled from keys that already carry their rotary phase, so
             routing is not purely content-addressed. Left padding shifts the block grid and so is not
             bit-identical to an unpadded run. And there is no fused kernel yet.</p></div>
+        </details>
+        <details>
+          <summary>How do I install and try HELIX?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>Run <code>pip install helix-lm</code>. The package ships a command-line tool: <code>helix info</code> explains what it is and what it costs, <code>helix demo</code> builds a model and verifies the decode state, <code>helix bench</code> measures cost against context length, and <code>helix recall</code> trains with and without the index strand and compares them. It requires Python 3.10 or newer and is licensed Apache-2.0.</p></div>
         </details>
       </div>
     </div>

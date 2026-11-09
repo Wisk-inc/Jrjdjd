@@ -21,26 +21,37 @@ const json = (body, status = 200) =>
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }
   });
 
+/* A character reference to its character; a code point that isn't one
+   (out of range, a surrogate) is dropped rather than thrown on. */
+const fromCode = (n) => (n > 0 && n <= 0x10ffff && !(n >= 0xd800 && n <= 0xdfff) ? String.fromCodePoint(n) : '');
+
+/* `&amp;` is decoded last: decoding it first would turn `&amp;lt;` — text
+   that is literally "&lt;" — into "<". */
 const decode = (s) =>
   String(s)
     .replace(/<[^>]*>/g, '')
-    .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
-    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&apos;/g, "'")
     .replace(/&nbsp;/g, ' ')
     .replace(/&middot;/g, '·')
     .replace(/&mdash;/g, '—')
     .replace(/&ndash;/g, '–')
-    .replace(/&#x2F;/g, '/')
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&hellip;/g, '…')
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => fromCode(parseInt(n, 16)))
+    .replace(/&#(\d+);/g, (_, n) => fromCode(Number(n)))
+    .replace(/&amp;/g, '&')
     .replace(/\s+/g, ' ')
     .trim();
+
+/* A link as written in a page's HTML still has its ampersands escaped. */
+const hrefText = (href) => String(href).replace(/&amp;/g, '&');
 
 /* DuckDuckGo wraps outbound links as /l/?uddg=<encoded>. */
 const unwrap = (href) => {
   try {
+    href = hrefText(href);
     if (href.startsWith('//')) href = `https:${href}`;
     const u = new URL(href, 'https://duckduckgo.com');
     const target = u.searchParams.get('uddg');
@@ -50,6 +61,24 @@ const unwrap = (href) => {
   }
 };
 const domainOf = (url) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; } };
+
+/* Bing sends result clicks through /ck/a?…&u=a1<the target, base64url>.
+   Hand back the page itself, so the source list shows the real site and
+   fetch_url reads the article rather than a tracking redirect. */
+const unwrapBing = (href) => {
+  try {
+    const u = new URL(hrefText(href), 'https://www.bing.com');
+    if (!/(^|\.)bing\.com$/i.test(u.hostname) || !u.pathname.startsWith('/ck/')) return u.toString();
+    const packed = u.searchParams.get('u') || '';
+    if (!packed.startsWith('a1')) return u.toString();
+    const b64 = packed.slice(2).replace(/-/g, '+').replace(/_/g, '/');
+    const bytes = Uint8Array.from(atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4)), (c) => c.charCodeAt(0));
+    const target = new TextDecoder().decode(bytes);
+    return /^https?:\/\//i.test(target) ? target : u.toString();
+  } catch {
+    return hrefText(href);
+  }
+};
 
 /* Attribute order in these pages isn't something to trust (href before
    class, or after — both show up across DDG's templates), so anchors are
@@ -138,10 +167,10 @@ export function parseBing(html, limit) {
     if (out.length >= limit) break;
     const linkM = block.match(/<h2>\s*<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/);
     if (!linkM) continue;
-    const url = linkM[1]; const title = decode(linkM[2]);
+    const url = unwrapBing(linkM[1]); const title = decode(linkM[2]);
     if (!title || !/^https?:/i.test(url) || seen.has(url)) continue;
     seen.add(url);
-    const snipM = block.match(/<p>([\s\S]*?)<\/p>/);
+    const snipM = block.match(/<p[^>]*>([\s\S]*?)<\/p>/);
     out.push({ title, url, domain: domainOf(url), snippet: snipM ? decode(snipM[1]) : '' });
   }
   return out;
@@ -165,17 +194,25 @@ const ENGINES = [
   { url: (q) => `https://www.bing.com/search?q=${encodeURIComponent(q)}`, parse: parseBing }
 ];
 
+/* One slow engine must not use up the whole request: each gets a few
+   seconds, then the next one is tried. */
+const ENGINE_TIMEOUT_MS = 6000;
+
 async function search(query, limit) {
   let lastError = 'Search upstream unreachable.';
   for (const engine of ENGINES) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), ENGINE_TIMEOUT_MS);
     try {
-      const res = await fetch(engine.url(query), { method: 'GET', headers: BROWSER_HEADERS });
+      const res = await fetch(engine.url(query), { method: 'GET', headers: BROWSER_HEADERS, signal: controller.signal });
       if (!res.ok) { lastError = `Search upstream returned ${res.status}`; continue; }
       const results = engine.parse(await res.text(), limit);
       if (results.length) return results;
       lastError = 'No results parsed from the search page.';
     } catch (err) {
-      lastError = String(err?.message || err);
+      lastError = err && err.name === 'AbortError' ? 'Search upstream timed out.' : String(err?.message || err);
+    } finally {
+      clearTimeout(timer);
     }
   }
   throw new Error(lastError);

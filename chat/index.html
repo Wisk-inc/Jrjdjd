@@ -23,20 +23,22 @@
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="Chat with CorX3.8 — Jamaica's Open-Weight LLM">
 <meta name="twitter:description" content="Talk to CorX3.8-27B, a 27B Jamaican Patois-speaking agent, live in your browser.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+<meta name="twitter:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="CorX Labs — model releases" href="/feed.xml">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..600&family=Inter:wght@400..600&display=swap">
+<link rel="preload" href="/assets/fonts/inter-latin.3100e775.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/cormorant-garamond-latin.d80df8ff.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/main.css">
 <link rel="stylesheet" href="/assets/css/chat.css">
 <style>html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100c}}</style>
@@ -110,6 +112,7 @@
         <li><a href="/blog/">Blog</a></li>
         <li><a href="/developers/">Developers</a></li>
         <li><a href="/about/">About Us</a></li>
+        <li><a href="/contact/">Contact</a></li>
       </ul>
       <a class="btn btn-primary" href="/chat/documentation/">Set-up guide</a>
     </div>
@@ -274,7 +277,7 @@
           <button class="link-btn" type="button" id="editor-download">Download</button>
           <button class="link-btn danger" type="button" id="editor-delete">Delete</button>
         </div>
-        <textarea id="editor-area" spellcheck="false"></textarea>
+        <textarea id="editor-area" spellcheck="false" aria-label="File contents"></textarea>
       </div>
     </div>
 
@@ -327,7 +330,7 @@
 
     <div class="row-between">
       <span>Work as a team of two</span>
-      <button class="toggle" type="button" id="split-toggle" role="switch" aria-checked="false"><i></i></button>
+      <button class="toggle" type="button" id="split-toggle" role="switch" aria-checked="false" aria-label="Work as a team of two"><i></i></button>
     </div>
 
     <div id="split-fields" hidden>
@@ -509,7 +512,7 @@
         <h3>The lyrics</h3>
         <p>What it should sing. The duration and pitch predictors invent the timing and melody
           from these unless you add a melody guide.</p>
-        <textarea id="voice-lyrics" rows="4" placeholder="One line per phrase&#10;the way you want it sung"></textarea>
+        <textarea id="voice-lyrics" rows="4" aria-label="Lyrics" placeholder="One line per phrase&#10;the way you want it sung"></textarea>
         <label class="btn btn-ghost btn-sm" for="voice-melody" style="margin-top:10px">Melody guide (optional)</label>
         <input id="voice-melody" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/wave,audio/flac,audio/x-flac,audio/ogg,audio/opus,audio/aiff,audio/x-aiff,.mp3,.wav,.flac,.ogg,.oga,.opus,.aiff,.aif,audio/*" hidden>
         <span class="voice-file" id="voice-melody-name">No file chosen</span>
@@ -586,7 +589,7 @@
     </div>
     <div class="menu-row">
       <span>Memory<small>Let CorX3.8 recall your other saved chats when it uses the search_memory tool</small></span>
-      <button class="toggle" type="button" id="memory-toggle" role="switch" aria-checked="true"><i></i></button>
+      <button class="toggle" type="button" id="memory-toggle" role="switch" aria-checked="true" aria-label="Memory"><i></i></button>
     </div>
     <hr class="rule" style="margin:20px 0 4px">
     <h3 id="personality" style="font-family:var(--sans);font-size:.95rem;font-weight:600;margin-bottom:4px">Personality</h3>
