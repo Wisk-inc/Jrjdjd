@@ -1,7 +1,7 @@
 # CorX Labs — complete site content
 
 Source: https://corx-labs.com/
-Last updated: 2026-11-08
+Last updated: 2026-11-11
 Licence of described models: Apache 2.0
 
 ===============================================================================
@@ -24,7 +24,7 @@ Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigman
         CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) — https://huggingface.co/Sigmandndnns/CorX3.8-27B
         HELIX (sequence architecture, no trained checkpoints) — https://corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
         NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) — https://corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
-App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.8) — https://corx-labs.com/automa/ , APK: https://corx-labs.com/downloads/Automa-1.9.8.apk
+App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.9) — https://corx-labs.com/automa/ , APK: https://corx-labs.com/downloads/Automa-1.9.9.apk
 
 ===============================================================================
 CORX1.5 — MODEL CARD
@@ -480,9 +480,9 @@ AUTOMA — https://corx-labs.com/automa/
 ===============================================================================
 
 Automa is an Android app, made in Jamaica by Nathan at CorX Labs, that runs a whole company of AI
-agents from a phone. The current version is 1.9.8, dated 8 November 2026; version 1.0.0 is dated
+agents from a phone. The current version is 1.9.9, dated 9 November 2026; version 1.0.0 is dated
 27 September 2026. It needs Android 8.0 or newer and about 100 MB of storage. The signed APK
-(23.9 MB) downloads from https://corx-labs.com/downloads/Automa-1.9.8.apk ; an APKPure listing is
+(23.9 MB) downloads from https://corx-labs.com/downloads/Automa-1.9.9.apk ; an APKPure listing is
 pending review and will go live once APKPure finishes it. There is no iPhone version and no Automa
 cloud account. Automa is one of the first AI agent apps built in Jamaica, made by Nathan, the
 14-year-old founder of CorX Labs (the lab behind CorX3.8-27B, Jamaica's first large open-weight

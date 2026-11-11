@@ -5,7 +5,12 @@
   "redirects": [
     {
       "source": "/downloads/Automa-1.9.7.apk",
-      "destination": "/downloads/Automa-1.9.8.apk",
+      "destination": "/downloads/Automa-1.9.9.apk",
+      "permanent": false
+    },
+    {
+      "source": "/downloads/Automa-1.9.8.apk",
+      "destination": "/downloads/Automa-1.9.9.apk",
       "permanent": false
     },
     {
