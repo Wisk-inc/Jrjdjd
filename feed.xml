@@ -6,13 +6,31 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Mon, 09 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 11 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.9 — waits out the slow-down</title>
+      <link>https://corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.9</guid>
+      <pubDate>Wed, 11 Nov 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.9 is out, with fixes from a scan of every page and a live run of the app. When
+        the free AI service asks Automa to slow down, Automa now waits the minute it asks for and
+        carries on, instead of failing the reply. Home no longer shows cards for chats and tasks you
+        deleted, and deleting a chat or task cancels the retries still waiting for it.
+        <a href="https://corx-labs.com/downloads/Automa-1.9.9.apk">Download the APK</a> (23.9 MB); it
+        installs over 1.9.8 and keeps your data. <a href="https://corx-labs.com/automa/#whats-new">Every
+        release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.8 — fixes under the hood</title>
