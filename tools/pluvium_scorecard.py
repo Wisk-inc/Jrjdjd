@@ -58,7 +58,12 @@ OFFICIAL_DIR = Path(__file__).resolve().parent.parent / "assets/img/logos/weathe
 OFFICIAL_FOR = {"ens": "ecmwf", "hres": "ecmwf", "aifs": "ecmwf", "gefs": "noaa", "gfs": "noaa"}
 
 
+CORX_LOGO = "/assets/img/logos/corx.4c986e8d.svg"   # the lab's mark, as on the benchmark pages
+
+
 def icon_src(key):
+    if key == "pluvium":
+        return CORX_LOGO
     org = OFFICIAL_FOR.get(key)
     for ext in ("svg", "png", "webp"):
         if org and (OFFICIAL_DIR / f"{org}.{ext}").is_file():
@@ -67,7 +72,8 @@ def icon_src(key):
 
 
 def icon(key, small=False):
-    return ICON.format(cls=" is-sm" if small else "", src=icon_src(key), w=20 if small else 26)
+    cls = (" is-sm" if small else "") + (" is-tile" if key == "pluvium" else "")
+    return ICON.format(cls=cls, src=icon_src(key), w=20 if small else 26)
 
 
 def pct(v, digits=1):
