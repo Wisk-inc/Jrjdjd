@@ -1,0 +1,130 @@
+/* ==========================================================================
+   CorX Labs — model scorecards (used on /models/pluvium/)
+   Bar charts and a comparison table. Loaded on top of main.css, which owns
+   every colour token; this file only arranges them. No script: the day tabs
+   are radio inputs, so the charts work under the site's script-src policy.
+   ========================================================================== */
+
+/* --- system marks -------------------------------------------------------- */
+.sc-mark { display: block; width: 26px; height: 26px; border-radius: 7px; flex: none; }
+.sc-mark.is-sm { width: 20px; height: 20px; border-radius: 6px; }
+
+/* --- chart card ------------------------------------------------------------ */
+.sc-card {
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--paper-raised);
+  padding: clamp(18px, 2.6vw, 30px);
+}
+.sc-card + .sc-card { margin-top: 20px; }
+.sc-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 18px; }
+.sc-title { font-family: var(--sans); font-size: 1.02rem; font-weight: 600; letter-spacing: -.01em; color: var(--ink-strong); }
+.sc-sub { margin-top: 4px; font-size: .86rem; color: var(--muted); max-width: 70ch; }
+.sc-dir {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--line-strong); border-radius: var(--r-pill);
+  padding: 4px 10px; white-space: nowrap;
+}
+
+/* --- day tabs (radio inputs, no script) ------------------------------------ */
+.sc-radio { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+.sc-tabs {
+  display: inline-flex; gap: 4px; margin-top: 16px; padding: 4px;
+  border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--paper-sunk);
+}
+.sc-tabs label {
+  cursor: pointer; padding: 6px 14px; border-radius: var(--r-pill);
+  font-size: .82rem; font-weight: 500; color: var(--muted);
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.sc-tabs label:hover { color: var(--ink-strong); }
+.sc-panel { display: none; }
+#sc-d1:checked ~ .sc-p1, #sc-d2:checked ~ .sc-p2, #sc-d3:checked ~ .sc-p3 { display: block; }
+#sc-d1:checked ~ .sc-tabs label[for="sc-d1"],
+#sc-d2:checked ~ .sc-tabs label[for="sc-d2"],
+#sc-d3:checked ~ .sc-tabs label[for="sc-d3"] { background: var(--paper-raised); color: var(--ink-strong); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+#sc-d1:focus-visible ~ .sc-tabs label[for="sc-d1"],
+#sc-d2:focus-visible ~ .sc-tabs label[for="sc-d2"],
+#sc-d3:focus-visible ~ .sc-tabs label[for="sc-d3"] { outline: 2px solid var(--ink-strong); outline-offset: 2px; }
+
+/* --- bar chart ------------------------------------------------------------- */
+.sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 18px; }
+.sc-chart { min-width: 640px; display: grid; grid-template-columns: 44px minmax(0, 1fr); padding-top: 44px; }
+.sc-axis { position: relative; height: 240px; }
+.sc-axis span {
+  position: absolute; right: 8px; transform: translateY(50%);
+  font-size: .7rem; color: var(--faint); font-variant-numeric: tabular-nums;
+}
+.sc-plot { position: relative; height: 240px; }
+.sc-grid { position: absolute; left: 0; right: 0; border-top: 1px solid var(--line); }
+.sc-grid.is-zero { border-top: 1.5px solid var(--line-strong); }
+.sc-bars { position: absolute; inset: 0; display: grid; gap: 10px; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+.sc-col { position: relative; }
+.sc-bar {
+  position: absolute; left: 12%; right: 12%;
+  bottom: var(--b); height: var(--h);
+  min-height: 2px;
+  background: color-mix(in srgb, var(--faint) 45%, transparent);
+  border-radius: 5px;
+}
+.sc-col.is-up .sc-bar { border-radius: 5px 5px 2px 2px; }
+.sc-col.is-down .sc-bar { border-radius: 2px 2px 5px 5px; }
+.sc-col.is-featured .sc-bar { background: var(--espresso); }
+.sc-col.is-blend .sc-bar {
+  background: repeating-linear-gradient(135deg, var(--espresso) 0 4px, color-mix(in srgb, var(--espresso) 55%, transparent) 4px 8px);
+}
+.sc-col.is-ref .sc-bar { background: transparent; border: 1.5px dashed var(--faint); }
+.sc-val {
+  position: absolute; left: 0; right: 0; text-align: center;
+  font-size: .78rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.sc-col.is-up .sc-val { bottom: calc(var(--b) + var(--h) + 6px); }
+.sc-col.is-down .sc-val { top: calc(100% - var(--b) + 6px); }
+.sc-col.is-featured .sc-val { color: var(--ink-strong); }
+.sc-best {
+  display: block; margin: 0 auto 3px; width: max-content;
+  font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--paper); background: var(--ink-strong); border-radius: var(--r-pill); padding: 2px 7px;
+}
+.sc-best.is-single { color: var(--ink-strong); background: transparent; border: 1px dashed var(--ink-strong); padding: 1px 6px; }
+.sc-names {
+  grid-column: 2; display: grid; gap: 10px; margin-top: 12px;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+}
+.sc-name { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.sc-name b { font-size: .76rem; font-weight: 600; color: var(--ink-strong); line-height: 1.2; }
+.sc-name small { font-size: .66rem; color: var(--faint); letter-spacing: .02em; }
+.sc-name.is-featured b { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.sc-note { margin-top: 16px; font-size: .8rem; color: var(--muted); max-width: 80ch; }
+.sc-key { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; font-size: .78rem; color: var(--muted); }
+.sc-key span { display: inline-flex; align-items: center; gap: 7px; }
+.sc-key i { width: 14px; height: 10px; border-radius: 3px; display: inline-block; background: color-mix(in srgb, var(--faint) 45%, transparent); }
+.sc-key i.is-featured { background: var(--espresso); }
+.sc-key i.is-blend { background: repeating-linear-gradient(135deg, var(--espresso) 0 3px, color-mix(in srgb, var(--espresso) 55%, transparent) 3px 6px); }
+.sc-key i.is-ref { background: transparent; border: 1.5px dashed var(--faint); }
+
+/* --- scorecard table --------------------------------------------------------- */
+.sc-table { min-width: 860px; font-size: .86rem; }
+.sc-table th, .sc-table td { padding: 11px 12px; text-align: center; font-variant-numeric: tabular-nums; }
+.sc-table thead th { vertical-align: bottom; text-transform: none; letter-spacing: 0; font-size: .74rem; color: var(--ink-strong); font-weight: 600; }
+.sc-table thead th small { display: block; font-weight: 400; color: var(--faint); font-size: .66rem; margin-top: 2px; }
+.sc-table thead .sc-mark { margin: 0 auto 7px; }
+.sc-table th[scope="row"] { text-align: left; font-weight: 500; color: var(--ink-strong); white-space: nowrap; }
+.sc-table tbody th[scope="row"] small { display: block; color: var(--faint); font-weight: 400; font-size: .7rem; }
+.sc-table .sc-group th {
+  text-align: left; background: var(--paper-sunk); font-size: .7rem; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+}
+.sc-table .sc-group th em { font-style: normal; text-transform: none; letter-spacing: 0; color: var(--faint); font-weight: 500; margin-left: 6px; }
+.sc-table td { color: var(--muted); }
+.sc-table td:first-child { color: var(--muted); font-weight: 400; }
+.sc-table .is-featured { background: color-mix(in srgb, var(--espresso) 7%, transparent); }
+.sc-table td.is-featured { color: var(--ink-strong); }
+.sc-table .is-ref { color: var(--faint); font-style: italic; }
+.sc-table td.is-best { color: var(--ink-strong); font-weight: 700; box-shadow: inset 0 0 0 1.5px var(--ink-strong); border-radius: 6px; }
+.sc-table td.is-best::after { content: " \2605"; font-size: .7em; vertical-align: .15em; }
+.sc-table td.is-best-single { color: var(--ink-strong); font-weight: 600; box-shadow: inset 0 0 0 1.5px transparent; outline: 1.5px dashed var(--ink-strong); outline-offset: -4px; border-radius: 6px; }
+.sc-sig { color: var(--ink-strong); font-weight: 700; margin-left: 2px; }
+.sc-table td.is-na { color: var(--faint); }
