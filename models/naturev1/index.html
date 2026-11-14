@@ -26,7 +26,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="NatureV1 — an open-source AI weather and hurricane model made in Jamaica">
-<meta property="article:modified_time" content="2026-10-24T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-14T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="NatureV1 — a Jamaican-made AI weather and hurricane model">
@@ -67,7 +67,7 @@
       "softwareRequirements": "Python >= 3.10, PyTorch",
       "isAccessibleForFree": true,
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
-      "dateModified": "2026-10-24",
+      "dateModified": "2026-11-14",
       "inLanguage": "en",
       "license": "https://www.apache.org/licenses/LICENSE-2.0",
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
@@ -112,7 +112,7 @@
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "mainEntity": { "@id": "https://corx-labs.com/models/naturev1/#model" },
       "inLanguage": "en",
-      "dateModified": "2026-10-24",
+      "dateModified": "2026-11-14",
       "breadcrumb": { "@id": "https://corx-labs.com/models/naturev1/#breadcrumb" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
@@ -148,7 +148,7 @@
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "datePublished": "2026-10-14",
-      "dateModified": "2026-10-24",
+      "dateModified": "2026-11-14",
       "inLanguage": "en",
       "isPartOf": { "@id": "https://corx-labs.com/models/naturev1/#webpage" },
       "proficiencyLevel": "Expert"
@@ -1459,6 +1459,9 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
           results and failure modes are all public, that anyone can download, re-run, retrain or try
           to break. How it was built is written up in
           <a href="/blog/building-a-hurricane-ai-in-jamaica/">Building a hurricane AI in Jamaica, on one GPU</a>.</p>
+        <p>The same engine now drives <a href="/models/pluvium/">Pluvium</a>, which forecasts rain hour by
+          hour for every town and village in the Caribbean &mdash; when it starts, how long it lasts and how
+          much falls.</p>
       </div>
 
       <div class="callout mt-m" data-reveal>
@@ -1590,6 +1593,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="/models/helix/">HELIX</a></li>
           <li><a href="/models/naturev1/">NatureV1</a></li>
+          <li><a href="/models/pluvium/">Pluvium</a></li>
           <li><a href="/automa/">Automa</a></li>
         </ul>
       </nav>

@@ -1,7 +1,7 @@
 # CorX Labs — complete site content
 
 Source: https://corx-labs.com/
-Last updated: 2026-11-11
+Last updated: 2026-11-14
 Licence of described models: Apache 2.0
 
 ===============================================================================
@@ -24,6 +24,7 @@ Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigman
         CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) — https://huggingface.co/Sigmandndnns/CorX3.8-27B
         HELIX (sequence architecture, no trained checkpoints) — https://corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
         NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) — https://corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
+        Pluvium (hour-by-hour rain forecasts for every Caribbean town, on the NatureV1 engine; a research model, not an official forecast; code released, full-size weights not yet published) — https://corx-labs.com/models/pluvium/ , https://pypi.org/project/pluvium/
 App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.9) — https://corx-labs.com/automa/ , APK: https://corx-labs.com/downloads/Automa-1.9.9.apk
 
 ===============================================================================

@@ -200,6 +200,7 @@ FOOTER = """<footer class="site-footer">
           <li><a href="/models/tristream-svs/">TriStream-SVS</a></li>
           <li><a href="/models/helix/">HELIX</a></li>
           <li><a href="/models/naturev1/">NatureV1</a></li>
+          <li><a href="/models/pluvium/">Pluvium</a></li>
           <li><a href="/automa/">Automa</a></li>
           <li><a href="/chat/">Chat</a></li>
         </ul>
