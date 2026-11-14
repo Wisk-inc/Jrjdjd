@@ -6,13 +6,35 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Wed, 11 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 14 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Pluvium — rain, hour by hour, for every Caribbean town</title>
+      <link>https://corx-labs.com/models/pluvium/</link>
+      <guid isPermaLink="false">https://corx-labs.com/models/pluvium/#released-2026-11-14</guid>
+      <pubDate>Sat, 14 Nov 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Weather model</category>
+      <description><![CDATA[
+        <p>Pluvium forecasts rain for every town and village in the Caribbean, hour by hour, three
+        days ahead: the chance of rain each hour, whether it will be drizzle, showers or a
+        thunderstorm, when it will start, how long it will last and how much will fall. It runs on
+        the NatureV1 engine, and Pluvium Blend pools six operational forecast systems into daily rain
+        chances out to 14 days.</p>
+        <p>Tested against ECMWF and NOAA on real archived forecasts for Jamaica, the small model had
+        the highest skill of any single system for rain on days 1 and 2 in July and August 2025, and
+        lost in May and June 2025, after a wet April it had never trained on. It is a research model,
+        not an official forecast. The code is on PyPI as <code>pluvium</code>, under Apache 2.0.
+        <a href="https://corx-labs.com/models/pluvium/">The model page</a> has the results and the
+        limits.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.9 — waits out the slow-down</title>
