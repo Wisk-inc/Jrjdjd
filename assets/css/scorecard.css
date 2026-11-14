@@ -8,6 +8,7 @@
 /* --- system marks -------------------------------------------------------- */
 .sc-mark { display: block; width: 26px; height: 26px; border-radius: 7px; flex: none; }
 .sc-mark.is-sm { width: 20px; height: 20px; border-radius: 6px; }
+.sc-mark.is-tile { background: var(--paper); border: 1px solid var(--line-strong); padding: 3px; box-sizing: border-box; }
 
 /* --- chart card ------------------------------------------------------------ */
 .sc-card {
