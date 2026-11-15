@@ -21,6 +21,8 @@ SYSTEMS = {
     "b6":      ("Blend of six", "All six", "blend6", "blend"),
     "b6p":     ("Blend + Pluvium", "Six + Pluvium", "blend6p", "blend"),
     "never":   ("Never rain", "Reference", "never", "ref"),
+    "pblend":  ("Pluvium Blend", "CorX Labs", "pluvium", "featured"),
+    "pnet":    ("Pluvium network", "CorX Labs", "pluvium", "featured"),
 }
 ORDER = ["pluvium", "ens", "gefs", "hres", "aifs", "gc", "gfs", "b6", "b6p", "never"]
 
@@ -62,7 +64,7 @@ CORX_LOGO = "/assets/img/logos/corx.4c986e8d.svg"   # the lab's mark, as on the 
 
 
 def icon_src(key):
-    if key == "pluvium":
+    if key in ("pluvium", "pblend", "pnet"):
         return CORX_LOGO
     org = OFFICIAL_FOR.get(key)
     for ext in ("svg", "png", "webp"):
@@ -72,7 +74,7 @@ def icon_src(key):
 
 
 def icon(key, small=False):
-    cls = (" is-sm" if small else "") + (" is-tile" if key == "pluvium" else "")
+    cls = (" is-sm" if small else "") + (" is-tile" if key in ("pluvium", "pblend", "pnet") else "")
     return ICON.format(cls=cls, src=icon_src(key), w=20 if small else 26)
 
 
@@ -114,6 +116,8 @@ def bar_chart(values, *, title, sub, note="", floor=None, axis_fmt=axis_pct,
     best = {k for k in keys if SYSTEMS[k][3] != "ref" and values[k] == top}
     top1 = max(values[k] for k in keys if SYSTEMS[k][3] in ("featured", "other"))
     single = {k for k in keys if SYSTEMS[k][3] in ("featured", "other") and values[k] == top1} - best
+    if any(SYSTEMS[k][3] in ("featured", "other") for k in best):
+        single = set()
     n = len(keys)
     axis = "".join(f'<span style="bottom:{pos(t):.2f}%">{axis_fmt(t)}</span>' for t in ticks)
     grid = "".join(f'<div class="sc-grid{" is-zero" if abs(t - base) < 1e-9 else ""}" style="bottom:{pos(t):.2f}%"></div>'
@@ -196,6 +200,8 @@ def table():
         best = {k for k, v in cand.items() if v == pick(cand.values())}
         singles = {k: v for k, v in cand.items() if SYSTEMS[k][3] in ("featured", "other")}
         single = {k for k, v in singles.items() if v == pick(singles.values())} - best
+        if any(SYSTEMS[k][3] in ("featured", "other") for k in best):
+            single = set()
         cells = []
         for k in ORDER:
             v = vals[k]
@@ -250,11 +256,12 @@ def scorecard():
                         "bars start at 50%. Jamaica, July&ndash;August 2025.",
                     floor=.5, note="A system with no skill would sit on the baseline. Pluvium ranks rainy and dry "
                                    "days better than any single operational system.")
-    return f"""<h3 class="mt-m" id="scorecard">Scorecard</h3>
+    return f"""<h3 class="mt-m" id="scorecard">Jamaica, July&ndash;August 2025: Pluvium&rsquo;s own network against the six</h3>
       <div class="prose">
-        <p>Pluvium against the six operational systems and two blends of them, on 450 land cells covering
-          Jamaica. Skill scores are shown as percentages, so a taller bar is a better forecast.
-          Choose a day:</p>
+        <p>The first test of Pluvium&rsquo;s hour-by-hour network itself, at its small size (0.9M parameters,
+          about two hours of training on a CPU) and driven only by GFS, against the six operational systems and
+          two blends of them, on 450 land cells covering Jamaica. Skill scores are percentages, so a taller bar
+          is a better forecast. Choose a day:</p>
       </div>
       {day_tabs()}
       {KEY}
@@ -268,3 +275,152 @@ def mayjun_chart():
                      sub="Brier skill score as a percentage, isotonic calibration (the protocol fixed for this test).",
                      note="After a wet April it had never trained on, calibration turned Pluvium&rsquo;s forecasts "
                           "into false alarms, and it fell below climatology.")
+
+
+# ----------------------------------------------------------------------------------------------
+# Full year, April 2025 - March 2026 (docs/FULL_YEAR_BENCHMARK.md, "Headline: rain of 1 mm or more"):
+# Brier skill of Pluvium Blend, and of the best of every other system, raw or post-processed.
+LEADS = ["Days 1&ndash;3", "Days 4&ndash;7", "Days 8&ndash;10", "Days 11&ndash;14"]
+PLACES = [  # name, region note, [(blend, best other, which) per lead group]
+    ("Jamaica", "8 km, with Pluvium&rsquo;s network",
+     [(.192, .179, "gc"), (.138, .118, "aifs"), (.074, .085, "gc"), (-.004, -.004, "aifs")]),
+    ("Caribbean", "islands and coasts",
+     [(.228, .218, "aifs"), (.167, .156, "aifs"), (.102, .089, "aifs"), (.052, .043, "ens")]),
+    ("Maritime Continent", "deep tropical convection",
+     [(.304, .294, "aifs"), (.244, .226, "aifs"), (.169, .155, "aifs"), (.114, .109, "aifs")]),
+    ("Alps", "mid-latitude mountains",
+     [(.504, .493, "ens"), (.340, .315, "ens"), (.139, .117, "ens"), (.032, .027, "ens")]),
+    ("US Pacific Northwest", "coast and mountains",
+     [(.380, .366, "ens"), (.254, .235, "ens"), (.096, .078, "ens"), (.003, .002, "aifs")]),
+    ("US Great Plains", "mid-latitude storms",
+     [(.476, .463, "aifs"), (.310, .290, "aifs"), (.140, .121, "ens"), (.032, .028, "ens")]),
+    ("Southern Andes", "and Chile",
+     [(.426, .417, "ens"), (.291, .280, "ens"), (.144, .132, "ens"), (.047, .051, "ens")]),
+]
+SCOREBOARD = [  # score, places (of 7) where Pluvium Blend beat every other system, by lead group
+    ("Brier skill, 1&nbsp;mm", (7, 7, 6, 6)), ("Brier skill, 10&nbsp;mm", (7, 7, 7, 3)),
+    ("Brier skill, 25&nbsp;mm", (6, 6, 7, 4)), ("Brier skill, 50&nbsp;mm", (3, 3, 3, 5)),
+    ("Critical success index, 1&nbsp;mm", (7, 6, 6, 2)), ("Critical success index, 10&nbsp;mm", (6, 6, 7, 3)),
+    ("ROC area, 1&nbsp;mm", (7, 7, 6, 4)), ("CRPS", (6, 7, 7, 3)), ("RMSE", (4, 6, 6, 4)),
+    ("Anomaly correlation", (6, 5, 3, 2)),
+]
+
+
+def place_chart(lead):
+    rows = [(name, note, *vals[lead]) for name, note, vals in PLACES]
+    allv = [v for r in rows for v in r[2:4]]
+    lo, hi = min(min(allv), 0), max(allv)
+    ticks = nice_ticks(lo, hi); lo, hi = ticks[0], ticks[-1]
+    pos = lambda v: (v - lo) / (hi - lo) * 100
+    axis = "".join(f'<span style="bottom:{pos(t):.2f}%">{axis_pct(t)}</span>' for t in ticks)
+    grid = "".join(f'<div class="sc-grid{" is-zero" if abs(t) < 1e-9 else ""}" style="bottom:{pos(t):.2f}%"></div>'
+                   for t in ticks)
+
+    def col(v, cls):
+        up = v >= 0
+        b = pos(0) if up else pos(v)
+        h = abs(pos(v) - pos(0))
+        return (f'<div class="sc-col {"is-up" if up else "is-down"} {cls}" style="--b:{b:.2f}%;--h:{h:.2f}%">'
+                f'<div class="sc-bar"></div><span class="sc-val">{pct(v)}</span></div>')
+    cols, names, aria = [], [], []
+    for name, note, blend, other, who in rows:
+        cols.append(f'<div class="sc-pair">{col(blend, "is-featured")}{col(other, "")}</div>')
+        d = (blend - other) * 100
+        verdict = ('<span class="sc-diff is-ahead">+{:.1f} pts</span>'.format(d) if d > 0.05 else
+                   '<span class="sc-diff is-behind">−{:.1f} pts</span>'.format(-d) if d < -0.05 else
+                   '<span class="sc-diff">level</span>')
+        names.append(f'<div class="sc-name"><span class="sc-duo">{icon("pblend", True)}{icon(who, True)}</span>'
+                     f'<b>{name}</b><small>vs {SYSTEMS[who][0]} &middot; {note}</small>{verdict}</div>')
+        aria.append(f"{name}: Pluvium Blend {pct(blend)}, best other system {SYSTEMS[who][0]} {pct(other)}")
+    title = f"Rain of at least 1&nbsp;mm, {LEADS[lead].lower()}, a full year in seven places"
+    return f"""<div class="sc-card" data-reveal>
+          <div class="sc-head">
+            <div><p class="sc-title">{title}</p><p class="sc-sub">Brier skill of Pluvium Blend (dark) beside the best
+              of every other system, raw or post-processed (light), April 2025 to March 2026.</p></div>
+            <span class="sc-dir"><span aria-hidden="true">&uarr;</span> Higher is better</span>
+          </div>
+          <div class="sc-scroll">
+            <div class="sc-chart" role="img" aria-label="{html.escape(title.replace("&nbsp;", " ").replace("&ndash;", "-"))}. {html.escape("; ".join(aria))}.">
+              <div class="sc-axis" aria-hidden="true">{axis}</div>
+              <div class="sc-plot" aria-hidden="true">{grid}<div class="sc-bars" style="--n:7">{"".join(cols)}</div></div>
+              <div class="sc-names" style="--n:7" aria-hidden="true">{"".join(names)}</div>
+            </div>
+          </div>
+        </div>"""
+
+
+def full_year():
+    radios = "".join(f'<input class="sc-radio" type="radio" name="sc-lead" id="sc-l{i}"{" checked" if i == 1 else ""}>'
+                     for i in range(1, 5))
+    tabs = "".join(f'<label for="sc-l{i}">{LEADS[i - 1]}</label>' for i in range(1, 5))
+    panels = "".join(f'<div class="sc-panel sc-q{i + 1}">{place_chart(i)}</div>' for i in range(4))
+    head = "".join(f'<th scope="col">{l}</th>' for l in LEADS)
+    body = ""
+    for score, counts in SCOREBOARD:
+        cells = "".join(f'<td class="{"is-full" if c == 7 else "is-low" if c <= 3 else ""}">'
+                        f'<span class="sc-meter" style="--f:{c / 7 * 100:.1f}%"></span>{c} of 7</td>' for c in counts)
+        body += f'<tr><th scope="row">{score}</th>{cells}</tr>'
+    return f"""<div class="sc-leads mt-m">
+        {radios}
+        <div class="sc-tabs sc-tabs-lead" aria-hidden="true">{tabs}</div>
+        {panels}
+      </div>
+      <div class="sc-key" aria-hidden="true">
+        <span><i class="is-featured"></i> Pluvium Blend</span>
+        <span><i></i> Best of every other system, raw or post-processed</span>
+      </div>
+      <div class="table-wrap mt-m" data-reveal>
+        <table class="sc-table sc-board">
+          <caption class="visually-hidden">In how many of the seven places Pluvium Blend beat every other system, raw and post-processed, on each score and lead group, April 2025 to March 2026</caption>
+          <thead><tr><th scope="col">In how many places it beat every other system</th>{head}</tr></thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>"""
+
+
+MELISSA2 = {"aifs": 1.00, "gfs": .98, "gc": .97, "hres": .94, "ens": .90, "gefs": .83, "pblend": .66, "pnet": .20}
+
+
+def melissa_chart():
+    return bar_chart(MELISSA2,
+                     title="Hurricane Melissa: the chance of 50&nbsp;mm over Jamaica, two days ahead",
+                     sub="Averaged over Jamaica&rsquo;s 450 cells, for 28 October 2025. It came true everywhere: every "
+                         "cell had 50&nbsp;mm or more, 154&nbsp;mm on average. Raw forecasts beside Pluvium Blend and "
+                         "Pluvium&rsquo;s network.",
+                     label=lambda v: f"{v * 100:.0f}%",
+                     note="Here a taller bar was the better forecast, and Pluvium came last. Calibration trained on a "
+                          "year without such a storm pulled a record forecast back towards normal. The daily table "
+                          "now reports how many raw systems call for 50&nbsp;mm, so a storm they agree on is no "
+                          "longer hidden.")
+
+
+# Pluvium Cyclone, East Pacific 2025 (the test season), early guidance, mean track error in nautical miles
+# (docs/CYCLONE_BENCHMARK.md). Lower is better.
+CYC_LEADS = ["12 h", "24 h", "36 h", "48 h", "60 h", "72 h", "96 h", "120 h"]
+CYC = [
+    ("Pluvium Cyclone", "CorX Labs, six public systems", (20, 30, 37, 46, 57, 69, 90, 125), True),
+    ("NHC official forecast", "National Hurricane Center", (18, 27, 34, 40, 46, 52, 73, 100), False),
+    ("NHC consensus TVCN", "National Hurricane Center", (19, 27, 35, 43, 53, 64, 92, 127), False),
+    ("NHC corrected consensus HCCA", "National Hurricane Center", (19, 30, 34, 43, 51, 58, 78, 107), False),
+]
+CYC_N = (130, 110, 92, 76, 64, 53, 39, 30)
+
+
+def cyclone_table():
+    head = "".join(f'<th scope="col">{l}</th>' for l in CYC_LEADS)
+    best = [min(r[2][i] for r in CYC) for i in range(8)]
+    body = ""
+    for name, who, vals, ours in CYC:
+        cells = "".join(f'<td class="{" ".join(c for c in ["is-featured" if ours else "", "is-best" if v == best[i] else ""] if c)}">{v}</td>'
+                        for i, v in enumerate(vals))
+        mark = icon("pluvium", True) if ours else ""
+        body += (f'<tr><th scope="row"><span class="sc-rowname">{mark}{name}</span>'
+                 f'<small>{who}</small></th>{cells}</tr>')
+    body += '<tr><th scope="row">Forecasts compared</th>' + "".join(f'<td class="is-na">{n}</td>' for n in CYC_N) + "</tr>"
+    return f"""<div class="table-wrap mt-s" data-reveal>
+        <table class="sc-table sc-cyc">
+          <caption class="visually-hidden">Mean track error in nautical miles by lead for Pluvium Cyclone and the National Hurricane Center&rsquo;s forecasts, East Pacific 2025 test season, early guidance; lower is better</caption>
+          <thead><tr><th scope="col">Track error, nautical miles &mdash; lower is better</th>{head}</tr></thead>
+          <tbody>{body}</tbody>
+        </table>
+      </div>"""

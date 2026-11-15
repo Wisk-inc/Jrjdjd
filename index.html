@@ -168,7 +168,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "primaryImageOfPage": { "@id": "https://corx-labs.com/#logo" },
       "inLanguage": "en",
       "datePublished": "2026-08-01",
-      "dateModified": "2026-11-14",
+      "dateModified": "2026-11-15",
       "speakable": {
         "@type": "SpeakableSpecification",
         "cssSelector": [".answer-box", ".fact-list", "h1"]
@@ -614,19 +614,19 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
             tested reference implementation; there are no trained checkpoints. NatureV1's engine grew
             out of it.</p>
 
-          <h3>Pluvium — rain, hour by hour, for every Caribbean town</h3>
+          <h3>Pluvium — rain for every town, and hurricane tracks</h3>
 
-          <p>Pluvium uses NatureV1&rsquo;s engine at the scale of a town. For every town and village in
-            the Caribbean it forecasts rain hour by hour for three days &mdash; the chance of rain each
-            hour, whether it will be drizzle, showers or a thunderstorm, when it will start, how long it
-            will last and how much will fall &mdash; and Pluvium Blend pools six operational forecast
-            systems into daily rain chances out to 14 days.</p>
+          <p>Pluvium uses NatureV1&rsquo;s engine at the scale of a town. Its network forecasts rain hour by hour
+            for three days; Pluvium Blend combines six operational forecast systems into each day&rsquo;s rain out to
+            14 days, for any country between 60&deg;&nbsp;S and 60&deg;&nbsp;N; and Pluvium Cyclone, added in
+            version 0.3, forecasts hurricane tracks from the same six systems.</p>
 
-          <p>It was tested against ECMWF and NOAA on real archived forecasts for Jamaica. In July and
-            August 2025 it had the highest skill of any single system for rain on days 1 and 2; in May and
-            June 2025 it lost, after a wet April it had never trained on. Its code is out as the
-            <code>pluvium</code> package, and the full-size model&rsquo;s weights are still to come. It is
-            a research model, not an official forecast.</p>
+          <p>Over a full year, April 2025 to March 2026, in seven places on four continents, Pluvium Blend had the
+            best skill of every ECMWF and NOAA system for rain on days 1 to 7. Its misses are published beside
+            that: it does not lead at 50&nbsp;mm, it under-forecast Hurricane Melissa&rsquo;s rain over Jamaica, and
+            its hurricane tracks trail the National Hurricane Center&rsquo;s official forecast. Its code is out as
+            the <code>pluvium</code> package, and the full-size network&rsquo;s weights are still to come. It is a
+            research model, not an official forecast.</p>
 
           <blockquote>
             <p>“For years I've shared a dream to build something great — my own AI. Today that dream
@@ -728,7 +728,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
           <li><strong>TriStream-SVS is a 321.8-million-parameter singing voice synthesis model</strong> that splits the human voice into three encoder streams: pitch, timbre and breath texture.</li>
           <li><strong>HELIX is a linear-scaling sequence architecture</strong> published as the <code>helix-lm</code> Python package. It has a tested reference implementation and no trained checkpoints.</li>
           <li><strong>NatureV1 is a Jamaican-made AI weather and hurricane model</strong> with 89 million parameters, built on attention over the real sphere and released as a research model. On held-out seasons its hurricane track beats physics-only steering at every lead, but its errors are 2.5&ndash;4.5&times; the National Hurricane Center&rsquo;s.</li>
-          <li><strong>Pluvium is a Jamaican-made AI rain forecasting system</strong> that forecasts rain hour by hour for every town in the Caribbean, three days ahead, on the NatureV1 engine. It is a research model: on Jamaica it had the highest skill of any single system for rain on days 1 and 2 in July and August 2025, and it lost the May&ndash;June 2025 test.</li>
+          <li><strong>Pluvium is a Jamaican-made AI rain forecasting system</strong>: rain hour by hour for every town, daily to 14 days for any country, and hurricane tracks. Over a full year in seven places its Blend beat every ECMWF and NOAA system for rain on days 1 to 7; it does not lead at 50&nbsp;mm and under-forecast Hurricane Melissa. A research model.</li>
           <li><strong>Automa is an Android app, version 1.9.9,</strong> for running a company of AI agents from a phone, and one of the first AI agent apps built in Jamaica. It is a free APK download from corx-labs.com, with an APKPure listing pending review. It runs on free AI models with no key, account or card, including Moan, a Jamaican model that speaks Patois.</li>
           <li><strong>Every CorX Labs model is open-source under the Apache 2.0 licence</strong> &mdash; on Hugging Face under the account <a href="https://huggingface.co/Sigmandndnns" rel="noopener" target="_blank">Sigmandndnns</a>, on PyPI, or both.</li>
           <li><strong>You can talk to CorX3.8 free in a browser</strong> at <a href="/chat/">corx-labs.com/chat</a>, with no sign-up and no API key.</li>
@@ -823,13 +823,12 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
             <div class="tag-row" style="margin-bottom:14px">
               <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> New</span>
               <span class="tag">Rain forecasts</span>
-              <span class="tag">Every Caribbean town</span>
+              <span class="tag">Hurricane tracks</span>
             </div>
             <h3>Pluvium</h3>
-            <p class="lede" style="margin-top:12px">Rain for every town and village in the Caribbean,
-              hour by hour, three days ahead: will it rain, when it starts, how long it lasts and how
-              much falls. Pluvium Blend pools six operational forecast systems into daily rain chances
-              out to 14 days &mdash; a research model, not a forecast.</p>
+            <p class="lede" style="margin-top:12px">Rain for every town and village, hour by hour for
+              three days and day by day for 14, plus hurricane tracks. Over a full year in seven places it beat
+              every ECMWF and NOAA system for rain on days 1 to 7 &mdash; a research model, not a forecast.</p>
           </div>
         </div>
 

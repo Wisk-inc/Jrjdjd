@@ -129,3 +129,31 @@
 .sc-table td.is-best-single { color: var(--ink-strong); font-weight: 600; box-shadow: inset 0 0 0 1.5px transparent; outline: 1.5px dashed var(--ink-strong); outline-offset: -4px; border-radius: 6px; }
 .sc-sig { color: var(--ink-strong); font-weight: 700; margin-left: 2px; }
 .sc-table td.is-na { color: var(--faint); }
+
+/* --- full year: lead tabs, paired bars, scoreboard ------------------------- */
+#sc-l1:checked ~ .sc-q1, #sc-l2:checked ~ .sc-q2, #sc-l3:checked ~ .sc-q3, #sc-l4:checked ~ .sc-q4 { display: block; }
+#sc-l1:checked ~ .sc-tabs label[for="sc-l1"],
+#sc-l2:checked ~ .sc-tabs label[for="sc-l2"],
+#sc-l3:checked ~ .sc-tabs label[for="sc-l3"],
+#sc-l4:checked ~ .sc-tabs label[for="sc-l4"] { background: var(--paper-raised); color: var(--ink-strong); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+#sc-l1:focus-visible ~ .sc-tabs label[for="sc-l1"],
+#sc-l2:focus-visible ~ .sc-tabs label[for="sc-l2"],
+#sc-l3:focus-visible ~ .sc-tabs label[for="sc-l3"],
+#sc-l4:focus-visible ~ .sc-tabs label[for="sc-l4"] { outline: 2px solid var(--ink-strong); outline-offset: 2px; }
+.sc-tabs { flex-wrap: wrap; }
+.sc-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; position: relative; }
+.sc-pair .sc-bar { left: 8%; right: 8%; }
+.sc-pair .sc-val { font-size: .7rem; }
+.sc-duo { display: inline-flex; gap: 4px; }
+.sc-diff { font-size: .68rem; font-weight: 700; color: var(--muted); border-radius: var(--r-pill); padding: 1px 7px; border: 1px solid var(--line-strong); }
+.sc-diff.is-ahead { color: var(--ink-strong); border-color: var(--ink-strong); }
+.sc-diff.is-behind { border-style: dashed; }
+.sc-board { min-width: 620px; }
+.sc-board td { position: relative; text-align: left; white-space: nowrap; }
+.sc-meter { display: inline-block; vertical-align: middle; width: 46px; height: 6px; margin-right: 8px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--espresso) var(--f), color-mix(in srgb, var(--faint) 28%, transparent) var(--f)); }
+.sc-board td.is-full { color: var(--ink-strong); font-weight: 700; }
+.sc-board td.is-low { color: var(--faint); }
+.sc-rowname { display: inline-flex; align-items: center; gap: 8px; }
+.sc-cyc { min-width: 760px; }
+.sc-cyc td.is-best::after { content: ""; }
