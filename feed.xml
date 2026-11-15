@@ -6,13 +6,32 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sat, 14 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Pluvium 0.3 — a full year in seven places, and hurricane tracks</title>
+      <link>https://corx-labs.com/models/pluvium/</link>
+      <guid isPermaLink="false">https://corx-labs.com/models/pluvium/#release-0-3-0</guid>
+      <pubDate>Sun, 15 Nov 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Weather model</category>
+      <description><![CDATA[
+        <p>Pluvium 0.3.0 is out. Over a full year, April 2025 to March 2026, in seven places on four
+        continents, Pluvium Blend had the best skill of every ECMWF and NOAA system for rain on days 1
+        to 7. Version 0.3 learns after every verified day, handles record storms, labels alerts in plain
+        terms, and adds Pluvium Cyclone, hurricane tracks from the same six systems.</p>
+        <p>The losses are published too: it does not lead at 50 mm, it under-forecast Hurricane Melissa's
+        rain over Jamaica, and its hurricane tracks trail the National Hurricane Center's official forecast.
+        It is a research model, not an official forecast. <a href="https://corx-labs.com/models/pluvium/">The
+        model page</a> has the charts.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Pluvium — rain, hour by hour, for every Caribbean town</title>

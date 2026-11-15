@@ -55,7 +55,7 @@
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "about": { "@id": "https://corx-labs.com/#organization" },
       "inLanguage": "en",
-      "dateModified": "2026-11-14",
+      "dateModified": "2026-11-15",
       "breadcrumb": { "@id": "https://corx-labs.com/models/#breadcrumb" },
       "mainEntity": { "@id": "https://corx-labs.com/models/#list" }
     },
@@ -104,7 +104,7 @@
             "applicationCategory": "DeveloperApplication",
             "applicationSubCategory": "Rain forecasting model",
             "operatingSystem": "OS Independent",
-            "description": "Open-source, hour-by-hour rain forecasts for every town and village in the Caribbean, three days ahead, on the NatureV1 / iHELIX engine, with Pluvium Blend pooling six operational forecast systems into daily rain chances out to 14 days. A research model: on Jamaica in July and August 2025 it had the highest skill of any single system for rain of at least 1 mm on days 1 and 2, and in May and June 2025 it lost.",
+            "description": "Open-source rain forecasts for every town, hour by hour for three days and daily to 14 days, and hurricane tracks, on the NatureV1 / iHELIX engine, for any country between 60 S and 60 N. A research model: over April 2025 to March 2026 in seven places Pluvium Blend had the highest skill of every ECMWF and NOAA system for rain of at least 1 mm on days 1 to 7; it does not lead at 50 mm and under-forecast Hurricane Melissa's rain over Jamaica.",
             "license": "https://www.apache.org/licenses/LICENSE-2.0",
             "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
             "publisher": { "@id": "https://corx-labs.com/#organization" },
@@ -333,25 +333,25 @@
               <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> New</span>
               <span class="tag">Rain forecasts</span>
               <span class="tag">Every Caribbean town</span>
-              <span class="tag">Hour by hour</span>
+              <span class="tag">Hurricane tracks</span>
               <span class="tag">Research model</span>
             </div>
             <h3>Pluvium</h3>
-            <p class="lede" style="margin-top:12px">Rain forecasts for every town and village in the
-              Caribbean, hour by hour, three days ahead: will it rain, when it starts, how long it lasts
-              and how much falls. Pluvium Blend pools six operational forecast systems into daily rain
-              chances out to 14 days. Made in Jamaica, on the NatureV1 engine, and tested against
-              ECMWF and NOAA on real archived forecasts.</p>
+            <p class="lede" style="margin-top:12px">Rain forecasts for every town and village, hour by
+              hour for three days and day by day for 14, and hurricane tracks &mdash; for the Caribbean and any
+              country between 60&deg;&nbsp;S and 60&deg;&nbsp;N. Over a full year in seven places, Pluvium Blend beat
+              every ECMWF and NOAA system for rain on days 1 to 7; its misses, such as Hurricane Melissa, are
+              published too. Made in Jamaica, on the NatureV1 engine.</p>
           </div>
         </div>
 
         <dl class="spec-list">
-          <div><dt>Forecast</dt><dd>Hourly, 3 days</dd></div>
-          <div><dt>Pluvium Blend</dt><dd>Daily, 14 days</dd></div>
+          <div><dt>Rain, hourly</dt><dd>3 days, every town</dd></div>
+          <div><dt>Rain, daily</dt><dd>14 days, Pluvium Blend</dd></div>
+          <div><dt>Hurricane tracks</dt><dd>N. Atlantic &amp; E. Pacific</dd></div>
           <div><dt>Engine</dt><dd>NatureV1 / iHELIX</dd></div>
-          <div><dt>Mesh</dt><dd>6,075 points, ~11 km</dd></div>
-          <div><dt>Tested against</dt><dd>6 ECMWF &amp; NOAA systems</dd></div>
-          <div><dt>Package</dt><dd>pluvium 0.1.0</dd></div>
+          <div><dt>Full-year test</dt><dd>7 places, 6 ECMWF &amp; NOAA systems</dd></div>
+          <div><dt>Package</dt><dd>pluvium 0.3.0</dd></div>
         </dl>
 
         <div class="btn-row">

@@ -25,7 +25,8 @@ OUT = ROOT / "models/pluvium/index.html"
 URL = "https://corx-labs.com/models/pluvium/"
 PYPI = "https://pypi.org/project/pluvium/"
 OG = "https://corx-labs.com/assets/img/og-pluvium.jpg"
-DATE = "2026-11-14"
+DATE = "2026-11-14"        # first published
+MODIFIED = "2026-11-15"    # Pluvium 0.3.0
 ODPEM = '<a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>'
 EXT = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>')
@@ -65,24 +66,34 @@ if '/models/pluvium/' not in footer:   # the NatureV1 footer already lists Pluvi
 # ---------------------------------------------------------------- FAQ (one source)
 FAQ = [
     ("What is Pluvium?",
-     "Pluvium is an open-source AI rain-forecasting system built by CorX Labs in Jamaica and released "
-     "under Apache-2.0. For every town and village in the Caribbean it forecasts rain hour by hour for "
-     "three days: the chance of rain, whether it will be drizzle, showers, heavy rain or a thunderstorm, "
-     "when it will most likely start, how long it will last and how much will fall. Pluvium Blend adds "
-     "daily rain chances out to 14 days. It is a research model, not an official forecast."),
+     "Pluvium is an open-source AI forecasting system built by CorX Labs in Jamaica and released under "
+     "Apache-2.0, in three parts. Pluvium&rsquo;s network forecasts rain at every town hour by hour for three "
+     "days: the chance of rain, whether it will be drizzle, showers, heavy rain or a thunderstorm, when it will "
+     "start, how long it will last and how much will fall. Pluvium Blend gives each day&rsquo;s rain out to 14 "
+     "days for any country between 60&deg;&nbsp;S and 60&deg;&nbsp;N. Pluvium Cyclone forecasts hurricane "
+     "tracks. It is a research model, not an official forecast."),
     ("Is Pluvium an official forecast?",
      "<strong>No.</strong> It is a research model that no independent party has verified, and its flood "
      "levels are a rule that has not been checked against flood reports. Do not use it for real "
      "decisions. Follow your national meteorological service; in Jamaica, the Meteorological Service of "
-     f"Jamaica and {ODPEM}."),
+     f"Jamaica and {ODPEM}. For hurricanes, follow the National Hurricane Center."),
     ("How accurate is Pluvium?",
-     "On 450 land cells covering Jamaica in July and August 2025, with a protocol frozen before the data "
-     "were downloaded, Pluvium had the highest Brier skill of any single system for rain of at least "
-     "1&nbsp;mm on days 1 and 2: +0.127 and +0.118, against +0.087 and +0.091 for the best of the six "
-     "operational systems (ECMWF ENS, HRES and AIFS, and NOAA GEFS, GraphCast and GFS). With 95% confidence it beat ENS and HRES on all three days "
-     "and AIFS and GraphCast on days 1 and 2; against GEFS and GFS its lead was not significant. In May "
-     "and June 2025 it lost after calibration, because of a wet April it had never trained on. At 25 and "
-     "50&nbsp;mm no system beat a forecast that never says rain."),
+     "Over a full year, April 2025 to March 2026, in seven places (Jamaica, the Caribbean, the Maritime "
+     "Continent, the Alps, the US Pacific Northwest, the US Great Plains and the southern Andes), Pluvium Blend "
+     "had the highest Brier skill of every system, raw or post-processed, for rain of at least 1&nbsp;mm on "
+     "days 1 to 7 in all seven places. Against each of ECMWF ENS, HRES and AIFS and NOAA GEFS, GFS and "
+     "GraphCast after the same post-processing, it was better with 95% confidence in all 72 comparisons on "
+     "days 1 to 7 in the six regions, and never worse. It does not lead at 50&nbsp;mm, where post-processed "
+     "AIFS often wins at short range, and it under-forecast Hurricane Melissa&rsquo;s rain over Jamaica: a 66% "
+     "chance of 50&nbsp;mm two days ahead, when every raw system said 83 to 100%."),
+    ("Can Pluvium forecast hurricanes?",
+     "Pluvium Cyclone forecasts where tropical cyclones in the North Atlantic and the eastern North Pacific "
+     "will go: a track to five days, a circle that should hold the centre two times in three, and the chance "
+     "of the centre passing within 150&nbsp;km of each place. Track only, not intensity. On its test season "
+     "it beat ECMWF HRES and NOAA GFS at every lead and was level with the National Hurricane Center&rsquo;s "
+     "consensus, but it was behind the Center&rsquo;s official forecast at every lead (125 against 100 nautical "
+     "miles at five days), and Google DeepMind&rsquo;s cyclone model was better still. For a live storm, follow "
+     "the National Hurricane Center."),
     ("Can Pluvium forecast rain in my country?",
      "It can be set up for any country between 60&deg;&nbsp;S and 60&deg;&nbsp;N, because nothing in it is "
      "tied to Jamaica. <code>pluvium setup --country</code> with an ISO code builds the area, terrain, "
@@ -91,23 +102,23 @@ FAQ = [
      "in Jamaica, Trinidad and Tobago, Sri Lanka and Ghana, with bulletins in English, Spanish, French and "
      "Jamaican Patois. Its skill in a new country is unknown until it is scored there."),
     ("What is Pluvium Blend?",
-     "Pluvium Blend combines six operational systems (ECMWF ENS, HRES and AIFS, and NOAA GEFS, GraphCast "
-     "and GFS), plus Pluvium&rsquo;s own network where it runs, into one calibrated forecast of each "
-     "day&rsquo;s rain out to 14 days. Each system is first post-processed on its own by a small network; "
-     "then a pool of about 70 weights, fitted on weeks the components never trained on, combines them. "
-     "Because every rival gets the same post-processing, the blend has to beat each system&rsquo;s best "
-     "version, not just its raw output."),
+     "Pluvium Blend combines six operational systems (ECMWF ENS, HRES and AIFS, and NOAA GEFS, GFS and "
+     "GraphCast), plus Pluvium&rsquo;s own network where it runs, into one calibrated forecast of each "
+     "day&rsquo;s rain out to 14 days. Each system is first post-processed on its own; a pool weighs them, "
+     "and its weights move after every verified day towards whoever has been right. A forecast beyond "
+     "anything in the training record is handed back, in part, to what the raw systems say, in the places "
+     "where that helped. It needs no GPU."),
     ("How is Pluvium related to NatureV1?",
-     "Pluvium runs on the same engine as <a href=\"/models/naturev1/\">NatureV1</a>: iHELIX, whose "
-     "attention heads have physical radii in kilometres on the sphere. NatureV1 forecasts the whole "
+     "Pluvium&rsquo;s network runs on the same engine as <a href=\"/models/naturev1/\">NatureV1</a>: iHELIX, "
+     "whose attention heads have physical radii in kilometres on the sphere. NatureV1 forecasts the whole "
      "atmosphere and hurricanes on a 1.5&deg; global grid. Pluvium uses the engine on a Caribbean mesh of "
      "6,075 points, about 11&nbsp;km apart over land, with physics such as mountain rain and sea-breeze "
      "convergence built in, to forecast the rain at each town hour by hour."),
     ("Is Pluvium free and open source?",
-     "Yes. The code is released under the Apache-2.0 licence, which allows commercial use, and installs "
-     "with <code>pip install pluvium</code>. The weights of the full-size model, Pluvium-500, have not been "
-     "published yet; the results on this page come from the small model, pluvium-small. The data it "
-     "learns from has its own terms, credited on this page."),
+     "Yes. Version 0.3.0 is released under the Apache-2.0 licence, which allows commercial use, and installs "
+     "with <code>pip install pluvium</code>. Pluvium Blend is trained for your own country on a CPU, and "
+     "Pluvium Cyclone needs nothing trained. The weights of the full-size network, Pluvium-500, have not been "
+     "published yet. The data it learns from has its own terms, credited on this page."),
     ("Who built Pluvium?",
      "Pluvium was built by <a href=\"/nathan/\">Nathan Lyttle</a>, the founder of CorX Labs and a solo "
      "developer from Jamaica, who also built NatureV1 and its iHELIX engine."),
@@ -127,37 +138,38 @@ graph = [
         "@type": ["SoftwareApplication", "SoftwareSourceCode"],
         "@id": URL + "#model",
         "name": "Pluvium",
-        "alternateName": ["pluvium", "Pluvium-500", "Pluvium Blend"],
+        "alternateName": ["pluvium", "Pluvium-500", "Pluvium Blend", "Pluvium Cyclone"],
         "url": URL,
         "image": OG,
         "description": (
-            "Pluvium is an open-source probabilistic rain forecasting system from CorX Labs, made in Jamaica "
-            "and released under Apache-2.0 as a research model rather than an official forecast. For every "
-            "town and village in the Caribbean it forecasts rain hour by hour for three days: the chance of "
-            "rain, whether it will be drizzle, showers, heavy rain or a thunderstorm, when it will most likely "
-            "start, how long it will last, how much will fall, lightning nearby and a flood-risk rule. It runs "
-            "on the NatureV1 / iHELIX engine over a 6,075-point Caribbean mesh with physics such as orographic "
-            "rain and sea-breeze convergence built in, and one chain of rain states per town keeps every timing "
-            "and amount answer consistent. Pluvium Blend pools the post-processed forecasts of six operational "
-            "systems into daily rain chances out to 14 days. On 450 land cells covering Jamaica in July and "
-            "August 2025 the small model had the highest Brier skill for rain of at least 1 mm on days 1 and 2 "
-            "against ECMWF ENS, HRES and AIFS and NOAA GEFS, GraphCast and GFS; in May and June 2025 it lost "
-            "after calibration."),
+            "Pluvium is an open-source probabilistic rain and hurricane-track forecasting system from CorX Labs, made "
+            "in Jamaica and released under Apache-2.0 as a research model rather than an official forecast. It has "
+            "three parts. Pluvium's network, on the NatureV1 / iHELIX engine, forecasts rain at every town hour by "
+            "hour for three days: the chance of rain, its kind and intensity, when it will start, how long it will "
+            "last and how much will fall. Pluvium Blend combines ECMWF ENS, HRES and AIFS and NOAA GEFS, GFS and "
+            "GraphCast into each day's rain out to 14 days for any country between 60 S and 60 N, and keeps learning "
+            "from every verified day. Pluvium Cyclone forecasts tropical cyclone tracks in the North Atlantic and the "
+            "eastern North Pacific from the same six systems. Over April 2025 to March 2026 in seven places, Pluvium "
+            "Blend had the highest Brier skill of every system, raw or post-processed, for rain of at least 1 mm on "
+            "days 1 to 7; it does not lead at 50 mm, and it under-forecast Hurricane Melissa's rain over Jamaica. "
+            "Pluvium Cyclone beats ECMWF HRES and NOAA GFS but trails the National Hurricane Center's official "
+            "forecast."),
         "applicationCategory": "DeveloperApplication",
         "applicationSubCategory": "Rain forecasting model",
         "operatingSystem": "OS Independent",
-        "softwareVersion": "0.1.0",
+        "softwareVersion": "0.3.0",
         "programmingLanguage": "Python",
         "runtimePlatform": "PyTorch",
         "codeRepository": PYPI,
         "downloadUrl": PYPI,
         "installUrl": PYPI,
         "softwareRequirements": "Python >= 3.10, PyTorch >= 2.5",
+        "releaseNotes": "https://pypi.org/project/pluvium/0.3.0/",
         "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD",
                    "availability": "https://schema.org/InStock"},
         "datePublished": DATE,
-        "dateModified": DATE,
+        "dateModified": MODIFIED,
         "inLanguage": "en",
         "license": "https://www.apache.org/licenses/LICENSE-2.0",
         "author": person,
@@ -168,7 +180,8 @@ graph = [
         "keywords": ("Caribbean rain forecast, Jamaica rain forecast, AI rain forecast, hourly rain forecast, "
                      "Jamaican AI weather model, precipitation forecasting, probabilistic forecasting, "
                      "post-processing, nowcasting, orographic precipitation, hidden Markov model, "
-                     "geodesic attention, ECMWF, GFS, GraphCast, AIFS, CMORPH, PyTorch"),
+                     "geodesic attention, ECMWF, GFS, GraphCast, AIFS, CMORPH, PyTorch, hurricane track forecast, "
+                     "tropical cyclone, multi-model ensemble, online learning, extreme rainfall"),
         "featureList": [
             "Hour-by-hour rain for every town and village in the Caribbean, three days ahead",
             "The chance of rain each hour, and whether it is drizzle, showers, steady rain, heavy rain or a thunderstorm",
@@ -181,11 +194,15 @@ graph = [
             "Any country between 60 S and 60 N with one setup command; bulletins in English, Spanish, French and Jamaican Patois",
             "Lightning within 10 km of each town from the GOES Geostationary Lightning Mapper",
             "Input repair, drift detection, a statistical fallback and atomic publishing in operation",
+            "Pluvium Blend learns online after every verified day, hands record storms back in part to the raw systems where that helped, and labels alert tiers and return periods",
+            "Pluvium Cyclone: tropical cyclone tracks to five days in the North Atlantic and eastern North Pacific, with a two-in-three circle and the chance of the centre passing within 150 km of each place",
         ],
         "sameAs": [PYPI],
         "about": [
             {"@type": "Thing", "name": "Weather forecasting",
              "sameAs": "https://en.wikipedia.org/wiki/Weather_forecasting"},
+            {"@type": "Thing", "name": "Tropical cyclone forecasting",
+             "sameAs": "https://en.wikipedia.org/wiki/Tropical_cyclone_forecasting"},
             {"@type": "Thing", "name": "Quantitative precipitation forecast",
              "sameAs": "https://en.wikipedia.org/wiki/Quantitative_precipitation_forecast"},
             {"@type": "Place", "name": "Caribbean", "sameAs": "https://en.wikipedia.org/wiki/Caribbean"},
@@ -204,7 +221,7 @@ graph = [
         "primaryImageOfPage": {"@type": "ImageObject", "url": OG, "width": 1200, "height": 630},
         "inLanguage": "en",
         "datePublished": DATE,
-        "dateModified": DATE,
+        "dateModified": MODIFIED,
         "breadcrumb": {"@id": URL + "#breadcrumb"},
         "speakable": {"@type": "SpeakableSpecification", "cssSelector": [".answer-box"]},
     },
@@ -227,7 +244,7 @@ graph = [
         "author": person,
         "publisher": {"@id": "https://corx-labs.com/#organization"},
         "datePublished": DATE,
-        "dateModified": DATE,
+        "dateModified": MODIFIED,
         "inLanguage": "en",
         "isPartOf": {"@id": URL + "#webpage"},
         "proficiencyLevel": "Expert",
@@ -253,7 +270,7 @@ HEAD = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>Pluvium — AI Rain Forecasts for Every Caribbean Town | CorX Labs</title>
-<meta name="description" content="Pluvium is an open-source AI rain forecast made in Jamaica: hour by hour for every Caribbean town — when rain starts, how long, how much. A research model.">
+<meta name="description" content="Pluvium is an open-source AI rain forecast made in Jamaica: hour by hour for every town, daily to 14 days, plus hurricane tracks. A research model.">
 <link rel="canonical" href="https://corx-labs.com/models/pluvium/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -269,17 +286,17 @@ HEAD = """<!DOCTYPE html>
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/models/pluvium/">
 <meta property="og:title" content="Pluvium — hour-by-hour rain forecasts for every Caribbean town">
-<meta property="og:description" content="An open-source AI rain model made in Jamaica: will it rain, when it starts, how long it lasts and how much falls, hour by hour for every town. Tested against ECMWF and NOAA on real archived forecasts. A research model, not a forecast.">
+<meta property="og:description" content="Open-source rain forecasts made in Jamaica: hour by hour for every town, daily to 14 days, and hurricane tracks. Over a full year in seven places it beat ECMWF and NOAA for rain on days 1 to 7, and its losses are published too.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-pluvium.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Pluvium — rain, hour by hour, town by town. An open-source rain model made in Jamaica">
 <meta property="article:published_time" content="2026-11-14T00:00:00Z">
-<meta property="article:modified_time" content="2026-11-14T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-15T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="Pluvium — hour-by-hour rain forecasts for every Caribbean town">
-<meta name="twitter:description" content="Rain for every Caribbean town, hour by hour, three days ahead, and Pluvium Blend out to 14 days. Open source, made in Jamaica, scored against ECMWF and NOAA. A research model.">
+<meta name="twitter:description" content="Rain for every town, hour by hour and daily to 14 days, plus hurricane tracks. Open source, made in Jamaica, scored for a full year against ECMWF and NOAA. A research model.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-pluvium.jpg">
 <meta name="twitter:image:alt" content="Pluvium — rain, hour by hour, town by town. An open-source rain model made in Jamaica">
 
@@ -432,19 +449,19 @@ MAIN = """<main id="main">
     </nav>
 
     <div class="tag-row" style="margin-top:22px">
-      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> New</span>
+      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> New: version 0.3</span>
       <span class="tag">Rain forecasts</span>
-      <span class="tag">Every Caribbean town</span>
-      <span class="tag">Hour by hour</span>
+      <span class="tag">Every town</span>
+      <span class="tag">Hourly &amp; 14 days</span>
+      <span class="tag">Hurricane tracks</span>
       <span class="tag">Apache-2.0</span>
       <span class="tag">Research model</span>
     </div>
 
     <h1>Pluvium</h1>
-    <p class="lede">Open-source rain forecasts for every town and village in the Caribbean, hour by
-      hour, three days ahead &mdash; made in Jamaica. For each place it answers the questions people
-      actually ask: will it rain, when will it start, how long will it last, how much will fall, and
-      could it flood?</p>
+    <p class="lede">Open-source rain forecasts for every town and village &mdash; hour by hour for three days,
+      day by day for 14 &mdash; and hurricane tracks, built from the forecasts the world already makes. Made in
+      Jamaica, for the Caribbean and any country between 60&deg;&nbsp;S and 60&deg;&nbsp;N.</p>
 
     <div class="btn-row mt-m">
       <a class="btn btn-primary" href="https://pypi.org/project/pluvium/" rel="noopener" target="_blank">
@@ -454,7 +471,7 @@ MAIN = """<main id="main">
       <a class="btn btn-ghost" href="#results">See the results</a>
     </div>
     <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
-      Package: <code>pluvium</code> 0.1.0 &middot; Python &ge; 3.10 &middot; Engine: NatureV1 / iHELIX &middot;
+      Package: <code>pluvium</code> 0.3.0 &middot; Python &ge; 3.10 &middot; Engine: NatureV1 / iHELIX &middot;
       Developer: Nathan &middot; Origin: Jamaica
     </p>
   </div>
@@ -465,24 +482,19 @@ MAIN = """<main id="main">
   <section class="section-tight" id="what-it-is">
     <div class="shell">
       <div class="answer-box" style="margin-top:0" data-reveal>
-        <p><strong>Pluvium</strong> is an AI rain-forecasting system built by
-          <a href="/about/">CorX Labs</a> in Jamaica. For every town and village in the Caribbean it
-          forecasts rain hour by hour for the next three days: the chance of rain each hour, whether it
-          will be drizzle, showers, steady rain, heavy rain or a thunderstorm, the hour it will most
-          likely start (in local time, with a window), how long it will last, and how much will fall
-          &mdash; a median and a bad case. <strong>Every answer comes from one chain of rain states, so
-          the answers never contradict each other.</strong></p>
-        <p>It is tested against the forecasts people already use &mdash; ECMWF ENS, HRES and AIFS, and
-          NOAA GEFS, GraphCast and GFS &mdash; on real archived runs, with every system calibrated the
-          same way. On 450 land cells covering Jamaica in <strong>July and August 2025</strong>, Pluvium
-          had the <strong>highest skill of any single system for rain of at least 1&nbsp;mm on days 1 and
-          2</strong>. In
-          <strong>May and June 2025 it lost</strong>, after a wet April it had never trained on. Both
-          results are published.</p>
-        <p><strong>Pluvium Blend</strong> combines all six operational systems, each post-processed on its
-          own first so every rival gets a fair chance, into daily rain chances out to 14 days. And nothing
-          in Pluvium is tied to Jamaica: any country between 60&deg;&nbsp;S and 60&deg;&nbsp;N can be set
-          up with one command.</p>
+        <p><strong>Pluvium</strong> is an AI forecasting system built by <a href="/about/">CorX Labs</a> in
+          Jamaica, in three parts. <strong>Pluvium&rsquo;s network</strong> forecasts rain at every town hour by
+          hour for three days: the chance each hour, whether it will be drizzle, showers, heavy rain or a
+          thunderstorm, when it will start, how long it will last and how much will fall. <strong>Pluvium
+          Blend</strong> combines six operational systems &mdash; ECMWF ENS, HRES and AIFS, and NOAA GEFS, GFS
+          and GraphCast &mdash; into each day&rsquo;s rain out to 14 days, and keeps learning from every day it
+          can check. <strong>Pluvium Cyclone</strong> forecasts hurricane tracks from the same six systems.</p>
+        <p>Over a full year, April 2025 to March 2026, in seven places on four continents, Pluvium Blend had
+          <strong>the best skill of every system, raw or post-processed, for rain of at least 1&nbsp;mm on days 1
+          to 7 in all seven</strong>. It does not lead at 50&nbsp;mm, where post-processed AIFS often wins at
+          short range, and <strong>it under-forecast Hurricane Melissa&rsquo;s rain over Jamaica</strong>. Pluvium
+          Cyclone beats ECMWF HRES and NOAA GFS but is <strong>behind the National Hurricane Center&rsquo;s
+          official forecast</strong>. Every loss is published beside the wins.</p>
       </div>
 
       <div class="callout mt-m" data-reveal>
@@ -490,22 +502,22 @@ MAIN = """<main id="main">
           party has verified it. Its flood levels are a rule that has not been checked against flood
           reports, and its alerts are marked as exercises. <strong>Do not use Pluvium for real
           decisions.</strong> Follow your national meteorological service &mdash; in Jamaica, the
-          Meteorological Service of Jamaica and @@ODPEM@@.</p>
+          Meteorological Service of Jamaica and @@ODPEM@@. For hurricanes, the National Hurricane Center.</p>
       </div>
 
       <dl class="spec-list mt-m" data-reveal>
-        <div><dt>Covers</dt><dd>Every Caribbean town and village</dd></div>
-        <div><dt>Forecast</dt><dd>Hourly, 3 days</dd></div>
-        <div><dt>Pluvium Blend</dt><dd>Daily, 14 days</dd></div>
+        <div><dt>Products</dt><dd>Network, Blend, Cyclone</dd></div>
+        <div><dt>Rain, hourly</dt><dd>3 days, every town</dd></div>
+        <div><dt>Rain, daily</dt><dd>14 days, Pluvium Blend</dd></div>
+        <div><dt>Hurricane tracks</dt><dd>N. Atlantic &amp; E. Pacific, 5 days</dd></div>
         <div><dt>Engine</dt><dd>NatureV1 / iHELIX, 12 blocks</dd></div>
         <div><dt>Mesh</dt><dd>6,075 points, ~11 km over land</dd></div>
-        <div><dt>Head radii</dt><dd>15&ndash;500 km</dd></div>
-        <div><dt>Rain states</dt><dd>Dry, light, moderate, heavy</dd></div>
+        <div><dt>Full-year test</dt><dd>7 places, Apr 2025&ndash;Mar 2026</dd></div>
         <div><dt>Full size</dt><dd>Pluvium-500, 57.9M params</dd></div>
-        <div><dt>Tested size</dt><dd>pluvium-small, 0.9M params</dd></div>
+        <div><dt>Covers</dt><dd>Any country, 60&deg;&nbsp;S&ndash;60&deg;&nbsp;N</dd></div>
         <div><dt>Bulletins</dt><dd>English, Spanish, French, Patois</dd></div>
+        <div><dt>Package</dt><dd>pluvium 0.3.0</dd></div>
         <div><dt>Licence</dt><dd>Apache-2.0</dd></div>
-        <div><dt>Status</dt><dd>New &mdash; research model</dd></div>
       </dl>
     </div>
   </section>
@@ -686,20 +698,137 @@ MAIN = """<main id="main">
           takes a year of archived runs and satellite truth: about two hours of downloads and under an hour
           of CPU.</p>
       </div>
+
+      <h3 class="mt-m" id="blend-0-3">New in version 0.3</h3>
+      <div class="prose">
+        <ul>
+          <li><strong>It learns every day.</strong> <code>pluvium blend learn</code> re-weighs the components and
+            the pool after each day that can be checked, towards whoever has been right.</li>
+          <li><strong>It sees every heavy day.</strong> The components train on every day with 25&nbsp;mm or more
+            observed or forecast, weighted so the chances stay unbiased.</li>
+          <li><strong>Record storms.</strong> A forecast beyond anything in the training record is handed back, in
+            part, to what the raw systems say &mdash; but only where that helped. Each place withholds its four
+            wettest training days, forecasts them unseen, and keeps the hand-over only if it improved them. It
+            stayed on in Jamaica, the Caribbean, the Maritime Continent, the Great Plains and the southern Andes,
+            and switched itself off in the Alps and the Pacific Northwest.</li>
+          <li><strong>Alerts in plain terms.</strong> Every place and day gets an alert tier for 50&nbsp;mm (watch,
+            warning, extreme), a flag when the forecast is beyond the training record, how rare the amount is
+            there (&ldquo;about once in 6 years&rdquo;), and how many raw systems call for 50&nbsp;mm.</li>
+          <li><strong>Maps that look like weather.</strong> Scenarios arrange the calibrated amounts in space like
+            the ECMWF ensemble&rsquo;s members, so a long-range map is not a smooth blur.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pluvium Cyclone -->
+  <section class="section-tight" id="cyclone">
+    <div class="shell">
+      <h2>4. Pluvium Cyclone: hurricane tracks</h2>
+      <div class="prose">
+        <p><strong>Pluvium Cyclone</strong> finds every tropical cyclone in the North Atlantic and the eastern
+          North Pacific in all six systems &mdash; in every member of the ECMWF and NOAA ensembles, and in HRES,
+          AIFS, GFS and GraphCast &mdash; and combines their tracks with weights learned through the season from
+          the forecasts that have already verified. It needs no GPU and nothing to train.</p>
+        <p>For each storm it writes a bulletin and a data file: the track to five days, a circle that should hold
+          the centre two times in three at each lead, the chance of the centre passing within 150&nbsp;km of each
+          listed place, and scenarios when the tracks split. <strong>Track only</strong> &mdash; not intensity.</p>
+      </div>
+      <pre class="mt-s"><code>pluvium cyclone --root ~/storms                        # every storm alive now: track, cone, passage chances
+pluvium cyclone --root ~/storms --time 2025-10-25T22   # as it would have been issued then</code></pre>
+
+      <h3 class="mt-m" id="cyclone-results">Against the National Hurricane Center</h3>
+      <div class="prose">
+        <p>Settings were chosen on three seasons and tested once on a fourth: the East Pacific in 2025, 167
+          forecasts of 18 storms. Mean track error on the forecasts all four made, with what a forecaster has in
+          hand at advisory time. The best in each column is outlined.</p>
+      </div>
+      @@CYCLONE@@
+      <div class="prose mt-m">
+        <ul>
+          <li><strong>Against single models it wins:</strong> lower error than ECMWF HRES at all 8 leads (8 with 95%
+            confidence) and than NOAA GFS at all 8 (5 with 95% confidence).</li>
+          <li><strong>Against the Center&rsquo;s consensus it is level.</strong></li>
+          <li><strong>Against the official forecast it lost</strong> on the test season, at every lead &mdash; 125
+            against 100 nautical miles at five days. It was ahead on the North Atlantic 2025 season, but its
+            settings were chosen with that season in view, so that is not the result to trust.</li>
+          <li><strong>Google DeepMind&rsquo;s cyclone model is better</strong> than both.</li>
+          <li><strong>The uncertainty is honest:</strong> the circle meant to hold the centre two times in three
+            held it 70% of the time, and the passage chances scored a Brier skill of 0.47, against 0.42 for the raw
+            cloud of ensemble members.</li>
+          <li><strong>Hurricane Melissa:</strong> the chance of the centre passing within 150&nbsp;km of Kingston
+            passed 40% five days before it arrived and 90% three days before.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- Results -->
   <section class="section-tight" id="results">
     <div class="shell">
-      <h2>4. Results</h2>
+      <h2>5. Results</h2>
 
       <div class="callout" data-reveal>
         <p><strong>Every number here was measured on real, archived forecasts &mdash; no reanalysis
-          anywhere.</strong> Truth is CMORPH satellite rain, adjusted to rain gauges, at 450 land cells of
-          8&nbsp;km covering Jamaica. Every system, Pluvium included, is calibrated the same causal way, on
-          the 30 runs before each test day. The model tested is <strong>pluvium-small</strong> (0.9M
-          parameters, about two hours of training on a 4-core CPU), driven only by GFS.</p>
+          anywhere.</strong> Truth is CMORPH satellite rain, adjusted to rain gauges. Each rival is scored raw
+          and after the same post-processing Pluvium gets, because beating a raw global model is easy and
+          beating it after equal treatment is the real test. Losses are reported beside wins.</p>
+      </div>
+
+      <h3 class="mt-m" id="full-year">A full year, seven places, 14 days</h3>
+      <div class="prose">
+        <p>Trained on April 2024 to March 2025 and scored on every day from April 2025 to March 2026, in six
+          regions on four continents and in Jamaica at 8&nbsp;km, against ECMWF ENS, HRES and AIFS and NOAA GEFS,
+          GFS and GraphCast. Pick a range of days:</p>
+      </div>
+      @@FULLYEAR@@
+      <div class="prose mt-m">
+        <ul>
+          <li><strong>Rain of 1&nbsp;mm or more:</strong> the best of every system in all six regions on days 1 to
+            10, and in 5 of 6 on days 11 to 14. Against each system after the same post-processing it was better
+            with 95% confidence in all 72 comparisons on days 1 to 7, and never worse.</li>
+          <li><strong>Where it does not lead:</strong> 50&nbsp;mm, where post-processed AIFS was ahead on days 1 to 7
+            in the Alps, the Caribbean and the Great Plains; anomaly correlation beyond a week in the
+            mid-latitudes, where raw ensembles keep more; and winter on days 1 to 3, where it led in 2 of 6
+            regions (most within 0.004).</li>
+          <li><strong>Jamaica, with Pluvium&rsquo;s network as a seventh component:</strong> it led at 1&nbsp;mm on
+            days 1 to 7. Post-processed GraphCast led on days 8 to 10. On its own, Pluvium&rsquo;s network scored
+            +0.137 on days 1 to 3, behind GraphCast (+0.179) and AIFS (+0.172) after the same treatment; as a
+            component it helps a little.</li>
+        </ul>
+      </div>
+
+      <h3 class="mt-m" id="melissa">Hurricane Melissa: the clearest failure</h3>
+      <div class="prose">
+        <p>On 28 October 2025 Melissa crossed Jamaica as a category 5 hurricane. CMORPH measured 154&nbsp;mm on
+          average over the island&rsquo;s cells, and up to 447&nbsp;mm.</p>
+      </div>
+      <div class="mt-s">@@MELISSA@@</div>
+      <div class="prose mt-m">
+        <p>Four days ahead raw AIFS gave 100% and Pluvium Blend 42%. Melissa decided the year&rsquo;s amount scores
+          in Jamaica: in autumn the Blend lost CRPS and RMSE to post-processed GraphCast and raw ENS. In the other
+          three seasons its CRPS was best or within 0.01 of the best. Making the pool itself keep a record
+          forecast the systems agree on is the next step.</p>
+      </div>
+
+      <h3 class="mt-m" id="version-0-3">Version 0.3, aimed at the weak spots</h3>
+      <div class="prose">
+        <p>The first full year found three weak spots: 50&nbsp;mm, winter in mid-latitude climates, and structure
+          at long range. Version 0.3 was aimed at them and scored on the same year by the same rules:</p>
+        <ul>
+          <li><strong>Heavy rain (50&nbsp;mm):</strong> mean skill on days 1 to 3 went from +0.190 to +0.213, better
+            in 7 of 7 places. Against each post-processed system at 50&nbsp;mm, 79 of 161 comparisons are better
+            with 95% confidence and none worse.</li>
+          <li><strong>Rain or no rain (1&nbsp;mm):</strong> on days 1 to 7, 81 of 84 comparisons with single
+            post-processed systems are better with 95% confidence and none worse.</li>
+          <li><strong>Days 11 to 14 got slightly worse:</strong> +0.0394 to +0.0390 at 1&nbsp;mm. The online weights
+            for that range learn from few forecasts, and cost a little.</li>
+          <li><strong>Maps:</strong> on days 11 to 14 one scenario keeps 0.88 of the weather&rsquo;s spatial
+            variability, against 0.84 for the raw ECMWF ensemble.</li>
+          <li><strong>A caution:</strong> the weak spots were found on this same year, so a second look at it is
+            weaker evidence than a fresh year. One rule, how each place decides about record storms, was settled
+            after five of the seven places had been scored.</li>
+        </ul>
       </div>
 
       @@SCORECARD@@
@@ -794,38 +923,20 @@ MAIN = """<main id="main">
           per step. Heavy-rain hours and thunder remain its weak spots.</p>
       </div>
 
-      <h3 class="mt-m" id="six-regions">Six regions, a full year &mdash; being scored now</h3>
-      <div class="prose">
-        <p>A larger test is running: six regions on a 0.25&deg; grid &mdash; the Caribbean, the Maritime
-          Continent, the Alps, the US Pacific Northwest, the US Great Plains, and southern Chile and the
-          Andes &mdash; trained on April 2024 to March 2025 and scored on forecasts from April 2025 to March
-          2026, out to 14 days, against all six operational systems, each post-processed by the same
-          network. In these regions Pluvium Blend pools the operational systems; Pluvium&rsquo;s own network
-          runs only at 8&nbsp;km in the countries it was trained for.</p>
-        <p><strong>Early results from four of the six regions, not yet published with the code:</strong>
-          for rain of at least 1&nbsp;mm, Pluvium Blend beat every system&rsquo;s post-processed forecast on
-          days 1 to 7 in all four, with 95% confidence, and on days 8 to 10 in three of the four (in the
-          Pacific Northwest it did not beat ENS or AIFS). The margins are small: in the Caribbean on days 1
-          to 3, a Brier skill of +0.228 against +0.218 for post-processed AIFS, which was better there at
-          50&nbsp;mm on days 1 to 7 and on root-mean-square error on days 1 to 3. The Great Plains and the
-          southern Andes are still being scored.</p>
-      </div>
-
       <h3 class="mt-m" id="next">What is still missing</h3>
       <div class="prose">
         <ol>
-          <li><strong>Train on every month, over several years.</strong> Stage B never saw an April, and the
-            climatology input came from one year. A retrain on all twelve months with a multi-year
-            climatology is under way.</li>
-          <li><strong>Give Pluvium the ensembles.</strong> GEFS and ENS earn their day-3 skill from their
-            spread; ensemble statistics could become inputs.</li>
-          <li><strong>Train the real model.</strong> The tests used pluvium-small, 0.9M parameters trained
-            for about two hours on a CPU. Pluvium-500 is 60 times larger and is designed for a day on one
-            RTX PRO 6000.</li>
-          <li><strong>Calibrate on the same weeks of earlier years.</strong> Season-matched windows, as
-            reforecast-based calibration does, instead of the trailing 30 days that a dry-to-wet change
-            breaks.</li>
+          <li><strong>Keep a record storm the systems agree on.</strong> Melissa showed calibration shrinking a
+            forecast that every raw system had right.</li>
+          <li><strong>50&nbsp;mm and winter.</strong> Version 0.3 narrowed both; post-processed AIFS still often
+            wins heavy rain at short range.</li>
+          <li><strong>Train the real network.</strong> The network results come from pluvium-small, 0.9M
+            parameters trained for about two hours on a CPU. Pluvium-500 is 60 times larger, designed for a day
+            on one GPU, and not yet published.</li>
+          <li><strong>A fresh year.</strong> Version 0.3 was scored on the year its weak spots were found on.</li>
         </ol>
+        <p>Four short technical papers and a list of the ideas that were built, tested and dropped are published
+          with the code. They are research results from one person&rsquo;s project and are not peer reviewed.</p>
       </div>
     </div>
   </section>
@@ -833,7 +944,7 @@ MAIN = """<main id="main">
   <!-- Any country -->
   <section class="section-tight" id="any-country">
     <div class="shell">
-      <h2>5. Use it in your country</h2>
+      <h2>6. Use it in your country</h2>
       <div class="prose">
         <p>Nothing in Pluvium is tied to Jamaica. The engine works on the sphere, and every source it
           learns from is global: terrain, borders, towns, satellite rain, airports and the driving models.
@@ -843,8 +954,12 @@ MAIN = """<main id="main">
       <pre class="mt-s"><code>pluvium setup --country TT --root ~/pluvium-TT     # area, terrain, provinces and every town
 pluvium blend train --root ~/pluvium-TT            # learn Pluvium Blend from a year of archived runs (CPU, ~2 h)
 pluvium blend forecast --root ~/pluvium-TT         # 14 days of daily rain chances for every town
+pluvium blend learn --root ~/pluvium-TT            # every day: update the weights from the days now verified
 pluvium program --root ~/pluvium-TT --country TT   # train Pluvium's own network for the country (GPU)</code></pre>
       <div class="prose mt-m">
+        <p><code>pluvium blend forecast</code> writes one row per place and day: the chance of 1, 10, 25 and
+          50&nbsp;mm; the median, 90th percentile and expected rain; how many raw systems call for 50&nbsp;mm; an
+          alert tier; whether the forecast is beyond the training record; and how rare the amount is there.</p>
         <ul>
           <li><code>--country</code> takes ISO codes, one or several (<code>DO,HT</code> for Hispaniola).
             <code>--box south,north,west,east</code> sets the extent by hand; split large countries into
@@ -865,7 +980,7 @@ pluvium program --root ~/pluvium-TT --country TT   # train Pluvium's own network
   <!-- Install and run -->
   <section class="section-tight" id="usage">
     <div class="shell">
-      <h2>6. Install and run</h2>
+      <h2>7. Install and run</h2>
       <pre><code>pip install pluvium</code></pre>
       <div class="prose mt-m">
         <p>With a trained model:</p>
@@ -929,7 +1044,7 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
   <!-- Failure modes -->
   <section class="section-tight" id="failure-modes">
     <div class="shell">
-      <h2>7. When something goes wrong</h2>
+      <h2>8. When something goes wrong</h2>
       <div class="prose">
         <p>A forecast system fails in operation in ways no benchmark shows. Pluvium checks for the failures
           that matter and says what it did about each in the forecast&rsquo;s notes.</p>
@@ -947,6 +1062,7 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
             <tr><th scope="row">No airport reports at all</th><td>Carries on: it was trained with whole networks of reports dropped at random</td></tr>
             <tr><th scope="row">A situation unlike training &mdash; a record hurricane, a new driving-model version</th><td>Pulled towards climatology in proportion, with the inputs responsible named</td></tr>
             <tr><th scope="row">An operational run is late or missing</th><td>The previous run at the matching lead; a system missing altogether drops out of Pluvium Blend&rsquo;s pool</td></tr>
+            <tr><th scope="row">A storm bigger than anything in training</th><td>Handed back, in part, to the raw systems where that helped; flagged in the daily table, with how many systems call for 50&nbsp;mm</td></tr>
             <tr><th scope="row">The network cannot run</th><td>A statistical fallback forecast, labelled as such</td></tr>
             <tr><th scope="row">Chances that contradict each other</th><td>Repaired before publishing, and the repairs counted</td></tr>
             <tr><th scope="row">A half-written forecast</th><td>A new forecast becomes the latest only when it is complete</td></tr>
@@ -959,34 +1075,31 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
   <!-- Limits -->
   <section class="section-tight" id="limits">
     <div class="shell">
-      <h2>8. Limits, stated plainly</h2>
+      <h2>9. Limits, stated plainly</h2>
       <div class="callout" data-reveal>
         <p><strong>Do not use Pluvium for real decisions.</strong> It is a research model, not an official
-          forecast, and no independent party has verified it.</p>
+          forecast, and no independent party has verified it. For hurricanes, the National Hurricane Center is the
+          authority.</p>
       </div>
       <div class="prose mt-m">
         <ul>
-          <li><strong>Tested on one island, two months at a time.</strong> Skill elsewhere and in other
-            seasons is untested until the six-region year is published.</li>
-          <li><strong>It lost one of its two tests.</strong> A wet April it had never trained on broke its
-            calibration in May and June 2025.</li>
-          <li><strong>The truth is imperfect.</strong> Satellite rain at 8&nbsp;km and airport reports;
-            neither sees every shower, and the satellite under-reports mountain rain. Pluvium trained on the
-            same satellite truth it is scored against, which flatters its raw scores; calibration puts every
-            system on the same footing.</li>
-          <li><strong>A small model.</strong> Every result comes from pluvium-small, trained for about two
-            hours on a CPU. The weights of Pluvium-500 are not yet published.</li>
-          <li><strong>Heavy rain is the weak spot.</strong> At 25 and 50&nbsp;mm no system beats a forecast
-            that never says rain, and heavy-rain hours are below climatology in the version tests.</li>
-          <li><strong>Flood risk is a rule.</strong> Its thresholds have not been verified against flood
-            reports, and its alerts carry the status &ldquo;Exercise&rdquo;.</li>
-          <li><strong>Live &ldquo;rain now&rdquo; is cruder than training.</strong> Outside radar it comes
-            from GOES infrared when the rain-rate product is unavailable, which is cruder than the CMORPH
-            used in training.</li>
-          <li><strong>Tropical cyclones are rare</strong> in any training period; a storm-rain prior stands
-            in for experience.</li>
-          <li><strong>The driving models&rsquo; own biases</strong> in a new season are corrected only as fast
-            as airport reports reveal them.</li>
+          <li><strong>One test year, looked at twice.</strong> Version 0.3 was scored on the year whose weak spots
+            it was built for, and one of its rules was settled after most places had been scored.</li>
+          <li><strong>Heavy rain is still the weak spot.</strong> Post-processed AIFS often wins 50&nbsp;mm at short
+            range, and a single season holds few heavy-rain days.</li>
+          <li><strong>Record storms.</strong> Calibration pulled Hurricane Melissa&rsquo;s rain back towards normal.
+            The daily table now shows when the raw systems agree on 50&nbsp;mm; read it.</li>
+          <li><strong>The truth is imperfect.</strong> Satellite rain at 8&nbsp;km and airport reports. Neither sees
+            every shower, the satellite under-reports mountain rain, and it sees winter snow poorly.</li>
+          <li><strong>A small network.</strong> Every network result comes from pluvium-small. The weights of
+            Pluvium-500 are not yet published.</li>
+          <li><strong>Hurricane tracks only.</strong> Pluvium Cyclone forecasts where a storm goes, not how strong
+            it gets, and it trails the National Hurricane Center&rsquo;s official forecast.</li>
+          <li><strong>Flood risk is a rule.</strong> Its thresholds have not been verified against flood reports,
+            and its alerts carry the status &ldquo;Exercise&rdquo;.</li>
+          <li><strong>Long range is hard for everyone.</strong> Skill at 1&nbsp;mm on days 11 to 14 is small for every
+            system, and the lead changes hands often.</li>
+          <li><strong>Not polar.</strong> The satellite truth stops at 60&deg; of latitude.</li>
         </ul>
       </div>
     </div>
@@ -995,7 +1108,7 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
   <!-- Jamaica -->
   <section class="section-tight" id="jamaica">
     <div class="shell">
-      <h2>9. Made in Jamaica, for island rain</h2>
+      <h2>10. Made in Jamaica, for island rain</h2>
       <div class="prose">
         <p>Pluvium is built in Jamaica, for islands where a shower can soak one side of a mountain and leave
           the other dry, and where a global model&rsquo;s grid square can be wider than a parish. It starts
@@ -1003,7 +1116,8 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
           Caribbean, and can be set up for any country that wants it.</p>
         <p>It is the second weather model from CorX Labs. <a href="/models/naturev1/">NatureV1</a> forecasts
           the whole atmosphere and hurricanes; Pluvium uses the same iHELIX engine at the scale of a town,
-          for the rain people plan their day around. The engine grew out of
+          for the rain people plan their day around. Hurricane Melissa, which struck Jamaica in October 2025, is the
+          storm the project has learned most from. The engine grew out of
           <a href="/models/helix/">HELIX</a>, the lab&rsquo;s linear-context architecture.</p>
       </div>
       <div class="callout mt-m" data-reveal>
@@ -1017,7 +1131,7 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
   <!-- FAQ -->
   <section class="section-tight" id="faq">
     <div class="shell">
-      <h2>10. Questions</h2>
+      <h2>11. Questions</h2>
       <div class="faq mt-m">
 @@FAQ@@
       </div>
@@ -1028,9 +1142,9 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
     <div class="shell">
       <div class="cta-band" data-reveal>
         <p class="eyebrow is-plain" style="justify-content:center">New</p>
-        <h2 class="mt-s">Open code, published results &mdash; including the test it lost.</h2>
-        <p>Pluvium is on PyPI under Apache-2.0, and every result on this page is reported in full &mdash;
-          both operational tests, the protocol change between them and the comparison of versions.</p>
+        <h2 class="mt-s">Open code, published results &mdash; including what it got wrong.</h2>
+        <p>Pluvium 0.3.0 is on PyPI under Apache-2.0, and every result on this page is reported in full &mdash;
+          the full year, the hurricane tracks, Hurricane Melissa and both of the network&rsquo;s first tests.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="https://pypi.org/project/pluvium/" rel="noopener" target="_blank">
             View on PyPI
@@ -1049,7 +1163,7 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
 
 page = (HEAD.replace("@@LD@@", ld)
         + masthead + "\n\n"
-        + MAIN.replace("@@DIAGRAM@@", DIAGRAM).replace("@@SCORECARD@@", sc.scorecard()).replace("@@MAYJUN@@", sc.mayjun_chart()).replace("@@FAQ@@", faq_html)
+        + MAIN.replace("@@DIAGRAM@@", DIAGRAM).replace("@@SCORECARD@@", sc.scorecard()).replace("@@FULLYEAR@@", sc.full_year()).replace("@@MELISSA@@", sc.melissa_chart()).replace("@@CYCLONE@@", sc.cyclone_table()).replace("@@MAYJUN@@", sc.mayjun_chart()).replace("@@FAQ@@", faq_html)
               .replace("@@EXT@@", EXT).replace("@@ODPEM@@", ODPEM).replace("@@ALSO@@", also)
         + footer + "\n\n"
         + '<script src="/assets/js/main.js" defer></script>\n</body>\n</html>\n')
