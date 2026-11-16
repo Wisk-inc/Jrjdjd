@@ -187,8 +187,8 @@
       </ol>
     </nav>
     <h1>Documentation</h1>
-    <p class="lede">What CorX Labs is, what this website is, and how CorX1.5 — our first
-      open-source language model — was designed, trained and released.</p>
+    <p class="lede">What CorX Labs is, what this website is, and how CorX1.5, our first
+      open-source language model, was designed, trained and released.</p>
   </div>
 
   <div class="shell"><hr class="rule"></div>
@@ -218,8 +218,8 @@
           <h2>1. Overview</h2>
           <div class="answer-box">
             <p><strong>CorX Labs</strong> is an independent AI research lab and research station in
-              Jamaica, in the Caribbean. It builds language models from scratch — architecture,
-              tokenizer, training pipeline and fine-tuning — instead of adapting an existing base
+              Jamaica, in the Caribbean. It builds language models from scratch (architecture,
+              tokenizer, training pipeline and fine-tuning) instead of adapting an existing base
               model. <strong>CorX1.5</strong> is its first public release: a decoder-only transformer
               of roughly 158 million parameters, trained from random weights on a single GPU by one
               developer, and published open-source under the Apache 2.0 licence.</p>
@@ -229,8 +229,8 @@
               BPE tokenizer with a 32,768-token vocabulary, a custom decoder-only transformer with
               role embeddings and assistant-only loss masking, and a three-stage training run
               covering pretraining, distillation and reasoning.</p>
-            <p>The model is actively developed. New training data — new topics, new examples, patches
-              for gaps found in testing — is added on an ongoing basis rather than treating the
+            <p>The model is actively developed. New training data (new topics, new examples, patches
+              for gaps found in testing) is added on an ongoing basis rather than treating the
               release as a one-time event. Updated checkpoints are published as training continues.</p>
           </div>
 
@@ -250,14 +250,14 @@
               models have one clear, permanent address instead of living only inside a model
               repository. The site has four parts:</p>
             <ul>
-              <li><strong><a href="/documentation/">Documentation</a></strong> — this page. What the
+              <li><strong><a href="/documentation/">Documentation</a></strong>, this page. What the
                 lab is, what the models are, and how they were built.</li>
-              <li><strong><a href="/models/">Our Products</a></strong> — every model CorX Labs has
+              <li><strong><a href="/models/">Our Products</a></strong>, every model CorX Labs has
                 released, each with a short summary and a link to its full details and its Hugging
                 Face page.</li>
-              <li><strong><a href="/about/">About Us</a></strong> — who is behind the lab and why it
+              <li><strong><a href="/about/">About Us</a></strong>, who is behind the lab and why it
                 exists.</li>
-              <li><strong><a href="/contact/">Contact</a></strong> — how to reach us for business
+              <li><strong><a href="/contact/">Contact</a></strong>: how to reach us for business
                 inquiries and research questions.</li>
             </ul>
             <p>Model weights and code are not hosted here. They live on Hugging Face, which is linked
@@ -283,7 +283,7 @@
                 <tr><td>Positional encoding</td><td>RoPE</td><td>Relative position information that extrapolates cleanly across the context window.</td></tr>
                 <tr><td>Feed-forward</td><td>SwiGLU</td><td>Gated activation; better quality per parameter than a plain MLP.</td></tr>
                 <tr><td>Normalisation</td><td>RMSNorm</td><td>Cheaper and more stable than LayerNorm at this scale.</td></tr>
-                <tr><td>Role embeddings</td><td>Learned, per token</td><td>Every token is tagged as user, assistant or raw text at the architecture level, so the model always knows whose turn it is — most models infer this only from special tokens.</td></tr>
+                <tr><td>Role embeddings</td><td>Learned, per token</td><td>Every token is tagged as user, assistant or raw text at the architecture level, so the model always knows whose turn it is: most models infer this only from special tokens.</td></tr>
                 <tr><td>Loss masking</td><td>Assistant-only</td><td>The model is trained to predict only the tokens it should generate, not the user's side of the conversation.</td></tr>
                 <tr><td>Parameters</td><td>157.8M</td><td>Small enough to train and iterate on a single GPU.</td></tr>
                 <tr><td>Layers</td><td>10</td><td>—</td></tr>
@@ -346,7 +346,7 @@
               <ul class="check-list mt-s">
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Holding a consistent identity and conversational style</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Short, direct answers to greetings and everyday questions</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Declining requests it genuinely cannot fulfil — no internet, no memory between chats, no tool access — instead of fabricating an answer</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Declining requests it genuinely cannot fulfil (no internet, no memory between chats, no tool access) instead of fabricating an answer</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Small worked arithmetic, shown step by step</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Recognising and explaining common Python bugs in a structured format</li>
               </ul>
@@ -365,10 +365,9 @@
 
           <div class="prose mt-m">
             <p>For context: models in a similar parameter range from major labs are typically trained
-              on trillions of tokens. CorX1.5 was trained on billions. That gap is the honest
-              explanation for most of what it cannot do, and it is documented here rather than
+              on trillions of tokens. CorX1.5 was trained on billions. That gap explains most of what it cannot do, and it is documented here rather than
               glossed over. This is an independent research and learning project, shared in that
-              spirit — small, transparent, and built to understand every part of how it works.</p>
+              spirit: small, transparent, and built to understand every part of how it works.</p>
           </div>
         </section>
 
@@ -391,8 +390,8 @@
           <div class="prose">
             <p>CorX1.5 uses a custom architecture and is <strong>not</strong> compatible with
               <code>AutoModel.from_pretrained()</code> out of the box. Load it with the model
-              definition included in the repository — <code>modeling_corx.py</code> or the provided
-              inference script — alongside the checkpoint and tokenizer files.</p>
+              definition included in the repository, <code>modeling_corx.py</code> or the provided
+              inference script, alongside the checkpoint and tokenizer files.</p>
           </div>
 
           <pre class="mt-m"><code># 1. Get the repository (weights, tokenizer, model definition)
@@ -437,7 +436,7 @@ python inference.py</code></pre>
             </details>
             <details>
               <summary>What licence is CorX1.5 released under?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Apache 2.0 — commercial use, modification and redistribution are
+              <div class="faq-body"><p>Apache 2.0: commercial use, modification and redistribution are
                 all permitted with attribution.</p></div>
             </details>
             <details>
@@ -484,7 +483,7 @@ python inference.py</code></pre>
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

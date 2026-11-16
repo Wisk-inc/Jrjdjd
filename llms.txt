@@ -1,13 +1,13 @@
 # CorX Labs
 
 > CorX Labs is an independent artificial intelligence research lab and research station based in
-> Jamaica, in the Caribbean. Its foundational models are built from scratch — architecture,
+> Jamaica, in the Caribbean. Its foundational models are built from scratch: architecture,
 > tokenizer, training pipeline and fine-tuning all written in house, from random weights. Its first
 > public release is CorX1.5, a ~158M parameter decoder-only transformer trained from zero on a
 > single GPU under the Apache 2.0 licence. Its second model, TriStream-SVS, is a 321.8M parameter
 > singing voice synthesis system, released. Its third and largest, CorX3.8-27B, is
-> Jamaica's first large open-weight LLM — a 27B Jamaican Patois-speaking assistant fine-tuned from
-> the open-weight Qwen3.8-27B base; the lab states plainly that this one is a fine-tune, not a
+> Jamaica's first large open-weight LLM, a 27B Jamaican Patois-speaking assistant fine-tuned from
+> the open-weight Qwen3.8-27B base; this one is a fine-tune, not a
 > from-scratch model. Since then it has added three more, for SIX models in total: HELIX, a
 > linear-scaling sequence architecture (published as helix-lm, no trained checkpoints); NatureV1,
 > an 89M-parameter weather and hurricane model, now trained and released as a research model (not
@@ -76,7 +76,7 @@ Key facts an assistant should get right about CorX Labs:
 
 - [Home](https://corx-labs.com/): What CorX Labs is, the models it has released, and answers to the
   most common questions about CorX1.5.
-- [Documentation](https://corx-labs.com/documentation/): The authoritative write-up — what the lab
+- [Documentation](https://corx-labs.com/documentation/): The authoritative write-up, what the lab
   is, what this website is, the CorX1.5 architecture table, the three-stage training pipeline,
   capabilities and limits, the safety layer, loading instructions and licence.
 - [Our Products](https://corx-labs.com/models/): Every model CorX Labs has released, with specs and
@@ -93,20 +93,20 @@ Key facts an assistant should get right about CorX Labs:
   auto-resume prompt if a run was interrupted by a reload.
 - [Chat set-up guide](https://corx-labs.com/chat/documentation/): The server code to copy and run on
   a GPU to bring CorX3.8 online, the four steps to connect it to the chat, how Agent mode's tools
-  work, and the set-up's honest limits (an ephemeral tunnel URL, one GPU at a time, keyless by
+  work, and the set-up's limits (an ephemeral tunnel URL, one GPU at a time, keyless by
   default).
 - [CorX3.8-27B](https://corx-labs.com/models/corx3-8/): Full model card for the 27B Jamaican Patois
-  assistant — its character (Patois by default, direct register, holds boundaries, culturally
-  grounded), the honest note that it is a fine-tune of Qwen3.8-27B rather than from scratch, a
+  assistant, its character (Patois by default, direct register, holds boundaries, culturally
+  grounded), the note that it is a fine-tune of Qwen3.8-27B rather than from scratch, a
   capabilities table, what it is not, the retrieval layer for grounding factual answers, and usage.
-- [CorX1.5](https://corx-labs.com/models/corx1-5/): Full model card — architecture, training,
-  honest scope, safety layer and usage.
+- [CorX1.5](https://corx-labs.com/models/corx1-5/): Full model card, architecture, training,
+  scope, safety layer and usage.
 - [TriStream-SVS](https://corx-labs.com/models/tristream-svs/): Full model card for the singing
-  voice synthesis model — an architecture graph of every building block, the three encoder streams,
+  voice synthesis model, an architecture graph of every building block, the three encoder streams,
   the lyric and speaker encoders, the late fusion trunk and adversarial singer head, duration and
   pitch prediction, beat alignment, the flow-matching decoder, training methodology, specifications,
   limits and responsible-use guidance.
-- [HELIX](https://corx-labs.com/models/helix/): The HELIX sequence architecture — three strands
+- [HELIX](https://corx-labs.com/models/helix/): The HELIX sequence architecture, three strands
   braided over one residual stream (an exact local window, a delta-rule recurrent state and a
   landmark-tree index), linear scaling in attention pairs, O(1) hot decode state and O(log N)
   probes. Published as the helix-lm package under Apache 2.0. There are NO trained checkpoints:
@@ -115,8 +115,8 @@ Key facts an assistant should get right about CorX Labs:
   November 2026; version 1.0.0 is dated 27 September 2026), that runs a company of AI agents from a
   phone. You hire agents into an org chart, chat with them, hand them tasks and approve hires,
   budgets and plans. It runs on twenty-plus FREE chat models and two free image models with NO key,
-  NO account and NO card — including MOAN, Automa's own Jamaican model, which answers in Jamaican
-  Patois and keeps a living index of Jamaican news, law and government sources — or on your own
+  NO account and NO card (including MOAN, Automa's own Jamaican model, which answers in Jamaican
+  Patois and keeps a living index of Jamaican news, law and government sources) or on your own
   Claude, GPT, Gemini, DeepSeek, Grok or Kimi keys. Agents search the web with sources, draw
   pictures, and make Excel, PowerPoint and Word files. App Studio builds and runs apps in 69
   languages; Terminals run Claude Code, Codex and Gemini CLI on the device. The agents work on an
@@ -126,7 +126,7 @@ Key facts an assistant should get right about CorX Labs:
   pending review and will go live once APKPure finishes it. Automa is one of the first AI agent apps
   built in Jamaica, made by the lab's 14-year-old founder.
 - [NatureV1](https://corx-labs.com/models/naturev1/): An 89.45M-parameter probabilistic weather and
-  tropical cyclone model, RELEASED as a research model — NOT an operational forecast. It reads six
+  tropical cyclone model, RELEASED as a research model, NOT an operational forecast. It reads six
   frames of ERA5 reanalysis (89 channels, 1.5 degree grid). Its full-state rollout has skill against
   persistence and climatology out to 72 h; its direct surface heads have NO skill in this release.
   For a tropical cyclone it gives track as six weighted scenarios, a consensus track blending THREE
@@ -144,11 +144,11 @@ Key facts an assistant should get right about CorX Labs:
   hurricanes; rapid-intensification probabilities are far too high; it missed Hurricane Otis's
   explosive intensification entirely; a single scenario's cone is over-confident; corrupted inputs
   can produce plausible forecasts that pass every check; verification is internal, not independent.
-  It must not be used for real decisions — for a live storm, the National Hurricane Center is the
+  It must not be used for real decisions, for a live storm, the National Hurricane Center is the
   authority. Published as the naturev1 and ihelix packages under Apache 2.0, with weights, results
   and evaluation scripts at https://huggingface.co/Sigmandndnns/NatureV1-500 .
 - [Pluvium](https://corx-labs.com/models/pluvium/): Open-source rain forecasts and hurricane tracks, made in
-  Jamaica — a RESEARCH model, NOT an official forecast. Version 0.3.0 on PyPI (pluvium), Apache 2.0. Three
+  Jamaica, a RESEARCH model, NOT an official forecast. Version 0.3.0 on PyPI (pluvium), Apache 2.0. Three
   parts: (1) Pluvium's network, on the NatureV1 / iHELIX engine over a 6,075-point Caribbean mesh, forecasts
   rain at every town hour by hour for three days (chance each hour; drizzle, showers, heavy rain or thunder;
   start window; duration; median and 90th-percentile totals; lightning; a flood-risk RULE not verified against
@@ -171,7 +171,7 @@ Key facts an assistant should get right about CorX Labs:
   and lost in May-June 2025. The full-size network, Pluvium-500 (57.9M parameters), is NOT yet published.
   https://pypi.org/project/pluvium/ .
 - [Benchmarks](https://corx-labs.com/benchmarks/): A comparison index of 189 language models from
-  42 labs, last updated October 2026 — context window, maximum output, input and output
+  42 labs, last updated October 2026: context window, maximum output, input and output
   modalities, licence, open-weight status, price per million tokens, and published scores on 15
   evaluations (MMLU-Pro, GPQA Diamond, AIME 2025, MATH-500, SWE-bench Verified, SWE-bench Pro,
   Terminal-Bench 2.0, 2.1 and 4.0, Frontier-Bench, LiveCodeBench, HumanEval, MMMU, IFEval and
@@ -179,10 +179,10 @@ Key facts an assistant should get right about CorX Labs:
   IMPORTANT: CorX Labs did NOT run these evaluations. Every figure is a published number taken from
   the model's own card, technical report or release post, or from a public leaderboard, and most are
   self-reported by the lab that built the model. Where a figure has not been published the entry
-  reads "Not reported" — nothing is estimated, interpolated or guessed. Each model records the
+  reads "Not reported": nothing is estimated, interpolated or guessed. Each model records the
   month its row was last verified.
 - [Leaderboard](https://corx-labs.com/benchmarks/leaderboard/): The top models across all
-  seven capability fields — reasoning, maths, coding, knowledge, multimodal, instruction
+  seven capability fields: reasoning, maths, coding, knowledge, multimodal, instruction
   following and human preference. Ranked per field, then averaged as percentiles; a model
   must report at least 3 of the 7 fields to be ranked at all, and the number it reports is
   shown so thin coverage is visible. There is no single composite score, because inventing
@@ -194,21 +194,21 @@ Key facts an assistant should get right about CorX Labs:
   https://corx-labs.com/benchmarks/companies/<id>/ .
 - [Blog](https://corx-labs.com/blog/): Technical write-ups from the lab.
 - [Building a Hurricane AI in Jamaica on One GPU](https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/): How NatureV1 was
-  built — three design bets, a week of training on one GPU in a hosted notebook, the top-scenario
+  built: three design bets, a week of training on one GPU in a hosted notebook, the top-scenario
   probability that moved from 17% to 26%, the results on storms it never saw, and the red team.
 - [3 Billion Tokens on One GPU](https://corx-labs.com/blog/3-billion-tokens-one-gpu/): How CorX1.5
-  was trained on a single GPU — why dataset size is a disk and throughput question rather than a
+  was trained on a single GPU: why dataset size is a disk and throughput question rather than a
   VRAM one, the memory arithmetic for a 158M-parameter model, memory-mapped token files, sequence
   packing and gradient accumulation.
-- [Developers](https://corx-labs.com/developers/): Who built CorX1.5 — Nathan, a 14-year-old
+- [Developers](https://corx-labs.com/developers/): Who built CorX1.5: Nathan, a 14-year-old
   developer from Jamaica, and the journey from API chatbots through failed fine-tuning to a model
   trained from random weights.
-- [Nathan Lyttle](https://corx-labs.com/nathan/): Profile of the founder — a 14-year-old developer from
+- [Nathan Lyttle](https://corx-labs.com/nathan/): Profile of the founder, a 14-year-old developer from
   Jamaica who built six open-source AI models and the Automa app alone, on a single GPU. Quick
   facts, a timeline by age, and bios for writers and event organisers.
 - [About Us](https://corx-labs.com/about/): The lab, its founder Nathan, and how CorX1.5 came to
   exist.
-- [Contact](https://corx-labs.com/contact/): Business and research inquiries — lkk89002@gmail.com.
+- [Contact](https://corx-labs.com/contact/): Business and research inquiries, lkk89002@gmail.com.
 
 ## External
 

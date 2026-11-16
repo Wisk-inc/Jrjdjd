@@ -30,7 +30,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="NatureV1 — a Jamaican-made AI weather and hurricane model">
-<meta name="twitter:description" content="Trained, scored on data it never saw, and red-teamed: a hurricane model that beats physics steering at every lead and says plainly where it breaks.">
+<meta name="twitter:description" content="Trained, scored on data it never saw, and red-teamed: a hurricane model that beats physics steering at every lead and lists where it breaks.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-naturev1.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -129,14 +129,14 @@
       "@type": "ImageObject",
       "@id": "https://corx-labs.com/models/naturev1/#engine-diagram",
       "name": "iHELIX: attention over physical space",
-      "caption": "Any source grid — ERA5's 240 by 121 latitude-longitude grid, a satellite scan's pixel footprints — is encoded onto one shared 4,096-point Fibonacci mesh, processed by 17 blocks whose attention heads have physical radii from 120 km to 1,600 km measured along great-circle distance, and decoded onto any output grid. A region tree lets a point reach distant points without paying for the whole globe, and a gated recurrence carries state across the six input frames.",
+      "caption": "Any source grid (ERA5's 240 by 121 latitude-longitude grid, a satellite scan's pixel footprints) is encoded onto one shared 4,096-point Fibonacci mesh, processed by 17 blocks whose attention heads have physical radii from 120 km to 1,600 km measured along great-circle distance, and decoded onto any output grid. A region tree lets a point reach distant points without paying for the whole globe, and a gated recurrence carries state across the six input frames.",
       "representativeOfPage": true
     },
     {
       "@type": "ImageObject",
       "@id": "https://corx-labs.com/models/naturev1/#storm-diagram",
       "name": "How NatureV1 assembles a storm forecast",
-      "caption": "The processed mesh is pooled twice around the storm centre — a 500 km Gaussian for the core and a 1,000 km pool for the steering ridge — then joined with the storm's own state, its position, and a physical environment computed from the state tensor. The track head predicts the residual from a physics-only steering track rather than the track itself, and the learned track, the steering track and straight extrapolation are blended into a consensus with per-lead weights fitted on held-out seasons."
+      "caption": "The processed mesh is pooled twice around the storm centre (a 500 km Gaussian for the core and a 1,000 km pool for the steering ridge) then joined with the storm's own state, its position, and a physical environment computed from the state tensor. The track head predicts the residual from a physics-only steering track rather than the track itself, and the learned track, the steering track and straight extrapolation are blended into a consensus with per-lead weights fitted on held-out seasons."
     },
     {
       "@type": "TechArticle",
@@ -195,7 +195,7 @@
           "name": "How accurate is NatureV1 on hurricanes?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "On 59 Atlantic storms from the held-out 2017, 2019 and 2021 seasons, its consensus track error was 163 km at 24 hours, 421 km at 48, 739 km at 72 and 1,373 km at 120 — better than a physics-only steering track and straight-line extrapolation at every lead. Its wind forecast beat persistence from 24 hours on. On the unseen 2023 El Niño season it scored 167 km at 24 hours and 810 km at 72, and beat steering for every one of the seven hurricanes at 24, 48 and 72 hours. For scale, the National Hurricane Center's official error averaged about 66 km at 24 hours and 168 km at 72 over 2018 to 2022, so NatureV1's errors are 2.5 to 4.5 times larger."
+            "text": "On 59 Atlantic storms from the held-out 2017, 2019 and 2021 seasons, its consensus track error was 163 km at 24 hours, 421 km at 48, 739 km at 72 and 1,373 km at 120: better than a physics-only steering track and straight-line extrapolation at every lead. Its wind forecast beat persistence from 24 hours on. On the unseen 2023 El Niño season it scored 167 km at 24 hours and 810 km at 72, and beat steering for every one of the seven hurricanes at 24, 48 and 72 hours. For scale, the National Hurricane Center's official error averaged about 66 km at 24 hours and 168 km at 72 over 2018 to 2022, so NatureV1's errors are 2.5 to 4.5 times larger."
           }
         },
         {
@@ -227,7 +227,7 @@
           "name": "Why is the backbone frozen when the hurricane heads train?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Because best-track labels are scarce and no amount of engineering makes more of them. The whole Atlantic best-track record is on the order of 55,000 points, and the rarest fields are far thinner — radius of maximum wind only entered HURDAT2 with the 2021 season, and quadrant wind radii only go back to 2004. So the backbone learns from roughly 2 times 10 to the 11 supervised values in reanalysis, then freezes, and only about 1.2 million parameters in the storm heads ever see a label: 16,219 samples from 584 storms. Even then the heads start memorising quickly — the best checkpoint was epoch 3 of 28."
+            "text": "Because best-track labels are scarce and no amount of engineering makes more of them. The whole Atlantic best-track record is on the order of 55,000 points, and the rarest fields are far thinner: radius of maximum wind only entered HURDAT2 with the 2021 season, and quadrant wind radii only go back to 2004. So the backbone learns from roughly 2 times 10 to the 11 supervised values in reanalysis, then freezes, and only about 1.2 million parameters in the storm heads ever see a label: 16,219 samples from 584 storms. Even then the heads start memorising quickly, the best checkpoint was epoch 3 of 28."
           }
         },
         {
@@ -235,7 +235,7 @@
           "name": "What does it mean that the track head predicts a residual?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Instead of predicting the track from scratch, the model predicts the difference between the real track and a physics-only steering track — the path a storm would take if it were simply carried by the thickness-weighted 850 to 200 hPa flow around it, plus beta drift. That steering track needs no training at all, so the learned part only has to fix what steering gets wrong. The red team measured how much each part carries: removing the steering prior raises the 24-hour track error by 240 percent, and the learned correction on top of it is worth about 30 percent at 24 hours."
+            "text": "Instead of predicting the track from scratch, the model predicts the difference between the real track and a physics-only steering track, the path a storm would take if it were simply carried by the thickness-weighted 850 to 200 hPa flow around it, plus beta drift. That steering track needs no training at all, so the learned part only has to fix what steering gets wrong. The red team measured how much each part carries: removing the steering prior raises the 24-hour track error by 240 percent, and the learned correction on top of it is worth about 30 percent at 24 hours."
           }
         },
         {
@@ -243,7 +243,7 @@
           "name": "What is the consensus track?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Three tracks are produced — the learned one, a physics-only steering track, and straight extrapolation of the storm's recent motion — and blended with per-lead weights fitted on held-out seasons. This copies the way operational consensus aids at the National Hurricane Center routinely beat every individual model that goes into them, and it does the same here: scored leave-one-season-out on 2017, 2019 and 2021, the consensus had the lowest track error at every lead, ahead of the learned track alone. Every member is reported alongside the blend."
+            "text": "Three tracks are produced (the learned one, a physics-only steering track, and straight extrapolation of the storm's recent motion) and blended with per-lead weights fitted on held-out seasons. This copies the way operational consensus aids at the National Hurricane Center routinely beat every individual model that goes into them, and it does the same here: scored leave-one-season-out on 2017, 2019 and 2021, the consensus had the lowest track error at every lead, ahead of the learned track alone. Every member is reported alongside the blend."
           }
         },
         {
@@ -251,7 +251,7 @@
           "name": "What does NatureV1 refuse to do, and what still gets through?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "An output whose head never received a training step is not shown at all — weather type and landfall timing, among others, come back as unavailable, and the training record travels inside the checkpoint. A forecast from the untrained satellite path is flagged untrustworthy, and the live satellite forecast is refused. Every scenario track, intensity, eyewall and rapid-intensification value is checked against physical bounds, but the check reports problems rather than blocking the forecast. A red-team pass found what gets through: random noise in place of the backbone features produced a normal-looking forecast with no check failures, a corrupted steering prior passed straight through, and the consensus track is not bounds-checked. There is no out-of-distribution detector."
+            "text": "An output whose head never received a training step is not shown at all: weather type and landfall timing, among others, come back as unavailable, and the training record travels inside the checkpoint. A forecast from the untrained satellite path is flagged untrustworthy, and the live satellite forecast is refused. Every scenario track, intensity, eyewall and rapid-intensification value is checked against physical bounds, but the check reports problems rather than blocking the forecast. A red-team pass found what gets through: random noise in place of the backbone features produced a normal-looking forecast with no check failures, a corrupted steering prior passed straight through, and the consensus track is not bounds-checked. There is no out-of-distribution detector."
           }
         },
         {
@@ -267,7 +267,7 @@
           "name": "Who built NatureV1, and how long did training take?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Nathan Lyttle, the founder of CorX Labs and a solo developer from Jamaica, built the whole stack: the iHELIX engine, the model, the training pipeline and the evaluation. The training run took about one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook — three to four days of GPU time, with the rest lost to session restarts. The full-atmosphere rollout stage alone took 74.3 GPU-hours."
+            "text": "Nathan Lyttle, the founder of CorX Labs and a solo developer from Jamaica, built the whole stack: the iHELIX engine, the model, the training pipeline and the evaluation. The training run took about one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook: three to four days of GPU time, with the rest lost to session restarts. The full-atmosphere rollout stage alone took 74.3 GPU-hours."
           }
         }
       ]
@@ -345,7 +345,7 @@
     <p class="lede">An open-source AI weather and hurricane model, made in Jamaica. Its attention
       works in kilometres on the real sphere, not in cells on a flat grid. It rolls the whole
       atmosphere forward three days and, for a hurricane, forecasts track, intensity, rapid
-      intensification and landfall &mdash; every number with an uncertainty attached.</p>
+      intensification and landfall, every number with an uncertainty attached.</p>
 
     <div class="btn-row mt-m">
       <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/NatureV1-500" rel="noopener" target="_blank">
@@ -368,13 +368,13 @@
       <div class="answer-box" style="margin-top:0" data-reveal>
         <p><strong>NatureV1</strong> is an 89.45-million-parameter AI model of the atmosphere built from
           scratch by <a href="/about/">CorX Labs</a> in Jamaica, and released. It reads the last 30
-          hours of reanalysis &mdash; six frames, 89 channels, a 1.5&deg; global grid &mdash; rolls the
+          hours of reanalysis (six frames, 89 channels, a 1.5&deg; global grid) rolls the
           whole atmosphere forward to three days, and, for a tropical cyclone, says where it will go,
           how strong it will get, whether it will intensify rapidly and whether it will come ashore.
           <strong>Every number it produces carries an uncertainty.</strong></p>
         <p>On data it never trained on, its hurricane track <strong>beats a physics-only steering
-          track and straight-line extrapolation at every lead</strong> &mdash; 163&nbsp;km at
-          24&nbsp;h and 739&nbsp;km at 72 on the held-out 2017, 2019 and 2021 seasons &mdash; and on
+          track and straight-line extrapolation at every lead</strong> (163&nbsp;km at
+          24&nbsp;h and 739&nbsp;km at 72 on the held-out 2017, 2019 and 2021 seasons) and on
           the unseen 2023 El Ni&ntilde;o season it beat steering for every storm. It is also
           <strong>2.5&ndash;4.5&times; less accurate than the National Hurricane Center</strong>, it
           underestimates strong storms, and it cannot warn of explosive intensification.</p>
@@ -388,7 +388,7 @@
       </div>
 
       <div class="callout mt-m" data-reveal>
-        <p><strong>Trained and scored &mdash; a research model, not an operational forecast.</strong>
+        <p><strong>Trained and scored, a research model, not an operational forecast.</strong>
           The first full run is complete and every number on this page was measured on data the
           model never trained on. A red-team pass found failure modes worth knowing before you use any
           output; they are <a href="#red-team">listed below</a>. <strong>Do not use NatureV1 for real
@@ -408,7 +408,7 @@
         <div><dt>24 h track error</dt><dd>163 km (held-out)</dd></div>
         <div><dt>Training</dt><dd>~1 week, one GPU</dd></div>
         <div><dt>Licence</dt><dd>Apache-2.0</dd></div>
-        <div><dt>Status</dt><dd>Released &mdash; research model</dd></div>
+        <div><dt>Status</dt><dd>Released: research model</dd></div>
       </dl>
     </div>
   </section>
@@ -419,7 +419,7 @@
       <h2>1. What it forecasts</h2>
       <div class="prose">
         <p>Leads are 6, 12, 18, 24, 36, 48, 72, 96 and 120 hours. The last column says what this
-          release actually delivers &mdash; some heads were never trained, and one set has no skill.</p>
+          release actually delivers: some heads were never trained, and one set has no skill.</p>
       </div>
 
       <div class="table-wrap mt-m" data-reveal>
@@ -431,19 +431,19 @@
           <tbody>
             <tr>
               <th scope="row" rowspan="3">Global weather</th>
-              <td><strong>Full-state rollout</strong> &mdash; all 86 prognostic channels, surface to 50 hPa</td>
+              <td><strong>Full-state rollout</strong>, all 86 prognostic channels, surface to 50 hPa</td>
               <td>Stepped 6 h at a time on its own forecast to 72 h, as an ensemble, with mass conservation</td>
               <td><strong>Skill against persistence and climatology to 72 h.</strong> The weather output to use.</td>
             </tr>
             <tr>
               <td>Direct 2 m temperature, sea-level pressure, 10 m wind, precipitation</td>
               <td>Mean and 90% interval at each lead</td>
-              <td>No skill &mdash; not retrained after the rollout stage. Use the rollout.</td>
+              <td>No skill, not retrained after the rollout stage. Use the rollout.</td>
             </tr>
             <tr>
               <td>Weather type</td>
               <td>A category at every grid point</td>
-              <td>Never trained &mdash; never shown</td>
+              <td>Never trained: never shown</td>
             </tr>
             <tr>
               <th scope="row" rowspan="7">Tropical cyclone</th>
@@ -464,7 +464,7 @@
             <tr>
               <td>Rapid intensification</td>
               <td>Probability of a 25, 30 and 35 kt gain in 24 h, plus the expected change</td>
-              <td>Ranks risk well; probabilities far too high &mdash; do not read them as probabilities</td>
+              <td>Ranks risk well; probabilities far too high: do not read them as probabilities</td>
             </tr>
             <tr>
               <td>Landfall</td>
@@ -493,7 +493,7 @@
 
       <div class="prose mt-m">
         <p>The storm&rsquo;s environment is read out of the model&rsquo;s own atmosphere: deep-layer
-          steering, 200&ndash;850 hPa shear, mid-level humidity and ocean temperature &mdash; the same
+          steering, 200&ndash;850 hPa shear, mid-level humidity and ocean temperature, the same
           quantities operational statistical-dynamical intensity schemes such as
           <abbr title="Statistical Hurricane Intensity Prediction Scheme">SHIPS</abbr> are built on.
           They were handed to the storm heads explicitly to help intensity. The red team shows they
@@ -512,7 +512,7 @@
           composed from spherical, periodic, linear and logarithmic axes:
           <code>Geometry.globe()</code> is the Earth's surface, and
           <code>Geometry.atmosphere()</code> is a spherical shell whose vertical axis is
-          log-pressure — so 1000&rarr;500 hPa is the same distance as 500&rarr;250 hPa, which is what
+          log-pressure, so 1000&rarr;500 hPa is the same distance as 500&rarr;250 hPa, which is what
           the atmosphere actually thinks.</p>
       </div>
 
@@ -521,8 +521,8 @@
           <svg viewBox="0 0 1140 560" width="1140" height="560" role="img"
                aria-labelledby="nv1-title nv1-desc">
             <title id="nv1-title">iHELIX: encode onto a shared mesh, process with physical radii, decode anywhere</title>
-            <desc id="nv1-desc">On the left, several different source grids — ERA5's 240 by 121
-              latitude-longitude grid, a satellite scan's pixel footprints, and station points — are
+            <desc id="nv1-desc">On the left, several different source grids (ERA5's 240 by 121
+              latitude-longitude grid, a satellite scan's pixel footprints, and station points) are
               read onto one shared 4,096-point Fibonacci mesh that carries true area weights and a
               local east, north and up frame at every point. The mesh is processed by seventeen
               blocks. Within each block, geodesic attention heads attend over great-circle distance
@@ -566,8 +566,8 @@
             <text class="dg-tag"   x="36" y="352">Geometry axes</text>
             <text class="dg-title" x="36" y="374">Composed, not assumed</text>
             <text class="dg-sub"   x="36" y="394">spherical &middot; periodic &middot; linear &middot; log</text>
-            <text class="dg-sub"   x="36" y="414">Geometry.globe() &mdash; the surface</text>
-            <text class="dg-sub"   x="36" y="432">Geometry.atmosphere() &mdash; a shell</text>
+            <text class="dg-sub"   x="36" y="414">Geometry.globe(), the surface</text>
+            <text class="dg-sub"   x="36" y="432">Geometry.atmosphere(), a shell</text>
             <text class="dg-sub"   x="36" y="446">on a log-pressure vertical axis</text>
 
             <!-- encode -->
@@ -595,10 +595,10 @@
             <rect class="dg-accent" x="552" y="64" width="3" height="128" rx="1.5"/>
             <text class="dg-tag"   x="570" y="86">Geodesic attention</text>
             <text class="dg-title" x="570" y="108">A radius in kilometres, not cells</text>
-            <text class="dg-sub"   x="570" y="128">120 km &mdash; fronts, convection</text>
-            <text class="dg-sub"   x="570" y="144">400 km &mdash; mesoscale</text>
-            <text class="dg-sub"   x="570" y="160">900 km &mdash; storm environment</text>
-            <text class="dg-sub"   x="570" y="176">1,600 km &mdash; synoptic</text>
+            <text class="dg-sub"   x="570" y="128">120 km: fronts, convection</text>
+            <text class="dg-sub"   x="570" y="144">400 km: mesoscale</text>
+            <text class="dg-sub"   x="570" y="160">900 km: storm environment</text>
+            <text class="dg-sub"   x="570" y="176">1,600 km: synoptic</text>
 
             <rect class="dg-box" x="552" y="208" width="336" height="96" rx="11"/>
             <text class="dg-tag"   x="570" y="230">Index strand</text>
@@ -610,7 +610,7 @@
             <text class="dg-tag"   x="570" y="342">Temporal strand</text>
             <text class="dg-title" x="570" y="364">Gated delta-rule recurrence</text>
             <text class="dg-sub"   x="570" y="384">carries state across the 6 frames</text>
-            <text class="dg-sub"   x="570" y="400">at linear cost &mdash; inherited from HELIX</text>
+            <text class="dg-sub"   x="570" y="400">at linear cost: inherited from HELIX</text>
 
             <!-- decode -->
             <path class="dg-edge" d="M906 128 H944 V96  H974" marker-end="url(#nv-ah)"/>
@@ -677,7 +677,7 @@
             <desc id="nv2-desc">The processed mesh is pooled twice around the storm centre: a 500
               kilometre Gaussian for the core, and a 1,000 kilometre pool because the ridge that
               steers a storm sits about a thousand kilometres from the eye. Those two pools are
-              joined by three further inputs a 1.5 degree reanalysis cannot show — the storm's own
+              joined by three further inputs a 1.5 degree reanalysis cannot show, the storm's own
               state, meaning its wind, pressure, twelve-hour motion and twelve-hour wind change; its
               position, which fixes Coriolis and beta drift; and a physical environment of steering
               flow, shear, mid-level humidity and sea surface temperature computed directly from the
@@ -819,7 +819,7 @@
       <div class="callout mt-m" data-reveal>
         <p><strong>Everything new starts at exactly zero effect.</strong> The state head opens as
           persistence, the ensemble noise as nothing, the environment inputs as nothing. That is not
-          a detail of initialisation — it is what makes it safe to add a capability to a model that
+          a detail of initialisation: it is what makes it safe to add a capability to a model that
           is already training. <strong>Adding one can never make an existing checkpoint worse</strong>,
           and uncertainties open at climatological spread rather than at a confident guess.</p>
       </div>
@@ -853,20 +853,20 @@
           </thead>
           <tbody>
             <tr>
-              <th scope="row">1 &mdash; Pretraining</th>
+              <th scope="row">1: Pretraining</th>
               <td>Backbone and surface heads</td>
               <td>7,275 (8 epochs)</td>
               <td>ERA5 2011&ndash;2015, every surface channel at every lead; area-weighted Gaussian NLL over roughly 2&times;10<sup>11</sup> values</td>
             </tr>
             <tr>
-              <th scope="row">1b &mdash; Rollout</th>
+              <th scope="row">1b: Rollout</th>
               <td>Backbone and state head</td>
               <td>4,000</td>
-              <td>Curriculum to 12 steps (72 h), 2-member CRPS ensemble, mass conserved &mdash; <strong>74.3 GPU-hours</strong></td>
+              <td>Curriculum to 12 steps (72 h), 2-member CRPS ensemble, mass conserved: <strong>74.3 GPU-hours</strong></td>
             </tr>
             <tr>
-              <th scope="row">2 &mdash; Storm heads</th>
-              <td><strong>~1.2M parameters only</strong> &mdash; backbone frozen</td>
+              <th scope="row">2: Storm heads</th>
+              <td><strong>~1.2M parameters only</strong>: backbone frozen</td>
               <td>Best epoch 3 of 28</td>
               <td>HURDAT2, 1979 onward: 584 storms, 16,219 samples; early-stopped on held-out seasons, then consensus weights fitted on them</td>
             </tr>
@@ -877,7 +877,7 @@
       <div class="prose mt-m">
         <p><strong>About one week end to end, on one GPU.</strong> The run used a single RTX PRO 6000
           (96&nbsp;GB) in a hosted notebook. GPU time was roughly three to four days; the rest was
-          session overhead &mdash; sessions end after 12 hours or 90 idle minutes and the disk is
+          session overhead: sessions end after 12 hours or 90 idle minutes and the disk is
           wiped, so every restart re-pulled checkpoints and staged data from the Hugging Face
           repository before training resumed. Every stage resumes from a one-minute checkpoint, so no
           restart lost more than a minute of training. A machine that keeps its disk would cut the
@@ -914,7 +914,7 @@
       <h2>5. What it refuses to do</h2>
       <div class="prose">
         <p>This is as much a part of the model as anything above it. A forecast that cannot say
-          <em>I don't know</em> is not a cautious forecast &mdash; it is a dangerous one.</p>
+          <em>I don't know</em> is not a cautious forecast: it is a dangerous one.</p>
       </div>
 
       <ul class="fact-list mt-m" data-reveal>
@@ -926,7 +926,7 @@
         <li><strong>An untrained input path is marked untrustworthy.</strong> A forecast run from the
           satellite path comes back with <code>trustworthy: false</code>, and the live satellite
           forecast is refused outright.</li>
-        <li><strong>Every forecast is checked against physical bounds &mdash; and the check
+        <li><strong>Every forecast is checked against physical bounds, and the check
           reports, it does not block.</strong> <code>check_forecast</code> tests every scenario track,
           intensity, eyewall and rapid-intensification value: no 400&nbsp;kt hurricane, no pressure
           outside 850&ndash;1100&nbsp;hPa, no cone wider than an ocean, no probabilities that fail to
@@ -934,7 +934,7 @@
           what it does not catch.</li>
         <li><strong>The publishing gate is weak, so this release was reviewed by hand.</strong> The
           pipeline publishes only if the model beats persistence somewhere on held-out data and
-          changes its answer when the weather changes &mdash; a bar precipitation alone can clear.
+          changes its answer when the weather changes, a bar precipitation alone can clear.
           This release went out after the full scorecards and the red team below were reviewed.</li>
       </ul>
 
@@ -942,8 +942,8 @@
         <p>The scoring follows what operational centres do: area-weighted RMSE and anomaly
           correlation against <strong>persistence</strong> and <strong>climatology</strong> on
           identical batches, in physical units, with a 1% margin before anything is called skill. The
-          storm scorecard adds the baselines a forecaster would really reach for &mdash; a storm that
-          stays put, straight extrapolation, and the physics-only steering track &mdash; and scores the
+          storm scorecard adds the baselines a forecaster would really reach for (a storm that
+          stays put, straight extrapolation, and the physics-only steering track) and scores the
           consensus leave-one-season-out. Beating extrapolation and persistence is the bar.
           <strong>Beating steering is what the learned part is for.</strong></p>
       </div>
@@ -972,14 +972,14 @@
             sea-level pressure, 700&nbsp;hPa humidity, 2&nbsp;m temperature, 850&nbsp;hPa temperature,
             10&nbsp;m wind and 500&nbsp;hPa geopotential. Its ensemble spread/skill ratio at
             +24&nbsp;h is <strong>1.08</strong>, where 1.0 is perfectly calibrated.</li>
-          <li><strong>The direct multi-lead surface heads have no skill</strong> &mdash; they beat
+          <li><strong>The direct multi-lead surface heads have no skill</strong>: they beat
             persistence on 6 of 45 field&ndash;lead pairs, all precipitation. They were trained in stage
             one and not updated when the rollout retrained the backbone underneath them. Use the
             rollout for weather.</li>
         </ul>
       </div>
 
-      <h3 class="mt-m" id="held-out">Hurricane track and intensity &mdash; held-out 2017, 2019, 2021</h3>
+      <h3 class="mt-m" id="held-out">Hurricane track and intensity: held-out 2017, 2019, 2021</h3>
       <div class="prose">
         <p>59 Atlantic storms, including Harvey, Irma, Maria, Dorian, Lorenzo and Ida, that neither
           the backbone nor the storm heads trained on. Consensus weights scored
@@ -1007,7 +1007,7 @@
           on; before that, &ldquo;it stays as strong as it is&rdquo; is still the better guess.</p>
       </div>
 
-      <h3 class="mt-m" id="season-2023">End to end on an unseen El Ni&ntilde;o season &mdash; 2023</h3>
+      <h3 class="mt-m" id="season-2023">End to end on an unseen El Ni&ntilde;o season: 2023</h3>
       <div class="prose">
         <p>2023 was a strong El Ni&ntilde;o year and is outside everything the model saw. ERA5 for 2023
           was rebuilt at WeatherBench&nbsp;2&rsquo;s 1.5&deg; grid from ARCO-ERA5 with area-weighted
@@ -1051,7 +1051,7 @@
       </div>
       <div class="prose mt-s">
         <p>Out to 24&nbsp;h the El Ni&ntilde;o season scored the same as the held-out seasons; from
-          48&nbsp;h the errors are larger, but the margin over physics steering grew &mdash; 29% better
+          48&nbsp;h the errors are larger, but the margin over physics steering grew: 29% better
           at 72&nbsp;h, against 25% on the held-out seasons. It beat steering for every storm at every
           one of these leads. One season, seven storms, 00Z only: <strong>encouraging, not
           conclusive.</strong></p>
@@ -1066,7 +1066,7 @@
           </thead>
           <tbody>
             <tr><th scope="row">Landfall probability</th><td>Brier skill over the base rate +4% (6 h) to +29% (72 h); AUC 0.81&ndash;0.86. In 2023: +30 to +42% from 72 h, AUC 0.81&ndash;0.95</td><td><strong>Skilful</strong></td></tr>
-            <tr><th scope="row">Rapid intensification (3 thresholds)</th><td>Ranks risk well (AUC 0.82&ndash;0.84), but the probabilities are too high &mdash; Brier score worse than the base rate</td><td><strong>Needs calibration before use</strong></td></tr>
+            <tr><th scope="row">Rapid intensification (3 thresholds)</th><td>Ranks risk well (AUC 0.82&ndash;0.84), but the probabilities are too high: Brier score worse than the base rate</td><td><strong>Needs calibration before use</strong></td></tr>
             <tr><th scope="row">Peak wind (eyewall head)</th><td>MAE 6 / 11 / 19 kt at 6 / 24 / 72 h, against 22&ndash;26 kt for the climatological mean</td><td><strong>Beats climatology</strong></td></tr>
             <tr><th scope="row">34/50/64 kt wind radii</th><td>MAE 32&ndash;37 n mi, against 47&ndash;49 for the mean</td><td><strong>About 30% better</strong></td></tr>
             <tr><th scope="row">Radius of maximum wind</th><td>28 against 29 n mi at 6 h; loses by 72 h</td><td><strong>No skill</strong></td></tr>
@@ -1076,7 +1076,7 @@
 
       <h3 class="mt-m" id="cases">Individual forecasts</h3>
       <div class="prose">
-        <p><strong>Maria, 2017</strong> &mdash; issued 18 September 00Z east of the Lesser Antilles,
+        <p><strong>Maria, 2017</strong>: issued 18 September 00Z east of the Lesser Antilles,
           the full model from raw ERA5. Close for four days, then steering wins at five. The wind
           forecast was about 70&nbsp;kt against an observed 145&ndash;150&nbsp;kt.</p>
       </div>
@@ -1093,7 +1093,7 @@
         </table>
       </div>
       <div class="prose mt-m">
-        <p><strong>Dorian, 2019</strong> &mdash; issued 30 August 18Z. Good to two days; Dorian then
+        <p><strong>Dorian, 2019</strong>: issued 30 August 18Z. Good to two days; Dorian then
           stalled over the Bahamas, which steering handled better.</p>
       </div>
       <div class="table-wrap mt-s" data-reveal>
@@ -1113,20 +1113,19 @@
       <div class="prose mt-s">
         <p>The 26% is worth reading. The model proposes six track scenarios with a probability on
           each, and an even split between six is 16.7%. Before training finished, this same hindcast
-          gave its top scenario <strong>17%</strong> &mdash; an even split &mdash; and its track sat
+          gave its top scenario <strong>17%</strong>, an even split, and its track sat
           within 10&nbsp;km of steering at every lead: it had not learned to tell paths apart. The
           released model gives its top scenario <strong>26%</strong>, and its learned track beats
-          steering by 78&nbsp;km at 24&nbsp;h. It has moved off an even split, though not far &mdash;
-          and on a storm that stalled and turned, spreading the weight is the honest answer. The
-          calibration check below says the full scenario mixture is honest.</p>
+          steering by 78&nbsp;km at 24&nbsp;h. It has moved off an even split, though not far, and on a storm that stalled and turned, spreading the weight is the right answer. The
+          calibration check below says the full scenario mixture is well calibrated.</p>
       </div>
 
       <h3 class="mt-m" id="in-context">In context</h3>
       <div class="prose">
         <p>For scale only: the National Hurricane Center&rsquo;s official Atlantic track error averaged
           about <strong>66&nbsp;km at 24&nbsp;h and 168&nbsp;km at 72&nbsp;h</strong> over
-          2018&ndash;2022, and the leading global AI models &mdash; GraphCast, Pangu-Weather, FuXi
-          &mdash; and ECMWF are in the same league. NatureV1&rsquo;s 163&nbsp;km and 739&nbsp;km are
+          2018&ndash;2022, and the leading global AI models (GraphCast, Pangu-Weather, FuXi
+         ) and ECMWF are in the same league. NatureV1&rsquo;s 163&nbsp;km and 739&nbsp;km are
           <strong>2.5&ndash;4.5&times; larger</strong>.</p>
         <p>That gap has a plain cause. NatureV1 is a 1.5&deg; model trained on five years of data with
           a few GPU-days of compute; those systems use 0.25&deg;, decades of data and orders of
@@ -1143,7 +1142,7 @@
           held-out data unless noted. <strong>The data-leak audit found nothing.</strong></p>
       </div>
 
-      <h3 class="mt-m" style="font-family:var(--sans);font-size:1rem;font-weight:600">Is the uncertainty honest?</h3>
+      <h3 class="mt-m" style="font-family:var(--sans);font-size:1rem;font-weight:600">Is the uncertainty calibrated?</h3>
       <div class="table-wrap mt-s" data-reveal>
         <table>
           <caption class="visually-hidden">Calibration of NatureV1's stated uncertainty against what happened, held-out seasons with 2023 in brackets</caption>
@@ -1151,18 +1150,18 @@
             <tr><th scope="col">Output</th><th scope="col">Claimed</th><th scope="col">Actually</th></tr>
           </thead>
           <tbody>
-            <tr><th scope="row">Track, full 6-scenario mixture, 50% region</th><td>50%</td><td>47&ndash;53% (32&ndash;55%) &mdash; honest</td></tr>
-            <tr><th scope="row">Track, full mixture, 90% region</th><td>90%</td><td>87&ndash;92% (81&ndash;93%) &mdash; honest, slightly tight at 4&ndash;5 days in 2023</td></tr>
-            <tr><th scope="row">Track, <strong>top scenario&rsquo;s &ldquo;95%&rdquo; cone</strong> &mdash; what a single cone shows</th><td>95%</td><td><strong>60&ndash;87%</strong> &mdash; over-confident; the other scenarios carry the rest</td></tr>
-            <tr><th scope="row"><code>cone_radius_km_68</code> field</th><td>68%</td><td>It is the 1-sigma ellipse, which holds <strong>39%</strong> in two dimensions &mdash; mislabelled</td></tr>
-            <tr><th scope="row">Wind, 90% interval</th><td>90%</td><td>85&ndash;93% &mdash; honest</td></tr>
-            <tr><th scope="row">Landfall by 72 h</th><td>18% / 39% / 61% / 79%</td><td>10% / 31% / 51% / 79% &mdash; too high below 70%</td></tr>
-            <tr><th scope="row">Rapid intensification (+30 kt / 24 h)</th><td>21% / 39% / 55%</td><td><strong>1% / 10% / 38%</strong> &mdash; far too high; do not read these as probabilities</td></tr>
+            <tr><th scope="row">Track, full 6-scenario mixture, 50% region</th><td>50%</td><td>47&ndash;53% (32&ndash;55%): well calibrated</td></tr>
+            <tr><th scope="row">Track, full mixture, 90% region</th><td>90%</td><td>87&ndash;92% (81&ndash;93%): well calibrated, slightly tight at 4&ndash;5 days in 2023</td></tr>
+            <tr><th scope="row">Track, <strong>top scenario&rsquo;s &ldquo;95%&rdquo; cone</strong>: what a single cone shows</th><td>95%</td><td><strong>60&ndash;87%</strong>, over-confident; the other scenarios carry the rest</td></tr>
+            <tr><th scope="row"><code>cone_radius_km_68</code> field</th><td>68%</td><td>It is the 1-sigma ellipse, which holds <strong>39%</strong> in two dimensions: mislabelled</td></tr>
+            <tr><th scope="row">Wind, 90% interval</th><td>90%</td><td>85&ndash;93%: well calibrated</td></tr>
+            <tr><th scope="row">Landfall by 72 h</th><td>18% / 39% / 61% / 79%</td><td>10% / 31% / 51% / 79%: too high below 70%</td></tr>
+            <tr><th scope="row">Rapid intensification (+30 kt / 24 h)</th><td>21% / 39% / 55%</td><td><strong>1% / 10% / 38%</strong>: far too high; do not read these as probabilities</td></tr>
           </tbody>
         </table>
       </div>
       <div class="prose mt-s">
-        <p>The <strong>full scenario mixture is honest</strong>; a single scenario&rsquo;s cone is not.
+        <p>The <strong>full scenario mixture is well calibrated</strong>; a single scenario&rsquo;s cone is not.
           Draw cones from the mixture.</p>
       </div>
 
@@ -1209,12 +1208,12 @@
       <div class="prose">
         <ul>
           <li><strong>Garbage in, plausible out.</strong> Random noise in place of the backbone features
-            produced a normal-looking forecast &mdash; 22&ndash;45&nbsp;kt and a sensible track
-            &mdash; with <strong>zero</strong> check failures. There is no out-of-distribution
+            produced a normal-looking forecast, 22&ndash;45&nbsp;kt and a sensible track
+           , with <strong>zero</strong> check failures. There is no out-of-distribution
             detector.</li>
           <li><strong>A corrupted steering prior passes straight through.</strong> Shifting it by 30&deg;
             moved the forecast 30&deg;, with zero check failures.</li>
-          <li><strong>The consensus track is not bounds-checked</strong> &mdash; a centre near the pole
+          <li><strong>The consensus track is not bounds-checked</strong>, a centre near the pole
             gave consensus latitudes above 90&deg;; only the scenario tracks were flagged.</li>
           <li>A missing (NaN) storm centre is flagged on the track, but intensity and rapid
             intensification are still produced as if valid.</li>
@@ -1233,7 +1232,7 @@
             grows. It falls in <strong>20%</strong> of forecasts, by up to 12 points.</li>
           <li>A 50 or 64&nbsp;kt wind radius exceeds the 34/50&nbsp;kt radius in <strong>21%</strong> of
             forecasts, and the radius of maximum wind exceeds the 34&nbsp;kt radius in
-            <strong>17%</strong> &mdash; both physically impossible.</li>
+            <strong>17%</strong>, both physically impossible.</li>
           <li>Consistent: the three rapid-intensification thresholds are always ordered, and the two
             intensity heads agree to 1.5&nbsp;kt on average.</li>
         </ul>
@@ -1241,10 +1240,10 @@
 
       <h3 class="mt-m" style="font-family:var(--sans);font-size:1rem;font-weight:600">The hardest case: Hurricane Otis, 2023</h3>
       <div class="prose">
-        <p>East Pacific &mdash; outside the Atlantic the storm heads trained on &mdash; run through the
+        <p>East Pacific, outside the Atlantic the storm heads trained on, run through the
           full model from raw ERA5, five forecasts. Otis went from 50&nbsp;kt to a 130&nbsp;kt Category
           5 in 24 hours and struck Acapulco. From 24 October 00Z, NatureV1 forecast
-          <strong>45&nbsp;kt</strong> &mdash; a slight weakening &mdash; and gave rapid intensification
+          <strong>45&nbsp;kt</strong>, a slight weakening, and gave rapid intensification
           44%, about what it said on the quiet days before (34&ndash;38%). Track was 104&nbsp;km at
           24&nbsp;h against steering&rsquo;s 156, but at 72&nbsp;h it kept Otis at the same latitude
           while the storm moved 5&deg; north. <strong>It cannot warn of explosive
@@ -1270,7 +1269,7 @@
           <li><strong>Preflight</strong> checks grid alignment, normalisation spikes, grid weights and
             device agreement before step one, and halts the run if anything fails.</li>
           <li><strong>A response probe</strong> confirms that different inputs give different outputs
-            &mdash; the test that catches a model which has quietly collapsed to climatology.</li>
+           , the test that catches a model which has quietly collapsed to climatology.</li>
           <li><strong>Resilience is treated as a safety property</strong> for a multi-day run: atomic
             checkpoint writes every minute, optimizer and schedule state travelling with the weights,
             damaged checkpoints falling back to older ones, incompatible ones quarantined rather than
@@ -1283,7 +1282,7 @@
   <!-- Limits -->
   <section class="section-tight" id="limits">
     <div class="shell">
-      <h2>7. Limits, stated plainly</h2>
+      <h2>7. Limits</h2>
 
       <div class="callout" data-reveal>
         <p><strong>Do not use NatureV1 for real decisions.</strong> It is a research model, not an
@@ -1308,8 +1307,8 @@
             single scenario&rsquo;s cone is over-confident and the <code>cone_radius_km_68</code> field
             is a 39% ellipse. Draw cones from the mixture.</li>
           <li><strong>No input sanity check.</strong> Corrupted inputs can produce plausible forecasts
-            that pass every check. Physically impossible structure &mdash; wind radii out of order,
-            landfall probability falling with lead &mdash; is not yet caught.</li>
+            that pass every check. Physically impossible structure (wind radii out of order,
+            landfall probability falling with lead) is not yet caught.</li>
           <li><strong>Surface heads are stale.</strong> The direct multi-lead surface fields were not
             retrained after the rollout stage; use the full-state rollout for weather.</li>
           <li><strong>Small data.</strong> Five years of reanalysis at 1.5&deg;, and the storm heads start
@@ -1328,8 +1327,8 @@
     <div class="shell">
       <h2>8. Using it</h2>
       <div class="prose">
-        <p>The whole pipeline — install, staging, three training stages, scorecards, and publishing
-          only if it earned it — is one cell, <code>colab_naturev1.py</code>, shipped with the
+        <p>The whole pipeline (install, staging, three training stages, scorecards, and publishing
+          only if it earned it) is one cell, <code>colab_naturev1.py</code>, shipped with the
           package. Every setting is at the top. It runs in marimo, Colab, Jupyter or a plain
           script.</p>
       </div>
@@ -1355,9 +1354,9 @@ model.load_state_dict(payload["model"])
 print(model.trained_heads())   # steps each output has received; 0 = never trained, never shown</code></pre>
 
       <div class="prose mt-m">
-        <p><code>build_forecast</code> turns a forward pass into the forecast bundle — track scenarios
+        <p><code>build_forecast</code> turns a forward pass into the forecast bundle (track scenarios
           with cones, the consensus and its members, landfall, intensity, rapid intensification,
-          eyewall structure and a point forecast — in physical units with 90% intervals, with every
+          eyewall structure and a point forecast) in physical units with 90% intervals, with every
           untrained section marked unavailable:</p>
       </div>
       <pre class="mt-s"><code>bundle = build_forecast(
@@ -1376,15 +1375,15 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
             <tr><th scope="col">Path</th><th scope="col">What it is</th></tr>
           </thead>
           <tbody>
-            <tr><th scope="row"><code>checkpoints/stage1/latest.pt</code></th><td>Stage one &mdash; reanalysis pretraining</td></tr>
-            <tr><th scope="row"><code>checkpoints/rollout/latest.pt</code></th><td>Stage 1b &mdash; full-state rollout</td></tr>
-            <tr><th scope="row"><code>checkpoints/stage2/latest.pt</code></th><td>Stage two &mdash; hurricane heads</td></tr>
+            <tr><th scope="row"><code>checkpoints/stage1/latest.pt</code></th><td>Stage one: reanalysis pretraining</td></tr>
+            <tr><th scope="row"><code>checkpoints/rollout/latest.pt</code></th><td>Stage 1b: full-state rollout</td></tr>
+            <tr><th scope="row"><code>checkpoints/stage2/latest.pt</code></th><td>Stage two: hurricane heads</td></tr>
             <tr><th scope="row"><code>checkpoints/storm_bank_*.pt</code></th><td>Cached frozen-backbone features for the storm heads</td></tr>
             <tr><th scope="row"><code>staging/era5*.npy</code></th><td>Normalised ERA5 staging, mirrored so a new session needs no re-download</td></tr>
             <tr><th scope="row"><code>staging/stats.json</code>, <code>batch.json</code></th><td>Normalisation statistics and the measured batch size</td></tr>
             <tr><th scope="row"><code>results/</code></th><td>The raw outputs behind every number in the results section</td></tr>
             <tr><th scope="row"><code>eval/</code></th><td>The scripts that produced them, including the red team</td></tr>
-            <tr><th scope="row"><code>training_record.json</code></th><td>Steps received by every output &mdash; zero means never shown</td></tr>
+            <tr><th scope="row"><code>training_record.json</code></th><td>Steps received by every output: zero means never shown</td></tr>
             <tr><th scope="row"><code>logs/train.log</code></th><td>The complete WeatherBench-style scorecard tables</td></tr>
           </tbody>
         </table>
@@ -1425,14 +1424,14 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         <article class="card">
           <h3>A forecast must be able to say &ldquo;I don't know&rdquo;</h3>
           <p>Every output carries an uncertainty, every untrained head is hidden, and the release was
-            red-teamed &mdash; with what broke published alongside what worked.</p>
+            red-teamed, with what broke published alongside what worked.</p>
         </article>
       </div>
 
       <div class="prose mt-m">
         <p>The engine is not a one-off either. iHELIX grew out of
           <a href="/models/helix/">HELIX</a>, the linear-context language architecture published as
-          <code>helix-lm</code> — the temporal strand that carries state across the six input frames
+          <code>helix-lm</code>, the temporal strand that carries state across the six input frames
           is the same gated delta-rule recurrence, applied to time instead of to text.</p>
       </div>
     </div>
@@ -1446,21 +1445,21 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         <p>NatureV1 is an open-source AI weather and hurricane model built in Jamaica, an island that
           sits squarely in the Atlantic hurricane belt. Its storm heads were trained on HURDAT2, the
           Atlantic best-track record, which covers the Caribbean Sea and the Gulf of Mexico as well as
-          the open ocean &mdash; the same storms that reach the Caribbean. Its held-out tests include
+          the open ocean, the same storms that reach the Caribbean. Its held-out tests include
           storms that crossed the islands, among them <strong>Irma and Maria</strong> in 2017 and
           <strong>Franklin and Tammy</strong> in 2023.</p>
         <p>AI forecasting already matters here. When Hurricane Melissa made landfall in Jamaica in
           October 2025, the <a href="https://www.nhc.noaa.gov/" rel="noopener nofollow" target="_blank">National Hurricane Center</a> drew on <a href="https://deepmind.google/blog/how-weathernext-helped-the-national-hurricane-center-better-predict-hurricane-melissas-historic-landfall-in-jamaica/" rel="noopener nofollow" target="_blank">Google DeepMind&rsquo;s WeatherNext</a> for its forecast of the
           storm&rsquo;s rapid intensification. NatureV1 is not that kind of system. It is a 1.5&deg;
           research model built by one person, and its own red team shows it
-          <strong>cannot warn of explosive intensification</strong> &mdash; the kind of rapid
+          <strong>cannot warn of explosive intensification</strong>, the kind of rapid
           strengthening that makes storms like Melissa so dangerous.</p>
         <p>What it offers instead is openness: a Jamaican-built weather model whose weights, code,
           results and failure modes are all public, that anyone can download, re-run, retrain or try
           to break. How it was built is written up in
           <a href="/blog/building-a-hurricane-ai-in-jamaica/">Building a hurricane AI in Jamaica, on one GPU</a>.</p>
         <p>The same engine now drives <a href="/models/pluvium/">Pluvium</a>, which forecasts rain hour by
-          hour for every town and village in the Caribbean &mdash; when it starts, how long it lasts and how
+          hour for every town and village in the Caribbean, when it starts, how long it lasts and how
           much falls.</p>
       </div>
 
@@ -1479,7 +1478,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
       <div class="faq mt-m">
         <details>
           <summary>What is NatureV1?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>An 89.45M-parameter probabilistic model of the atmosphere, released under Apache-2.0. Given the last 30 hours of ERA5 reanalysis it rolls the whole atmosphere forward to 72 hours and, for a tropical cyclone, forecasts its track as weighted scenarios, its intensity, the chance of rapid intensification and the chance of landfall &mdash; every number with an uncertainty. The first full run is complete and it has been scored on data it never trained on. It is a research model, not an operational forecast.</p></div>
+          <div class="faq-body"><p>An 89.45M-parameter probabilistic model of the atmosphere, released under Apache-2.0. Given the last 30 hours of ERA5 reanalysis it rolls the whole atmosphere forward to 72 hours and, for a tropical cyclone, forecasts its track as weighted scenarios, its intensity, the chance of rapid intensification and the chance of landfall, every number with an uncertainty. The first full run is complete and it has been scored on data it never trained on. It is a research model, not an operational forecast.</p></div>
         </details>
         <details>
           <summary>Is there a Jamaican AI weather model?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -1495,35 +1494,35 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         </details>
         <details>
           <summary>How accurate is NatureV1 on hurricanes?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>On 59 Atlantic storms from the held-out 2017, 2019 and 2021 seasons, its consensus track error was 163&nbsp;km at 24&nbsp;h, 421 at 48, 739 at 72 and 1,373 at 120 &mdash; better than a physics-only steering track and straight-line extrapolation at every lead. Its wind forecast beat persistence from 24&nbsp;h on. On the unseen 2023 El Ni&ntilde;o season it scored 167&nbsp;km at 24&nbsp;h and 810 at 72, and beat steering for all seven hurricanes at 24, 48 and 72&nbsp;h. For scale, the NHC&rsquo;s official error averaged about 66&nbsp;km at 24&nbsp;h and 168 at 72 over 2018&ndash;2022, so NatureV1&rsquo;s errors are 2.5&ndash;4.5&times; larger. <a href="#results">The full tables are above.</a></p></div>
+          <div class="faq-body"><p>On 59 Atlantic storms from the held-out 2017, 2019 and 2021 seasons, its consensus track error was 163&nbsp;km at 24&nbsp;h, 421 at 48, 739 at 72 and 1,373 at 120: better than a physics-only steering track and straight-line extrapolation at every lead. Its wind forecast beat persistence from 24&nbsp;h on. On the unseen 2023 El Ni&ntilde;o season it scored 167&nbsp;km at 24&nbsp;h and 810 at 72, and beat steering for all seven hurricanes at 24, 48 and 72&nbsp;h. For scale, the NHC&rsquo;s official error averaged about 66&nbsp;km at 24&nbsp;h and 168 at 72 over 2018&ndash;2022, so NatureV1&rsquo;s errors are 2.5&ndash;4.5&times; larger. <a href="#results">The full tables are above.</a></p></div>
         </details>
         <details>
           <summary>How does NatureV1 compare with GraphCast and other AI weather models?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>It is far smaller and less accurate. The leading AI weather models &mdash; GraphCast, Pangu-Weather and FuXi &mdash; and the ECMWF forecast are in the same league as the National Hurricane Center&rsquo;s official track forecasts, which averaged about 66&nbsp;km of error at 24&nbsp;h and 168&nbsp;km at 72 over 2018&ndash;2022. NatureV1&rsquo;s 163&nbsp;km and 739&nbsp;km are 2.5&ndash;4.5&times; larger. Those systems run at 0.25&deg; with decades of data and orders of magnitude more compute; NatureV1 is a 1.5&deg; model trained on five years of data with a few GPU-days.</p></div>
+          <div class="faq-body"><p>It is far smaller and less accurate. The leading AI weather models (GraphCast, Pangu-Weather and FuXi) and the ECMWF forecast are in the same league as the National Hurricane Center&rsquo;s official track forecasts, which averaged about 66&nbsp;km of error at 24&nbsp;h and 168&nbsp;km at 72 over 2018&ndash;2022. NatureV1&rsquo;s 163&nbsp;km and 739&nbsp;km are 2.5&ndash;4.5&times; larger. Those systems run at 0.25&deg; with decades of data and orders of magnitude more compute; NatureV1 is a 1.5&deg; model trained on five years of data with a few GPU-days.</p></div>
         </details>
         <details>
           <summary>How do AI weather models work?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>An AI weather model learns how the atmosphere changes from decades of past weather &mdash; usually the ERA5 reanalysis &mdash; instead of solving the physics equations step by step. Given the current state of the atmosphere it predicts the state a few hours later, then feeds that prediction back in to step further ahead. NatureV1 works this way, six hours at a time out to 72 hours. What is different is the engine: its attention heads work in physical kilometres over the curved Earth rather than on a flat grid, and its hurricane forecasts start from a physics-only steering track and learn a correction on top.</p></div>
+          <div class="faq-body"><p>An AI weather model learns how the atmosphere changes from decades of past weather, usually the ERA5 reanalysis, instead of solving the physics equations step by step. Given the current state of the atmosphere it predicts the state a few hours later, then feeds that prediction back in to step further ahead. NatureV1 works this way, six hours at a time out to 72 hours. What is different is the engine: its attention heads work in physical kilometres over the curved Earth rather than on a flat grid, and its hurricane forecasts start from a physics-only steering track and learn a correction on top.</p></div>
         </details>
         <details>
           <summary>What is geodesic attention, and why does it matter for weather?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Most weather transformers flatten the globe into tokens and leave the model to work out geography from data. Here every head is given a physical radius in kilometres, with compact support, and attends over great-circle distance &mdash; 120&nbsp;km for fronts and convection, up to 1,600&nbsp;km for synoptic scale. Points carry true area weights and a local east/north/up frame, so &ldquo;20&nbsp;km north&rdquo; means the same thing at the equator and at 80&deg; latitude.</p></div>
+          <div class="faq-body"><p>Most weather transformers flatten the globe into tokens and leave the model to work out geography from data. Here every head is given a physical radius in kilometres, with compact support, and attends over great-circle distance: 120&nbsp;km for fronts and convection, up to 1,600&nbsp;km for synoptic scale. Points carry true area weights and a local east/north/up frame, so &ldquo;20&nbsp;km north&rdquo; means the same thing at the equator and at 80&deg; latitude.</p></div>
         </details>
         <details>
           <summary>Why is the backbone frozen when the hurricane heads train?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Because the labels are scarce in a way no engineering fixes. The whole Atlantic best-track record is on the order of 55,000 points, and the rarest fields are far thinner &mdash; radius of maximum wind only entered HURDAT2 with the 2021 season, quadrant wind radii only go back to 2004. So the backbone learns from roughly 2&times;10<sup>11</sup> values in reanalysis, then freezes, and only about 1.2 million parameters ever see a label: 16,219 samples from 584 storms. Even then the heads start memorising quickly &mdash; the best checkpoint was epoch 3 of 28.</p></div>
+          <div class="faq-body"><p>Because the labels are scarce in a way no engineering fixes. The whole Atlantic best-track record is on the order of 55,000 points, and the rarest fields are far thinner: radius of maximum wind only entered HURDAT2 with the 2021 season, quadrant wind radii only go back to 2004. So the backbone learns from roughly 2&times;10<sup>11</sup> values in reanalysis, then freezes, and only about 1.2 million parameters ever see a label: 16,219 samples from 584 storms. Even then the heads start memorising quickly, the best checkpoint was epoch 3 of 28.</p></div>
         </details>
         <details>
           <summary>What does it mean that the track head predicts a residual?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Because the difference from a steering track is a much easier target than the track itself. A physics-only steering track &mdash; the path a storm takes if it is simply carried by the thickness-weighted 850&ndash;200 hPa flow around it, plus beta drift &mdash; needs no training at all, so the learned part only fixes what steering gets wrong. The red team measured the split: removing the steering prior raises the 24&nbsp;h track error by 240%, and the learned correction on top of it is worth about 30% at 24&nbsp;h.</p></div>
+          <div class="faq-body"><p>Because the difference from a steering track is a much easier target than the track itself. A physics-only steering track (the path a storm takes if it is simply carried by the thickness-weighted 850&ndash;200 hPa flow around it, plus beta drift) needs no training at all, so the learned part only fixes what steering gets wrong. The red team measured the split: removing the steering prior raises the 24&nbsp;h track error by 240%, and the learned correction on top of it is worth about 30% at 24&nbsp;h.</p></div>
         </details>
         <details>
           <summary>What is the consensus track?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>The learned track, a physics-only steering track and straight extrapolation, blended with per-lead weights fitted on held-out seasons. It copies something operational forecasting established long ago &mdash; consensus aids routinely beat every individual model that goes into them &mdash; and it holds here: scored leave-one-season-out on 2017, 2019 and 2021, the consensus had the lowest track error at every lead, ahead of the learned track alone. Every member is reported alongside the blend.</p></div>
+          <div class="faq-body"><p>The learned track, a physics-only steering track and straight extrapolation, blended with per-lead weights fitted on held-out seasons. It copies something operational forecasting established long ago, consensus aids routinely beat every individual model that goes into them, and it holds here: scored leave-one-season-out on 2017, 2019 and 2021, the consensus had the lowest track error at every lead, ahead of the learned track alone. Every member is reported alongside the blend.</p></div>
         </details>
         <details>
           <summary>What does NatureV1 refuse to do, and what still gets through?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>An output whose head never received a training step is not shown at all &mdash; weather type and landfall timing, among others, come back as unavailable. A forecast from the untrained satellite path is flagged untrustworthy, and the live satellite forecast is refused. Every scenario track, intensity, eyewall and rapid-intensification value is checked against physical bounds &mdash; but the check <em>reports</em> problems rather than blocking them. The red team found what gets through: random noise in place of the backbone features produced a normal-looking forecast with zero check failures, a corrupted steering prior passed straight through, and the consensus track is not bounds-checked. There is no out-of-distribution detector.</p></div>
+          <div class="faq-body"><p>An output whose head never received a training step is not shown at all: weather type and landfall timing, among others, come back as unavailable. A forecast from the untrained satellite path is flagged untrustworthy, and the live satellite forecast is refused. Every scenario track, intensity, eyewall and rapid-intensification value is checked against physical bounds, but the check <em>reports</em> problems rather than blocking them. The red team found what gets through: random noise in place of the backbone features produced a normal-looking forecast with zero check failures, a corrupted steering prior passed straight through, and the consensus track is not bounds-checked. There is no out-of-distribution detector.</p></div>
         </details>
         <details>
           <summary>Is NatureV1 free and open source?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -1531,7 +1530,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         </details>
         <details>
           <summary>Who built NatureV1, and how long did training take?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p><a href="/nathan/">Nathan Lyttle</a>, the founder of CorX Labs and a solo developer from Jamaica, built the whole stack: the iHELIX engine, the model, the training pipeline and the evaluation. Training took about one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook &mdash; three to four days of GPU time, the rest lost to session restarts. The full-atmosphere rollout stage alone took 74.3 GPU-hours. <a href="/blog/building-a-hurricane-ai-in-jamaica/">The full story is on the blog.</a></p></div>
+          <div class="faq-body"><p><a href="/nathan/">Nathan Lyttle</a>, the founder of CorX Labs and a solo developer from Jamaica, built the whole stack: the iHELIX engine, the model, the training pipeline and the evaluation. Training took about one week of wall-clock time on a single RTX PRO 6000 GPU in a hosted notebook: three to four days of GPU time, the rest lost to session restarts. The full-atmosphere rollout stage alone took 74.3 GPU-hours. <a href="/blog/building-a-hurricane-ai-in-jamaica/">The full story is on the blog.</a></p></div>
         </details>
       </div>
     </div>
@@ -1541,10 +1540,10 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
     <div class="shell">
       <div class="cta-band" data-reveal>
         <p class="eyebrow is-plain" style="justify-content:center">Released</p>
-        <h2 class="mt-s">Weights, results, and where it breaks &mdash; all public.</h2>
+        <h2 class="mt-s">Weights, results, and where it breaks, all public.</h2>
         <p>The checkpoints, the raw results and the evaluation scripts are on Hugging Face; the engine,
           model and pipeline are on PyPI under Apache-2.0. Almost every number on this page can be
-          re-run &mdash; the one gap is stated in the red team.</p>
+          re-run, the one gap is stated in the red team.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/NatureV1-500" rel="noopener" target="_blank">
             View on Hugging Face
@@ -1563,7 +1562,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

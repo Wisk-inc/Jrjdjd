@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>CorX1.5 — Open-Source 158M Language Model Built From Scratch</title>
-<meta name="description" content="CorX1.5 is a 158M-parameter decoder-only transformer built from scratch in Jamaica — RoPE, SwiGLU, RMSNorm, custom BPE tokenizer. Apache 2.0 on Hugging Face.">
+<meta name="description" content="CorX1.5 is a 158M-parameter decoder-only transformer built from scratch in Jamaica: RoPE, SwiGLU, RMSNorm, custom BPE tokenizer. Apache 2.0 on Hugging Face.">
 <link rel="canonical" href="https://corx-labs.com/models/corx1-5/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -202,7 +202,7 @@
 
     <h1>CorX1.5</h1>
     <p class="lede">A ~158M parameter language model, built entirely from scratch by a single
-      developer. Architecture, tokenizer, pretraining pipeline and fine-tuning — all written and
+      developer. Architecture, tokenizer, pretraining pipeline and fine-tuning, all written and
       trained solo, on a single GPU, from the ground up.</p>
 
     <div class="btn-row mt-m">
@@ -227,7 +227,7 @@
           parameters, built from scratch by <a href="/about/">CorX Labs</a> in Jamaica. It is a custom
           decoder-only transformer using RoPE positional encoding, SwiGLU feed-forward layers and
           RMSNorm, with 10 layers, a 1,024-token context window and a 32,768-token custom BPE
-          vocabulary. It is <strong>not</strong> a fine-tune of an existing base model — it was
+          vocabulary. It is <strong>not</strong> a fine-tune of an existing base model: it was
           trained from random weights.</p>
       </div>
 
@@ -250,7 +250,7 @@
       <div class="section-head" data-reveal>
         <p class="eyebrow">Architecture</p>
         <h2 id="arch-title">A custom decoder-only transformer.</h2>
-        <p class="lede">Not copied from an existing model family — designed and written here.</p>
+        <p class="lede">Not copied from an existing model family: designed and written here.</p>
       </div>
 
       <div class="grid grid-2">
@@ -259,7 +259,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>
           </span>
           <h3>Core stack</h3>
-          <p>RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm throughout — the
+          <p>RoPE positional encoding, SwiGLU feed-forward layers and RMSNorm throughout, the
             combination that gets the most quality out of a small parameter budget.</p>
         </div>
 
@@ -278,7 +278,7 @@
           </span>
           <h3>Assistant-only loss masking</h3>
           <p>Trained only to predict the tokens it should generate, never the user's side of the
-            conversation — cleaner learning signal per token spent.</p>
+            conversation: cleaner learning signal per token spent.</p>
         </div>
 
         <div class="card" data-reveal data-reveal-delay="160">
@@ -318,7 +318,7 @@
   <section class="section-tight" id="capabilities" aria-labelledby="cap-title">
     <div class="shell">
       <div class="section-head" data-reveal>
-        <p class="eyebrow">Honest scope</p>
+        <p class="eyebrow">Scope</p>
         <h2 id="cap-title">What it does, and what it doesn't.</h2>
       </div>
 
@@ -328,7 +328,7 @@
           <ul class="check-list mt-s">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Holding a consistent identity and conversational style</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Short, direct answers to greetings and common everyday questions</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Declining what it genuinely can't do — no internet, no memory between chats, no tools — instead of fabricating</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Declining what it genuinely can't do (no internet, no memory between chats, no tools) instead of fabricating</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Small worked arithmetic, shown step by step</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Recognising and explaining common Python bugs in a structured format</li>
           </ul>
@@ -342,7 +342,7 @@
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> Production or safety-critical use of any kind</li>
           </ul>
           <p style="margin-top:18px;font-size:.9rem">Models of a similar size from major labs are
-            typically trained on trillions of tokens. CorX1.5 was trained on billions — that gap
+            typically trained on trillions of tokens. CorX1.5 was trained on billions, that gap
             explains most of the above, and it is documented rather than glossed over.</p>
         </div>
       </div>
@@ -411,7 +411,7 @@ python inference.py</code></pre>
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

@@ -74,3 +74,6 @@ https://www.corx-labs.com/*    https://corx-labs.com/:splat    301!
 /downloads/Automa-1.9.8.apk  /downloads/Automa-1.9.9.apk  302!
 
 /*                   /404.html              404
+
+# Repository notes for coding tools, not pages.
+/.claude/*           /404.html              404

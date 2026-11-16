@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
 
 <title>Chat with CorX3.8 — Jamaica's Open-Weight LLM | CorX Labs</title>
-<meta name="description" content="Chat free with CorX3.8-27B, a 27B Jamaican Patois-speaking AI assistant — a live agent with a real terminal, file tools, web search and planning.">
+<meta name="description" content="Chat free with CorX3.8-27B, a 27B Jamaican Patois-speaking AI assistant, a live agent with a real terminal, file tools, web search and planning.">
 <link rel="canonical" href="https://corx-labs.com/chat/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
@@ -52,7 +52,7 @@
       "@id": "https://corx-labs.com/chat/#app",
       "name": "CorX3.8 Chat",
       "url": "https://corx-labs.com/chat/",
-      "description": "A browser chat and agent for CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant. It talks to the model's own open, self-hosted endpoint and runs a real Python sandbox in the tab — a terminal, file create/edit/delete/run, package installs, zip uploads, real web search and task planning. Conversations, a profile and the connection settings are saved in the browser.",
+      "description": "A browser chat and agent for CorX3.8-27B, CorX Labs' 27-billion-parameter Jamaican Patois-speaking assistant. It talks to the model's own open, self-hosted endpoint and runs a real Python sandbox in the tab, a terminal, file create/edit/delete/run, package installs, zip uploads, real web search and task planning. Conversations, a profile and the connection settings are saved in the browser.",
       "applicationCategory": "CommunicationApplication",
       "operatingSystem": "Web browser",
       "isAccessibleForFree": true,
@@ -183,7 +183,7 @@
           <h2>Chat with CorX3.8</h2>
           <p>A 27-billion-parameter Jamaican Patois-speaking assistant on CorX Labs' own hardware.
             It can search the web, run Python, make and edit files, and plan a task on its own,
-            right here in your browser — no toggle to switch on, it just calls what it needs.</p>
+            right here in your browser: no toggle to switch on, it just calls what it needs.</p>
           <div class="starter-row">
             <button class="starter" type="button" data-prompt="Wah gwaan? Tell mi bout yuhself.">Wah gwaan? Tell mi bout yuhself.</button>
             <button class="starter" type="button" data-prompt="Search the web for what's new in open-source AI this week and summarise the top three things, with sources.">Research something current</button>
@@ -216,7 +216,7 @@
               <option value="high">Effort: High</option>
               <option value="extra">Effort: Extra</option>
               <option value="max">Effort: Max</option>
-              <option value="auto">Effort: Auto — until I stop it</option>
+              <option value="auto">Effort: Auto, until I stop it</option>
             </select>
             <span class="spacer"></span>
             <label class="chip icon-only" for="upload" title="Upload files or a zip">
@@ -231,7 +231,7 @@
             </button>
           </div>
         </form>
-        <p class="composer-note">CorX3.8 is an open research model and can make mistakes. It searches and runs code on its own when it needs to — every command and search runs for real, watch it in the panel.</p>
+        <p class="composer-note">CorX3.8 is an open research model and can make mistakes. It searches and runs code on its own when it needs to, every command and search runs for real, watch it in the panel.</p>
       </div>
     </div>
   </div>
@@ -250,10 +250,9 @@
 
     <div class="dock-panel" data-panel="terminal" role="tabpanel">
       <div class="terminal">
-        <div class="t-head"><span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox &mdash; python</div>
+        <div class="t-head"><span class="dot3" aria-hidden="true"><i></i><i></i><i></i></span> sandbox: python</div>
         <p class="panel-empty" id="terminal-empty" style="color:#8d8172">Idle. CorX3.8 runs its own
-          commands and searches here whenever it needs to. You can type a command yourself —
-          <code style="color:#cfc6b8">help</code> lists the shell; anything else runs as Python.</p>
+          commands and searches here whenever it needs to. You can type a command yourself: <code style="color:#cfc6b8">help</code> lists the shell; anything else runs as Python.</p>
         <div id="terminal-out"></div>
       </div>
       <form class="terminal-form" id="terminal-form">
@@ -264,7 +263,7 @@
     </div>
 
     <div class="dock-panel" data-panel="files" role="tabpanel" hidden>
-      <p class="panel-empty" style="margin-bottom:10px">Shared with every chat in this tab — one
+      <p class="panel-empty" style="margin-bottom:10px">Shared with every chat in this tab, one
         sandbox, so files persist as you switch conversations.</p>
       <div class="file-list" id="file-list">
         <p class="panel-empty" id="files-empty">Files CorX3.8 writes, and anything you upload, appear
@@ -296,7 +295,7 @@
   <div class="sheet-card sheet-wide" role="dialog" aria-modal="true" aria-labelledby="settings-title">
     <h2 id="settings-title">Model &amp; connection</h2>
     <p>Choose a model backend. Bring your own key for a hosted provider, or point at your own CorX3.8
-      server. Everything is saved in this browser only — each request goes straight from your browser
+      server. Everything is saved in this browser only, each request goes straight from your browser
       to the provider you pick. New to this? Read the <a href="/chat/documentation/">set-up guide</a>.</p>
 
     <div class="provider-grid" id="provider-grid" role="radiogroup" aria-label="Model provider"></div>
@@ -337,7 +336,7 @@
       <div class="field">
         <label for="split-provider">Second model&rsquo;s provider</label>
         <select id="split-provider"></select>
-        <small>It can run on a different provider from the first — a big local model leading, a fast
+        <small>It can run on a different provider from the first, a big local model leading, a fast
           hosted one doing the legwork, for instance. It uses the key you saved for that provider.</small>
       </div>
       <div class="field">
@@ -390,7 +389,7 @@
         <input id="gh-manual" type="text" spellcheck="false" autocomplete="off" placeholder="owner/repo">
         <button class="btn btn-ghost btn-sm" type="button" id="gh-manual-add">Use this repo</button>
       </div>
-      <small>Works even if the list above comes back empty — paste <code>owner/repo</code> or a GitHub URL.</small>
+      <small>Works even if the list above comes back empty: paste <code>owner/repo</code> or a GitHub URL.</small>
     </div>
     <div class="sheet-actions">
       <button class="btn btn-ghost btn-sm" type="button" id="gh-cancel">Close</button>
@@ -399,7 +398,7 @@
   </div>
 </div>
 
-<!-- Voice studio — TriStream-SVS -->
+<!-- Voice studio: TriStream-SVS -->
 <div class="sheet" id="voice-sheet" hidden>
   <div class="sheet-card sheet-wide" role="dialog" aria-modal="true" aria-labelledby="voice-title">
     <h2 id="voice-title">Voice studio</h2>
@@ -415,7 +414,7 @@
           <div class="vs-body">
             <h3>Copy the server code</h3>
             <p>One file. It installs its own dependencies, downloads the TriStream weights and
-              opens a Cloudflare tunnel. You need a machine with an NVIDIA GPU — your own, or a
+              opens a Cloudflare tunnel. You need a machine with an NVIDIA GPU: your own, or a
               notebook runtime.</p>
             <div class="vs-row">
               <button class="btn btn-primary btn-sm" type="button" id="voice-copy">Copy server code</button>
@@ -428,14 +427,14 @@
           <div class="vs-body">
             <h3>Run it</h3>
             <p>Save it as <code>tristream-server.py</code> and run the command below. In a Colab or
-              molab notebook, paste it into one cell and run that instead — the same file works
+              molab notebook, paste it into one cell and run that instead, the same file works
               either way.</p>
             <div class="vs-cmd">
               <code id="voice-cmd">python3 tristream-server.py</code>
               <button class="vs-copy" type="button" id="voice-copy-cmd"
                       aria-label="Copy the run command">Copy</button>
             </div>
-            <p class="vs-note">First run takes a few minutes — it is downloading PyTorch and the
+            <p class="vs-note">First run takes a few minutes: it is downloading PyTorch and the
               weights. On Blackwell cards (RTX PRO 6000, RTX 50-series) it installs the CUDA 12.8
               build, the first one with <code>sm_120</code> kernels.</p>
           </div>
@@ -461,7 +460,7 @@
       <input id="voice-endpoint" type="url" spellcheck="false" autocomplete="off"
              placeholder="https://something.trycloudflare.com">
       <small>Nothing leaves your browser until you press Generate. The tunnel is public and
-        keyless — anyone holding that address can use your GPU, so do not post it.</small>
+        keyless: anyone holding that address can use your GPU, so do not post it.</small>
     </div>
     <div class="sheet-actions" style="margin-top:-4px">
       <span class="status" id="voice-status" data-state="idle" role="status">
@@ -499,7 +498,7 @@
         <span class="voice-slot-tag">Source &middot; residual streams</span>
         <h3>The performance</h3>
         <p>The melody, timing and delivery to reproduce. Only its pitch contour and texture are
-          used — the source stream cannot carry timbre, so this singer's voice does not come
+          used, the source stream cannot carry timbre, so this singer's voice does not come
           across with it.</p>
         <label class="btn btn-ghost btn-sm" for="voice-perf">Choose audio</label>
         <input id="voice-perf" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/wave,audio/flac,audio/x-flac,audio/ogg,audio/opus,audio/aiff,audio/x-aiff,.mp3,.wav,.flac,.ogg,.oga,.opus,.aiff,.aif,audio/*" hidden>
@@ -520,7 +519,7 @@
     </div>
 
     <p class="voice-formats">Audio in <strong>MP3, WAV, FLAC, OGG/Opus or AIFF</strong>.
-      <strong>M4A and AAC usually will not decode</strong> — that is what a phone voice memo
+      <strong>M4A and AAC usually will not decode</strong>, that is what a phone voice memo
       records, so export or convert it first. A few seconds of clean singing works better
       than a whole track; anything over 60 seconds is trimmed.</p>
 
@@ -530,8 +529,8 @@
         <div class="field">
           <label for="voice-residual">Breath and consonant texture from</label>
           <select id="voice-residual">
-            <option value="performance" selected>The performance — keeps its articulation</option>
-            <option value="voice">The cloned voice — keeps its breathiness</option>
+            <option value="performance" selected>The performance: keeps its articulation</option>
+            <option value="voice">The cloned voice: keeps its breathiness</option>
           </select>
         </div>
         <div class="field">
@@ -570,7 +569,7 @@
 <div class="sheet" id="profile-sheet" hidden>
   <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="profile-title">
     <h2 id="profile-title">Your profile</h2>
-    <p>Saved in this browser only — never sent anywhere. Used to label your messages and, if you
+    <p>Saved in this browser only: never sent anywhere. Used to label your messages and, if you
       turn memory off, kept out of what the agent can recall.</p>
     <div class="field">
       <label for="profile-name-input">Name</label>
@@ -593,7 +592,7 @@
     </div>
     <hr class="rule" style="margin:20px 0 4px">
     <h3 id="personality" style="font-family:var(--sans);font-size:.95rem;font-weight:600;margin-bottom:4px">Personality</h3>
-    <p style="margin-top:0">Give it a character and it stops answering like an assistant — it gets
+    <p style="margin-top:0">Give it a character and it stops answering like an assistant: it gets
       opinions, moods, its own way of talking, and can be as short or blunt as it likes. Tools still
       run for real; only the voice changes.</p>
     <div class="persona-list" id="persona-list"></div>
