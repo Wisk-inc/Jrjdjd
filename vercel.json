@@ -2,6 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": true,
+  "git": {
+    "deploymentEnabled": {
+      "scam-radar-data": false
+    }
+  },
   "redirects": [
     {
       "source": "/downloads/Automa-1.9.7.apk",
@@ -355,7 +360,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: https://icons.duckduckgo.com https://*.wikimedia.org https://*.wikipedia.org; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://*.trycloudflare.com https://pypi.org https://files.pythonhosted.org https://cdn.jsdelivr.net https://openrouter.ai https://api.anthropic.com https://api.deepseek.com https://api.openai.com https://api.github.com; media-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests"
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: https://icons.duckduckgo.com https://*.wikimedia.org https://*.wikipedia.org; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://*.trycloudflare.com https://pypi.org https://files.pythonhosted.org https://cdn.jsdelivr.net https://openrouter.ai https://api.anthropic.com https://api.deepseek.com https://api.openai.com https://api.github.com https://raw.githubusercontent.com; media-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests"
         }
       ]
     },

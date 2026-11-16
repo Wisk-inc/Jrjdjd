@@ -1,0 +1,84 @@
+# Scam Radar: scan for live scam sites and republish /scam-radar/ by itself.
+#
+# Every three hours: restore Radar's database from the last run, refresh the blocklists and the list of
+# newly registered domains, run a round of scan cycles, export a safe snapshot to
+# scam-radar.json (see tools/scam-radar/export.mjs for what is published and why), and force-push it to
+# the scam-radar-data branch, which the page reads. Run it by hand from the Actions tab at any time.
+name: Scam Radar
+
+on:
+  schedule:
+    - cron: '23 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scam-radar
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    env:
+      RADAR: node tools/scam-radar/scam-finder/cli.js radar
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Restore the Radar database
+        id: db
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.scam-finder
+          key: scam-radar-db-${{ github.run_id }}
+          restore-keys: scam-radar-db-
+
+      - name: Build the index (first run, about 10 minutes)
+        if: steps.db.outputs.cache-matched-key == ''
+        run: $RADAR ingest all
+
+      - name: Refresh blocklists and newly registered domains
+        if: steps.db.outputs.cache-matched-key != ''
+        run: |
+          $RADAR ingest feeds || echo "::warning::blocklist refresh failed; scanning with the last copy"
+          $RADAR ingest nrd || echo "::warning::new-domain refresh failed; scanning with the last copy"
+
+      - name: Scan
+        timeout-minutes: 50
+        run: $RADAR run --ticks 25 --seconds 20
+
+      - name: Save the Radar database
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.scam-finder
+          key: scam-radar-db-${{ github.run_id }}
+
+      - name: Export the snapshot
+        run: node tools/scam-radar/export.mjs
+
+      - name: Publish to the data branch
+        # One commit, force-pushed, so the snapshots never pile up in the history. The page reads
+        # https://raw.githubusercontent.com/<repo>/scam-radar-data/scam-radar.json
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/publish" && cp assets/data/scam-radar.json "$RUNNER_TEMP/publish/"
+          cd "$RUNNER_TEMP/publish"
+          git init -q -b scam-radar-data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scam-radar.json
+          git commit -q -m "Scam Radar: snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          for attempt in 1 2 3; do
+            git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" scam-radar-data && exit 0
+            sleep $((attempt * 15))
+          done
+          exit 1

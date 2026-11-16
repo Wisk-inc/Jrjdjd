@@ -202,6 +202,7 @@ FOOTER = """<footer class="site-footer">
           <li><a href="/models/naturev1/">NatureV1</a></li>
           <li><a href="/models/pluvium/">Pluvium</a></li>
           <li><a href="/automa/">Automa</a></li>
+          <li><a href="/scam-radar/">Scam Radar</a></li>
           <li><a href="/chat/">Chat</a></li>
         </ul>
       </nav>

@@ -145,6 +145,19 @@
   </url>
 
   <url>
+    <loc>https://corx-labs.com/scam-radar/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/scam-radar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/scam-radar/"/>
+    <image:image>
+      <image:loc>https://corx-labs.com/assets/img/og-scam-radar.jpg</image:loc>
+      <image:title>Scam Radar: live scam websites by country</image:title>
+    </image:image>
+  </url>
+
+  <url>
     <loc>https://corx-labs.com/automa/</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
