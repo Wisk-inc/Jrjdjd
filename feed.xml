@@ -6,13 +6,50 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Mon, 16 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 16 Nov 2026 13:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.11: plain words when the connection drops</title>
+      <link>https://corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.11</guid>
+      <pubDate>Mon, 16 Nov 2026 13:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.11 is out, with fixes from a scan of the whole app. Saving your name or photo, and
+        the App Studio page an invited collaborator uses, say "Can't reach" in plain words instead of
+        "Failed to fetch" when the connection drops. An agent's settings page loads its extra settings by
+        itself once Automa answers again. After a reconnect, pages you had already left stop asking the
+        server every 10 seconds. <a href="https://corx-labs.com/downloads/Automa-1.9.11.apk">Download
+        the APK</a> (23.9 MB); it installs over 1.9.10 and keeps your data.
+        <a href="https://corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Pluvium 0.5.5: three GPU runs, none finished yet</title>
+      <link>https://corx-labs.com/models/pluvium/#next</link>
+      <guid isPermaLink="false">corx-labs.com/models/pluvium/release/0.5.5</guid>
+      <pubDate>Mon, 16 Nov 2026 11:30:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Pluvium 0.5.5 is on PyPI. The forecast itself has not changed since 0.5.2. Versions 0.5.3 to
+        0.5.5 are about training Pluvium-500, the full-size network. Three GPU runs have been tried and
+        none has finished: the first stopped after 138 minutes, the second right after it measured one
+        forecast at 38.6 GB on the 96 GB card, and the third trained on that card for the first time, then
+        stopped when a data file was missing. The fixes are in: a batch that cannot fit is not tried, a
+        stopped run starts again and keeps its log, and every data file is checked before training starts.
+        Pluvium-500 is not trained or published yet.
+        <a href="https://corx-labs.com/models/pluvium/">The Pluvium page</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Scam Radar: live scam websites, by country</title>
