@@ -51,10 +51,17 @@ try {
   const groups = [...byBrand.values()].sort((a, b) => Boolean(b.brand.country) - Boolean(a.brand.country));
   let added = 0;
   const picked = [];
+  const first = store.prepare('UPDATE sites SET next_check = 0 WHERE name = ? AND checks = 0');
+  // The same for look-alikes an earlier run added that are still waiting for their first visit
+  const waiting = store.prepare("UPDATE sites SET next_check = 0 WHERE checks = 0 AND why LIKE 'borrows the name of %'").run().changes;
+  if (waiting) console.log(`${waiting} look-alikes from earlier runs moved to the front as well`);
   for (const { brand, names } of groups) {
     if (added >= limit) break;
     const take = names.slice(0, limit - added);
     const count = watch(store, take, `borrows the name of ${brand.name}`);
+    // Radar visits what has been due longest first, and after a gap between scans every site it
+    // already knows is overdue. A due time of zero puts these first visits ahead of those revisits.
+    for (const name of take) first.run(name);
     added += count;
     if (count) picked.push(`${brand.name}${brand.country ? ` (${brand.country})` : ''} ${count}`);
   }
