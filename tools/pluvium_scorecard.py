@@ -221,16 +221,16 @@ def table():
         return f'<tr class="sc-group"><th colspan="{n}" scope="colgroup">{text}<em>{hint}</em></th></tr>'
 
     mm = lambda v: f"{v:.2f}"
-    rows = [group("Rain at all &mdash; at least 1&nbsp;mm", "Brier skill, higher is better")]
+    rows = [group("Rain at all, at least 1&nbsp;mm", "Brier skill, higher is better")]
     rows += [row(f"Day {d + 1}", "July&ndash;August 2025", {k: v[d] for k, v in BSS1.items()}, pct, sig=SIG1[d]) for d in range(3)]
-    rows += [group("Wetter days &mdash; at least 10&nbsp;mm", "Brier skill, higher is better")]
+    rows += [group("Wetter days, at least 10&nbsp;mm", "Brier skill, higher is better")]
     rows += [row(f"Day {d + 1}", "July&ndash;August 2025", {k: v[d] for k, v in BSS10.items()}, pct, sig=SIG10[d]) for d in range(3)]
-    rows += [group("Telling rainy days from dry ones &mdash; day 1", "ROC area, higher is better; 50% is chance")]
+    rows += [group("Telling rainy days from dry ones: day 1", "ROC area, higher is better; 50% is chance")]
     rows += [row("At least 1&nbsp;mm", "July&ndash;August 2025", ROC1, pct),
              row("At least 10&nbsp;mm", "July&ndash;August 2025", ROC10, pct)]
-    rows += [group("How much falls &mdash; daily totals", "CRPS in mm, lower is better; raw forecasts")]
+    rows += [group("How much falls: daily totals", "CRPS in mm, lower is better; raw forecasts")]
     rows += [row(f"Day {d + 1}", "July&ndash;August 2025", {k: v[d] for k, v in CRPS.items()}, mm, lower_better=True) for d in range(3)]
-    rows += [group("The test Pluvium lost &mdash; at least 1&nbsp;mm", "Brier skill, higher is better")]
+    rows += [group("The test Pluvium lost, at least 1&nbsp;mm", "Brier skill, higher is better")]
     rows += [row(f"Day {d + 1}", "May&ndash;June 2025", {k: v[d] for k, v in MAYJUN1.items()}, pct) for d in range(3)]
     return f"""<div class="table-wrap mt-m" data-reveal>
         <table class="sc-table">
@@ -251,7 +251,7 @@ def table():
 
 def scorecard():
     """The block that opens the Results section."""
-    roc = bar_chart(ROC1, title="Telling rainy days from dry ones &mdash; day 1, at least 1&nbsp;mm",
+    roc = bar_chart(ROC1, title="Telling rainy days from dry ones: day 1, at least 1&nbsp;mm",
                     sub="ROC area after calibration, as a percentage. 50% is a coin toss, 100% is perfect; "
                         "bars start at 50%. Jamaica, July&ndash;August 2025.",
                     floor=.5, note="A system with no skill would sit on the baseline. Pluvium ranks rainy and dry "
@@ -271,7 +271,7 @@ def scorecard():
 
 def mayjun_chart():
     return bar_chart({k: v[0] for k, v in MAYJUN1.items()},
-                     title="The test Pluvium lost &mdash; at least 1&nbsp;mm, day 1, May&ndash;June 2025",
+                     title="The test Pluvium lost: at least 1&nbsp;mm, day 1, May&ndash;June 2025",
                      sub="Brier skill score as a percentage, isotonic calibration (the protocol fixed for this test).",
                      note="After a wet April it had never trained on, calibration turned Pluvium&rsquo;s forecasts "
                           "into false alarms, and it fell below climatology.")
@@ -420,7 +420,7 @@ def cyclone_table():
     return f"""<div class="table-wrap mt-s" data-reveal>
         <table class="sc-table sc-cyc">
           <caption class="visually-hidden">Mean track error in nautical miles by lead for Pluvium Cyclone and the National Hurricane Center&rsquo;s forecasts, East Pacific 2025 test season, early guidance; lower is better</caption>
-          <thead><tr><th scope="col">Track error, nautical miles &mdash; lower is better</th>{head}</tr></thead>
+          <thead><tr><th scope="col">Track error, nautical miles: lower is better</th>{head}</tr></thead>
           <tbody>{body}</tbody>
         </table>
       </div>"""

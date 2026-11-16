@@ -54,7 +54,7 @@
       "name": "TriStream-SVS",
       "alternateName": ["TriStream-SVS-300M", "TriStream"],
       "url": "https://corx-labs.com/models/tristream-svs/",
-      "description": "TriStream-SVS is a 321.8M-parameter singing voice synthesis model built from scratch by CorX Labs in Jamaica. It factors the source-filter model of human voice production directly into its architecture as three parallel encoder streams — a source stream for pitch, a filter stream for timbre and formants, and a residual stream for breath and fricative texture — which are combined only in a late fusion trunk. It supports zero-shot voice cloning through a dedicated contrastive speaker encoder and generates audio with rectified flow matching in roughly 32 sampling steps.",
+      "description": "TriStream-SVS is a 321.8M-parameter singing voice synthesis model built from scratch by CorX Labs in Jamaica. It factors the source-filter model of human voice production directly into its architecture as three parallel encoder streams (a source stream for pitch, a filter stream for timbre and formants, and a residual stream for breath and fricative texture) which are combined only in a late fusion trunk. It supports zero-shot voice cloning through a dedicated contrastive speaker encoder and generates audio with rectified flow matching in roughly 32 sampling steps.",
       "applicationCategory": "MultimediaApplication",
       "applicationSubCategory": "Singing voice synthesis",
       "operatingSystem": "Cross-platform",
@@ -132,7 +132,7 @@
           "name": "How does TriStream-SVS separate pitch from voice identity?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Structurally rather than statistically. The source stream receives only a log-scaled F0 contour and a voiced/unvoiced flag — never the mel spectrogram, the singer embedding, or any other timbre-carrying signal. There is no pathway through which identity information could reach it, so the separation holds regardless of what training pressure is applied."
+            "text": "Structurally rather than statistically. The source stream receives only a log-scaled F0 contour and a voiced/unvoiced flag: never the mel spectrogram, the singer embedding, or any other timbre-carrying signal. There is no pathway through which identity information could reach it, so the separation holds regardless of what training pressure is applied."
           }
         },
         {
@@ -140,7 +140,7 @@
           "name": "Can TriStream-SVS clone a voice it has never heard?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes — that is what the speaker encoder is for. A separate convolutional network with dilated convolutions, squeeze-excitation blocks and attentive statistics pooling turns an arbitrary reference clip into a fixed-size voice embedding. It is trained contrastively, so closeness in that embedding space corresponds to sounding like the same person, which is what makes zero-shot cloning of unseen voices possible."
+            "text": "Yes, that is what the speaker encoder is for. A separate convolutional network with dilated convolutions, squeeze-excitation blocks and attentive statistics pooling turns an arbitrary reference clip into a fixed-size voice embedding. It is trained contrastively, so closeness in that embedding space corresponds to sounding like the same person, which is what makes zero-shot cloning of unseen voices possible."
           }
         },
         {
@@ -156,7 +156,7 @@
           "name": "Why does TriStream-SVS use flow matching instead of diffusion?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Rectified flow matching learns to predict a direct velocity field from noise toward the target mel spectrogram, rather than learning to reverse a noise-adding process over 100 or more denoising steps. This allows full-quality generation in roughly 32 sampling steps — a substantial efficiency gain over the diffusion approach used in earlier singing synthesis systems such as the original DiffSinger."
+            "text": "Rectified flow matching learns to predict a direct velocity field from noise toward the target mel spectrogram, rather than learning to reverse a noise-adding process over 100 or more denoising steps. This allows full-quality generation in roughly 32 sampling steps, a substantial efficiency gain over the diffusion approach used in earlier singing synthesis systems such as the original DiffSinger."
           }
         }
       ]
@@ -231,7 +231,7 @@
 
     <h1>TriStream-SVS</h1>
     <p class="lede">A singing voice synthesis model that takes the source-filter theory of human
-      voice production and builds it into the architecture as a hard constraint — three parallel
+      voice production and builds it into the architecture as a hard constraint: three parallel
       encoder streams for pitch, timbre and breath, combined only at the very end.</p>
 
     <div class="btn-row mt-m">
@@ -254,7 +254,7 @@
       <div class="answer-box" style="margin-top:0" data-reveal>
         <p><strong>TriStream-SVS</strong> is a 321.8M-parameter singing voice synthesis model built
           from scratch by <a href="/about/">CorX Labs</a> in Jamaica. Human voice production factors
-          naturally into three components — a <strong>glottal source</strong> (the vibration of the
+          naturally into three components, a <strong>glottal source</strong> (the vibration of the
           vocal folds that becomes perceived pitch), a <strong>vocal-tract filter</strong> (the
           resonant shaping by throat, mouth and tongue that makes a voice sound like a specific
           person and a vowel sound like that vowel), and <strong>turbulent noise</strong> (breath,
@@ -292,7 +292,7 @@
           <svg viewBox="0 0 1140 558" width="1140" height="558" role="img"
                aria-labelledby="dg-title dg-desc">
             <title id="dg-title">TriStream-SVS architecture</title>
-            <desc id="dg-desc">Inputs feed three parallel encoder streams — source, filter and
+            <desc id="dg-desc">Inputs feed three parallel encoder streams: source, filter and
               residual. A lyric encoder cross-attends into the filter stream and the fusion
               trunk. A speaker encoder produces a singer embedding for the filter stream. The
               three streams meet in an eight-layer late fusion trunk, which feeds an adversarial
@@ -500,19 +500,19 @@
                 <tr><th scope="col">Stream</th><th scope="col">Depth</th><th scope="col">Receives</th><th scope="col">Models</th></tr>
               </thead>
               <tbody>
-                <tr><td>Source</td><td>3 layers</td><td>Log-scaled F0 contour, voiced/unvoiced flag</td><td>The glottal pulse train — perceived pitch</td></tr>
-                <tr><td>Filter</td><td>5 layers</td><td>Mel spectrogram, singer embedding, emotion/technique embedding, lyric cross-attention</td><td>Vocal-tract resonance — formants, timbre, identity</td></tr>
+                <tr><td>Source</td><td>3 layers</td><td>Log-scaled F0 contour, voiced/unvoiced flag</td><td>The glottal pulse train: perceived pitch</td></tr>
+                <tr><td>Filter</td><td>5 layers</td><td>Mel spectrogram, singer embedding, emotion/technique embedding, lyric cross-attention</td><td>Vocal-tract resonance: formants, timbre, identity</td></tr>
                 <tr><td>Residual</td><td>2 layers</td><td>Mel spectrogram</td><td>Breath noise, fricatives, articulation texture</td></tr>
               </tbody>
             </table>
           </div>
 
           <div class="prose mt-m">
-            <p><strong>Stream 1 — Source.</strong> This stream receives only two numeric inputs: a
+            <p><strong>Stream 1: Source.</strong> This stream receives only two numeric inputs: a
               log-scaled F0 pitch contour and a binary voiced/unvoiced flag. Critically, it never
               receives the mel spectrogram, the singer embedding, or any timbre-carrying signal
               whatsoever. It is architecturally incapable of representing anything about <em>who</em>
-              is singing — it can only ever describe <em>what pitch is being produced</em>.</p>
+              is singing: it can only ever describe <em>what pitch is being produced</em>.</p>
           </div>
 
           <div class="callout">
@@ -524,14 +524,14 @@
           </div>
 
           <div class="prose">
-            <p><strong>Stream 2 — Filter.</strong> The deepest of the three, reflecting that formant
+            <p><strong>Stream 2: Filter.</strong> The deepest of the three, reflecting that formant
               structure and timbre are the hardest components of a voice to model well. It receives
               the mel spectrogram along with a singer identity embedding and an emotion/technique
               embedding, and cross-attends against the lyric representation so it always knows what
               phoneme is currently being produced. <strong>This is the only stream that carries
               identity information.</strong></p>
-            <p><strong>Stream 3 — Residual.</strong> Handles breath noise, fricative consonants and
-              general articulation texture — the parts of a vocal performance that aren't well
+            <p><strong>Stream 3: Residual.</strong> Handles breath noise, fricative consonants and
+              general articulation texture, the parts of a vocal performance that aren't well
               described by either clean pitch or clean timbre.</p>
           </div>
         </section>
@@ -545,20 +545,20 @@
               Filter stream and, later, the Fusion Trunk, by cross-attention. This keeps "what should
               be sung" cleanly separated from "how it should sound" throughout most of the network.</p>
             <p><strong>The speaker encoder</strong> is a separate convolutional network that extracts
-              a portable "voice fingerprint" from an arbitrary reference clip — including from voices
+              a portable "voice fingerprint" from an arbitrary reference clip, including from voices
               the model has never encountered during training. It uses:</p>
             <ul>
               <li><strong>Dilated convolutions</strong>, to build a wide receptive field cheaply</li>
               <li><strong>Squeeze-excitation blocks</strong>, letting the network weight which
                 channels matter most</li>
-              <li><strong>Attentive statistics pooling</strong> — a weighted mean and standard
-                deviation rather than a simple average — to collapse a variable-length clip into a
+              <li><strong>Attentive statistics pooling</strong>, a weighted mean and standard
+                deviation rather than a simple average, to collapse a variable-length clip into a
                 single fixed-size embedding</li>
             </ul>
             <p>It is trained with a <strong>contrastive objective</strong>: two different clips from
               the same speaker are pulled together in embedding space, while clips from different
               speakers are pushed apart. That is what gives the embedding space genuine, learned
-              structure — rather than an arbitrary set of numbers, it becomes a space where
+              structure, rather than an arbitrary set of numbers, it becomes a space where
               "closeness" reliably corresponds to "sounds like the same person," which is the
               property that makes zero-shot cloning of unseen voices possible at all.</p>
           </div>
@@ -568,8 +568,8 @@
         <section class="doc-section" id="fusion">
           <h2>4. Late fusion and the adversarial singer head</h2>
           <div class="prose">
-            <p><strong>The late fusion trunk</strong> is an 8-layer transformer — again using
-              cross-attention against the lyric encoder — where the three separately-processed
+            <p><strong>The late fusion trunk</strong> is an 8-layer transformer, again using
+              cross-attention against the lyric encoder, where the three separately-processed
               streams are finally allowed to combine into one unified representation. This fusion
               point is deliberately placed as late as possible in the network. Everything before it
               has been kept artificially separated; this is the single location where pitch, timbre
@@ -577,7 +577,7 @@
             <p><strong>The adversarial singer head</strong> is a small classifier attached to the
               trunk's output, trained to guess which singer produced a given piece of audio using
               only the shared representation. Its gradient passes through a <strong>gradient reversal
-              layer</strong> before propagating back into the trunk — so as the classifier gets
+              layer</strong> before propagating back into the trunk, so as the classifier gets
               better at identifying singers, the trunk is pushed in the <em>opposite</em> direction,
               actively degrading its own identifiability.</p>
           </div>
@@ -585,8 +585,7 @@
           <div class="callout">
             <p>The practical effect is a shared representation explicitly trained to be as
               uninformative about singer identity as possible. It is pushed toward encoding general
-              vocal mechanics — how a formant transition behaves, how a phoneme boundary sounds —
-              rather than person-specific fingerprints that could be exploited to memorise particular
+              vocal mechanics: how a formant transition behaves, how a phoneme boundary sounds, rather than person-specific fingerprints that could be exploited to memorise particular
               singers.</p>
             <p>This is domain-adversarial training, applied here specifically as an
               <strong>anti-memorisation mechanism</strong> rather than for its more typical use in
@@ -598,8 +597,7 @@
         <section class="doc-section" id="prosody">
           <h2>5. Duration, pitch and beat alignment</h2>
           <div class="prose">
-            <p>When generating an entirely new performance — as opposed to editing existing audio —
-              the model has no ground-truth timing or melody to read from. It has to invent both.</p>
+            <p>When generating an entirely new performance, as opposed to editing existing audio, the model has no ground-truth timing or melody to read from. It has to invent both.</p>
             <p><strong>The duration predictor</strong> estimates how many audio frames each phoneme
               should occupy, predicted in logarithmic space specifically because real note durations
               are heavily skewed: a sustained vowel might last dozens of times longer than a short
@@ -608,16 +606,16 @@
             <p><strong>The pitch predictor</strong> deliberately avoids outputting one blended pitch
               curve. It separately predicts:</p>
             <ul>
-              <li><strong>Base pitch</strong> — the target note itself</li>
-              <li><strong>Scoop</strong> — the natural human tendency to slide into a pitch rather
+              <li><strong>Base pitch</strong>, the target note itself</li>
+              <li><strong>Scoop</strong>, the natural human tendency to slide into a pitch rather
                 than hit it instantaneously, which is one of the clearest tells separating human
                 singing from robotic-sounding synthesis</li>
-              <li><strong>Vibrato depth and rate</strong> — ramped in gradually over roughly a
+              <li><strong>Vibrato depth and rate</strong>: ramped in gradually over roughly a
                 quarter-second rather than snapping on instantly, mirroring how real vibrato builds
                 over a sustained note</li>
             </ul>
             <p>Because these components are generated separately, they remain independently
-              adjustable after the fact — vibrato intensity can be dialled up or down without
+              adjustable after the fact: vibrato intensity can be dialled up or down without
               disturbing underlying pitch accuracy.</p>
             <p><strong>Beat alignment.</strong> When a backing track accompanies a generation
               request, a beat-tracking step extracts tempo and downbeat positions from that track,
@@ -639,7 +637,7 @@
             <p>Rather than learning to slowly reverse a noise-adding process across 100 or more
               denoising steps, the model learns to predict a direct velocity field pointing from
               random noise toward the target mel spectrogram. This allows full-quality audio
-              generation in roughly <strong>32 sampling steps</strong> — a substantial efficiency
+              generation in roughly <strong>32 sampling steps</strong>, a substantial efficiency
               improvement over the diffusion approach used in systems like the original DiffSinger,
               while maintaining comparable output fidelity.</p>
           </div>
@@ -649,13 +647,13 @@
         <section class="doc-section" id="modes">
           <h2>7. Two modes, one underlying model</h2>
           <div class="prose">
-            <p><strong>Editing is the model's native training objective</strong> — not a feature
+            <p><strong>Editing is the model's native training objective</strong>, not a feature
               added on top of a generation-only system. During training, random contiguous spans of
               real audio are masked out, and the model is trained to reconstruct exactly that masked
               span using the surrounding, unmasked audio as context, along with the lyrics for that
               section.</p>
             <p>This means "regenerate this one phrase with different lyrics" or "make this section
-              sound more breathy" is not a special-cased inference trick bolted on afterward — it is
+              sound more breathy" is not a special-cased inference trick bolted on afterward: it is
               the literal task the network was designed and trained around from its first training
               step.</p>
             <p><strong>Generation mode reuses every one of the same trained components</strong>, but
@@ -674,14 +672,14 @@
           <div class="prose">
             <p><strong>Singer-disjoint validation.</strong> A held-out set of singers is determined by
               a stable hash function applied to singer identity, and that set is completely excluded
-              from training data at the point of data loading — not merely reserved after the fact.
+              from training data at the point of data loading.
               Every reported validation score is measured exclusively against voices the model has
               never once encountered.</p>
           </div>
 
           <div class="callout">
             <p>This is meaningfully stricter than a random validation split, which can silently allow
-              the same singer's recordings to appear in both training and validation — producing
+              the same singer's recordings to appear in both training and validation: producing
               validation scores that look strong but don't measure generalisation at all. The
               singer-disjoint approach is the only way to be confident the model is learning
               transferable vocal mechanics rather than quietly memorising the individuals in its
@@ -693,8 +691,7 @@
               automatically pushes checkpoints to a remote Hugging Face repository whenever the
               singer-disjoint validation score improves on its previous best, and additionally on a
               rolling time-based interval regardless of improvement. If a session is interrupted for
-              any reason — a platform session limit, an infrastructure failure, a manual restart —
-              the next invocation of the training script automatically detects the most recent
+              any reason, a platform session limit, an infrastructure failure, a manual restart, the next invocation of the training script automatically detects the most recent
               checkpoint, including full optimiser state, and resumes from precisely that point
               rather than restarting from initialisation. This infrastructure was built and hardened
               specifically in response to real interruptions encountered during development,
@@ -703,12 +700,12 @@
 
             <p><strong>Careful data curation.</strong> Training data is deliberately restricted to
               dry, isolated vocal recordings, with instrumental bleed, heavy reverb and mixed-track
-              audio explicitly excluded — because mixed audio actively corrupts the mel-spectrogram
+              audio explicitly excluded, because mixed audio actively corrupts the mel-spectrogram
               reconstruction target the model trains against, regardless of how much of it is fed in.
               The corpus combines large-scale speech data, used to teach general vocal-tract
               mechanics and broad phonetic coverage, with smaller, carefully verified singing corpora
               used specifically for pitch behaviour, vocal technique and musical phrasing. Datasets
-              are individually probed and verified before inclusion — the pipeline tests that each
+              are individually probed and verified before inclusion, the pipeline tests that each
               configured source actually loads and decodes correctly before committing to it in a
               training run.</p>
 
@@ -717,11 +714,11 @@
           </div>
 
           <ul class="check-list mt-s">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Waveform-level augmentation — pitch shifting, time stretching and gain variation, so the model never sees the exact same acoustic realisation of a clip twice</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Waveform-level augmentation: pitch shifting, time stretching and gain variation, so the model never sees the exact same acoustic realisation of a clip twice</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> SpecAugment-style frequency and time masking applied directly to the mel spectrogram</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Mixup between training samples within a batch, discouraging the model from latching onto exact spectral fingerprints of individual recordings</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> Early stopping keyed directly to the singer-disjoint validation score, with patience-based tolerance for normal step-to-step noise</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> The best-performing checkpoint by validation score — not simply the most recent — is what gets preserved and deployed, tracked and saved as an entirely separate file throughout training</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg> The best-performing checkpoint by validation score, not simply the most recent, is what gets preserved and deployed, tracked and saved as an entirely separate file throughout training</li>
           </ul>
         </section>
 
@@ -758,7 +755,7 @@
 
           <div class="answer-box">
             <p><strong>TriStream-SVS is released.</strong> The complete architecture and pipeline
-              function end to end — data ingestion and verification, the three-stream encoder system,
+              function end to end: data ingestion and verification, the three-stream encoder system,
               adversarial disentanglement, the speaker encoder, duration and pitch prediction,
               flow-matching generation, and fully automated crash-safe checkpointing all operate
               together. Validation loss measured against held-out, previously unseen singers improved
@@ -793,7 +790,7 @@
 
           <div class="prose mt-m">
             <p>The model's own output is a <strong>mel spectrogram</strong>, so producing a listenable
-              waveform requires a vocoder stage on top of it — worth knowing before planning an
+              waveform requires a vocoder stage on top of it: worth knowing before planning an
               integration. As with <a href="/models/corx1-5/">CorX1.5</a>, the limits here are
               documented as carefully as the capabilities, and this page will be updated as training
               progresses rather than rewritten to look better than the results are.</p>
@@ -805,13 +802,13 @@
           <h2>11. Responsible use</h2>
           <div class="prose">
             <p>TriStream-SVS can reproduce the vocal characteristics of a person from a short
-              reference clip, including people who were never part of its training data. That is a
-              capability worth stating plainly rather than burying.</p>
+              reference clip, including people who were never part of its training data. That is the
+              first thing to know about it.</p>
             <p>Clone a voice only with the consent of the person it belongs to. Do not use this model
               to impersonate anyone, to produce material attributed to a real artist without their
               agreement, or to generate anything intended to deceive a listener about who is singing.
               The adversarial singer head reduces the model's tendency to memorise specific
-              individuals from training data — it does not, and cannot, address misuse of the
+              individuals from training data: it does not, and cannot, address misuse of the
               zero-shot cloning path at inference time. That part is on whoever runs it.</p>
           </div>
         </section>
@@ -832,31 +829,31 @@
             <details>
               <summary>How does TriStream-SVS separate pitch from voice identity?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>Structurally rather than statistically. The source stream
-                receives only a log-scaled F0 contour and a voiced/unvoiced flag — never the mel
+                receives only a log-scaled F0 contour and a voiced/unvoiced flag: never the mel
                 spectrogram or the singer embedding. There is no pathway through which identity
                 information could reach it, so the separation holds regardless of training
                 pressure.</p></div>
             </details>
             <details>
               <summary>Can TriStream-SVS clone a voice it has never heard?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Yes — that is what the speaker encoder is for. It turns an
+              <div class="faq-body"><p>Yes, that is what the speaker encoder is for. It turns an
                 arbitrary reference clip into a fixed-size voice embedding using dilated convolutions,
                 squeeze-excitation blocks and attentive statistics pooling, trained contrastively so
                 that closeness in the embedding space corresponds to sounding like the same person.
-                Quality depends heavily on the reference clip being dry and clean — see
+                Quality depends heavily on the reference clip being dry and clean: see
                 <a href="#limits">limits</a>.</p></div>
             </details>
             <details>
               <summary>Why does TriStream-SVS use flow matching instead of diffusion?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>Rectified flow matching predicts a direct velocity field from
                 noise toward the target mel spectrogram, instead of reversing a noise-adding process
-                over 100+ steps. That gets full-quality generation in roughly 32 sampling steps — a
+                over 100+ steps. That gets full-quality generation in roughly 32 sampling steps, a
                 substantial efficiency gain over the diffusion approach used in systems like the
                 original DiffSinger.</p></div>
             </details>
             <details>
               <summary>Is TriStream-SVS released? Can I use it now?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Yes — it is released and the weights are on Hugging Face. The
+              <div class="faq-body"><p>Yes: it is released and the weights are on Hugging Face. The
                 architecture and pipeline run end to end. CorX Labs has not published objective
                 benchmark scores or listening tests for it. The
                 <a href="https://huggingface.co/Sigmandndnns/TriStream-SVS-300M" rel="noopener" target="_blank">Hugging
@@ -894,7 +891,7 @@
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

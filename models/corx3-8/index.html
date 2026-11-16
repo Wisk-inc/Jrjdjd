@@ -54,7 +54,7 @@
       "name": "CorX3.8-27B",
       "alternateName": ["CorX3.8", "CorX 3.8"],
       "url": "https://corx-labs.com/models/corx3-8/",
-      "description": "CorX3.8-27B is a 27-billion-parameter conversational language model from CorX Labs in Jamaica, fine-tuned from the open-weight Qwen3.8-27B base under Apache 2.0. It speaks Jamaican Patois by default, switches to standard English on request, answers directly, holds boundaries and carries everyday Jamaican cultural reference, while keeping the general reasoning, coding and mathematics ability of its base model. It is fully merged and standalone — no adapter step and no separate base-model download.",
+      "description": "CorX3.8-27B is a 27-billion-parameter conversational language model from CorX Labs in Jamaica, fine-tuned from the open-weight Qwen3.8-27B base under Apache 2.0. It speaks Jamaican Patois by default, switches to standard English on request, answers directly, holds boundaries and carries everyday Jamaican cultural reference, while keeping the general reasoning, coding and mathematics ability of its base model. It is fully merged and standalone: no adapter step and no separate base-model download.",
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Language model",
       "operatingSystem": "Cross-platform",
@@ -141,7 +141,7 @@
           "name": "Does CorX3.8 know specific Jamaican facts like addresses or laws?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not reliably. CorX3.8 has a Patois voice and common cultural reference, but it does not dependably know specific facts such as street addresses, current laws, exam schedules, prices or business regulations. For those, pair it with the recommended retrieval layer, which grounds answers on real Jamaican sources and says plainly when something is not in its references — do not trust its unaided recall."
+            "text": "Not reliably. CorX3.8 has a Patois voice and common cultural reference, but it does not dependably know specific facts such as street addresses, current laws, exam schedules, prices or business regulations. For those, pair it with the recommended retrieval layer, which grounds answers on real Jamaican sources and says when something is not in its references: do not trust its unaided recall."
           }
         },
         {
@@ -231,7 +231,7 @@
     </div>
 
     <h1>CorX3.8-27B</h1>
-    <p class="lede">Jamaica's first large open-weight LLM — a Jamaican Patois-speaking assistant that
+    <p class="lede">Jamaica's first large open-weight LLM, a Jamaican Patois-speaking assistant that
       answers straight, holds its ground, and carries a natural Jamaican voice. Third in the CorX
       line, after CorX1.5 and TriStream.</p>
 
@@ -259,8 +259,8 @@
         <p><strong>CorX3.8-27B</strong> is a 27-billion-parameter conversational model from
           <a href="/about/">CorX Labs</a> in Westmoreland, Jamaica. It speaks Jamaican Patois by
           default and switches to standard English when you write in English or ask it to. It is a
-          fine-tune of the open-weight <strong>Qwen3.8-27B</strong> base (Apache 2.0) — fully merged
-          and standalone, with no adapter step and no separate base download — so it keeps its base
+          fine-tune of the open-weight <strong>Qwen3.8-27B</strong> base (Apache 2.0) (fully merged
+          and standalone, with no adapter step and no separate base download) so it keeps its base
           model's general reasoning, code and maths while carrying a Jamaican voice, a direct
           register and everyday cultural grounding.</p>
       </div>
@@ -285,7 +285,7 @@
         <p class="eyebrow">The character</p>
         <h2 id="char-title">How it behaves.</h2>
         <p class="lede">The fine-tune adds a voice and a temperament on top of the base model's
-          reasoning — this is what CorX Labs shaped.</p>
+          reasoning, this is what CorX Labs shaped.</p>
       </div>
 
       <div class="grid grid-2">
@@ -313,8 +313,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.5-3 7.8-7.5 9-4.5-1.2-7.5-4.5-7.5-9V6z"/></svg>
           </span>
           <h3>Holds boundaries</h3>
-          <p>It declines requests that cross a line and says so plainly, instead of complying under
-            pressure. Refusal is stated, not negotiated away.</p>
+          <p>It declines requests that cross a line and says so, instead of complying under pressure. Refusal is stated, not negotiated away.</p>
         </div>
 
         <div class="card" data-reveal data-reveal-delay="160">
@@ -322,8 +321,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
           </span>
           <h3>Culturally grounded</h3>
-          <p>Everyday knowledge a Jamaican would take for granted, expressed in a natural voice —
-            the reference points and idiom that make a reply feel local rather than translated.</p>
+          <p>Everyday knowledge a Jamaican would take for granted, expressed in a natural voice, the reference points and idiom that make a reply feel local rather than translated.</p>
         </div>
       </div>
     </div>
@@ -333,7 +331,7 @@
   <section class="section-tight" id="base" aria-labelledby="base-title">
     <div class="shell">
       <div class="section-head" data-reveal>
-        <p class="eyebrow">Honest about the build</p>
+        <p class="eyebrow">How it was built</p>
         <h2 id="base-title">A fine-tune, and we say so.</h2>
       </div>
 
@@ -341,7 +339,7 @@
         <p>Being upfront about limits is part of the CorX character, so the model page follows the
           same rule. <strong>CorX3.8 is not trained from scratch.</strong> It is a fine-tune of
           <strong>Qwen3.8-27B</strong>, an existing open-weight base released under Apache 2.0. The
-          underlying reasoning, code and mathematics come from that base — CorX Labs added the
+          underlying reasoning, code and mathematics come from that base: CorX Labs added the
           Jamaican voice, the direct register and the cultural grounding on top. That makes it a
           different kind of project from <a href="/models/corx1-5/">CorX1.5</a>, which was trained
           from random weights.</p>
@@ -360,8 +358,8 @@
                 <tr><td>Common Jamaican cultural reference</td><td>Good</td></tr>
                 <tr><td>General reasoning &amp; explanation</td><td>Good (inherited)</td></tr>
                 <tr><td>Code &amp; mathematics</td><td>Good (inherited)</td></tr>
-                <tr><td>Specific facts (roads, laws, prices)</td><td>Weak — use retrieval</td></tr>
-                <tr><td>Real-time / current information</td><td>None — no live data</td></tr>
+                <tr><td>Specific facts (roads, laws, prices)</td><td>Weak: use retrieval</td></tr>
+                <tr><td>Real-time / current information</td><td>None: no live data</td></tr>
               </tbody>
             </table>
           </div>
@@ -371,9 +369,9 @@
           <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">What it is not</h3>
           <ul class="check-list is-limits mt-s">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not trained from scratch.</strong> The reasoning is inherited from Qwen3.8-27B; the Jamaican voice and register are what CorX Labs added.</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not a Jamaican knowledge base.</strong> It has the voice and common reference, but does not reliably know addresses, current laws, exam schedules or prices — pair it with retrieval.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not a Jamaican knowledge base.</strong> It has the voice and common reference, but does not reliably know addresses, current laws, exam schedules or prices: pair it with retrieval.</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not fluent in every register.</strong> Its Patois is strong for conversation and common idiom; deep dialect range across all fourteen parishes is a goal for a future release.</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not a substitute for professional advice</strong> — legal, medical or financial. It can explain and discuss; it is not an authority.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg> <strong>Not a substitute for professional advice</strong>: legal, medical or financial. It can explain and discuss; it is not an authority.</li>
           </ul>
         </div>
       </div>
@@ -390,10 +388,8 @@
 
       <div class="callout" data-reveal>
         <p>Because the model should not be trusted for specific facts on its own, CorX Labs ships a
-          <strong>retrieval layer</strong> that grounds answers on real Jamaican sources —
-          OpenStreetMap geography and public government documents. With retrieval attached, CorX3.8
-          answers factual questions from cited material and says plainly when something is not in its
-          references, instead of guessing. This is the recommended setup for anything factual.</p>
+          <strong>retrieval layer</strong> that grounds answers on real Jamaican sources: OpenStreetMap geography and public government documents. With retrieval attached, CorX3.8
+          answers factual questions from cited material and says when something is not in its references, instead of guessing. This is the recommended setup for anything factual.</p>
       </div>
     </div>
   </section>
@@ -405,7 +401,7 @@
         <p class="eyebrow">Usage</p>
         <h2 id="usage-title">Running CorX3.8-27B.</h2>
         <p class="lede">The weights are fully merged, so it loads with the standard
-          <code>transformers</code> API — no adapter step, no separate base download.</p>
+          <code>transformers</code> API: no adapter step, no separate base download.</p>
       </div>
 
       <pre data-reveal><code>from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -447,7 +443,7 @@ print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
         </details>
         <details>
           <summary>Does CorX3.8 know specific Jamaican facts like addresses or laws?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Not reliably. CorX3.8 has a Patois voice and common cultural reference, but it does not dependably know specific facts such as street addresses, current laws, exam schedules, prices or business regulations. For those, pair it with the <a href="#grounding">recommended retrieval layer</a>, which grounds answers on real Jamaican sources and says plainly when something is not in its references — do not trust its unaided recall.</p></div>
+          <div class="faq-body"><p>Not reliably. CorX3.8 has a Patois voice and common cultural reference, but it does not dependably know specific facts such as street addresses, current laws, exam schedules, prices or business regulations. For those, pair it with the <a href="#grounding">recommended retrieval layer</a>, which grounds answers on real Jamaican sources and says when something is not in its references: do not trust its unaided recall.</p></div>
         </details>
         <details>
           <summary>What hardware does CorX3.8-27B need?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -466,7 +462,7 @@ print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
       <div class="cta-band" data-reveal>
         <p class="eyebrow is-plain" style="justify-content:center">Open weights</p>
         <h2 class="mt-s">Download it, run it, build on it.</h2>
-        <p>The merged weights are published under Apache 2.0 on Hugging Face — open for anyone to
+        <p>The merged weights are published under Apache 2.0 on Hugging Face: open for anyone to
           run, study, and build on.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="https://huggingface.co/Sigmandndnns/CorX3.8-27B" rel="noopener" target="_blank">
@@ -486,7 +482,7 @@ print(tok.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

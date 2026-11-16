@@ -21,7 +21,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/models/helix/">
 <meta property="og:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
-<meta property="og:description" content="Hierarchical Episodic Linear IndeX. Three mixers braided over one residual stream — a local window, a delta-rule recurrent state, and a top-k index over a landmark tree — for linear cost without losing exact recall.">
+<meta property="og:description" content="Hierarchical Episodic Linear IndeX. Three mixers braided over one residual stream (a local window, a delta-rule recurrent state, and a top-k index over a landmark tree) for linear cost without losing exact recall.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-helix.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -117,7 +117,7 @@
       "@type": "ImageObject",
       "@id": "https://corx-labs.com/models/helix/#block-diagram",
       "name": "HELIX block diagram",
-      "caption": "One HELIX block: the residual stream feeds three parallel mixers — a local strand reading a fixed exact window, a recurrent strand holding a matrix-valued delta-rule state, and an index strand retrieving top-k blocks through a landmark tree — whose outputs are braided back into the residual stream. Each strand's decode-time state is shown alongside it.",
+      "caption": "One HELIX block: the residual stream feeds three parallel mixers (a local strand reading a fixed exact window, a recurrent strand holding a matrix-valued delta-rule state, and an index strand retrieving top-k blocks through a landmark tree) whose outputs are braided back into the residual stream. Each strand's decode-time state is shown alongside it.",
       "representativeOfPage": true
     },
     {
@@ -149,7 +149,7 @@
           "name": "What is HELIX?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "HELIX — Hierarchical Episodic Linear IndeX — is a sequence architecture that scales linearly in context length while keeping the exact long-range recall that attention is good at. Every block braids three mixers over the same residual stream: a local strand reading a fixed window exactly, a recurrent strand compressing the whole past into a matrix-valued delta-rule state, and an index strand retrieving a handful of memory blocks from anywhere in the past. It is published as the helix-lm package under Apache-2.0 and was built by Nathan at CorX Labs in Jamaica."
+            "text": "HELIX, Hierarchical Episodic Linear IndeX, is a sequence architecture that scales linearly in context length while keeping the exact long-range recall that attention is good at. Every block braids three mixers over the same residual stream: a local strand reading a fixed window exactly, a recurrent strand compressing the whole past into a matrix-valued delta-rule state, and an index strand retrieving a handful of memory blocks from anywhere in the past. It is published as the helix-lm package under Apache-2.0 and was built by Nathan at CorX Labs in Jamaica."
           }
         },
         {
@@ -173,7 +173,7 @@
           "name": "How does the HELIX index stay causal if summaries are shared?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Two rules. A node is eligible for query block J only if the entire span it summarises ends at or before J, so a summary is never consulted by a query it partly describes — which also means a landmark is computed once and reused by every later query. And routing for block J comes from the hidden state at the end of block J-1, which is strictly past for every token in block J, so one gather serves the whole block. Anything routing could not anticipate within that block is covered exactly by the local strand."
+            "text": "Two rules. A node is eligible for query block J only if the entire span it summarises ends at or before J, so a summary is never consulted by a query it partly describes, which also means a landmark is computed once and reused by every later query. And routing for block J comes from the hidden state at the end of block J-1, which is strictly past for every token in block J, so one gather serves the whole block. Anything routing could not anticipate within that block is covered exactly by the local strand."
           }
         },
         {
@@ -181,7 +181,7 @@
           "name": "Has HELIX been trained on real text?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. There are no trained checkpoints and nobody has trained HELIX on real language data. Everything published about it concerns complexity, causality and recall mechanics — properties provable on an untrained model or measurable on a synthetic probe — not perplexity or language quality. It is an architecture proposal with a working, tested reference implementation, not a better model."
+            "text": "No. There are no trained checkpoints and nobody has trained HELIX on real language data. Everything published about it concerns complexity, causality and recall mechanics, properties provable on an untrained model or measurable on a synthetic probe, not perplexity or language quality. It is an architecture proposal with a working, tested reference implementation, not a better model."
           }
         },
         {
@@ -189,7 +189,7 @@
           "name": "Is HELIX faster than attention?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "On the published measurements, HELIX forms a constant 8,192 attention pairs per token at every context length, fitting N^1.00, while full attention fits N^2.00. At 32,768 tokens that is 32 times fewer pairs and 1.6 times faster wall-clock — and that comparison runs unfused reference PyTorch against a fused SDPA kernel, so the constant factor is working against HELIX, not for it. At 4,096 tokens full attention is still the faster of the two."
+            "text": "On the published measurements, HELIX forms a constant 8,192 attention pairs per token at every context length, fitting N^1.00, while full attention fits N^2.00. At 32,768 tokens that is 32 times fewer pairs and 1.6 times faster wall-clock, and that comparison runs unfused reference PyTorch against a fused SDPA kernel, so the constant factor is working against HELIX, not for it. At 4,096 tokens full attention is still the faster of the two."
           }
         },
         {
@@ -197,7 +197,7 @@
           "name": "Does the index strand actually earn its place?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "That is the one result the recall experiment establishes. On multi-query associative recall with bindings placed well outside the local window, HELIX scores 30.8 percent against 6.0 percent for the same model with the index strand removed — a gap of roughly 21 standard errors, with chance at 6.2 percent. Without the index the model sits at chance, because its window cannot see the bindings and its recurrent state cannot hold them. Against full attention at 32.0 percent, HELIX is a tie rather than a win: 1.2 points with a 1.7-point standard error."
+            "text": "That is the one result the recall experiment establishes. On multi-query associative recall with bindings placed well outside the local window, HELIX scores 30.8 percent against 6.0 percent for the same model with the index strand removed, a gap of roughly 21 standard errors, with chance at 6.2 percent. Without the index the model sits at chance, because its window cannot see the bindings and its recurrent state cannot hold them. Against full attention at 32.0 percent, HELIX is a tie rather than a win: 1.2 points with a 1.7-point standard error."
           }
         },
         {
@@ -286,7 +286,7 @@
     </div>
 
     <h1>HELIX</h1>
-    <p class="lede">Hierarchical Episodic Linear IndeX — a sequence architecture that keeps what
+    <p class="lede">Hierarchical Episodic Linear IndeX, a sequence architecture that keeps what
       attention is good at while dropping the quadratic bill. Three strands braided over one
       residual stream: an exact local window, a recurrent state, and an index that can reach any
       block in the past.</p>
@@ -313,20 +313,20 @@
           <a href="/about/">CorX Labs</a> in Jamaica, published as the <code>helix-lm</code> package.
           A transformer compares every token to every other token: ten thousand tokens is fifty
           million comparisons, and doubling the input quadruples the work. Linear-time alternatives
-          fix that by squeezing the past into a fixed-size state — and then they cannot quote back a
+          fix that by squeezing the past into a fixed-size state, and then they cannot quote back a
           name they saw once, because a state of <em>S</em> bits cannot tell apart more than
           2<sup><em>S</em></sup> histories. That is a counting argument, not an engineering gap.</p>
         <p>HELIX does not try to compress its way around it. It <strong>separates memory capacity
           from memory bandwidth</strong>: storage grows linearly, stays append-only and can live in
           cold memory, while what any one token touches stays bounded. The claim is
-          <strong>O(1) hot state and O(log N) probes</strong> — not O(1) total memory, which is
+          <strong>O(1) hot state and O(log N) probes</strong>, not O(1) total memory, which is
           impossible for anything that can quote an exact name from a million tokens back.</p>
       </div>
 
       <div class="callout mt-m" data-reveal>
         <p><strong>There are no trained checkpoints.</strong> Nobody has trained HELIX on real text.
-          Everything measured here is about complexity, causality and recall mechanics — properties
-          provable on an untrained model or measurable on a synthetic probe — not perplexity or
+          Everything measured here is about complexity, causality and recall mechanics, properties
+          provable on an untrained model or measurable on a synthetic probe, not perplexity or
           language quality. Treat this as an architecture proposal with a working, tested reference
           implementation, not a better model. <a href="#not">The full caveats are below.</a></p>
       </div>
@@ -351,7 +351,7 @@
       <h2>1. One HELIX block</h2>
       <div class="prose">
         <p>Every block braids three mixers over the same residual stream. They differ in what they
-          read, what they cost to train, and — the part that matters at inference — what they have
+          read, what they cost to train, and, the part that matters at inference, what they have
           to hold on to while decoding. Solid lines carry representations forward; dashed lines are
           reads against stored memory.</p>
       </div>
@@ -469,7 +469,7 @@
             <text class="dg-title" x="1060" y="290">block</text>
 
             <!-- per-step read note -->
-            <text class="dg-sub" x="216" y="530">A step reads O(index_topk &times; block_size + index_branching &times; log N) of that storage — bounded, whatever N is.</text>
+            <text class="dg-sub" x="216" y="530">A step reads O(index_topk &times; block_size + index_branching &times; log N) of that storage: bounded, whatever N is.</text>
           </svg>
         </div>
 
@@ -481,8 +481,7 @@
 
         <figcaption>One HELIX block. The same residual stream feeds all three mixers, and their
           outputs are braided back into it. The middle column is what each strand costs at training
-          time; the right column is the part that decides whether the thing is usable at inference —
-          what has to stay live per step.</figcaption>
+          time; the right column is the part that decides whether the thing is usable at inference: what has to stay live per step.</figcaption>
       </figure>
 
       <div class="table-wrap mt-m" data-reveal>
@@ -493,19 +492,19 @@
           </thead>
           <tbody>
             <tr>
-              <th scope="row">L &mdash; local</th>
+              <th scope="row">L: local</th>
               <td>The last <code>local_blocks &times; block_size</code> tokens, exactly, with a different window per head</td>
               <td>O(N &middot; span)</td>
               <td>A window-sized ring buffer</td>
             </tr>
             <tr>
-              <th scope="row">R &mdash; recurrent</th>
+              <th scope="row">R: recurrent</th>
               <td>Everything, compressed into a matrix-valued delta-rule state</td>
               <td>O(N &middot; d<sub>k</sub> &middot; d<sub>v</sub>)</td>
               <td>One matrix plus two convolution states per head</td>
             </tr>
             <tr>
-              <th scope="row">I &mdash; index</th>
+              <th scope="row">I: index</th>
               <td><code>index_topk</code> blocks chosen anywhere in the past, by a beam descent over a landmark tree</td>
               <td>O(N &middot; topk &middot; block_size) + O(N log N) routing</td>
               <td>The key/value history and a landmark tree, of which a step reads O(topk &middot; block_size + branching &middot; log N)</td>
@@ -522,7 +521,7 @@
       <h2>2. How the index works</h2>
       <div class="prose">
         <p>The past is cut into blocks of <code>block_size</code> tokens. Each <em>closed</em> block
-          gets a <strong>landmark</strong> — a learned pooled summary that mixes a plain mean with an
+          gets a <strong>landmark</strong>, a learned pooled summary that mixes a plain mean with an
           attention pool, because a mean alone erases the rare token a later query will be hunting
           for. Landmarks are pooled again, <code>index_branching</code> at a time, into a tree, using
           one weight-shared pooler at every internal level.</p>
@@ -663,7 +662,7 @@
         <div class="diagram-key">
           <span><i aria-hidden="true"></i> Pooling &amp; tree structure</span>
           <span><i class="is-dashed" aria-hidden="true"></i> Routing &amp; retrieval</span>
-          <span>Eligible spans only &mdash; causal by construction</span>
+          <span>Eligible spans only: causal by construction</span>
         </div>
 
         <figcaption>The landmark tree. Blocks are pooled into landmarks, landmarks into internal
@@ -681,7 +680,7 @@
             children plus that level's frontier.</li>
           <li><strong>Descend to the landmarks</strong>, accumulating selection scores along the
             path.</li>
-          <li><strong>Read <code>index_topk</code> whole blocks exactly</strong> — the tokens
+          <li><strong>Read <code>index_topk</code> whole blocks exactly</strong>, the tokens
             themselves, not their summaries.</li>
         </ol>
         <p>Two rules keep it causal and parallel:</p>
@@ -690,12 +689,12 @@
             it summarises ends at or before <em>J</em>. A summary is never consulted by a query it
             partly describes, so a landmark is computed once and reused by every query.</li>
           <li>Routing for block <em>J</em> comes from the hidden state at the end of block
-            <em>J</em> &minus; 1 — strictly past for every token of block <em>J</em>, so one gather
+            <em>J</em> &minus; 1: strictly past for every token of block <em>J</em>, so one gather
             serves <code>block_size</code> queries. Anything routing could not anticipate inside that
             block is covered exactly by strand L.</li>
         </ol>
         <p>The descent keeps <code>index_beam_width</code> nodes per level. Candidates at each level
-          are the beam's children plus that level's <strong>frontier</strong> — eligible nodes whose
+          are the beam's children plus that level's <strong>frontier</strong>: eligible nodes whose
           parent is not eligible. At most <code>branching &minus; 1</code> per level, and the
           frontiers across all levels tile [0, <em>J</em>) exactly, so nothing reachable is cut off
           by a beam that descended elsewhere. Selection scores are fed back as additive attention
@@ -716,7 +715,7 @@
 
       <h3 class="mt-m">Cost against context length</h3>
       <div class="prose">
-        <p>Attention pairs are exact — the query/key products the forward pass actually forms,
+        <p>Attention pairs are exact, the query/key products the forward pass actually forms,
           counted by instrumenting the attention call, not estimated from the formula.</p>
       </div>
 
@@ -744,7 +743,7 @@
       <div class="prose mt-s">
         <p>HELIX fits N<sup>1.00</sup> in attention pairs; full attention fits N<sup>2.00</sup>. By
           32k tokens HELIX forms <strong>32&times; fewer pairs</strong> and runs
-          <strong>1.6&times; faster</strong> — as unfused reference PyTorch against a fused SDPA
+          <strong>1.6&times; faster</strong>, as unfused reference PyTorch against a fused SDPA
           kernel. At 4k tokens full attention is still the faster of the two; the crossover is
           somewhere between 8k and 16k on this hardware.</p>
       </div>
@@ -772,7 +771,7 @@
 
       <div class="callout mt-m" data-reveal>
         <p><strong>Read the two gaps separately.</strong> HELIX against its own ablation is the
-          result: strip the index strand and the same model — same width, same depth — sits at
+          result: strip the index strand and the same model (same width, same depth) sits at
           chance, because its window cannot see the bindings and its recurrent state cannot hold
           them. That gap is about <strong>21 standard errors</strong>.</p>
         <p>HELIX against full attention is a <strong>tie, not a win or a loss</strong>: 1.2 points
@@ -789,17 +788,17 @@
       <div class="prose">
         <p><code>pytest</code> covers the properties you can check without training anything:</p>
         <ul>
-          <li><strong>Strictly causal</strong> — editing token <em>t</em> leaves every earlier logit
+          <li><strong>Strictly causal</strong>: editing token <em>t</em> leaves every earlier logit
             bitwise unchanged.</li>
-          <li><strong>Decode == prefill</strong> — token-by-token generation from the fixed-size
+          <li><strong>Decode == prefill</strong>: token-by-token generation from the fixed-size
             state reproduces the one-shot forward, as does unaligned chunked prefill.</li>
           <li><strong>Right padding is exactly invariant.</strong></li>
-          <li><strong>Constant work per token</strong> — each query reads the same number of keys at
+          <li><strong>Constant work per token</strong>, each query reads the same number of keys at
             any context length.</li>
-          <li><strong>The cache is what the architecture claims</strong> — fixed-size recurrent and
+          <li><strong>The cache is what the architecture claims</strong>: fixed-size recurrent and
             convolution states everywhere, a window-capped key/value cache on non-indexing
             layers.</li>
-          <li><strong>Tiling is bitwise inert</strong> — <code>attention_tile_blocks</code> caps peak
+          <li><strong>Tiling is bitwise inert</strong>: <code>attention_tile_blocks</code> caps peak
             activation memory and changes nothing about the result.</li>
           <li><strong>Every parameter gets gradient</strong>, landmark poolers included.</li>
         </ul>
@@ -814,8 +813,8 @@
 
       <div class="callout" data-reveal>
         <p><strong>There are no trained checkpoints. Nobody has trained HELIX on real text.</strong>
-          Everything above is about complexity, causality and recall mechanics — properties provable
-          on an untrained model or measurable on a synthetic probe — not about perplexity or
+          Everything above is about complexity, causality and recall mechanics, properties provable
+          on an untrained model or measurable on a synthetic probe, not about perplexity or
           language quality. The inductive-bias arguments (multi-scale windows, short convolutions,
           surprise-gated writes) are untested hypotheses.</p>
         <p>Treat this as an <strong>architecture proposal with a working, tested reference
@@ -823,12 +822,12 @@
           needs real training runs on real hardware.</p>
       </div>
 
-      <h3 class="mt-m">Known design limits, stated plainly</h3>
+      <h3 class="mt-m">Known design limits</h3>
       <div class="prose">
         <ul>
           <li>One retrieval serves a whole query block, so <code>index_topk</code> must cover the
             diversity a <code>block_size</code> span asks for.</li>
-          <li>Routing is <strong>one block stale</strong> — the index cannot react to the token
+          <li>Routing is <strong>one block stale</strong>, the index cannot react to the token
             currently being generated.</li>
           <li>Landmarks are pooled from keys that already carry their rotary phase, so routing is not
             purely content-addressed.</li>
@@ -898,7 +897,7 @@ helix recall    # train with and without the index strand, and compare</code></p
       <div class="faq mt-m">
         <details>
           <summary>What is HELIX?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Hierarchical Episodic Linear IndeX — a sequence architecture that
+          <div class="faq-body"><p>Hierarchical Episodic Linear IndeX, a sequence architecture that
             scales linearly in context length while keeping the exact long-range recall that
             attention is good at. Every block braids three mixers over the same residual stream: a
             local strand reading a fixed window exactly, a recurrent strand compressing the whole
@@ -919,7 +918,7 @@ helix recall    # train with and without the index strand, and compare</code></p
           <summary>What exactly is O(1) in HELIX, and what isn&rsquo;t?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>The <em>hot</em> state is O(1): a window-sized ring buffer, one
             delta-rule matrix and two convolution states per head, all fixed-size whatever the
-            context length. The key/value history and landmark tree are O(N) — but append-only,
+            context length. The key/value history and landmark tree are O(N), but append-only,
             never rewritten, and able to live in cold memory. A step reads only
             O(<code>index_topk</code> &times; <code>block_size</code> + <code>branching</code> &times;
             log N) of it. Total memory is explicitly <em>not</em> O(1), which would be impossible for
@@ -928,7 +927,7 @@ helix recall    # train with and without the index strand, and compare</code></p
         <details>
           <summary>How does the HELIX index stay causal if summaries are shared?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>A node is eligible for query block <em>J</em> only if the entire
-            span it summarises ends at or before <em>J</em> — so a summary is never consulted by a
+            span it summarises ends at or before <em>J</em>, so a summary is never consulted by a
             query it partly describes, which is also what lets a landmark be computed once and reused
             by every later query. Routing for block <em>J</em> comes from the hidden state at the end
             of block <em>J</em>&nbsp;&minus;&nbsp;1, strictly past for every token in the block, so a
@@ -954,7 +953,7 @@ helix recall    # train with and without the index strand, and compare</code></p
           <summary>Does the index strand actually earn its place?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>That is the one thing the recall experiment does establish. With
             the index: 30.8%. Same model with the index strand stripped out: 6.0%, against a chance
-            floor of 6.2% — indistinguishable from guessing. The gap is roughly 21 standard errors.
+            floor of 6.2%: indistinguishable from guessing. The gap is roughly 21 standard errors.
             Against full attention at 32.0% it is a tie, not a win.</p></div>
         </details>
         <details>
@@ -981,7 +980,7 @@ helix recall    # train with and without the index strand, and compare</code></p
         <h2 class="mt-s">The claims are reproducible in one command.</h2>
         <p><code>helix bench</code> counts the attention pairs the forward pass actually forms, and
           <code>helix recall</code> trains the ablation alongside the full model. Neither takes
-          special hardware — the published numbers came off 4 CPU cores.</p>
+          special hardware, the published numbers came off 4 CPU cores.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="https://pypi.org/project/helix-lm/" rel="noopener" target="_blank">
             View on PyPI
@@ -1000,7 +999,7 @@ helix recall    # train with and without the index strand, and compare</code></p
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

@@ -21,7 +21,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://corx-labs.com/blog/3-billion-tokens-one-gpu/">
 <meta property="og:title" content="3 Billion Tokens on One GPU: How CorX1.5 Was Trained">
-<meta property="og:description" content="Why 3 billion tokens never needs to fit in VRAM — and what actually does. The memory maths, the data pipeline, and the numbers behind training CorX1.5 on one GPU.">
+<meta property="og:description" content="Why 3 billion tokens never needs to fit in VRAM, and what actually does. The memory maths, the data pipeline, and the numbers behind training CorX1.5 on one GPU.">
 <meta property="og:image" content="https://corx-labs.com/assets/img/og-post-3b.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -37,7 +37,7 @@
 <meta name="twitter:label1" content="Written by"><meta name="twitter:data1" content="Nathan Lyttle">
 <meta name="twitter:label2" content="Reading time"><meta name="twitter:data2" content="9 minutes">
 <meta name="twitter:title" content="3 Billion Tokens on One GPU: How CorX1.5 Was Trained">
-<meta name="twitter:description" content="Why 3 billion tokens never needs to fit in VRAM — and what actually does.">
+<meta name="twitter:description" content="Why 3 billion tokens never needs to fit in VRAM, and what actually does.">
 <meta name="twitter:image" content="https://corx-labs.com/assets/img/og-post-3b.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -135,7 +135,7 @@
           "name": "Could I do this with a smaller GPU?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Almost certainly, at this model size — drop the micro-batch, raise the accumulation steps to keep the effective batch the same, and turn on 8-bit Adam and gradient checkpointing. The run gets slower, not impossible. Memory sets what you can train; throughput sets how long you wait."
+            "text": "Almost certainly, at this model size: drop the micro-batch, raise the accumulation steps to keep the effective batch the same, and turn on 8-bit Adam and gradient checkpointing. The run gets slower, not impossible. Memory sets what you can train; throughput sets how long you wait."
           }
         },
         {
@@ -251,7 +251,7 @@
             <p><strong>3 billion training tokens never need to fit in GPU memory.</strong> Tokens
               stream through the GPU a batch at a time and are thrown away. What has to fit is the
               model weights, their gradients, the optimiser state, and the activations for a single
-              micro-batch. For a 158M-parameter model that is a couple of gigabytes — a number that
+              micro-batch. For a 158M-parameter model that is a couple of gigabytes, a number that
               does not change whether you train on 3 million tokens or 3 billion.</p>
             <p>Dataset size is a <em>disk and wall-clock</em> problem. Model size is the
               <em>memory</em> problem. Confusing the two is the single most common reason people
@@ -269,7 +269,7 @@
           <h2>What actually lives in VRAM</h2>
           <div class="prose">
             <p>CorX1.5 has <strong>157.8 million parameters</strong>. Everything below follows from
-              that one number. In fp32, each parameter costs 4 bytes — and the optimiser needs its
+              that one number. In fp32, each parameter costs 4 bytes, and the optimiser needs its
               own copies.</p>
           </div>
 
@@ -298,7 +298,7 @@
               an 8-bit Adam implementation quantises those two moment buffers to one byte each and
               hands back nearly a gigabyte for roughly no quality cost. On a small card, that one
               change is often the difference between a batch size of 4 and a batch size of 12.</p>
-            <p>On top of that sits <strong>activation memory</strong> — the intermediate tensors kept
+            <p>On top of that sits <strong>activation memory</strong>, the intermediate tensors kept
               alive between the forward and backward pass. Unlike the numbers above, this one scales
               with batch size and sequence length, which is exactly why it is the lever you pull when
               you run out of room.</p>
@@ -307,7 +307,7 @@
           <div class="callout">
             <p><strong>The rule of thumb:</strong> model state is fixed and you pay it once. Activation
               memory is variable and you pay it per sequence in flight. If you are out of memory, you
-              almost always shrink the second one — not the model.</p>
+              almost always shrink the second one, not the model.</p>
           </div>
         </section>
 
@@ -315,8 +315,7 @@
         <section class="doc-section" id="datafile">
           <h2>The 6 GB file that never touches the GPU</h2>
           <div class="prose">
-            <p>Here is where the 3 billion actually lives. Before training starts, the entire corpus —
-              25 open datasets spanning code, maths, reasoning, conversation and general text — gets
+            <p>Here is where the 3 billion actually lives. Before training starts, the entire corpus: 25 open datasets spanning code, maths, reasoning, conversation and general text: gets
               tokenised <strong>once</strong>, offline, and written into a single flat binary file of
               raw token IDs. No JSON, no per-example records, no tokenising during training.</p>
             <p>CorX1.5's vocabulary is <strong>32,768 tokens</strong>. That number matters more than
@@ -338,7 +337,7 @@
 
           <div class="prose mt-m">
             <p>A 32,768-entry vocabulary fits inside a <code>uint16</code> with room to spare, so the
-              whole pretraining corpus is <strong>6 GB on disk</strong> — not 12. That halving is free,
+              whole pretraining corpus is <strong>6 GB on disk</strong>, not 12. That halving is free,
               and it halves the disk bandwidth the training loop needs to keep the GPU fed.</p>
             <p>The file is then read with a <strong>memory map</strong>. The operating system pages in
               only the slices actually touched and evicts the rest, so RAM usage stays bounded no
@@ -362,7 +361,7 @@ def get_batch(batch_size, block_size):
             <p>Sampling random offsets also means there is no shuffle step. Shuffling 3 billion
               tokens as records would be its own engineering project; sampling random windows out of
               a mapped array gets you the same decorrelation for free, and it makes the dataset
-              trivially resumable — position is just an integer.</p>
+              trivially resumable: position is just an integer.</p>
           </div>
 
           <div class="callout">
@@ -380,7 +379,7 @@ def get_batch(batch_size, block_size):
             <p>Because the corpus is one continuous stream of token IDs, documents are concatenated
               end to end with a separator and then sliced at exactly 1,024 tokens. Every position in
               every batch carries a real token.</p>
-            <p>The naive alternative — one document per row, padded out to the block size — quietly
+            <p>The naive alternative (one document per row, padded out to the block size) quietly
               throws away a large share of every batch. If your documents average 300 tokens and you
               pad them to 1,024, roughly <strong>70% of the compute in every step is spent on padding
               tokens</strong> that contribute nothing. On a cluster that is money. On one GPU it is
@@ -389,7 +388,7 @@ def get_batch(batch_size, block_size):
               <strong>assistant-only loss masking</strong>: during instruction tuning the model reads
               the user's tokens as context but only ever gets a gradient for the tokens it is supposed
               to produce. Same forward pass, same cost, and none of the capacity is spent learning to
-              predict the user's half of the conversation — which is not a skill the model needs.</p>
+              predict the user's half of the conversation, which is not a skill the model needs.</p>
           </div>
         </section>
 
@@ -397,19 +396,19 @@ def get_batch(batch_size, block_size):
         <section class="doc-section" id="accumulation">
           <h2>Gradient accumulation: "batch size" is two different numbers</h2>
           <div class="prose">
-            <p>Language models train best with large batches — hundreds of thousands of tokens per
+            <p>Language models train best with large batches: hundreds of thousands of tokens per
               optimiser step. A single consumer GPU cannot hold that. These two facts look like a
               contradiction and are not, because <em>batch size</em> means two separate things:</p>
             <ul>
-              <li><strong>The micro-batch</strong> — how many sequences are in flight at once. This is
+              <li><strong>The micro-batch</strong>: how many sequences are in flight at once. This is
                 a memory constraint.</li>
-              <li><strong>The effective batch</strong> — how many sequences the optimiser sees before
+              <li><strong>The effective batch</strong>: how many sequences the optimiser sees before
                 it takes a step. This is a learning-dynamics constraint.</li>
             </ul>
             <p>Gradient accumulation decouples them. Run the forward and backward pass on a small
               micro-batch, keep the gradients instead of stepping, repeat, and only call
               <code>optimizer.step()</code> once you have accumulated enough. The gradients sum
-              exactly as if you had run one big batch — the memory just never went up.</p>
+              exactly as if you had run one big batch, the memory just never went up.</p>
           </div>
 
           <pre class="mt-m"><code>accum_steps = 64          # micro-batches per optimiser step
@@ -443,7 +442,7 @@ scheduler.step()</code></pre>
 
           <div class="prose mt-m">
             <p>Roughly <strong>5,700 optimiser steps</strong> for the whole pretraining run. That is a
-              surprisingly small, very human number — and it is why the learning-rate schedule matters
+              surprisingly small, very human number, and it is why the learning-rate schedule matters
               so much at this scale. There is no room for a slow warm-up over tens of thousands of
               steps; every step is 0.02% of the entire budget.</p>
           </div>
@@ -466,14 +465,13 @@ scheduler.step()</code></pre>
               produce infinities halfway through a long run. If the card supports it, there is no
               reason not to.</p>
             <p><strong>Fused attention.</strong> A naive attention implementation materialises the full
-              scores matrix — shape <code>batch × heads × 1024 × 1024</code>. At a micro-batch of 8
+              scores matrix: shape <code>batch × heads × 1024 × 1024</code>. At a micro-batch of 8
               with, say, 16 heads, that single tensor is about 268 MB in bf16, <em>per layer</em>. A
               fused kernel (<code>F.scaled_dot_product_attention</code>, or FlashAttention) never
               writes it to memory at all, computing the softmax in tiles instead. This is usually the
               largest single activation saving available.</p>
             <p><strong>Gradient checkpointing.</strong> The escape hatch. Discard intermediate
-              activations during the forward pass and recompute them during the backward pass —
-              roughly 30% slower per step in exchange for a large drop in activation memory. At 10
+              activations during the forward pass and recompute them during the backward pass: roughly 30% slower per step in exchange for a large drop in activation memory. At 10
               layers and a 1,024-token window CorX1.5 is small enough that this is a last resort
               rather than a default, but it is what you reach for when nothing else will fit.</p>
             <p>One more, almost free: <code>torch.set_float32_matmul_precision("high")</code> to enable
@@ -492,7 +490,7 @@ scheduler.step()</code></pre>
               or more, shorter ones. For a model this small, <strong>more tokens wins</strong>. A 158M
               model has nowhere near enough capacity to exploit long-range structure across 4,000
               tokens; it has plenty of room to get better at ordinary sentences. Spending the budget
-              on breadth rather than reach was the right trade — and it is honestly documented as a
+              on breadth rather than reach was the right trade, and it is listed as a
               limitation on the <a href="/models/corx1-5/">model page</a> rather than dressed up as a
               feature.</p>
           </div>
@@ -502,7 +500,7 @@ scheduler.step()</code></pre>
         <section class="doc-section" id="throughput">
           <h2>The real constraint is wall-clock</h2>
           <div class="prose">
-            <p>Once everything fits, the only remaining question is time — and it is pure division.
+            <p>Once everything fits, the only remaining question is time, and it is pure division.
               Throughput depends on the card, the kernels and how well the data loader keeps up, so
               here is the shape of it rather than one number:</p>
           </div>
@@ -522,7 +520,7 @@ scheduler.step()</code></pre>
 
           <div class="prose mt-m">
             <p>Which tells you where optimisation effort belongs. Nobody's training run is bottlenecked
-              on a clever architecture choice — it is bottlenecked on tokens per second. A change that
+              on a clever architecture choice: it is bottlenecked on tokens per second. A change that
               makes each step 20% faster gives back most of a day. A change that makes the model 2%
               better on validation loss but 40% slower costs you more than it is worth at this scale.</p>
             <p>And the most embarrassing bottleneck is always the same one: <strong>a GPU sitting idle
@@ -538,18 +536,17 @@ scheduler.step()</code></pre>
             <p>This is the part that separates a bedroom setup from a lab, and it has nothing to do
               with machine learning. A run measured in days on a single machine <em>will</em> be
               interrupted. Power, a driver update, a full disk, an out-of-memory error at step 4,000.</p>
-            <p>So the checkpoint has to contain everything needed to continue as if nothing happened —
-              not just the weights:</p>
+            <p>So the checkpoint has to contain everything needed to continue as if nothing happened, not just the weights:</p>
             <ul>
               <li>Model <code>state_dict</code></li>
-              <li>Optimiser <code>state_dict</code> — those Adam moments are hard-won; losing them
+              <li>Optimiser <code>state_dict</code>, those Adam moments are hard-won; losing them
                 costs real progress</li>
               <li>Learning-rate scheduler state and the step counter</li>
               <li>RNG state, so the data sampling continues rather than restarts</li>
               <li>The config used, so a checkpoint is never ambiguous about what produced it</li>
             </ul>
             <p>Write them on a fixed step interval, keep the last few plus the best-by-validation, and
-              never overwrite in place — write to a temporary file and rename, so a crash mid-write
+              never overwrite in place: write to a temporary file and rename, so a crash mid-write
               cannot destroy the only good checkpoint you have. I have learned every item on that list
               the expensive way.</p>
           </div>
@@ -561,7 +558,7 @@ scheduler.step()</code></pre>
           <div class="prose">
             <p>A held-out validation split is carved out <strong>before</strong> training starts and
               never touched by the training sampler. Validation loss is evaluated on a fixed schedule,
-              and training stops when it stops improving — early stopping.</p>
+              and training stops when it stops improving: early stopping.</p>
             <p>The reason this matters more for a small model than a large one: with 158M parameters
               and billions of tokens, training loss will keep drifting down long after the model has
               stopped getting genuinely better. Without a held-out split you cannot tell the difference
@@ -589,7 +586,7 @@ scheduler.step()</code></pre>
             </ul>
             <p>None of this is exotic. Every technique here is published, and most of it is a few lines
               of PyTorch. The reason it is worth writing down is that when you are starting out, the
-              hard part is not the trick — it is not knowing which question you are actually asking.
+              hard part is not the trick: it is not knowing which question you are actually asking.
               "How do I fit 3 billion tokens on one GPU" has no answer. "How do I fit 158 million
               parameters plus one batch on one GPU, and how long does streaming 3 billion tokens past
               it take" has two, and both of them are arithmetic.</p>
@@ -610,7 +607,7 @@ scheduler.step()</code></pre>
             <details>
               <summary>How much VRAM does a 158M-parameter model need to train?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
               <div class="faq-body"><p>About 2.5 GB of model and optimiser state in fp32 with Adam, or
-                roughly 1.6 GB with an 8-bit optimiser — plus activation memory, which depends on your
+                roughly 1.6 GB with an 8-bit optimiser, plus activation memory, which depends on your
                 micro-batch and sequence length and is the part you actually tune.</p></div>
             </details>
             <details>
@@ -621,7 +618,7 @@ scheduler.step()</code></pre>
             </details>
             <details>
               <summary>Could I do this with a smaller GPU?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-              <div class="faq-body"><p>Almost certainly, at this model size — drop the micro-batch,
+              <div class="faq-body"><p>Almost certainly, at this model size: drop the micro-batch,
                 raise the accumulation steps to keep the effective batch the same, and turn on 8-bit
                 Adam and gradient checkpointing. The run gets slower, not impossible. Memory sets what
                 you <em>can</em> train; throughput sets how long you wait.</p></div>
@@ -641,7 +638,7 @@ scheduler.step()</code></pre>
       <div class="cta-band" data-reveal>
         <p class="eyebrow is-plain" style="justify-content:center">The model</p>
         <h2 class="mt-s">This is what came out of it.</h2>
-        <p>CorX1.5 — 158M parameters, trained from random weights, open-sourced under Apache 2.0.</p>
+        <p>CorX1.5: 158M parameters, trained from random weights, open-sourced under Apache 2.0.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="/models/corx1-5/">See CorX1.5</a>
           <a class="btn btn-ghost" href="/blog/">More from the blog</a>
@@ -657,7 +654,7 @@ scheduler.step()</code></pre>
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

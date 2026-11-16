@@ -58,7 +58,7 @@ pre.server-code{max-height:460px;overflow:auto}</style>
       "@id": "https://corx-labs.com/chat/documentation/#article",
       "headline": "CorX3.8 Chat — set-up and how it works",
       "name": "CorX3.8 Chat set-up guide",
-      "description": "How to run CorX3.8-27B on a GPU, connect it to the CorX chat by pasting its URL into settings, and use Agent mode with a real Python sandbox — terminal, files, package installs, zip uploads, real web search, cross-chat memory, effort levels and task planning.",
+      "description": "How to run CorX3.8-27B on a GPU, connect it to the CorX chat by pasting its URL into settings, and use Agent mode with a real Python sandbox: terminal, files, package installs, zip uploads, real web search, cross-chat memory, effort levels and task planning.",
       "url": "https://corx-labs.com/chat/documentation/",
       "mainEntityOfPage": "https://corx-labs.com/chat/documentation/",
       "image": "https://corx-labs.com/assets/img/og-corx3-8.jpg",
@@ -75,7 +75,7 @@ pre.server-code{max-height:460px;overflow:auto}</style>
       "@id": "https://corx-labs.com/chat/documentation/#howto",
       "name": "How to run CorX3.8 and connect it to the CorX chat",
       "step": [
-        { "@type": "HowToStep", "position": 1, "name": "Open a GPU notebook", "text": "Open a notebook with a GPU big enough for CorX3.8-27B (about 24GB in 4-bit, ~54GB in full bf16) — for example an RTX PRO 6000 Blackwell, H100, A100, or a rented GPU box. The server picks the precision to match the card automatically." },
+        { "@type": "HowToStep", "position": 1, "name": "Open a GPU notebook", "text": "Open a notebook with a GPU big enough for CorX3.8-27B (about 24GB in 4-bit, ~54GB in full bf16), for example an RTX PRO 6000 Blackwell, H100, A100, or a rented GPU box. The server picks the precision to match the card automatically." },
         { "@type": "HowToStep", "position": 2, "name": "Paste and run the server code", "text": "Copy the CorX3.8 API server code from this page into one cell and run it. It loads the model and opens a public Cloudflare tunnel, then prints a Public URL." },
         { "@type": "HowToStep", "position": 3, "name": "Copy the printed URL", "text": "When the cell prints CorX3.8-27B API IS LIVE, copy the Public URL (the https://...trycloudflare.com address, without the /v1)." },
         { "@type": "HowToStep", "position": 4, "name": "Paste it into chat settings", "text": "Open the CorX chat, click the gear icon, paste the URL into Model endpoint, and Save. The status dot turns green when it connects." }
@@ -189,7 +189,7 @@ pre.server-code{max-height:460px;overflow:auto}</style>
     <div class="shell">
       <div class="answer-box" style="margin-top:0">
         <p>CorX3.8-27B is too big to run in a browser, so it runs on a <strong>GPU you provide</strong>
-          &mdash; a notebook like molab or Colab, or a rented GPU box. The code below turns that GPU
+         , a notebook like molab or Colab, or a rented GPU box. The code below turns that GPU
           into an <strong>OpenAI-compatible API</strong> and opens a public URL. You paste that URL
           into the chat&rsquo;s settings, and the browser talks to your model directly.</p>
       </div>
@@ -678,7 +678,7 @@ while True:
           H100, A100&nbsp;80GB), dropping to 4-bit only on smaller cards. Force it either way with
           <code>PRECISION = "bf16"</code> or <code>"4bit"</code>.</p>
         <p style="margin-top:10px">On a single card that fits the model, it is pinned to GPU&nbsp;0
-          rather than left to <code>device_map="auto"</code> — that keeps the offload machinery out
+          rather than left to <code>device_map="auto"</code>, that keeps the offload machinery out
           of the picture entirely. The cell prints which precision it chose and confirms the whole
           model is resident on the GPU; if anything lands on CPU or disk it says so, because that is
           what makes the first token take minutes.</p>
@@ -701,14 +701,14 @@ while True:
         <li><div><h3>Wait for &ldquo;API IS LIVE&rdquo;</h3><p>When the cell prints
           <code>CorX3.8-27B API IS LIVE</code>, it shows a <strong>Public URL</strong> like
           <code>https://something.trycloudflare.com/v1</code>. Copy it <em>without</em> the
-          <code>/v1</code> &mdash; the chat adds that for you.</p></div></li>
+          <code>/v1</code>, the chat adds that for you.</p></div></li>
         <li><div><h3>Open the chat and its settings</h3><p>Go to <a href="/chat/">the chat</a> and
           click the <strong>model name</strong> at the top (or the gear icon) to open
           <strong>Model &amp; connection</strong>. With <strong>CorX3.8</strong> selected, paste the
           URL into <strong>Server address</strong> and press <strong>Save</strong>.</p></div></li>
         <li><div><h3>Watch the status dot</h3><p>The dot by the title turns <strong>green &middot;
           Online</strong> when it connects (it checks the server&rsquo;s <code>/health</code>). Red
-          means it can&rsquo;t reach the server &mdash; check the cell is still running and the URL is
+          means it can&rsquo;t reach the server: check the cell is still running and the URL is
           current.</p></div></li>
         <li><div><h3>Leave the cell running</h3><p>The server lives as long as that cell runs. The
           code blocks on purpose so the notebook doesn&rsquo;t tear it down, and restarts the tunnel
@@ -719,11 +719,11 @@ while True:
           panel has a provider picker: pick <strong>OpenRouter</strong>, <strong>Claude</strong>,
           <strong>DeepSeek</strong> or <strong>OpenAI</strong>, paste that provider&rsquo;s API key
           (stored in your browser only, sent only to that provider), and choose a model. The whole
-          agent &mdash; search, terminal, files, plan &mdash; then runs on that model instead. Two of
+          agent (search, terminal, files, plan) then runs on that model instead. Two of
           these call the provider straight from the browser and just work: <strong>OpenRouter</strong>
           (one key, most models) and <strong>Claude</strong>. <strong>DeepSeek</strong> and
           <strong>OpenAI</strong> block direct browser calls, so they&rsquo;re marked
-          <em>proxy</em> and will hit a CORS wall unless you front them yourself &mdash; use OpenRouter
+          <em>proxy</em> and will hit a CORS wall unless you front them yourself: use OpenRouter
           to reach GPT or DeepSeek models from the browser.</p>
       </div>
     </div>
@@ -736,11 +736,11 @@ while True:
         <h2>It runs code, files and a plan on its own.</h2>
       </div>
       <div class="answer-box">
-        <p>There is no toggle to switch on &mdash; every conversation can use tools: run
+        <p>There is no toggle to switch on, every conversation can use tools: run
           Python, make and edit files, install packages and plan a task. CorX3.8 decides for itself
           when a tool would help and calls it without asking permission first. The tools run in a
-          <strong>real Python sandbox inside your browser tab</strong> &mdash; not on the model
-          server &mdash; so you can watch every command in the <strong>Terminal</strong> panel and
+          <strong>real Python sandbox inside your browser tab</strong>, not on the model
+          server, so you can watch every command in the <strong>Terminal</strong> panel and
           nothing touches your computer outside the tab.</p>
       </div>
       <div class="grid grid-2 mt-m">
@@ -763,7 +763,7 @@ while True:
           <p style="font-size:.92rem">Open the work panel with the <strong>panel</strong> button by
             the title. It has three tabs: <strong>Terminal</strong> (commands as they run, and you can
             type Python yourself), <strong>Files</strong> (everything the sandbox holds, shared across
-            every chat in this tab &mdash; click one to edit, save or delete), and <strong>Plan</strong>
+            every chat in this tab: click one to edit, save or delete), and <strong>Plan</strong>
             (the live checklist).</p>
           <p style="font-size:.92rem;margin-top:12px">A real web search runs through
             <code>/api/search</code> (Google News, DuckDuckGo and Bing in turn, no key) with a sliding row of site logos while it
@@ -771,15 +771,14 @@ while True:
             and snippet. <code>/api/fetch</code> reads a page's actual content, including any code
             shown on it.</p>
           <p style="font-size:.92rem;margin-top:12px">The <strong>upload</strong> button in the
-            composer stages files &mdash; including <code>.zip</code> archives &mdash; into the
+            composer stages files, including <code>.zip</code> archives, into the
             sandbox at <code>/work</code>. Ask the agent to unzip, read or transform them.</p>
         </div>
       </div>
       <div class="callout mt-m">
-        <p><strong>Honest note on tools.</strong> The model server is a plain chat endpoint with no
+        <p><strong>A note on tools.</strong> The model server is a plain chat endpoint with no
           built-in tool-calling, so every system prompt teaches CorX3.8 a small text format for asking
-          to run a tool. Whether it uses tools well depends on the model following that format &mdash;
-          it is a Patois-focused fine-tune, not a dedicated tool-use model, so expect it to be better
+          to run a tool. Whether it uses tools well depends on the model following that format: it is a Patois-focused fine-tune, not a dedicated tool-use model, so expect it to be better
           at conversation than at long autonomous chains. If it ever ignores a tool it should have
           used, ask it directly and it will call it.</p>
       </div>
@@ -790,14 +789,14 @@ while True:
     <div class="shell">
       <div class="section-head">
         <p class="eyebrow">Step 4 &middot; Effort</p>
-        <h2>Low to Max &mdash; a real dial, not a label.</h2>
+        <h2>Low to Max, a real dial, not a label.</h2>
       </div>
       <div class="answer-box">
         <p>The <strong>Effort</strong> selector in the composer changes actual request parameters:
           how many tokens the model is allowed per reply, how many tool-call rounds the agent gets
           before it must stop, how many search results it pulls back, and how hard the system prompt
           tells it to think, weigh alternatives, verify its own steps and search when unsure. Higher
-          effort genuinely takes longer and spends more tokens &mdash; that trade is the point, for a
+          effort genuinely takes longer and spends more tokens, that trade is the point, for a
           task that is actually hard.</p>
       </div>
       <div class="table-wrap mt-m">
@@ -815,8 +814,7 @@ while True:
       </div>
       <p class="mt-m" style="font-size:.9rem;color:var(--muted)">Extra and Max also add a second pass:
         after producing code or a solution, the model is told to stop and deliberately review its own
-        work for bugs or missed cases &mdash; as if critiquing someone else's pull request &mdash;
-        before presenting it as done, and to say so plainly and correct itself if it realises
+        work for bugs or missed cases, as if critiquing someone else's pull request, before presenting it as done, and to say so plainly and correct itself if it realises
         mid-answer that something it already said was wrong.</p>
       <p class="mt-m" style="font-size:.9rem;color:var(--muted)">Effort is set per conversation and
         remembered when you come back to that chat.</p>
@@ -832,17 +830,17 @@ while True:
       <div class="grid grid-2">
         <div class="card">
           <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Conversations</h3>
-          <p style="font-size:.92rem">Every chat lives in the sidebar &mdash; switch between them,
+          <p style="font-size:.92rem">Every chat lives in the sidebar: switch between them,
             delete one, or start a <strong>New chat</strong>. Messages, the plan, the agent toggle
             and the effort level are all saved per conversation and restored exactly as you left
             them after a refresh, a closed tab, or days away. The Python sandbox itself is
-            <em>not</em> per-conversation &mdash; it is one real Python process for the whole tab, so
+            <em>not</em> per-conversation: it is one real Python process for the whole tab, so
             its files are shared across every chat you have open.</p>
         </div>
         <div class="card">
           <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Interrupted runs resume themselves</h3>
           <p style="font-size:.92rem">If you refresh mid-task, the chat notices on reload and starts
-            picking the run back up automatically after a few seconds &mdash; <strong>Dismiss</strong>
+            picking the run back up automatically after a few seconds: <strong>Dismiss</strong>
             if you'd rather not. Because the Python sandbox resets on every reload, the agent is told
             plainly that it did, and to check what actually exists with <code>list_files</code> before
             assuming anything survived.</p>
@@ -850,14 +848,14 @@ while True:
         <div class="card">
           <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Profile</h3>
           <p style="font-size:.92rem">Click your name at the bottom of the sidebar to set a name and
-            a photo. Both are saved locally and used to label your messages &mdash; never sent
+            a photo. Both are saved locally and used to label your messages: never sent
             anywhere, and not part of what the model itself receives.</p>
         </div>
         <div class="card">
           <h3 style="font-family:var(--sans);font-size:1rem;font-weight:600">Cross-chat memory</h3>
           <p style="font-size:.92rem">With <strong>Memory</strong> on in your profile, the agent can
             call <code>search_memory</code> to grep your <em>other</em> saved conversations for
-            relevant context &mdash; a real keyword search over what is in this browser, not a hidden
+            relevant context, a real keyword search over what is in this browser, not a hidden
             server-side record.</p>
         </div>
       </div>
@@ -867,7 +865,7 @@ while True:
   <section class="section-tight" id="limits">
     <div class="shell">
       <div class="section-head">
-        <p class="eyebrow">Honest limits</p>
+        <p class="eyebrow">Limits</p>
         <h2>What this set-up is, and isn&rsquo;t.</h2>
       </div>
       <ul class="check-list is-limits">
@@ -885,7 +883,7 @@ while True:
         <p class="eyebrow">Optional &middot; Heretic mode</p>
         <h2>The uncensored build, at full precision.</h2>
         <p class="lede">Same chat, same tools, a different set of weights. Heretic runs
-          <strong>Qwen3.8-27B-Heretic-Abliterated</strong> &mdash; the same base CorX3.8 was built
+          <strong>Qwen3.8-27B-Heretic-Abliterated</strong>, the same base CorX3.8 was built
           on, with the refusal direction removed. Run this cell instead of the one above and paste
           the URL it prints into the same box.</p>
       </div>
@@ -893,8 +891,7 @@ while True:
       <div class="callout" style="margin-bottom:22px">
         <p><strong>Read this first.</strong> <em>Abliterated</em> means the part of the network that
           produces refusals has been edited out. It will answer almost anything asked of it,
-          including things it should not, and it is no more accurate than the normal build &mdash;
-          removing the refusals does not add knowledge. There is no filter left except you.</p>
+          including things it should not, and it is no more accurate than the normal build: removing the refusals does not add knowledge. There is no filter left except you.</p>
         <p style="margin-top:10px">The tunnel URL is <strong>public and keyless by default</strong>.
           Anyone holding it can use this model on your GPU, under your connection. If you run
           Heretic, set <code>NO_AUTH = False</code> and an <code>API_KEY</code>, and do not paste the
@@ -2772,7 +2769,7 @@ else:
           as the normal server. Nothing in the chat needs to change.</p>
         <p style="margin-top:10px"><strong>Full precision means the F16 file.</strong> A GGUF repo
           ships one file per quantisation, so <code>PRECISION = "full"</code> pulls the F16/BF16
-          weights &mdash; roughly <strong>54&nbsp;GB</strong>, nothing quantised, every layer on the
+          weights: roughly <strong>54&nbsp;GB</strong>, nothing quantised, every layer on the
           GPU. That wants about <strong>64&nbsp;GB</strong> of VRAM once the 32k KV cache is in
           there. On a smaller card use <code>PRECISION = "auto"</code> and it takes the largest file
           that fits, or name a quant directly with <code>"q8_0"</code> or <code>"q4_k_m"</code>.
@@ -2793,14 +2790,14 @@ else:
         <p style="margin-top:10px">This cell will not let that happen quietly. It reads the startup
           log for the device it actually got and <strong>refuses to hand you a URL</strong> if the
           model landed on the CPU. Before printing the address it runs a warm-up generation and tells
-          you the measured <strong>tokens/sec</strong> — so you know it is fast enough without
+          you the measured <strong>tokens/sec</strong>, so you know it is fast enough without
           finding out in the chat. Set <code>REQUIRE_GPU = False</code> if you want it to serve
           anyway.</p>
         <p style="margin-top:10px"><strong>If it said &ldquo;CUDA Toolkit not found&rdquo;</strong>,
           that is the opposite problem and just as common: a notebook container ships the NVIDIA
           <em>driver</em> but no <em>toolkit</em>, so <code>nvidia-smi</code> works,
           <code>nvcc</code> does not exist, and there is nothing to compile with. No pip wheel fixes
-          it either &mdash; <code>nvidia-cuda-nvcc-cu12</code> contains <code>ptxas</code> and
+          it either: <code>nvidia-cuda-nvcc-cu12</code> contains <code>ptxas</code> and
           <code>nvvm</code> only, not <code>nvcc</code>.</p>
         <p style="margin-top:10px">So getting a backend is a <strong>ladder</strong>, and the cell
           walks it for you: compile with CUDA if <code>nvcc</code> is already there; else use a
@@ -2808,12 +2805,12 @@ else:
           driver</strong> if it is installed, which is a genuine GPU path needing no toolkit at all;
           else install about 1&nbsp;GB of CUDA from NVIDIA&rsquo;s own apt repo and compile. A
           software Vulkan device is refused at every rung. If none of it is possible it stops with a
-          list of what to change &mdash; it will never quietly serve from the CPU. Pin a rung with
+          list of what to change: it will never quietly serve from the CPU. Pin a rung with
           <code>BACKEND = "cuda"</code> or <code>"vulkan"</code>, and set
           <code>INSTALL_CUDA_TOOLKIT = False</code> to be told rather than fixed.</p>
         <p style="margin-top:10px">The chat helps from its side too: when your own server misses the
-          window it asks <code>/health</code> — which answers instantly even while generation crawls
-          — and tells you which problem you have, a dead tunnel URL or a model on the wrong device,
+          window it asks <code>/health</code>, which answers instantly even while generation crawls
+         , and tells you which problem you have, a dead tunnel URL or a model on the wrong device,
           quoting the device and tok/s it reported.</p>
       </div>
     </div>
@@ -2834,14 +2831,14 @@ else:
           <a href="/models/tristream-svs/">TriStream</a> keeps pitch, timbre and texture in three
           encoder streams that cannot exchange information until the fusion trunk, so a two-clip
           transplant is the natural operation rather than a trick. The <strong>voice</strong> clip
-          goes through the speaker encoder into the <strong>filter stream</strong> &mdash; the only
+          goes through the speaker encoder into the <strong>filter stream</strong>, the only
           stream that carries identity. The <strong>performance</strong> clip contributes its F0
           contour to the <strong>source stream</strong>, which has no pathway to timbre at all, and
           its texture to the <strong>residual stream</strong>. That is why the melody transfers
           without the original singer&rsquo;s voice coming with it.</p>
         <p style="margin-top:10px">The tunnel URL is <strong>public and keyless by default</strong>,
           exactly like the chat server. Anyone holding it can run voice cloning on your GPU. Clone
-          voices you have the right to use &mdash; your own, or ones you have permission for.</p>
+          voices you have the right to use: your own, or ones you have permission for.</p>
       </div>
 
       <ol class="steps" style="margin-bottom:26px">
@@ -2861,7 +2858,7 @@ else:
       </ol>
 
       <p style="margin-bottom:14px;font-size:.9rem">Press <strong>Copy</strong> for the whole
-        script &mdash; all 1879 lines, not just what is on screen. If you would rather not paste it
+        script, all 1879 lines, not just what is on screen. If you would rather not paste it
         by hand, the same file is at
         <code>curl -O https://corx-labs.com/chat/tristream-server.py</code>.</p>
       <div class="code-wrap">
@@ -4165,7 +4162,7 @@ def mel_to_wave(mel):
 
     Griffin-Lim is phase-blind, so this sounds thinner and slightly metallic
     next to a trained vocoder. It is still recognisably the right voice singing
-    the right notes, which is the whole point, and it is honest about what it is
+    the right notes, which is the whole point, and it says what it is
     — the response says a fallback vocoder was used.
     """
     import librosa
@@ -4801,7 +4798,7 @@ if KEEP_ALIVE and url:
         <div>
           <p class="eyebrow is-plain">Also from CorX Labs</p>
           <p class="also-title" id="also-automa">Automa, an AI agents app made in Jamaica</p>
-          <p class="also-text">Run a team of AI agents from your Android phone &mdash; research, writing, pictures and apps &mdash; on free AI models with no API key. A free APK download.</p>
+          <p class="also-text">Run a team of AI agents from your Android phone (research, writing, pictures and apps) on free AI models with no API key. A free APK download.</p>
           <span class="also-more">See Automa <span aria-hidden="true">&rarr;</span></span>
         </div>
       </a>

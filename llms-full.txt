@@ -1,4 +1,4 @@
-# CorX Labs — complete site content
+# CorX Labs: complete site content
 
 Source: https://corx-labs.com/
 Last updated: 2026-11-15
@@ -11,7 +11,7 @@ SUMMARY
 CorX Labs is an independent artificial intelligence research lab and research station based in
 Jamaica, in the Caribbean. Its foundational models are built from the ground up: the architecture,
 the tokenizer, the data pipeline and the training loop are all written in house, from random
-weights. Where a model builds on an existing open base instead — as CorX3.8-27B does — the lab
+weights. Where a model builds on an existing open base instead, as CorX3.8-27B does, the lab
 states that plainly rather than presenting it as from scratch.
 
 Slogan: "Architecting the future." Positioning: "from the ground up."
@@ -19,16 +19,16 @@ Founder: Nathan Lyttle, a solo developer and independent AI researcher from Jama
 X (formerly Twitter): https://x.com/corxlabs (@corxlabs)
 Contact: lkk89002@gmail.com
 Website: https://corx-labs.com/
-Models: CorX1.5 (language model, from scratch) — https://huggingface.co/Sigmandndnns/CorX1.5-160M
-        TriStream-SVS (singing voice synthesis, released) — https://huggingface.co/Sigmandndnns/TriStream-SVS-300M
-        CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) — https://huggingface.co/Sigmandndnns/CorX3.8-27B
-        HELIX (sequence architecture, no trained checkpoints) — https://corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
-        NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) — https://corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
-        Pluvium (version 0.3.0: rain for every town, hourly for three days and daily to 14 days, and hurricane tracks; a research model, not an official forecast; full-size network weights not yet published) — https://corx-labs.com/models/pluvium/ , https://pypi.org/project/pluvium/
-App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.9) — https://corx-labs.com/automa/ , APK: https://corx-labs.com/downloads/Automa-1.9.9.apk
+Models: CorX1.5 (language model, from scratch) (https://huggingface.co/Sigmandndnns/CorX1.5-160M
+        TriStream-SVS (singing voice synthesis, released)) https://huggingface.co/Sigmandndnns/TriStream-SVS-300M
+        CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) (https://huggingface.co/Sigmandndnns/CorX3.8-27B
+        HELIX (sequence architecture, no trained checkpoints)) https://corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
+        NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) (https://corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
+        Pluvium (version 0.3.0: rain for every town, hourly for three days and daily to 14 days, and hurricane tracks; a research model, not an official forecast; full-size network weights not yet published)) https://corx-labs.com/models/pluvium/ , https://pypi.org/project/pluvium/
+App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.9): https://corx-labs.com/automa/ , APK: https://corx-labs.com/downloads/Automa-1.9.9.apk
 
 ===============================================================================
-CORX1.5 — MODEL CARD
+CORX1.5: MODEL CARD
 ===============================================================================
 
 CorX1.5 is an open-source language model with approximately 158 million parameters (157.8M), built
@@ -47,10 +47,10 @@ Status: actively trained; new data added on an ongoing basis
 
 A custom decoder-only transformer, not copied from an existing model family.
 
-- Positional encoding: RoPE — relative position information that extrapolates cleanly across the
+- Positional encoding: RoPE, relative position information that extrapolates cleanly across the
   context window.
-- Feed-forward: SwiGLU — gated activation, better quality per parameter than a plain MLP.
-- Normalisation: RMSNorm — cheaper and more stable than LayerNorm at this scale.
+- Feed-forward: SwiGLU, gated activation, better quality per parameter than a plain MLP.
+- Normalisation: RMSNorm, cheaper and more stable than LayerNorm at this scale.
 - Role embeddings: a learned signal marking every token as user, assistant or raw text, so the
   model always knows whose turn it is. Most models infer this only from special tokens.
 - Loss masking: assistant-only. The model is trained to predict only the tokens it should generate,
@@ -62,16 +62,16 @@ A custom decoder-only transformer, not copied from an existing model family.
 
 ## Training pipeline
 
-1. Pretraining — approximately 3 billion tokens across 25 open datasets spanning code, math,
+1. Pretraining: approximately 3 billion tokens across 25 open datasets spanning code, math,
    reasoning, conversation and general web text, with a held-out validation split and early
    stopping to catch overfitting.
-2. Distillation — fine-tuned on responses generated by a larger teacher model (Qwen2.5-Instruct),
+2. Distillation: fine-tuned on responses generated by a larger teacher model (Qwen2.5-Instruct),
    with automated quality filtering that keeps only well-formatted, non-repetitive,
    correctly-verified answers.
-3. Reasoning training — trained to show step-by-step work inside <think>...</think> blocks before
+3. Reasoning training: trained to show step-by-step work inside <think>...</think> blocks before
    answering, including verified worked arithmetic and debugging exercises containing a known,
    injected bug that the answer can be checked against.
-4. Ongoing additions — new topics and targeted fixes are added continuously as gaps turn up in
+4. Ongoing additions: new topics and targeted fixes are added continuously as gaps turn up in
    testing. Updated checkpoints are pushed to the Hugging Face repository; its commit history is the
    source of truth for what is current.
 
@@ -79,8 +79,8 @@ A custom decoder-only transformer, not copied from an existing model family.
 
 - Holding a consistent identity and conversational style
 - Short, direct answers to greetings and common everyday questions
-- Declining requests it genuinely cannot fulfil — no internet access, no memory between chats, no
-  tool access — instead of fabricating an answer
+- Declining requests it genuinely cannot fulfil (no internet access, no memory between chats, no
+  tool access) instead of fabricating an answer
 - Small worked arithmetic, shown step by step
 - Recognising and explaining common Python bugs in a structured format
 
@@ -95,7 +95,7 @@ trained on billions. It should not be relied on for:
 - Production or safety-critical use of any kind
 
 This is an independent research and learning project, not a competitor to frontier or lab-scale
-models. It is shared in that spirit — small, transparent, and built to understand every part of how
+models. It is shared in that spirit: small, transparent, and built to understand every part of how
 it works.
 
 ## Safety
@@ -121,7 +121,7 @@ Apache 2.0. Use, modification and redistribution are permitted, including commer
 attribution and the licence notice are kept.
 
 ===============================================================================
-TRISTREAM-SVS — MODEL CARD
+TRISTREAM-SVS: MODEL CARD
 ===============================================================================
 
 TriStream-SVS is a 321.8M parameter singing voice synthesis model built entirely from scratch by
@@ -136,7 +136,7 @@ Human voice production factors naturally into three components:
 - The vocal-tract filter: resonant shaping by the throat, mouth cavity and tongue position. This is
   what makes a voice sound like a specific individual, and a given vowel sound like that vowel
   regardless of who produces it.
-- Turbulent noise: breath, fricative consonants and non-tonal texture — the airy quality of a
+- Turbulent noise: breath, fricative consonants and non-tonal texture, the airy quality of a
   breathy delivery, the hiss of an "s".
 
 Rather than hoping a neural network discovers this structure implicitly through training, TriStream
@@ -144,39 +144,39 @@ builds it directly into the architecture as a hard constraint.
 
 ## Building blocks
 
-1. Source stream — 3 transformer layers. Receives ONLY a log-scaled F0 pitch contour and a binary
+1. Source stream: 3 transformer layers. Receives ONLY a log-scaled F0 pitch contour and a binary
    voiced/unvoiced flag. It never receives the mel spectrogram, the singer embedding, or any
    timbre-carrying signal. It is architecturally incapable of representing who is singing. This
-   makes the disentanglement structural rather than merely encouraged — there is no pathway through
+   makes the disentanglement structural rather than merely encouraged: there is no pathway through
    which timbre could reach it.
-2. Filter stream — 5 transformer layers, the deepest, cross-attending to the lyric encoder.
+2. Filter stream: 5 transformer layers, the deepest, cross-attending to the lyric encoder.
    Receives the mel spectrogram, a singer identity embedding and an emotion/technique embedding.
    The ONLY stream that carries identity information.
-3. Residual stream — 2 transformer layers. Breath noise, fricative consonants, articulation texture.
-4. Lyric / phoneme encoder — 4 transformer layers, processed independently, conditioning the Filter
+3. Residual stream: 2 transformer layers. Breath noise, fricative consonants, articulation texture.
+4. Lyric / phoneme encoder: 4 transformer layers, processed independently, conditioning the Filter
    stream and the Fusion Trunk by cross-attention. Keeps "what should be sung" separate from "how it
    should sound".
-5. Late fusion trunk — 8 transformer layers with cross-attention to the lyric encoder. The single
+5. Late fusion trunk: 8 transformer layers with cross-attention to the lyric encoder. The single
    point where pitch, timbre and texture are permitted to interact. Placed as late as possible.
-6. Adversarial singer head — a classifier on the trunk output trained to identify the singer, whose
+6. Adversarial singer head, a classifier on the trunk output trained to identify the singer, whose
    gradient passes through a gradient reversal layer. As the classifier improves, the trunk is
    pushed the opposite way, degrading its own identifiability. Domain-adversarial training used
    specifically as an ANTI-MEMORISATION mechanism.
-7. Speaker encoder — a separate convolutional network for zero-shot voice cloning. Dilated
+7. Speaker encoder, a separate convolutional network for zero-shot voice cloning. Dilated
    convolutions for a wide receptive field, squeeze-excitation blocks for channel weighting, and
    attentive statistics pooling (weighted mean and standard deviation) to collapse a variable-length
    clip into a fixed-size embedding. Trained contrastively, so closeness in the embedding space
    corresponds to sounding like the same person.
-8. Duration predictor — frames per phoneme, predicted in log space because note durations are
+8. Duration predictor: frames per phoneme, predicted in log space because note durations are
    heavily skewed.
-9. Pitch predictor — separately predicts base pitch, a "scoop" component (sliding into a pitch
+9. Pitch predictor: separately predicts base pitch, a "scoop" component (sliding into a pitch
    rather than hitting it instantly, one of the clearest tells separating human singing from robotic
    synthesis), and vibrato depth and rate, ramped in over roughly a quarter-second. Because they are
    separate, they remain independently adjustable after generation.
-10. Beat alignment — beat tracking on a supplied backing track, with SOFT quantisation and an
+10. Beat alignment: beat tracking on a supplied backing track, with SOFT quantisation and an
     adjustable swing parameter, because perfectly quantised timing is a reliable tell of synthetic
     vocals.
-11. Flow-matching decoder — 5 layers using rectified flow matching. Predicts a direct velocity field
+11. Flow-matching decoder: 5 layers using rectified flow matching. Predicts a direct velocity field
     from noise toward the target mel spectrogram instead of reversing a 100+ step diffusion process,
     giving full-quality generation in roughly 32 sampling steps.
 
@@ -232,7 +232,7 @@ agreement, or to deceive listeners about who is singing. The adversarial singer 
 memorisation of training singers; it does not address misuse of zero-shot cloning at inference time.
 
 ===============================================================================
-CORX3.8-27B — MODEL CARD
+CORX3.8-27B: MODEL CARD
 ===============================================================================
 
 CorX3.8-27B is CorX Labs' third and largest model, described as Jamaica's first large open-weight
@@ -245,8 +245,8 @@ released.
 A Jamaican Patois-speaking assistant fine-tuned to:
 - Speak Jamaican Patois by default, and switch to standard English when written to in English or
   asked to.
-- Answer directly — no filler, no false agreement; it gives its honest read and owns its mistakes.
-- Hold boundaries — it declines requests that cross a line and says so plainly rather than complying
+- Answer directly: no filler, no false agreement; it gives its honest read and owns its mistakes.
+- Hold boundaries: it declines requests that cross a line and says so plainly rather than complying
   under pressure.
 - Carry everyday Jamaican cultural reference expressed in a natural voice.
 It keeps the general reasoning, coding and mathematics ability of its base model, so it works as a
@@ -257,7 +257,7 @@ normal assistant when needed.
 CorX3.8 is NOT trained from scratch. It is a fine-tune of an existing open-weight base model,
 Qwen3.8-27B, released under Apache 2.0. The underlying reasoning comes from that base; CorX Labs
 added the Jamaican voice, the direct register and the cultural grounding. It is fully merged and
-standalone — no adapter step and no separate base-model download. This makes it a different kind of
+standalone: no adapter step and no separate base-model download. This makes it a different kind of
 project from CorX1.5, which was trained from random weights.
 
 ## What it is NOT
@@ -278,8 +278,8 @@ project from CorX1.5, which was trained from random weights.
 - Common Jamaican cultural reference: good.
 - General reasoning / explanation: good (inherited from the base).
 - Code, mathematics: good (inherited from the base).
-- Specific Jamaican facts (roads, laws, prices): weak — use retrieval.
-- Real-time / current information: none — no live data.
+- Specific Jamaican facts (roads, laws, prices): weak, use retrieval.
+- Real-time / current information: none, no live data.
 
 ## Grounding on Jamaican facts (RAG)
 
@@ -291,7 +291,7 @@ for anything factual.
 
 ## Running it
 
-The weights are fully merged, so it loads with the standard transformers API — no adapter step, no
+The weights are fully merged, so it loads with the standard transformers API: no adapter step, no
 separate base download. It runs in 4-bit on a single ~24GB GPU; full bf16 needs ~56GB. Apache 2.0,
 inherited from the base model, with attribution to Qwen retained as the licence requires.
 
@@ -303,14 +303,14 @@ rely on it for factual accuracy without retrieval, for professional advice, or a
 decision-maker in any consequential setting.
 
 ===============================================================================
-CORX CHAT — LIVE BROWSER CHAT AND AGENT
+CORX CHAT: LIVE BROWSER CHAT AND AGENT
 ===============================================================================
 
 URL: https://corx-labs.com/chat/  ·  Set-up guide: https://corx-labs.com/chat/documentation/
 
 CorX Chat is a browser client for CorX3.8-27B. The model runs on CorX Labs' own server (a GPU
 notebook exposing an OpenAI-compatible endpoint, keyless, with CORS enabled), and the browser calls
-it DIRECTLY — no proxy, no OAuth. Because that endpoint's public URL is an ephemeral Cloudflare
+it DIRECTLY: no proxy, no OAuth. Because that endpoint's public URL is an ephemeral Cloudflare
 quick tunnel, it is editable in the chat's Settings dialog and persists in the browser.
 
 ## What is live
@@ -320,11 +320,11 @@ quick tunnel, it is editable in the chat's Settings dialog and persists in the b
   protocol and this page parses and executes the calls for real. Tools: set_plan, complete_step, run_python,
   write_file, read_file, delete_file, list_files, install_packages, deliver_file, web_search,
   fetch_url, search_memory.
-- A real Python sandbox — CPython compiled to WebAssembly, running in the tab, with its own Terminal
+- A real Python sandbox: CPython compiled to WebAssembly, running in the tab, with its own Terminal
   panel showing every command and its actual output (including real tracebacks). A Files panel lists
   everything the sandbox holds; click a file to edit, save, download or delete it. Uploads (including
   .zip archives) are staged into the sandbox; the agent uses Python's zipfile module to read or edit
-  them — there is no separate "zip tool", it is just real Python with real files.
+  them: there is no separate "zip tool", it is just real Python with real files.
   Shared across every conversation in the tab: one sandbox, one filesystem.
 - Real web search via /api/search (Google News, then DuckDuckGo, then Bing; no key) and real page fetches via /api/fetch (an
   SSRF-guarded proxy), so the browser is not blocked by CORS. A search shows a sliding strip of site
@@ -340,13 +340,13 @@ quick tunnel, it is editable in the chat's Settings dialog and persists in the b
   results it pulls, and how hard the system prompt tells it to think, verify and re-check its work.
   Higher effort genuinely takes longer and uses more tokens.
 - Saved conversations in a sidebar (switch, delete, "New chat"), a profile (name + photo, saved
-  locally), and connection settings — all persisted in this browser's localStorage and unaffected by
+  locally), and connection settings, all persisted in this browser's localStorage and unaffected by
   a refresh.
 - If a run is interrupted by a page refresh, the chat detects it on reload and auto-resumes after a
   few seconds (with a Dismiss option), telling the model the sandbox was reset so it re-checks
   rather than assumes files still exist.
 - If a run_python call fails, the real traceback is fed back to the model on the next round so it
-  can fix its own code — this is the existing multi-round tool loop, not a special "auto-fix" path.
+  can fix its own code, this is the existing multi-round tool loop, not a special "auto-fix" path.
 
 ## Honest limits
 
@@ -355,11 +355,11 @@ quick tunnel, it is editable in the chat's Settings dialog and persists in the b
   means the URL needs updating in Settings, not that something is broken.
 - One GPU serialises requests; the server queues and returns a clear "busy" rather than faking
   concurrency.
-- No native tool-calling on this backend — Agent mode's tool protocol depends on the model following
+- No native tool-calling on this backend: Agent mode's tool protocol depends on the model following
   a text format reliably, which is not guaranteed the way it would be with a purpose-built
   tool-calling model.
 - Keyless by default: anyone with the current URL can use the GPU while the notebook is up.
-- The sandbox has no access to the user's computer — only its own in-memory filesystem, discarded
+- The sandbox has no access to the user's computer, only its own in-memory filesystem, discarded
   when the tab closes.
 
 ===============================================================================
@@ -367,17 +367,16 @@ ABOUT CORX LABS
 ===============================================================================
 
 CorX Labs was founded by Nathan, a solo developer from Jamaica. For years the goal was the same:
-build an AI — not adapt someone else's, but write the thing himself and train it from random
+build an AI, not adapt someone else's, but write the thing himself and train it from random
 weights.
 
-It started with APIs — an early chatbot built on top of Gemini and customised piece by piece, which
+It started with APIs, an early chatbot built on top of Gemini and customised piece by piece, which
 worked, but was never the same as building from the ground up. Then came fine-tuning, which failed:
 slow GPUs, training runs that took far too long, and eventually the decision to walk away from that
 approach.
 
 CorX1.5 is what came out the other side: a custom transformer architecture, a tokenizer trained
-from scratch, and a three-stage pipeline covering pretraining, distillation and reasoning —
-designed, debugged and trained solo on a single GPU. Every checkpoint in the repository represents
+from scratch, and a three-stage pipeline covering pretraining, distillation and reasoning: designed, debugged and trained solo on a single GPU. Every checkpoint in the repository represents
 real hours spent fixing data pipelines, chasing down overfitting, and learning how these systems
 actually work underneath. It is open-sourced so other people can take it apart the same way.
 
@@ -395,7 +394,7 @@ DEVELOPERS
 
 CorX Labs is a one-person research lab.
 
-Nathan Lyttle — Founder and AI Researcher. A 14-year-old developer from Jamaica. He designed the
+Nathan Lyttle: Founder and AI Researcher. A 14-year-old developer from Jamaica. He designed the
 architecture, trained the tokenizer, wrote the pretraining and fine-tuning pipelines, curated the
 data and ran every training job, solo, on a single GPU, from random weights. There is no team
 behind CorX1.5 and no base model underneath it.
@@ -403,14 +402,14 @@ behind CorX1.5 and no base model underneath it.
 Profile, quick facts and bios: https://corx-labs.com/nathan/
 
 Journey:
-- Age 12 — built a chatbot on top of Gemini's API and customised its behaviour. Useful, but it was
+- Age 12: built a chatbot on top of Gemini's API and customised its behaviour. Useful, but it was
   somebody else's model wearing his configuration.
-- Age 13 — moved to fine-tuning existing base models. It failed: slow GPUs, training runs that took
+- Age 13: moved to fine-tuning existing base models. It failed: slow GPUs, training runs that took
   far too long, and eventually he stopped.
-- Age 14 — wrote a model instead of adapting one. Custom decoder-only transformer, tokenizer
+- Age 14: wrote a model instead of adapting one. Custom decoder-only transformer, tokenizer
   trained from scratch, ~3 billion tokens of pretraining across 25 open datasets, then distillation
   and reasoning training. The result is CorX1.5.
-- Now — CorX1.5 is open-sourced under Apache 2.0 and still being trained, with updated checkpoints
+- Now: CorX1.5 is open-sourced under Apache 2.0 and still being trained, with updated checkpoints
   released as new data is added.
 
 Contact: lkk89002@gmail.com
@@ -424,7 +423,7 @@ Author: Nathan
 
 Core claim: 3 billion training tokens never need to fit in GPU memory. Tokens stream through the
 GPU a batch at a time and are discarded. What has to fit is the model weights, their gradients, the
-optimiser state, and the activations for one micro-batch — a couple of gigabytes for a 158M model,
+optimiser state, and the activations for one micro-batch, a couple of gigabytes for a 158M model,
 and that figure does not change with dataset size. Dataset size is a disk and wall-clock problem;
 model size is the memory problem.
 
@@ -446,7 +445,7 @@ the dataset position trivially resumable.
 Packing: documents are concatenated with a separator and sliced at exactly 1,024 tokens, so no
 compute is spent on padding. A naive padded pipeline with 300-token average documents padded to
 1,024 wastes roughly 70% of every step. Assistant-only loss masking is the equivalent idea on the
-loss side — the model reads user tokens as context but is only ever graded on tokens it should
+loss side, the model reads user tokens as context but is only ever graded on tokens it should
 produce.
 
 Gradient accumulation: micro-batch size is a memory constraint; effective batch size is a
@@ -469,7 +468,7 @@ Wall-clock: 3 billion tokens takes about 83 hours at 10,000 tokens/second, 33 ho
 the most common bottleneck is a GPU idling while it waits for data.
 
 Surviving the run: checkpoints must contain the model state_dict, the optimiser state_dict, the
-scheduler state and step counter, the RNG state, and the config — written to a temporary file and
+scheduler state and step counter, the RNG state, and the config: written to a temporary file and
 renamed, so a crash mid-write cannot destroy the last good checkpoint.
 
 Stopping: a held-out validation split is carved out before training and never sampled from during
@@ -477,7 +476,7 @@ training. Training loss tells you the optimiser is working; only validation loss
 model is.
 
 ===============================================================================
-AUTOMA — https://corx-labs.com/automa/
+AUTOMA: https://corx-labs.com/automa/
 ===============================================================================
 
 Automa is an Android app, made in Jamaica by Nathan at CorX Labs, that runs a whole company of AI
@@ -503,8 +502,7 @@ WHAT IT DOES
    - Costs by agent, task and month, hard budget stops and free-model usage limits.
 
 FREE MODELS AND MOAN
-Twenty-plus free chat models and two free image models need no key, no account and no card —
-among them Moan, Nemotron 3 Ultra 550B, DeepSeek V4.1 Flash, Gemma 4, Qwen 3.8 27B, SDXL Lightning
+Twenty-plus free chat models and two free image models need no key, no account and no card: among them Moan, Nemotron 3 Ultra 550B, DeepSeek V4.1 Flash, Gemma 4, Qwen 3.8 27B, SDXL Lightning
 and SDXL Base. Moan is Automa's own Jamaican model (on Nemotron 3 Ultra): it answers in Jamaican
 Patois first and Standard Jamaican English for formal documents and code, carries a primer on
 Jamaica's history, government, courts, statutes, economy and culture, and keeps a living index of
@@ -540,11 +538,11 @@ A: An independent AI research lab and research station based in Jamaica, in the 
    designs, trains and open-sources language models built from the ground up.
 
 Q: Is there an open-source AI model made in Jamaica?
-A: Yes — CorX1.5, designed and trained in Jamaica by CorX Labs and released under Apache 2.0 at
+A: Yes, CorX1.5, designed and trained in Jamaica by CorX Labs and released under Apache 2.0 at
    https://huggingface.co/Sigmandndnns/CorX1.5-160M
 
 Q: Where can I download or try CorX1.5?
-A: https://huggingface.co/Sigmandndnns/CorX1.5-160M — weights, tokenizer and model definition.
+A: https://huggingface.co/Sigmandndnns/CorX1.5-160M: weights, tokenizer and model definition.
 
 Q: Who built CorX1.5?
 A: Nathan, a solo developer and independent AI researcher from Jamaica, founder of CorX Labs. The
@@ -561,7 +559,7 @@ Q: Should I use CorX1.5 in production?
 A: No. It is an independent research and learning project, not a production system.
 
 ================================================================================
-BENCHMARKS — https://corx-labs.com/benchmarks/
+BENCHMARKS: https://corx-labs.com/benchmarks/
 ================================================================================
 
 CorX Labs publishes a comparison index of 189 language models from 42 labs, last updated in
@@ -584,7 +582,7 @@ The evaluations tracked are: MMLU-Pro (knowledge, ten-option multiple choice), G
 (graduate-level science reasoning, 198 questions), AIME 2025 (competition mathematics), MATH-500
 (broader competition mathematics), SWE-bench Verified (real GitHub issues, patch must pass the
 project's own tests), SWE-bench Pro (a harder, contamination-resistant successor), Terminal-Bench
-2.0, 2.1 and 4.0 (agent tasks in a real terminal — three separate columns, because each version
+2.0, 2.1 and 4.0 (agent tasks in a real terminal: three separate columns, because each version
 has a different task set and the scores are not comparable), Frontier-Bench v0.1 (problems built
 to resist memorisation), LiveCodeBench (competitive programming collected after each model's
 training cutoff, so it resists contamination), HumanEval (short Python functions, now saturated),
