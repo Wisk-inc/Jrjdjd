@@ -1,19 +1,35 @@
-// Turn the Radar database into the snapshot the Scam Radar page reads:
-//   node tools/scam-radar/export.mjs [--db FILE] [--out assets/data/scam-radar.json]
+// Turn the Radar database into what the Scam Radar pages read.
 //
-// What it publishes, and why so little:
+//   node tools/scam-radar/export.mjs [--db FILE] [--out assets/data/scam-radar.json]
+//   node tools/scam-radar/export.mjs --all DIR      everything, for the scam-radar-data branch
+//
+// Files written with --all:
+//   scam-radar.json          the snapshot /scam-radar/ draws
+//   scam-radar-status.json   a few hundred bytes the page polls to see if there is a new snapshot
+//   lookup/xx.json           one record per watched site, keyed by a hash of its name ("Check a site")
+//   radar-map.json           the named sites in the shape Scam Finder's map viewer draws
+//
+// What is published, and why so little:
 // - Counts by country are taken over every live, high-risk site Radar watches.
-// - A site is NAMED only when the evidence is strong: it is up, scores 70 or more, and either runs a
-//   scam kit Radar recognises or is already on a public scam or phishing blocklist. A score from the
+// - A site is NAMED only when the evidence is strong: it scores 70 or more, and either runs a scam
+//   kit Radar recognises or is already on a public scam or phishing blocklist. A score from the
 //   spelling of a name alone is never enough to name a site.
 // - Names are defanged ("example[.]com") so they cannot be clicked.
-// - Nothing written by the scammers is copied: no page titles, no text, no phone numbers, emails or
-//   wallets (a contact on a scam page is often someone else's hijacked account). Labels come from
-//   Radar's own tables: the kit, the brand being impersonated, the kind of lure.
+// - From the scam page itself only the title is copied, for named sites, with phone numbers, emails,
+//   links and handles removed. No page text, no contacts, no wallets, no tracking IDs: a contact on
+//   a scam page is often someone else's hijacked account. Everything else comes from Radar's own
+//   tables: the kit, the brand being impersonated, the kind of lure, the reasons behind the score.
+// - The lookup holds records for sites that are not named, but under a hash, so it answers a
+//   question about a site somebody already has. It cannot be read as a list.
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { RadarStore, SRC, defaultDbPath } from './scam-finder/lib/radar/store.js';
 import { BRANDS } from './scam-finder/data/brands.js';
+import { buildCampaigns, buildLinks, describeShape } from './scam-finder/lib/graph.js';
+import { categoryName } from './scam-finder/lib/radar/checker.js';
+import { RadarStore, SRC, defaultDbPath } from './scam-finder/lib/radar/store.js';
+import { overview, toMapDomain } from './scam-finder/lib/radar/view.js';
+import { LEVELS } from './scam-finder/lib/score.js';
 
 const args = process.argv.slice(2);
 const flag = (name, fallback) => {
@@ -21,19 +37,37 @@ const flag = (name, fallback) => {
   return i >= 0 && args[i + 1] ? args[i + 1] : fallback;
 };
 const dbFile = flag('--db', defaultDbPath());
-const outFile = flag('--out', path.join(import.meta.dirname, '..', '..', 'assets', 'data', 'scam-radar.json'));
+const allDir = flag('--all', null);
+const outFile = flag('--out', allDir
+  ? path.join(allDir, 'scam-radar.json')
+  : path.join(import.meta.dirname, '..', '..', 'assets', 'data', 'scam-radar.json'));
 
 const NAME_MIN_RISK = 70;
 const COUNT_MIN_RISK = 60;
+const LOOKUP_MIN_RISK = 40;
+const NAMED_MAX = 500;
+const MAP_MAX = 300;
+const FEED_MAX = 80;
 const LISTED = { PHISHING: 'phishing blocklist', SCAM: 'scam blocklist', CRYPTO: 'crypto-scam blocklist',
   THREAT: 'threat blocklist', URLFEED: 'live phishing feed' };
+const HOUR = 3600;
 const DAY = 86400;
 
 const iso = (seconds) => (seconds ? new Date(seconds * 1000).toISOString() : null);
 const defang = (name) => String(name).toLowerCase().replace(/[^a-z0-9.-]/g, '').replace(/\./g, '[.]');
 const country = (code) => (/^[A-Z]{2}$/.test(code || '') ? code : null);
 const listedBy = (src) => Object.entries(LISTED).filter(([key]) => src & SRC[key]).map(([, label]) => label);
-const clean = (text, max = 60) => String(text || '').replace(/[<>"'`]/g, '').replace(/\s+/g, ' ').trim().slice(0, max);
+// Values are only ever shown as text, so this is tidying, not escaping: no markup, no control characters
+const clean = (text, max = 60) =>
+  String(text || '').replace(/[<>`\u0000-\u001f\u007f]/g, '').replace(/\s+/g, ' ').trim().slice(0, max);
+// A scam page's title, made safe to repeat: no phone numbers, emails, links or handles
+const cleanTitle = (title) => clean(String(title || '')
+  .replace(/\b(?:https?:\/\/|www\.)\S+/gi, ' ')
+  .replace(/\S+@\S+\.\S+/g, ' ')
+  .replace(/(?:^|\s)@\w{3,}/g, ' ')
+  .replace(/\+?\d[\d\s().-]{5,}\d/g, (run) => (run.replace(/\D/g, '').length >= 7 ? ' ' : run))
+  .replace(/\b([a-z0-9-]{2,})\.([a-z]{2,})\b/gi, '$1[.]$2'), 90) || null;
+const hashOf = (name) => crypto.createHash('sha256').update(String(name).toLowerCase()).digest('hex').slice(0, 12);
 
 const count = (items) =>
   [...items.reduce((map, key) => map.set(key, (map.get(key) || 0) + 1), new Map())]
@@ -43,6 +77,30 @@ const BRAND_COUNTRY = new Map(BRANDS.map((b) => [b.name, b.country || null]));
 const brandsOf = (site) => [...new Set((site.detail?.brands || []).filter((b) => !b.official).map((b) => clean(b.name)))].filter(Boolean);
 const kitOf = (site) => clean(site.detail?.kits?.[0]?.name || site.detail?.kits?.[0]?.id) || null;
 const targetsOf = (site) => [...new Set((site.detail?.targets || []).map((t) => country(t.country)).filter(Boolean))];
+const kindOf = (site) => categoryName(site.category) || null;
+const strong = (site) =>
+  site.risk >= NAME_MIN_RISK && ((site.detail?.kits || []).length > 0 || listedBy(site.src).length > 0);
+
+// What happened, in Radar's own words. Nothing from the page is repeated here.
+const EVENT_TEXT = {
+  'first-visit': () => 'Found live',
+  'taken-down': (d) => `Taken down${d.reason ? `. ${clean(d.reason, 70)}` : ''}`,
+  back: () => 'Came back online',
+  title: () => 'Switched to a new lure',
+  rebuilt: () => 'Page rebuilt with a different layout',
+  content: () => 'Wording on the page changed',
+  moved: () => 'Moved to a different server',
+  nameservers: () => 'Nameservers changed',
+  kit: (d, site) => `Scam kit detected${kitOf(site) ? `: ${kitOf(site)}` : ''}`,
+  risk: (d) => `Risk went from ${clean(d.from, 10)} to ${clean(d.to, 10)}`,
+  listed: (d) => `Added to a ${(d.on || []).map((l) => clean(l, 30)).join(', ') || 'blocklist'}`,
+};
+const eventText = (event, site) => (EVENT_TEXT[event.type] || (() => clean(event.type, 20)))(event.detail || {}, site);
+
+const writeJson = (file, value, indent = 0) => {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, `${JSON.stringify(value, null, indent)}\n`);
+};
 
 if (!fs.existsSync(dbFile)) {
   console.error(`No Radar database at ${dbFile}. Build one with: node tools/scam-radar/scam-finder/cli.js radar ingest all`);
@@ -54,16 +112,18 @@ try {
   const nowSec = Math.floor(Date.now() / 1000);
   const lastTick = store.getMeta('lastTick'); // the last cycle's report: { at, checks, ... }
 
-  const live = store.listSites({ state: 'live', minRisk: COUNT_MIN_RISK, limit: 100000 }).filter((s) => s.checks > 0);
+  const live = store.listSites({ state: 'live', minRisk: COUNT_MIN_RISK, limit: 200000 }).filter((s) => s.checks > 0);
   const targets = tally(live.flatMap(targetsOf));
   const hosts = tally(live.filter((s) => !s.detail?.sharedNetwork).map((s) => country(s.country)).filter(Boolean));
 
   // Leaderboards, over every live high-risk site (counts only; nothing here names a site)
   const leaderboards = {
     countries: targets.slice(0, 25),
+    hosting: hosts.slice(0, 25),
     brands: count(live.flatMap(brandsOf)).slice(0, 25)
       .map(([name, n]) => ({ name, country: BRAND_COUNTRY.get(name) || null, live: n })),
     kits: count(live.map(kitOf).filter(Boolean)).slice(0, 25).map(([name, n]) => ({ name, live: n })),
+    kinds: count(live.map(kindOf).filter(Boolean)).slice(0, 15).map(([name, n]) => ({ name, live: n })),
     networks: count(live.filter((s) => !s.detail?.sharedNetwork && s.network).map((s) => `${clean(s.network, 50)}|${country(s.country) || ''}`))
       .slice(0, 25).map(([key, n]) => { const [name, cc] = key.split('|'); return { name, country: cc || null, live: n }; }),
   };
@@ -84,42 +144,69 @@ try {
     entry.kits = count(entry.kits).slice(0, 4).map(([name, n]) => ({ name, live: n }));
   }
 
-  const strong = (site) =>
-    site.risk >= NAME_MIN_RISK && ((site.detail?.kits || []).length > 0 || listedBy(site.src).length > 0);
+  const strongLive = live.filter(strong);
+  const named = strongLive.slice(0, NAMED_MAX).map((site) => {
+    const d = site.detail || {};
+    return {
+      domain: defang(site.name),
+      risk: site.risk,
+      title: cleanTitle(site.title),
+      kind: kindOf(site),
+      kit: kitOf(site),
+      impersonates: brandsOf(site).slice(0, 3),
+      lure: clean(d.lures?.[0]?.label) || null,
+      targets: targetsOf(site),
+      hostedIn: d.sharedNetwork ? null : country(site.country),
+      behindSharedNetwork: Boolean(d.sharedNetwork),
+      listedBy: listedBy(site.src),
+      firstSeen: iso(site.first_seen),
+      upShare: site.checks ? Math.round((100 * site.ups) / site.checks) : null,
+    };
+  });
 
-  const named = live
-    .filter(strong)
-    .map((site) => {
-      const d = site.detail || {};
-      return {
-        domain: defang(site.name),
-        risk: site.risk,
-        kit: kitOf(site),
-        impersonates: brandsOf(site).slice(0, 3),
-        lure: clean(d.lures?.[0]?.label) || null,
-        targets: targetsOf(site),
-        hostedIn: d.sharedNetwork ? null : country(site.country),
-        behindSharedNetwork: Boolean(d.sharedNetwork),
-        listedBy: listedBy(site.src),
-        firstSeen: iso(site.first_seen),
-        upShare: site.checks ? Math.round((100 * site.ups) / site.checks) : null,
-      };
-    })
-    .slice(0, 300);
+  // Events, each tied to its site once. Asked for by kind, so a busy hour of first visits cannot
+  // crowd the week's takedowns out of the window.
+  const siteCache = new Map();
+  const siteFor = (name) => {
+    if (!siteCache.has(name)) siteCache.set(name, store.getSite(name));
+    return siteCache.get(name);
+  };
+  const eventsOf = (query) => store.recentEvents(query)
+    .map((event) => ({ event, site: siteFor(event.name) }))
+    .filter(({ site }) => site && strong(site));
 
-  // Takedowns of the last week, for sites that met the same bar
-  const takedowns = store
-    .recentEvents({ since: nowSec - 7 * DAY, types: ['taken-down'], limit: 2000 })
-    .map((event) => ({ event, site: store.getSite(event.name) }))
-    .filter(({ site }) => site && site.risk >= NAME_MIN_RISK && ((site.detail?.kits || []).length || listedBy(site.src).length))
+  // Takedowns of the last week, for sites that met the naming bar
+  const takedowns = eventsOf({ since: nowSec - 7 * DAY, types: ['taken-down'], limit: 3000 })
     .slice(0, 100)
     .map(({ event, site }) => ({
       domain: defang(site.name),
       at: iso(event.at),
-      reason: clean(event.detail?.reason || site.down_reason, 40) || null,
-      targets: [...new Set((site.detail?.targets || []).map((t) => country(t.country)).filter(Boolean))],
+      reason: clean(event.detail?.reason || site.down_reason, 60) || null,
+      livedHours: event.detail?.livedFor > 0 ? Math.round(event.detail.livedFor / HOUR) : null,
+      targets: targetsOf(site),
     }));
 
+  // The live feed: what Radar saw happen to named sites, newest first
+  const FEED_TYPES = ['first-visit', 'taken-down', 'back', 'title', 'rebuilt', 'content', 'moved', 'nameservers', 'kit', 'listed'];
+  const feed = eventsOf({ since: nowSec - 2 * DAY, types: FEED_TYPES, limit: 8000 })
+    .filter(({ event }) => event.type !== 'first-visit' || event.detail?.state === 'live')
+    .slice(0, FEED_MAX)
+    .map(({ event, site }) => ({
+      at: iso(event.at),
+      domain: defang(site.name),
+      type: event.type,
+      text: eventText(event, site),
+      kind: kindOf(site),
+      targets: targetsOf(site),
+    }));
+
+  // How busy the scanner has been, over every watched site (counts only)
+  const activityOver = (seconds) => Object.fromEntries(
+    store.prepare('SELECT type, count(*) AS n FROM events WHERE at >= ? GROUP BY type').all(nowSec - seconds)
+      .map((row) => [row.type, row.n]));
+  const activity = { hour: activityOver(HOUR), day: activityOver(DAY) };
+
+  const view = overview(store);
   const snapshot = {
     generated: new Date().toISOString(),
     lastScan: typeof lastTick?.at === 'string' ? lastTick.at : null,
@@ -129,27 +216,184 @@ try {
       newlyRegistered: stats.registered || 0,
       fromCertificates: stats.certified || 0,
       alreadyBlocklisted: stats.listed || 0,
+      worthVisiting: stats.hot || 0,
+      inBulkBatches: stats.batched || 0,
       watched: stats.watched || 0,
+      visited: stats.visited || 0,
+      liveNow: stats.live || 0,
       liveHighRisk: live.length,
-      named: named.length,
+      critical: live.filter((s) => s.level === 'critical').length,
+      named: strongLive.length,
       runningKnownKit: stats.kits || 0,
       takenDown: stats.takenDown || 0,
       visitsMade: stats.checks || 0,
+      eventsLogged: stats.events || 0,
     },
+    lastCycle: lastTick?.checks ? {
+      visited: lastTick.checks.checked || 0,
+      up: lastTick.checks.live || 0,
+      down: lastTick.checks.down || 0,
+      newFromCertificates: lastTick.certificates?.newDomains || 0,
+      addedToWatchlist: lastTick.promoted || 0,
+      seconds: lastTick.seconds || null,
+    } : null,
+    states: (view.byState || []).map((row) => ({ state: clean(row.key, 20), sites: row.sites })),
     targets,
     hosts,
     leaderboards,
     byCountry,
     named,
+    namedTotal: strongLive.length,
+    feed,
+    activity,
     takedowns,
+    batches: store.cohorts().slice(0, 12).map((cohort) => ({
+      shape: clean(describeShape(cohort.shape), 60), names: cohort.size, timesOverRepresented: cohort.lift })),
     rules: {
       countsInclude: `live sites scoring ${COUNT_MIN_RISK} or more`,
-      namedWhen: `live, scoring ${NAME_MIN_RISK} or more, and running a recognised scam kit or already on a public blocklist`,
+      namedWhen: `scoring ${NAME_MIN_RISK} or more, and running a recognised scam kit or already on a public blocklist`,
     },
   };
-  fs.mkdirSync(path.dirname(outFile), { recursive: true });
-  fs.writeFileSync(outFile, `${JSON.stringify(snapshot, null, 1)}\n`);
-  console.log(`Wrote ${outFile}: ${live.length} live high-risk sites, ${named.length} named, ${takedowns.length} takedowns this week`);
+  writeJson(outFile, snapshot, 1);
+  console.log(`Wrote ${outFile}: ${live.length} live high-risk sites, ${strongLive.length} meet the naming bar, ${feed.length} feed items, ${takedowns.length} takedowns this week`);
+
+  if (allDir) {
+    writeJson(path.join(allDir, 'scam-radar-status.json'), {
+      generated: snapshot.generated, lastScan: snapshot.lastScan, scanCycles: snapshot.scanCycles, totals: snapshot.totals });
+
+    // ---- Lookup: one record per visited site with something to say, in 256 files by hash
+    const worth = store.listSites({ minRisk: LOOKUP_MIN_RISK, limit: 1000000 }).filter((s) => s.checks > 0);
+    const shards = new Map();
+    for (const site of worth) {
+      const d = site.detail || {};
+      const isStrong = strong(site);
+      const record = {
+        state: clean(site.state, 20),
+        risk: site.risk,
+        level: clean(site.level, 10),
+        named: isStrong || undefined,
+        title: isStrong ? cleanTitle(site.title) || undefined : undefined,
+        kind: kindOf(site) || undefined,
+        kit: kitOf(site) || undefined,
+        brands: brandsOf(site).slice(0, 3),
+        targets: targetsOf(site).slice(0, 6),
+        hostedIn: d.sharedNetwork ? undefined : country(site.country) || undefined,
+        shared: d.sharedNetwork ? true : undefined,
+        network: clean(site.network, 50) || undefined,
+        listedBy: listedBy(site.src),
+        why: (d.signals || []).slice(0, 6).map((s) => clean(s.label, 90)).filter(Boolean),
+        code: (d.findings || []).slice(0, 6)
+          .map((f) => `${clean(f.label, 80)}${f.hidden ? ' (hidden in encoded script)' : ''}`).filter(Boolean),
+        firstSeen: iso(site.first_seen),
+        lastChecked: iso(site.last_check),
+        checks: site.checks,
+        upShare: site.checks ? Math.round((100 * site.ups) / site.checks) : undefined,
+        downSince: iso(site.down_since) || undefined,
+        takenDown: iso(site.taken_down) || undefined,
+        downReason: clean(site.down_reason, 80) || undefined,
+        registered: clean(site.created, 10) || undefined,
+        registrar: clean(site.registrar, 50) || undefined,
+      };
+      const key = hashOf(site.name);
+      const shard = key.slice(0, 2);
+      if (!shards.has(shard)) shards.set(shard, {});
+      shards.get(shard)[key] = record;
+    }
+    fs.rmSync(path.join(allDir, 'lookup'), { recursive: true, force: true });
+    for (let i = 0; i < 256; i += 1) {
+      const shard = i.toString(16).padStart(2, '0');
+      writeJson(path.join(allDir, 'lookup', `${shard}.json`), shards.get(shard) || {});
+    }
+    console.log(`Wrote ${worth.length} lookup records in 256 files`);
+
+    // ---- The map: named sites, in the result shape Scam Finder's viewer draws
+    const pool = store.listSites({ minRisk: NAME_MIN_RISK, limit: 5000 }).filter((s) => s.checks > 0 && strong(s));
+    const picked = [...pool.filter((s) => s.state === 'live'), ...pool.filter((s) => s.state !== 'live')].slice(0, MAP_MAX);
+    const eventsByName = new Map();
+    for (let i = 0; i < picked.length; i += 200) {
+      const names = picked.slice(i, i + 200).map((site) => site.name);
+      const rows = store.prepare(
+        `SELECT name, at, type, detail FROM events WHERE name IN (${names.map(() => '?').join(', ')}) ORDER BY at DESC, id DESC`,
+      ).all(...names);
+      for (const row of rows) {
+        const list = eventsByName.get(row.name) || [];
+        if (list.length < 12 && row.type !== 'watched') list.push({ ...row, detail: row.detail ? JSON.parse(row.detail) : null });
+        eventsByName.set(row.name, list);
+      }
+    }
+    const domains = picked.map((site) => toMapDomain(site, eventsByName.get(site.name) || []));
+    const campaigns = buildCampaigns(domains);
+    const links = buildLinks(domains);
+    const sitesByName = new Map(picked.map((site) => [site.name, site]));
+
+    // Strip what the scammers wrote, after the grouping above has used it
+    for (const domain of domains) {
+      const site = sitesByName.get(domain.domain);
+      domain.title = cleanTitle(domain.title);
+      domain.urls = [];
+      domain.root = null;
+      domain.seo = null;
+      domain.page = { description: null, spoofedHost: clean(domain.page?.spoofedHost, 60) || null, trackers: [], contacts: [], stages: [] };
+      domain.risk.signals = (domain.risk.signals || []).map(({ id, weight, label }) => ({ id, weight, label: clean(label, 120) }));
+      domain.findings = (domain.findings || []).map(({ id, label, severity, category, hidden }) =>
+        ({ id, label: clean(label, 100), severity, category, hidden: Boolean(hidden), evidence: '' }));
+      domain.kits = (domain.kits || []).map(({ id, name, category, description }) =>
+        ({ id, name: clean(name, 80), category, description: clean(description, 240), evidence: [] }));
+      domain.lures = (domain.lures || []).map(({ id, label }) => ({ id, label: clean(label, 60), cues: [] }));
+      domain.track.events = (eventsByName.get(domain.domain) || []).map((event) =>
+        ({ at: iso(event.at), type: event.type, text: eventText(event, site), detail: null }));
+    }
+    for (const campaign of campaigns) {
+      campaign.title = cleanTitle(campaign.title);
+      campaign.label = campaign.title || clean(campaign.kit, 80) || 'Same kit';
+      if (campaign.key.startsWith('title:')) campaign.key = `title:${hashOf(campaign.key)}`;
+    }
+    for (const link of links) {
+      if (link.kind === 'tracker' || link.kind === 'contact') {
+        const tag = hashOf(link.key).slice(0, 6);
+        link.id = `${link.kind}:${tag}`;
+        link.key = tag;
+        link.label = `${link.kindLabel} (ref ${tag})`;
+      }
+    }
+    const levels = Object.fromEntries(LEVELS.map((level) => [level.id, domains.filter((d) => d.risk.level === level.id).length]));
+    const { lastTick: _tick, database: _database, batches, ...radar } = view;
+    const map = {
+      tool: 'scam-finder',
+      version: 1,
+      kind: 'radar',
+      generatedAt: snapshot.generated,
+      radar: { ...radar, batches: batches.map(({ examples: _examples, ...batch }) => ({ ...batch, examples: [] })),
+        lastTick: null, ticks: snapshot.scanCycles, database: { file: 'radar.db', megabytes: Math.round((stats.fileBytes || 0) / 1048576) } },
+      recent: feed.slice(0, 40).map((item) => ({ at: item.at, type: item.type, text: item.text, domain: item.domain.replace(/\[\.\]/g, '.'), detail: null })),
+      domains,
+      campaigns,
+      links,
+      pivots: [],
+      sources: { errors: [] },
+      options: { depth: 1 },
+      partial: false,
+      summary: {
+        headline: `Radar has indexed ${snapshot.totals.domainsIndexed.toLocaleString('en')} domains and is watching ${snapshot.totals.watched.toLocaleString('en')} suspect sites. ${snapshot.totals.liveNow.toLocaleString('en')} are up right now and ${snapshot.totals.takenDown.toLocaleString('en')} have been taken down while watched. This map shows the ${domains.length.toLocaleString('en')} with the strongest evidence.`,
+        domains: domains.length,
+        related: domains.length,
+        levels,
+        live: domains.filter((d) => d.state === 'live').length,
+        offline: domains.filter((d) => d.state === 'offline').length,
+        campaigns: campaigns.length,
+        firstSeen: null,
+        lastSeen: null,
+        targets: count(domains.flatMap((d) => d.targets.map((t) => t.country))).slice(0, 12).map(([cc, n]) => ({ country: cc, domains: n })),
+        registrars: [],
+        networks: [],
+        tlds: [],
+        seedScore: null,
+        seedLevel: null,
+      },
+    };
+    writeJson(path.join(allDir, 'radar-map.json'), map);
+    console.log(`Wrote the map: ${domains.length} sites, ${campaigns.length} campaigns, ${links.length} shared fingerprints`);
+  }
 } finally {
   store.close();
 }
