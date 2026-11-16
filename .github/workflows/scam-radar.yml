@@ -1,15 +1,25 @@
 # Scam Radar: scan for live scam sites and republish /scam-radar/ by itself.
 #
-# Every three hours: restore Radar's database from the last run, refresh the blocklists and the list of
-# newly registered domains, run a round of scan cycles, export a safe snapshot to
-# scam-radar.json (see tools/scam-radar/export.mjs for what is published and why), and force-push it to
-# the scam-radar-data branch, which the page reads. Run it by hand from the Actions tab at any time.
+# Every hour: restore Radar's database from the last run, refresh the blocklists and the list of
+# newly registered domains, then scan in rounds. Each round is five one-minute scan cycles, and
+# after each round a safe snapshot is exported (see tools/scam-radar/export.mjs for what is
+# published and why) and force-pushed to the scam-radar-data branch, which the page reads. So
+# while a run is going, the page gets new data every five minutes.
+# Run it by hand from the Actions tab at any time.
+#
+# Cycles must stay at 60 seconds: Radar gives each cycle a time budget of its length minus four
+# seconds, reads certificates only with 20 seconds to spare and starts a visit only with 12.
+# Shorter cycles visit nothing.
 name: Scam Radar
 
 on:
   schedule:
-    - cron: '23 */3 * * *'
+    - cron: '17 * * * *'
   workflow_dispatch:
+    inputs:
+      rounds:
+        description: Rounds to scan (five minutes each)
+        default: '4'
 
 permissions:
   contents: write
@@ -21,9 +31,10 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    timeout-minutes: 75
     env:
       RADAR: node tools/scam-radar/scam-finder/cli.js radar
+      ROUNDS: ${{ inputs.rounds || '4' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,7 +52,7 @@ jobs:
           key: scam-radar-db-${{ github.run_id }}
           restore-keys: scam-radar-db-
 
-      - name: Build the index (first run, about 10 minutes)
+      - name: Build the index (first run, about five minutes)
         if: steps.db.outputs.cache-matched-key == ''
         run: $RADAR ingest all
 
@@ -51,34 +62,28 @@ jobs:
           $RADAR ingest feeds || echo "::warning::blocklist refresh failed; scanning with the last copy"
           $RADAR ingest nrd || echo "::warning::new-domain refresh failed; scanning with the last copy"
 
-      - name: Scan
-        timeout-minutes: 50
-        run: $RADAR run --ticks 25 --seconds 20
+      - name: Scan in rounds, publishing after each
+        id: scan
+        timeout-minutes: 55
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          out="$RUNNER_TEMP/radar-out"
+          [[ "$ROUNDS" =~ ^[1-9]$ ]] || ROUNDS=4
+          for round in $(seq 1 "$ROUNDS"); do
+            echo "::group::Round $round of $ROUNDS"
+            $RADAR run --ticks 5 --seconds 60
+            rm -rf "$out" && mkdir -p "$out"
+            node tools/scam-radar/export.mjs --out "$out/scam-radar.json"
+            bash tools/scam-radar/publish.sh "$out" || true
+            echo "::endgroup::"
+          done
+          $RADAR status
 
       - name: Save the Radar database
+        # Keep what was learned even if a later round failed, but never save a half-built index
+        if: always() && (steps.scan.outcome == 'success' || steps.scan.outcome == 'failure')
         uses: actions/cache/save@v4
         with:
           path: ~/.scam-finder
           key: scam-radar-db-${{ github.run_id }}
-
-      - name: Export the snapshot
-        run: node tools/scam-radar/export.mjs
-
-      - name: Publish to the data branch
-        # One commit, force-pushed, so the snapshots never pile up in the history. The page reads
-        # https://raw.githubusercontent.com/<repo>/scam-radar-data/scam-radar.json
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          mkdir -p "$RUNNER_TEMP/publish" && cp assets/data/scam-radar.json "$RUNNER_TEMP/publish/"
-          cd "$RUNNER_TEMP/publish"
-          git init -q -b scam-radar-data
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scam-radar.json
-          git commit -q -m "Scam Radar: snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
-          for attempt in 1 2 3; do
-            git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" scam-radar-data && exit 0
-            sleep $((attempt * 15))
-          done
-          exit 1
