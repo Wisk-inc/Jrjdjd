@@ -26,7 +26,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="NatureV1 — an open-source AI weather and hurricane model made in Jamaica">
-<meta property="article:modified_time" content="2026-11-14T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-16T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="NatureV1 — a Jamaican-made AI weather and hurricane model">
@@ -58,7 +58,7 @@
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Weather and tropical cyclone model",
       "operatingSystem": "OS Independent",
-      "softwareVersion": "0.10.0",
+      "softwareVersion": "0.19.0",
       "programmingLanguage": "Python",
       "runtimePlatform": "PyTorch",
       "codeRepository": "https://pypi.org/project/naturev1/",
@@ -67,7 +67,7 @@
       "softwareRequirements": "Python >= 3.10, PyTorch",
       "isAccessibleForFree": true,
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
-      "dateModified": "2026-11-14",
+      "dateModified": "2026-11-16",
       "inLanguage": "en",
       "license": "https://www.apache.org/licenses/LICENSE-2.0",
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
@@ -112,7 +112,7 @@
       "isPartOf": { "@id": "https://corx-labs.com/#website" },
       "mainEntity": { "@id": "https://corx-labs.com/models/naturev1/#model" },
       "inLanguage": "en",
-      "dateModified": "2026-11-14",
+      "dateModified": "2026-11-16",
       "breadcrumb": { "@id": "https://corx-labs.com/models/naturev1/#breadcrumb" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
@@ -148,7 +148,7 @@
       "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
       "publisher": { "@id": "https://corx-labs.com/#organization" },
       "datePublished": "2026-10-14",
-      "dateModified": "2026-11-14",
+      "dateModified": "2026-11-16",
       "inLanguage": "en",
       "isPartOf": { "@id": "https://corx-labs.com/models/naturev1/#webpage" },
       "proficiencyLevel": "Expert"
@@ -355,7 +355,7 @@
       <a class="btn btn-ghost" href="#results">See the results</a>
     </div>
     <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
-      Packages: <code>naturev1</code> 0.10.0 &middot; <code>ihelix</code> 0.5.1 &middot; Python &ge; 3.10 &middot;
+      Packages: <code>naturev1</code> 0.19.0 &middot; <code>ihelix</code> 0.6.0 &middot; Python &ge; 3.10 &middot;
       Developer: Nathan &middot; Origin: Jamaica
     </p>
   </div>
@@ -1328,8 +1328,7 @@
       <h2>8. Using it</h2>
       <div class="prose">
         <p>The whole pipeline (install, staging, three training stages, scorecards, and publishing
-          only if it earned it) is one cell, <code>colab_naturev1.py</code>, shipped with the
-          package. Every setting is at the top. It runs in marimo, Colab, Jupyter or a plain
+          only if it earned it) is one cell, <code>colab_naturev1.py</code>. Every setting is at the top. It runs in marimo, Colab, Jupyter or a plain
           script.</p>
       </div>
       <pre class="mt-s"><code>pip install "naturev1[all]"</code></pre>
@@ -1400,9 +1399,39 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
   </section>
 
   <!-- Why -->
+  <!-- Since the release -->
+  <section class="section-tight" id="since">
+    <div class="shell">
+      <h2>9. Since the release: naturev1 0.13 to 0.19</h2>
+      <div class="prose">
+        <p>The results above come from the trained network released in October. The package has kept growing
+          since, mostly around hurricanes:</p>
+        <ul>
+          <li><strong>Hurricane tracks from physics alone (0.13).</strong> <code>naturev1.cyclone</code> forecasts a
+            storm&rsquo;s track and strength with no neural network, from one analysis and the best track so far.
+            On the held-out 2018 and 2020 to 2022 seasons (4,447 forecasts of 407 storms, every basin) its 24-hour
+            track error was 127&nbsp;km, against 163 for a rebuilt CLIPER and 179 for extrapolation, and its
+            24-hour wind error 11&nbsp;kt against 14 for persistence. It loses to every modern global model after
+            six hours: GraphCast&rsquo;s 24-hour error on the same storms was 67&nbsp;km.</li>
+          <li><strong>The hurricane center&rsquo;s guidance as members (0.16).</strong> It reads the National
+            Hurricane Center&rsquo;s public guidance file and averages its track with the Center&rsquo;s corrected
+            consensus (HCCA). On 626 held-out Atlantic forecasts that took the 24-hour track error from 62 to
+            54&nbsp;km. Most of that gain comes from the Center&rsquo;s own guidance.</li>
+          <li><strong>More of the forecast (0.14 and 0.15).</strong> Several global models at once, a cone sized
+            for each forecast, the ocean&rsquo;s heat content, and landfall chances parish by parish.</li>
+          <li><strong>Built, not trained yet (0.13).</strong> Distillation from several teacher models, data
+            assimilation for live inputs, and a decoder at 0.25&deg;. These are tested on a CPU only.</li>
+        </ul>
+        <p>None of this changes the rule above: the package&rsquo;s own notes say nothing in it should inform a
+          decision about a real storm. The engine moved on too: <code>ihelix</code> 0.6 adds regular grids laid
+          out the way the sphere wants them.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="section-tight" id="why">
     <div class="shell">
-      <h2>9. Why it is built this way</h2>
+      <h2>10. Why it is built this way</h2>
       <div class="prose">
         <p>Three convictions run through the whole stack, and each one is a bet about where the
           parameters should go.</p>
@@ -1440,7 +1469,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
   <!-- Jamaica -->
   <section class="section-tight" id="jamaica">
     <div class="shell">
-      <h2>10. Made in Jamaica, for the hurricane belt</h2>
+      <h2>11. Made in Jamaica, for the hurricane belt</h2>
       <div class="prose">
         <p>NatureV1 is an open-source AI weather and hurricane model built in Jamaica, an island that
           sits squarely in the Atlantic hurricane belt. Its storm heads were trained on HURDAT2, the
@@ -1474,7 +1503,7 @@ print(model.trained_heads())   # steps each output has received; 0 = never train
   <!-- FAQ -->
   <section class="section-tight" id="faq">
     <div class="shell">
-      <h2>11. Questions</h2>
+      <h2>12. Questions</h2>
       <div class="faq mt-m">
         <details>
           <summary>What is NatureV1?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
