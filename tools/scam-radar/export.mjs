@@ -52,6 +52,7 @@ const store = await RadarStore.open(dbFile);
 try {
   const stats = store.stats({ refresh: true });
   const nowSec = Math.floor(Date.now() / 1000);
+  const lastTick = store.getMeta('lastTick'); // the last cycle's report: { at, checks, ... }
 
   const live = store.listSites({ state: 'live', minRisk: COUNT_MIN_RISK, limit: 100000 }).filter((s) => s.checks > 0);
   const targets = tally(live.flatMap(targetsOf));
@@ -121,7 +122,7 @@ try {
 
   const snapshot = {
     generated: new Date().toISOString(),
-    lastScan: iso(Number(store.getMeta('lastTick')) || 0),
+    lastScan: typeof lastTick?.at === 'string' ? lastTick.at : null,
     scanCycles: Number(store.getMeta('ticks', 0)) || 0,
     totals: {
       domainsIndexed: stats.domains || 0,
