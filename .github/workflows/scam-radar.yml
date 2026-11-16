@@ -74,7 +74,7 @@ jobs:
             echo "::group::Round $round of $ROUNDS"
             $RADAR run --ticks 5 --seconds 60
             rm -rf "$out" && mkdir -p "$out"
-            node tools/scam-radar/export.mjs --out "$out/scam-radar.json"
+            node tools/scam-radar/export.mjs --all "$out"
             bash tools/scam-radar/publish.sh "$out" || true
             echo "::endgroup::"
           done
