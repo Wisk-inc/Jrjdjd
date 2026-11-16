@@ -63,8 +63,20 @@ const tally = (items) => count(items).map(([code, live]) => ({ country: code, li
 const BRAND_COUNTRY = new Map(BRANDS.map((b) => [b.name, b.country || null]));
 // A brand a site pretends to be: one named in its address or its title. A brand that only turns up
 // somewhere in the page text (a "Continue with Facebook" button, say) is not being impersonated.
-const brandsOf = (site) => [...new Set((site.detail?.brands || [])
-  .filter((b) => !b.official && (b.inDomain || b.inTitle)).map((b) => clean(b.name)))].filter(Boolean);
+// Scam Finder marks brands whose name is also an everyday word ("Smart", "Globe") as common, and
+// counts those in a title only next to scam bait. The same rule is used here. The order is: named
+// in the address, then named in the title, then common names, so "Smart Lockers | USPS" is USPS.
+const COMMON = new Set(BRANDS.filter((b) => b.common).map((b) => b.name));
+const brandsOf = (site) => {
+  const lured = (site.detail?.lures || []).length > 0;
+  const rank = (b) => (b.inDomain ? 0 : COMMON.has(b.name) ? 2 : 1);
+  const hits = (site.detail?.brands || [])
+    .filter((b) => !b.official && (b.inDomain || (b.inTitle && (!COMMON.has(b.name) || lured))))
+    .map((b, i) => [rank(b), i, b]).sort((x, y) => x[0] - y[0] || x[1] - y[1]).map(([, , b]) => b);
+  return [...new Set(hits.map((b) => clean(b.name)))].filter(Boolean);
+};
+// The one brand a site mainly pretends to be, for counting
+const brandOf = (site) => brandsOf(site)[0] || null;
 const kitOf = (site) => clean(site.detail?.kits?.[0]?.name || site.detail?.kits?.[0]?.id) || null;
 const targetsOf = (site) => [...new Set((site.detail?.targets || []).map((t) => country(t.country)).filter(Boolean))];
 const kindOf = (site) => categoryName(site.category) || null;
@@ -115,7 +127,7 @@ try {
   const leaderboards = {
     countries: targets.slice(0, 25),
     hosting: hosts.slice(0, 25),
-    brands: count(live.flatMap(brandsOf)).slice(0, 25)
+    brands: count(live.map(brandOf).filter(Boolean)).slice(0, 25)
       .map(([name, n]) => ({ name, country: BRAND_COUNTRY.get(name) || null, live: n })),
     kits: count(live.map(kitOf).filter(Boolean)).slice(0, 25).map(([name, n]) => ({ name, live: n })),
     kinds: count(live.map(kindOf).filter(Boolean)).slice(0, 15).map(([name, n]) => ({ name, live: n })),
@@ -129,7 +141,7 @@ try {
     for (const cc of targetsOf(site)) {
       const entry = (byCountry[cc] ||= { live: 0, brands: [], kits: [] });
       entry.live += 1;
-      entry.brands.push(...brandsOf(site));
+      if (brandOf(site)) entry.brands.push(brandOf(site));
       const kit = kitOf(site);
       if (kit) entry.kits.push(kit);
     }
