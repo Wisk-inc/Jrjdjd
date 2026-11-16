@@ -1,0 +1,13 @@
+{
+ "generated": null,
+ "lastScan": null,
+ "scanCycles": 0,
+ "totals": {"domainsIndexed": 0, "newlyRegistered": 0, "fromCertificates": 0, "alreadyBlocklisted": 0, "watched": 0, "liveHighRisk": 0, "named": 0, "runningKnownKit": 0, "takenDown": 0, "visitsMade": 0},
+ "targets": [],
+ "hosts": [],
+ "leaderboards": {"countries": [], "brands": [], "kits": [], "networks": []},
+ "byCountry": {},
+ "named": [],
+ "takedowns": [],
+ "rules": {"countsInclude": "live sites scoring 60 or more", "namedWhen": "live, scoring 70 or more, and running a recognised scam kit or already on a public blocklist"}
+}

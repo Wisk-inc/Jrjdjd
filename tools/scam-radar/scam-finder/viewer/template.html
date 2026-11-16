@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <!--fragment:start-->
+    <title>Scam Map</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <style>
+      /*__CSS__*/
+    </style>
+    <!--fragment:head-end-->
+  </head>
+  <body>
+    <!--fragment:body-start-->
+    <div class="page" id="app">
+      <header class="masthead">
+        <div class="masthead-row">
+          <p class="eyebrow">Scam map</p>
+          <p class="stamp" id="stamp"></p>
+        </div>
+        <h1 class="target" id="target">Trace a suspicious link</h1>
+        <p class="target-link mono" id="target-link" hidden></p>
+        <p class="lede" id="headline">
+          Paste a link from a message you don’t trust. The map shows what the site is, why it scores
+          the way it does, and which other sites share its fingerprints.
+        </p>
+      </header>
+
+      <form class="lookup" id="lookup" hidden>
+        <label for="lookup-input">Link or domain to investigate</label>
+        <div class="lookup-row">
+          <input
+            id="lookup-input"
+            name="target"
+            type="text"
+            inputmode="url"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="https://example.buzz/abc123"
+          />
+          <button type="submit" id="lookup-go">Investigate</button>
+          <button type="button" class="secondary" id="lookup-radar">Open live radar</button>
+        </div>
+        <p class="hint" id="lookup-status" role="status"></p>
+      </form>
+
+      <div id="results" hidden>
+        <section class="stats" id="stats" aria-label="Summary"></section>
+
+        <section class="board" aria-label="Map of linked sites">
+          <div class="controls">
+            <div class="segmented" role="group" aria-label="Layout">
+              <button type="button" id="view-globe" aria-pressed="true">3D</button>
+              <button type="button" id="view-tree" aria-pressed="false">Tree</button>
+              <button type="button" id="view-network" aria-pressed="false">Network</button>
+            </div>
+            <label class="field" id="group-field">
+              <span>Group by</span>
+              <select id="group-by"></select>
+            </label>
+            <label class="field grow">
+              <span class="visually-hidden">Filter</span>
+              <input
+                id="search"
+                type="search"
+                placeholder="Filter by domain, lure or country"
+                autocomplete="off"
+              />
+            </label>
+            <div class="chips" id="level-chips" role="group" aria-label="Risk levels shown"></div>
+          </div>
+          <p class="focus-note" id="focus-note" hidden></p>
+
+          <div class="board-grid">
+            <figure class="chart" id="chart">
+              <canvas id="map" tabindex="0" role="img" aria-label="Map of linked sites"></canvas>
+              <div class="tooltip" id="tooltip" hidden></div>
+              <div class="zoom" role="group" aria-label="Zoom">
+                <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+                <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+                <button type="button" id="zoom-fit" aria-label="Fit everything in view">Fit</button>
+                <button
+                  type="button"
+                  id="spin"
+                  aria-pressed="true"
+                  aria-label="Turn the globe automatically"
+                >
+                  Spin
+                </button>
+              </div>
+              <figcaption class="legend" id="legend"></figcaption>
+            </figure>
+            <aside
+              class="record"
+              id="record"
+              aria-live="polite"
+              aria-label="Details of the selected site"
+            ></aside>
+          </div>
+        </section>
+
+        <section class="ledger" id="campaigns-section">
+          <div class="ledger-head">
+            <h2>Campaigns</h2>
+            <p class="ledger-note">Sites showing the same lure are grouped as one campaign.</p>
+          </div>
+          <div class="table-wrap"><table id="campaigns"></table></div>
+          <button type="button" class="quiet more" id="campaigns-more" hidden></button>
+        </section>
+
+        <section class="ledger" id="domains-section">
+          <div class="ledger-head">
+            <h2>Sites</h2>
+            <p class="ledger-note" id="domains-count"></p>
+            <button type="button" class="quiet" id="copy-domains">Copy list</button>
+          </div>
+          <div class="table-wrap"><table id="domains"></table></div>
+          <button type="button" class="quiet more" id="domains-more" hidden></button>
+        </section>
+
+        <section class="ledger" id="links-section">
+          <div class="ledger-head">
+            <h2>What they share</h2>
+            <p class="ledger-note">Select a row to light up the sites it connects.</p>
+          </div>
+          <ul class="links" id="links"></ul>
+        </section>
+
+        <section class="ledger notes" id="method-section">
+          <div class="ledger-head"><h2>How this was put together</h2></div>
+          <div id="method"></div>
+        </section>
+      </div>
+    </div>
+    <script type="application/json" id="scam-data">
+      null
+    </script>
+    <script>
+      /*__JS__*/
+    </script>
+    <!--fragment:end-->
+  </body>
+</html>

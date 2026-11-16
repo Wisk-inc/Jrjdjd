@@ -1,0 +1,79 @@
+/* Scam Radar (/scam-radar/). Loaded on top of main.css, which owns every colour token. */
+.sr-status { font-size: .9rem; color: var(--muted); }
+.sr-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line);
+  border-radius: var(--r-lg); background: var(--paper-raised); }
+.sr-stats > div { padding: clamp(16px, 2.6vw, 28px); border-right: 1px solid var(--line); }
+.sr-stats > div:last-child { border-right: 0; }
+.sr-stats dt { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.sr-stats dd { margin: 6px 0 0; font-family: var(--serif); font-size: clamp(1.7rem, 3.4vw, 2.6rem); color: var(--ink-strong);
+  font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) {
+  .sr-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sr-stats > div:nth-child(2) { border-right: 0; }
+  .sr-stats > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+}
+.sr-card { border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper-raised); padding: clamp(14px, 2.4vw, 26px); }
+.sr-toggle { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: var(--r-pill); background: var(--paper-sunk); }
+.sr-radio { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+.sr-toggle label { cursor: pointer; padding: 6px 14px; border-radius: var(--r-pill); font-size: .84rem; font-weight: 500; color: var(--muted); }
+.sr-radio:checked + label { background: var(--paper-raised); color: var(--ink-strong); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.sr-radio:focus-visible + label { outline: 2px solid var(--ink-strong); outline-offset: 2px; }
+.sr-map-wrap { margin-top: 14px; }
+.sr-map { width: 100%; height: auto; display: block; }
+.sr-map path { fill: color-mix(in srgb, var(--faint) 18%, transparent); stroke: var(--paper-raised); stroke-width: .5; }
+.sr-map path[data-level="1"] { fill: color-mix(in srgb, var(--espresso) 28%, transparent); }
+.sr-map path[data-level="2"] { fill: color-mix(in srgb, var(--espresso) 45%, transparent); }
+.sr-map path[data-level="3"] { fill: color-mix(in srgb, var(--espresso) 62%, transparent); }
+.sr-map path[data-level="4"] { fill: color-mix(in srgb, var(--espresso) 80%, transparent); }
+.sr-map path[data-level="5"] { fill: var(--espresso); }
+.sr-map path:hover { stroke: var(--ink-strong); stroke-width: 1; }
+.sr-legend { display: flex; align-items: center; gap: 4px; margin-top: 12px; font-size: .74rem; color: var(--faint); }
+.sr-legend span:first-child { margin-right: 4px; } .sr-legend span:last-child { margin-left: 4px; }
+.sr-legend i { width: 22px; height: 10px; border-radius: 3px; display: inline-block; }
+.sr-legend i:nth-of-type(1) { background: color-mix(in srgb, var(--espresso) 28%, transparent); }
+.sr-legend i:nth-of-type(2) { background: color-mix(in srgb, var(--espresso) 45%, transparent); }
+.sr-legend i:nth-of-type(3) { background: color-mix(in srgb, var(--espresso) 62%, transparent); }
+.sr-legend i:nth-of-type(4) { background: color-mix(in srgb, var(--espresso) 80%, transparent); }
+.sr-legend i:nth-of-type(5) { background: var(--espresso); }
+.sr-note { margin-top: 12px; font-size: .84rem; color: var(--muted); max-width: 80ch; }
+.sr-table td, .sr-table th { vertical-align: top; }
+.sr-domain { font-family: var(--mono); font-size: .84rem; color: var(--ink-strong); word-break: break-all; }
+.sr-bar { display: block; height: 8px; width: var(--w); min-width: 3px; border-radius: 4px; background: var(--espresso); margin-top: 6px; }
+.sr-downs { list-style: none; padding: 0; display: grid; gap: 8px; }
+.sr-downs li { color: var(--muted); font-size: .9rem; }
+
+/* your country */
+.sr-home-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; }
+.sr-home-head h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
+.sr-pick select { font: inherit; font-size: .9rem; color: var(--ink-strong); background: var(--paper);
+  border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 8px 14px; max-width: 100%; }
+.sr-home-count { margin-top: 14px; font-size: 1.05rem; color: var(--muted); }
+.sr-home-count strong { font-family: var(--serif); font-size: 2.4rem; color: var(--ink-strong); margin-right: 6px; vertical-align: -.1em; }
+.sr-home-label { margin-top: 14px; font-size: .74rem; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.sr-chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.sr-chips li { font-size: .84rem; color: var(--ink-strong); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 4px 12px; }
+.sr-map path[data-home] { stroke: var(--ink-strong); stroke-width: 1.4; }
+.sr-table tr.is-home td { color: var(--ink-strong); font-weight: 600; }
+
+/* leaderboard */
+.sr-lb { display: none; margin-top: 14px; }
+#sr-lb-1:checked ~ .sr-lb-p1, #sr-lb-2:checked ~ .sr-lb-p2, #sr-lb-3:checked ~ .sr-lb-p3, #sr-lb-4:checked ~ .sr-lb-p4 { display: block; }
+.sr-lb-tabs { flex-wrap: wrap; }
+#sr-lb-1:checked ~ .sr-lb-tabs label[for="sr-lb-1"], #sr-lb-2:checked ~ .sr-lb-tabs label[for="sr-lb-2"],
+#sr-lb-3:checked ~ .sr-lb-tabs label[for="sr-lb-3"], #sr-lb-4:checked ~ .sr-lb-tabs label[for="sr-lb-4"] {
+  background: var(--paper-raised); color: var(--ink-strong); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+#sr-lb-1:focus-visible ~ .sr-lb-tabs label[for="sr-lb-1"], #sr-lb-2:focus-visible ~ .sr-lb-tabs label[for="sr-lb-2"],
+#sr-lb-3:focus-visible ~ .sr-lb-tabs label[for="sr-lb-3"], #sr-lb-4:focus-visible ~ .sr-lb-tabs label[for="sr-lb-4"] {
+  outline: 2px solid var(--ink-strong); outline-offset: 2px; }
+.sr-rankings { list-style: none; padding: 0; display: grid; gap: 2px; }
+.sr-rankings li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; grid-template-rows: auto auto;
+  column-gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--line); }
+.sr-rankings li:last-child { border-bottom: 0; }
+.sr-rank { grid-row: 1 / 3; font-family: var(--serif); font-size: 1.5rem; color: var(--faint); line-height: 1; }
+.sr-rankings li:nth-child(-n+3) .sr-rank { color: var(--ink-strong); }
+.sr-who { min-width: 0; }
+.sr-who b { font-weight: 600; color: var(--ink-strong); font-size: .92rem; }
+.sr-who small { margin-left: 8px; color: var(--faint); font-size: .76rem; }
+.sr-count { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink-strong); }
+.sr-rankings .sr-bar { grid-column: 2 / 4; }
+.sr-empty { color: var(--faint); }

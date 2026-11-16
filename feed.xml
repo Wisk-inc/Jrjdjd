@@ -15,6 +15,22 @@
     </image>
 
     <item>
+      <title>Scam Radar: live scam websites, by country</title>
+      <link>https://corx-labs.com/scam-radar/</link>
+      <guid isPermaLink="false">https://corx-labs.com/scam-radar/#launch</guid>
+      <pubDate>Mon, 16 Nov 2026 01:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Tool</category>
+      <description><![CDATA[
+        <p>Scam Radar is live. A scanner watches more than 18 million domains and every new web certificate,
+        visits the suspicious sites, and records when each scam site goes up and when it is taken down. The
+        page shows the scams aimed at your own country first, a leaderboard of the most targeted countries
+        and most faked brands, and the week's takedowns. It publishes a new scan every three hours by itself.
+        Sites are only named on strong evidence.</p>
+      ]]></description>
+    </item>
+
+    <item>
       <title>Pluvium 0.5: one command to a forecast, and when in the day it rains</title>
       <link>https://corx-labs.com/models/pluvium/#usage</link>
       <guid isPermaLink="false">https://corx-labs.com/models/pluvium/#release-0-5</guid>
