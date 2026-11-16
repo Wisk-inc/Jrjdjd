@@ -210,12 +210,12 @@ FAQ = [
      "by a scrambled form of the name. Where this site&rsquo;s scan server is running, the page is also visited "
      "as plain text and its code is read for 23 scam behaviours. You are never sent to the site."),
     ("How often does it update?",
-     "A scan starts every hour and runs for about 20 minutes, publishing what it has found every five minutes "
-     "while it runs. This page checks for new data every minute and shows how old the current data is, to "
-     "the second. Between scans the scanner is not running, so the numbers don&rsquo;t change. Updating every "
-     "second would need a server that scans around the clock. No scanner visits millions of sites a second: "
-     "this one scores 18 million names from their spelling in seconds, then visits about 300 of the most "
-     "suspicious a minute."),
+     "A scan is started about once an hour and runs for about 25 minutes, publishing what it has found every "
+     "five minutes while it runs. GitHub starts each scan when it has room, so the gap between scans varies, "
+     "and this page shows how old its data is, to the second. It checks for new data every minute. Between "
+     "scans the scanner is not running, so the numbers don&rsquo;t change. Updating every second would need a "
+     "server that scans around the clock. No scanner visits millions of sites a second: this one scores 18 "
+     "million names from their spelling in seconds, then visits up to 300 of the most suspicious a minute."),
     ("How does it know my country?",
      "From your device&rsquo;s time zone, worked out in your browser. Nothing about you is sent anywhere, and "
      "you can pick another country from the list; the choice is remembered on this device only."),
@@ -542,9 +542,10 @@ page = f"""<!DOCTYPE html>
         <li><div><h3>Watched until they go</h3><p>Live high-risk sites are revisited every half hour to two hours.
           When one stops answering twice in a row, the takedown is recorded with when and why: gone from DNS,
           suspended by the registrar, or flagged by its host.</p></div></li>
-        <li><div><h3>Published by itself</h3><p>A scheduled job starts a scan every hour. It runs for about 20
-          minutes, about 300 site visits a minute, and publishes what it has found every five minutes. This page
-          checks for new data every minute. Nobody edits the list by hand.</p></div></li>
+        <li><div><h3>Published by itself</h3><p>A scheduled job starts a scan about once an hour, when GitHub has
+          room for it. A scan runs for about 25 minutes, up to 300 site visits a minute, and publishes what it has
+          found every five minutes. This page checks for new data every minute. Nobody edits the list by
+          hand.</p></div></li>
       </ol>
       <div class="callout mt-m">
         <p><strong>What it can&rsquo;t tell you.</strong> How many people clicked: only the scammers know. Who is

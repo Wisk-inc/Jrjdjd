@@ -15,7 +15,9 @@ import { isLocalName, isPrivateIp, parseTarget } from './scam-finder/lib/util.js
 import { clean, cleanTitle, sanitizeCampaigns, sanitizeDomain, sanitizeLinks } from './sanitize.mjs';
 
 export const API_VERSION = 1;
-const budgetMs = () => Math.min(60000, Math.max(5000, Number(process.env.SCAM_FINDER_BUDGET_MS) || 8000));
+// Seven seconds of work fits a ten-second serverless limit with room for a cold start. A host that
+// allows longer can raise it with SCAM_FINDER_BUDGET_MS (up to 60 seconds) for deeper results.
+const budgetMs = () => Math.min(60000, Math.max(5000, Number(process.env.SCAM_FINDER_BUDGET_MS) || 7000));
 const OPTIONS = {
   0: () => ({ depth: 0, feeds: 'light', timeBudgetMs: budgetMs(), cacheDir: undefined }),
   1: () => ({ quick: true, depth: 1, maxPivots: 4, pages: 4, rdap: 4, maxDomains: 80, feeds: 'light', timeBudgetMs: budgetMs() }),

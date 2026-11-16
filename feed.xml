@@ -6,13 +6,32 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Mon, 16 Nov 2026 13:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 16 Nov 2026 23:30:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Scam Radar: check any link, a live feed and a map</title>
+      <link>https://corx-labs.com/scam-radar/#check</link>
+      <guid isPermaLink="false">https://corx-labs.com/scam-radar/#check-a-link</guid>
+      <pubDate>Mon, 16 Nov 2026 23:30:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Tool</category>
+      <description><![CDATA[
+        <p>Scam Radar now checks a link you paste into it. It judges the address in your browser with the
+        scanner's own rules, looks up the scanner's record for the site, and, where the scan server is
+        running, visits the page as plain text and reads its code. The page also has a feed of named scam
+        sites going live and being taken down, the kinds of scam and the scam kits in use, and the batches
+        of names registered by script. <a href="https://corx-labs.com/scam-radar/map/">A second page</a>
+        draws the named sites on a globe, grouped into campaigns that show the same lure. In its first day
+        the scanner visited 9,713 sites and found 1,894 live and high risk. It has recorded no takedowns
+        yet, and found none aimed at Jamaica.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.11: plain words when the connection drops</title>
@@ -62,7 +81,7 @@
         <p>Scam Radar is live. A scanner watches more than 18 million domains and every new web certificate,
         visits the suspicious sites, and records when each scam site goes up and when it is taken down. The
         page shows the scams aimed at your own country first, a leaderboard of the most targeted countries
-        and most faked brands, and the week's takedowns. It publishes a new scan every three hours by itself.
+        and most faked brands, and the week's takedowns. It publishes new scans by itself, about once an hour.
         Sites are only named on strong evidence.</p>
       ]]></description>
     </item>

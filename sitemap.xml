@@ -158,6 +158,15 @@
   </url>
 
   <url>
+    <loc>https://corx-labs.com/scam-radar/map/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://corx-labs.com/scam-radar/map/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://corx-labs.com/scam-radar/map/"/>
+  </url>
+
+  <url>
     <loc>https://corx-labs.com/automa/</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>

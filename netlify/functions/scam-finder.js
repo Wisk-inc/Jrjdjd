@@ -5104,7 +5104,7 @@ var init_api_core = __esm({
     init_util();
     init_sanitize();
     API_VERSION = 1;
-    budgetMs = () => Math.min(6e4, Math.max(5e3, Number(process.env.SCAM_FINDER_BUDGET_MS) || 8e3));
+    budgetMs = () => Math.min(6e4, Math.max(5e3, Number(process.env.SCAM_FINDER_BUDGET_MS) || 7e3));
     OPTIONS = {
       0: () => ({ depth: 0, feeds: "light", timeBudgetMs: budgetMs(), cacheDir: void 0 }),
       1: () => ({ quick: true, depth: 1, maxPivots: 4, pages: 4, rdap: 4, maxDomains: 80, feeds: "light", timeBudgetMs: budgetMs() })

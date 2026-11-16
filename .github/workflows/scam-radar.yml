@@ -1,11 +1,17 @@
 # Scam Radar: scan for live scam sites and republish /scam-radar/ by itself.
 #
-# Every hour: restore Radar's database from the last run, refresh the blocklists and the list of
-# newly registered domains, then scan in rounds. Each round is five one-minute scan cycles, and
-# after each round a safe snapshot is exported (see tools/scam-radar/export.mjs for what is
-# published and why) and force-pushed to the scam-radar-data branch, which the page reads. So
-# while a run is going, the page gets new data every five minutes.
-# Run it by hand from the Actions tab at any time.
+# A scan: restore Radar's database from the last run, refresh the blocklists and the list of
+# newly registered domains, put new brand look-alikes at the front of the queue, then scan in
+# rounds. Each round is five one-minute scan cycles, and after each round a safe snapshot is
+# exported (see tools/scam-radar/export.mjs for what is published and why) and force-pushed to the
+# scam-radar-data branch, which the page reads. So while a scan is going, the page gets new data
+# every five minutes.
+#
+# When it runs: GitHub starts scheduled workflows when it has room, and it skips many of them. An
+# hourly schedule here started twice in 20 hours. So the schedule asks every ten minutes, and the
+# first step ends the run in a few seconds unless the last published scan is 35 minutes old or
+# more. That gives about one scan an hour when GitHub delivers, and a quick catch-up when it
+# doesn't. Starting it by hand from the Actions tab always scans.
 #
 # Cycles must stay at 60 seconds: Radar gives each cycle a time budget of its length minus four
 # seconds, reads certificates only with 20 seconds to spare and starts a visit only with 12.
@@ -14,12 +20,12 @@ name: Scam Radar
 
 on:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '3,13,23,33,43,53 * * * *'
   workflow_dispatch:
     inputs:
       rounds:
         description: Rounds to scan (five minutes each)
-        default: '4'
+        default: '5'
 
 permissions:
   contents: write
@@ -31,21 +37,45 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 80
     env:
       RADAR: node tools/scam-radar/scam-finder/cli.js radar
-      ROUNDS: ${{ inputs.rounds || '4' }}
+      ROUNDS: ${{ inputs.rounds || '5' }}
+      MIN_GAP_MINUTES: '35'
     steps:
+      - name: Is a scan due?
+        id: due
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Started by hand: scanning."
+            echo "run=yes" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          last=$(curl -fsS --max-time 20 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/scam-radar-data/scam-radar-status.json?t=$(date +%s)" \
+            | python3 -c "import json, sys; print(json.load(sys.stdin)['generated'])" 2>/dev/null || true)
+          age=999999
+          if [ -n "$last" ]; then age=$(( ( $(date +%s) - $(date -d "$last" +%s) ) / 60 )); fi
+          if [ "$age" -ge "$MIN_GAP_MINUTES" ]; then
+            echo "The last scan was published $age minutes ago: scanning."
+            echo "run=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "The last scan was published $age minutes ago. The next one is due at $MIN_GAP_MINUTES."
+            echo "run=no" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.due.outputs.run == 'yes'
         with:
           ref: main
 
       - uses: actions/setup-node@v4
+        if: steps.due.outputs.run == 'yes'
         with:
           node-version: '22'
 
       - name: Restore the Radar database
         id: db
+        if: steps.due.outputs.run == 'yes'
         uses: actions/cache/restore@v4
         with:
           path: ~/.scam-finder
@@ -53,23 +83,24 @@ jobs:
           restore-keys: scam-radar-db-
 
       - name: Build the index (first run, about five minutes)
-        if: steps.db.outputs.cache-matched-key == ''
+        if: steps.due.outputs.run == 'yes' && steps.db.outputs.cache-matched-key == ''
         run: $RADAR ingest all
 
       - name: Refresh blocklists and newly registered domains
-        if: steps.db.outputs.cache-matched-key != ''
+        if: steps.due.outputs.run == 'yes' && steps.db.outputs.cache-matched-key != ''
         run: |
           $RADAR ingest feeds || echo "::warning::blocklist refresh failed; scanning with the last copy"
           $RADAR ingest nrd || echo "::warning::new-domain refresh failed; scanning with the last copy"
 
       - name: Scan in rounds, publishing after each
         id: scan
-        timeout-minutes: 55
+        if: steps.due.outputs.run == 'yes'
+        timeout-minutes: 60
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           out="$RUNNER_TEMP/radar-out"
-          [[ "$ROUNDS" =~ ^[1-9]$ ]] || ROUNDS=4
+          [[ "$ROUNDS" =~ ^[1-9]$ ]] || ROUNDS=5
           # Brand look-alikes nobody has listed yet go to the front of the queue
           node tools/scam-radar/prioritize.mjs --limit 300 || echo "::warning::could not prioritise brand look-alikes"
           for round in $(seq 1 "$ROUNDS"); do
