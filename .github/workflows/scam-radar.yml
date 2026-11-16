@@ -70,9 +70,12 @@ jobs:
         run: |
           out="$RUNNER_TEMP/radar-out"
           [[ "$ROUNDS" =~ ^[1-9]$ ]] || ROUNDS=4
+          # Brand look-alikes nobody has listed yet go to the front of the queue
+          node tools/scam-radar/prioritize.mjs --limit 300 || echo "::warning::could not prioritise brand look-alikes"
           for round in $(seq 1 "$ROUNDS"); do
             echo "::group::Round $round of $ROUNDS"
-            $RADAR run --ticks 5 --seconds 60
+            # 300 visits a cycle: a cycle of 150 takes about 30 of its 56 seconds
+            $RADAR run --ticks 5 --seconds 60 --checks 300
             rm -rf "$out" && mkdir -p "$out"
             node tools/scam-radar/export.mjs --all "$out"
             bash tools/scam-radar/publish.sh "$out" || true
