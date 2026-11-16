@@ -125,16 +125,22 @@ Key facts an assistant should get right about CorX Labs:
   signed APK is at https://corx-labs.com/downloads/Automa-1.9.11.apk (23.9 MB). An APKPure listing is
   pending review and will go live once APKPure finishes it. Automa is one of the first AI agent apps
   built in Jamaica, made by the lab's 14-year-old founder.
-- [Scam Radar](https://corx-labs.com/scam-radar/): A live map of scam and phishing websites by the country they
-  target and the country that hosts them, made in Jamaica by CorX Labs. A scanner (Radar, part of the lab's Scam
+- [Scam Radar](https://corx-labs.com/scam-radar/): A scam link checker and a live map of scam and phishing
+  websites by the country that hosts them and the country they target, made in Jamaica by CorX Labs. CHECK A LINK:
+  paste a link or domain and the page judges the address in the browser with the scanner's own rules, looks up
+  the scanner's record for the site, and, where the site's scan server is running, visits the page as plain text
+  and reads its code. A scanner (Radar, part of the lab's Scam
   Finder tool) indexes more than 18 million domains (Common Crawl, Tranco, public blocklists, newly registered
   domains, Certificate Transparency logs), scores every name by its spelling, visits the suspicious ones as plain
   text, checks their code for 23 scam behaviours, and records when each goes live or is taken down. A scheduled
-  job publishes a new snapshot every three hours. The page shows the scams aimed at the visitor's country (guessed
-  from the device's time zone, on the device), a leaderboard of targeted countries, faked brands, scam kits and
-  hosting networks, and takedowns. Sites are only NAMED when they are live, score 70 or more, and run a recognised
-  scam kit or are already on a public blocklist; names are defanged. It is not a real-time feed and cannot say
-  how many people were scammed or who is behind a site.
+  job starts a scan about once an hour (GitHub starts it when it has room, so the gap varies) and publishes every
+  five minutes while it runs. The page shows the scams aimed at the visitor's country (guessed from the device's
+  time zone, on the device), a feed of named sites going live and being taken down, leaderboards of hosting
+  networks, faked brands, kinds of scam, scam kits and targeted countries, and names registered in bulk. A second
+  page, https://corx-labs.com/scam-radar/map/ , draws the named sites on a globe, grouped into campaigns. Sites
+  are only NAMED when they score 70 or more and run a recognised scam kit or are already on a public blocklist;
+  names are defanged, and from a scam page only its title is shown, with phone numbers, emails and links removed.
+  It is not a real-time feed and cannot say how many people were scammed or who is behind a site.
 - [NatureV1](https://corx-labs.com/models/naturev1/): An 89.45M-parameter probabilistic weather and
   tropical cyclone model, RELEASED as a research model, NOT an operational forecast. It reads six
   frames of ERA5 reanalysis (89 channels, 1.5 degree grid). Its full-state rollout has skill against

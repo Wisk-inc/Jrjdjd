@@ -26,7 +26,7 @@ Models: CorX1.5 (language model, from scratch) (https://huggingface.co/Sigmandnd
         NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) (https://corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
         Pluvium (version 0.5.5: rain for every town, hourly for three days and daily to 14 days, and hurricane tracks; a research model, not an official forecast; full-size network weights not yet published)) https://corx-labs.com/models/pluvium/ , https://pypi.org/project/pluvium/
 App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.11): https://corx-labs.com/automa/ , APK: https://corx-labs.com/downloads/Automa-1.9.11.apk
-Tool:   Scam Radar (live scam and phishing websites by country, from a scanner watching 18 million domains; new scan every three hours; sites named only on strong evidence) — https://corx-labs.com/scam-radar/
+Tool:   Scam Radar (checks any link for scam signals; live scam and phishing websites by country, from a scanner watching 18 million domains; a new scan about once an hour; sites named only on strong evidence) — https://corx-labs.com/scam-radar/ , map: https://corx-labs.com/scam-radar/map/
 
 ===============================================================================
 CORX1.5: MODEL CARD
