@@ -70,14 +70,14 @@
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Rain forecasting model",
       "operatingSystem": "OS Independent",
-      "softwareVersion": "0.3.0",
+      "softwareVersion": "0.5.2",
       "programmingLanguage": "Python",
       "runtimePlatform": "PyTorch",
       "codeRepository": "https://pypi.org/project/pluvium/",
       "downloadUrl": "https://pypi.org/project/pluvium/",
       "installUrl": "https://pypi.org/project/pluvium/",
       "softwareRequirements": "Python >= 3.10, PyTorch >= 2.5",
-      "releaseNotes": "https://pypi.org/project/pluvium/0.3.0/",
+      "releaseNotes": "https://pypi.org/project/pluvium/0.5.2/",
       "isAccessibleForFree": true,
       "offers": {
         "@type": "Offer",
@@ -86,7 +86,7 @@
         "availability": "https://schema.org/InStock"
       },
       "datePublished": "2026-11-14",
-      "dateModified": "2026-11-15",
+      "dateModified": "2026-11-16",
       "inLanguage": "en",
       "license": "https://www.apache.org/licenses/LICENSE-2.0",
       "author": {
@@ -180,7 +180,7 @@
       },
       "inLanguage": "en",
       "datePublished": "2026-11-14",
-      "dateModified": "2026-11-15",
+      "dateModified": "2026-11-16",
       "breadcrumb": {
         "@id": "https://corx-labs.com/models/pluvium/#breadcrumb"
       },
@@ -236,7 +236,7 @@
         "@id": "https://corx-labs.com/#organization"
       },
       "datePublished": "2026-11-14",
-      "dateModified": "2026-11-15",
+      "dateModified": "2026-11-16",
       "inLanguage": "en",
       "isPartOf": {
         "@id": "https://corx-labs.com/models/pluvium/#webpage"
@@ -311,7 +311,7 @@
           "name": "Is Pluvium free and open source?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Version 0.3.0 is released under the Apache-2.0 licence, which allows commercial use, and installs with pip install pluvium. Pluvium Blend is trained for your own country on a CPU, and Pluvium Cyclone needs nothing trained. The weights of the full-size network, Pluvium-500, have not been published yet. The data it learns from has its own terms, credited on this page."
+            "text": "Yes. Version 0.5.2 is released under the Apache-2.0 licence, which allows commercial use, and installs with pip install pluvium. Pluvium Blend is trained for your own country on a CPU, and Pluvium Cyclone needs nothing trained. The weights of the full-size network, Pluvium-500, have not been published yet. The data it learns from has its own terms, credited on this page."
           }
         },
         {
@@ -385,7 +385,7 @@
     </nav>
 
     <div class="tag-row" style="margin-top:22px">
-      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> New: version 0.3</span>
+      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> New: version 0.5</span>
       <span class="tag">Rain forecasts</span>
       <span class="tag">Every town</span>
       <span class="tag">Hourly &amp; 14 days</span>
@@ -407,7 +407,7 @@
       <a class="btn btn-ghost" href="#results">See the results</a>
     </div>
     <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
-      Package: <code>pluvium</code> 0.3.0 &middot; Python &ge; 3.10 &middot; Engine: NatureV1 / iHELIX &middot;
+      Package: <code>pluvium</code> 0.5.2 &middot; Python &ge; 3.10 &middot; Engine: NatureV1 / iHELIX &middot;
       Developer: Nathan &middot; Origin: Jamaica
     </p>
   </div>
@@ -452,7 +452,7 @@
         <div><dt>Full size</dt><dd>Pluvium-500, 57.9M params</dd></div>
         <div><dt>Covers</dt><dd>Any country, 60&deg;&nbsp;S&ndash;60&deg;&nbsp;N</dd></div>
         <div><dt>Bulletins</dt><dd>English, Spanish, French, Patois</dd></div>
-        <div><dt>Package</dt><dd>pluvium 0.3.0</dd></div>
+        <div><dt>Package</dt><dd>pluvium 0.5.2</dd></div>
         <div><dt>Licence</dt><dd>Apache-2.0</dd></div>
       </dl>
     </div>
@@ -1173,8 +1173,10 @@ pluvium cyclone --root ~/storms --time 2025-10-25T22   # as it would have been i
           <li><strong>50&nbsp;mm and winter.</strong> Version 0.3 narrowed both; post-processed AIFS still often
             wins heavy rain at short range.</li>
           <li><strong>Train the real network.</strong> The network results come from pluvium-small, 0.9M
-            parameters trained for about two hours on a CPU. Pluvium-500 is 60 times larger, designed for a day
-            on one GPU, and not yet published.</li>
+            parameters trained for about two hours on a CPU. Pluvium-500 is 60 times larger and designed for a
+            day on one GPU. Its GPU training only started working from the notebook in version 0.4.3, the first
+            GPU run stopped after 138 minutes, and since 0.5.1 a stopped run restarts itself. It is not trained
+            or published yet.</li>
           <li><strong>A fresh year.</strong> Version 0.3 was scored on the year its weak spots were found on.</li>
         </ol>
         <p>Four short technical papers and a list of the ideas that were built, tested and dropped are published
@@ -1223,14 +1225,49 @@ pluvium program --root ~/pluvium-TT --country TT   # train Pluvium's own network
   <section class="section-tight" id="usage">
     <div class="shell">
       <h2>7. Install and run</h2>
-      <pre><code>pip install pluvium</code></pre>
+      <pre><code>pip install pluvium
+pluvium now --country JM</code></pre>
       <div class="prose mt-m">
-        <p>With a trained model:</p>
+        <p><code>pluvium now</code> does whatever is still missing. It sets the country up in seconds, downloads a
+          trained Pluvium Blend if one has been published for the country, or trains one if not (86 minutes for
+          Jamaica on a four-core machine, nearly all of it downloads, leaving 41&nbsp;MB on disk), then reads the
+          newest run of each of the six systems and prints the forecast for the largest towns. After that a
+          forecast takes about a minute. No GPU, and nobody fetches the systems&rsquo; files by hand.</p>
       </div>
-      <pre class="mt-s"><code>pluvium forecast --country JM              # every place; tables in ./pluvium-forecast, a report on screen
-pluvium place "Port Antonio" --country JM  # hour by hour for one place
-pluvium learn                              # check past forecasts against airport reports; update the corrections
-pluvium info                               # what the published model is and how it scored</code></pre>
+      <pre class="mt-s"><code>pluvium now --country JM --place "Port Antonio"   # the places whose name contains this
+pluvium now --country JM --parishes               # every parish: its typical place and the range across it
+pluvium now --country JM --parish "St Ann"        # the largest towns of one parish
+pluvium now --country JM --when                   # the first three days in six-hour periods, each with its chance
+pluvium now --country JM --learn                  # learn first from the days whose rain has been published since
+pluvium now --country DO,HT --storms              # two countries, and every tropical cyclone alive now
+pluvium blend publish --root ~/pluvium-JM --repo you/your-repo   # share the blend you trained</code></pre>
+      <div class="prose mt-m">
+        <p>In Python:</p>
+      </div>
+      <pre class="mt-s"><code>from pluvium.quick import forecast, brief
+got = forecast("JM")
+print(brief(got["result"], got["names"], got["population"]))</code></pre>
+
+      <h3 class="mt-m" id="when">When in the day it rains</h3>
+      <div class="prose">
+        <p>New in version 0.5. For each of the first three days, every place gets the six-hour period in which rain
+          is most likely, in its own clock (in Jamaica: 7&nbsp;pm to 1&nbsp;am, 1&nbsp;am to 7&nbsp;am, 7&nbsp;am to
+          1&nbsp;pm and 1&nbsp;pm to 7&nbsp;pm). The chance for a period is the blend&rsquo;s chance of a wet day,
+          spread over the day by the systems&rsquo; members mixed half and half with when it usually rains at that
+          place.</p>
+        <p>Checked on 61 past runs for Jamaica: on wet days the mix placed the rain 7.8% better than the usual
+          pattern alone, while the members alone placed it 4.9% worse, so a blend without the usual pattern shows
+          no periods. It rarely changes which period is the most likely one (66.7% right against 66.5% for the usual
+          pattern), and the chance printed for a period is only as good as the daily chance.</p>
+      </div>
+
+      <h3 class="mt-m" id="upstream">The AI models it reads</h3>
+      <div class="prose">
+        <p><code>pluvium upstream</code> keeps unchanged copies of the published weights of the AI models whose
+          forecasts Pluvium reads: DeepMind&rsquo;s GraphCast, NOAA&rsquo;s GraphCastGFS and AIGFS, and
+          ECMWF&rsquo;s AIFS Single. Each copy carries its publisher&rsquo;s licence and a checksum for every file.
+          Pluvium does not run these models; it reads the forecasts NOAA and ECMWF make with them.</p>
+      </div>
 
       <div class="callout mt-m" data-reveal>
         <p><strong>The weights of Pluvium-500, the full-size model, are not published yet.</strong> The
@@ -1240,15 +1277,7 @@ pluvium info                               # what the published model is and how
           Hugging Face Hub, and the live forecast) and resumes where it stopped.</p>
       </div>
       <pre class="mt-s"><code>GPU_HOURS=24 HF_TOKEN=... HF_REPO=you/Pluvium-500 pluvium program</code></pre>
-      <div class="prose mt-m">
-        <p>From Python, with a model you have published:</p>
-      </div>
-      <pre class="mt-s"><code>from pluvium.cli import fetch_model
-from pluvium.forecast import Forecaster, place_timeline
 
-fc = Forecaster(fetch_model("you/Pluvium-500"))
-result = fc.run(out_dir="forecast")
-print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", hours=24))</code></pre>
 
       <h3 class="mt-m">Live data</h3>
       <div class="table-wrap mt-s" data-reveal>
@@ -1405,7 +1434,7 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
         </details>
         <details>
           <summary>Is Pluvium free and open source?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Yes. Version 0.3.0 is released under the Apache-2.0 licence, which allows commercial use, and installs with <code>pip install pluvium</code>. Pluvium Blend is trained for your own country on a CPU, and Pluvium Cyclone needs nothing trained. The weights of the full-size network, Pluvium-500, have not been published yet. The data it learns from has its own terms, credited on this page.</p></div>
+          <div class="faq-body"><p>Yes. Version 0.5.2 is released under the Apache-2.0 licence, which allows commercial use, and installs with <code>pip install pluvium</code>. Pluvium Blend is trained for your own country on a CPU, and Pluvium Cyclone needs nothing trained. The weights of the full-size network, Pluvium-500, have not been published yet. The data it learns from has its own terms, credited on this page.</p></div>
         </details>
         <details>
           <summary>Who built Pluvium?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
@@ -1420,7 +1449,7 @@ print(place_timeline(fc.towns, result["summary"], "Mandeville", country="JM", ho
       <div class="cta-band" data-reveal>
         <p class="eyebrow is-plain" style="justify-content:center">New</p>
         <h2 class="mt-s">Open code, published results, including what it got wrong.</h2>
-        <p>Pluvium 0.3.0 is on PyPI under Apache-2.0, and every result on this page is reported in full, the full year, the hurricane tracks, Hurricane Melissa and both of the network&rsquo;s first tests.</p>
+        <p>Pluvium 0.5.2 is on PyPI under Apache-2.0, and every result on this page is reported in full, the full year, the hurricane tracks, Hurricane Melissa and both of the network&rsquo;s first tests.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="https://pypi.org/project/pluvium/" rel="noopener" target="_blank">
             View on PyPI

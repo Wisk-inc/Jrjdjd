@@ -6,13 +6,32 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sun, 15 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 16 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Pluvium 0.5: one command to a forecast, and when in the day it rains</title>
+      <link>https://corx-labs.com/models/pluvium/#usage</link>
+      <guid isPermaLink="false">https://corx-labs.com/models/pluvium/#release-0-5</guid>
+      <pubDate>Mon, 16 Nov 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Weather model</category>
+      <description><![CDATA[
+        <p>Pluvium 0.5.2 is on PyPI. <code>pluvium now --country JM</code> goes from nothing to a forecast:
+        it sets the country up, downloads or trains a blend, reads the newest runs and prints the
+        forecast, with no GPU. For the first three days each place now gets the six-hour period in which
+        rain is most likely; on Jamaica's wet days that placed the rain 7.8% better than the usual pattern
+        alone. Parishes get their own view.</p>
+        <p>The full-size network is still not trained: its GPU training only started working in 0.4.3,
+        and the first run stopped after 138 minutes. <a href="https://corx-labs.com/models/pluvium/">The
+        model page</a> has the details.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Pluvium 0.3 — a full year in seven places, and hurricane tracks</title>
@@ -52,6 +71,23 @@
         not an official forecast. The code is on PyPI as <code>pluvium</code>, under Apache 2.0.
         <a href="https://corx-labs.com/models/pluvium/">The model page</a> has the results and the
         limits.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Automa 1.9.10: starting up and reconnecting</title>
+      <link>https://corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.10</guid>
+      <pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.10 is out. While Automa is still starting on the phone, the connect screen shows
+        which step it is on and how long it has waited. When the connection drops and comes back, the
+        board reconnects by itself instead of showing "Failed to fetch", and a dropped connection no
+        longer sends you to sign-in. <a href="https://corx-labs.com/downloads/Automa-1.9.10.apk">Download
+        the APK</a> (23.9 MB); it installs over 1.9.9 and keeps your data.
+        <a href="https://corx-labs.com/automa/#whats-new">Every release</a>.</p>
       ]]></description>
     </item>
 
