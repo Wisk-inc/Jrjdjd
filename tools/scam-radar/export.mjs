@@ -21,6 +21,7 @@
 //   tables: the kit, the brand being impersonated, the kind of lure, the reasons behind the score.
 // - The lookup holds records for sites that are not named, but under a hash, so it answers a
 //   question about a site somebody already has. It cannot be read as a list.
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { BRANDS } from './scam-finder/data/brands.js';
@@ -29,7 +30,6 @@ import { categoryName } from './scam-finder/lib/radar/checker.js';
 import { RadarStore, SRC, defaultDbPath } from './scam-finder/lib/radar/store.js';
 import { overview, toMapDomain } from './scam-finder/lib/radar/view.js';
 import { LEVELS } from './scam-finder/lib/score.js';
-import { clean, cleanTitle, defang, hashOf, sanitizeCampaigns, sanitizeDomain, sanitizeLinks } from './sanitize.mjs';
 
 const args = process.argv.slice(2);
 const flag = (name, fallback) => {
@@ -54,24 +54,30 @@ const HOUR = 3600;
 const DAY = 86400;
 
 const iso = (seconds) => (seconds ? new Date(seconds * 1000).toISOString() : null);
+const defang = (name) => String(name).toLowerCase().replace(/[^a-z0-9.-]/g, '').replace(/\./g, '[.]');
 const country = (code) => (/^[A-Z]{2}$/.test(code || '') ? code : null);
 const listedBy = (src) => Object.entries(LISTED).filter(([key]) => src & SRC[key]).map(([, label]) => label);
+// Values are only ever shown as text, so this is tidying, not escaping: no markup, no control characters
+const clean = (text, max = 60) =>
+  String(text || '').replace(/[<>`\u0000-\u001f\u007f]/g, '').replace(/\s+/g, ' ').trim().slice(0, max);
+// A scam page's title, made safe to repeat: no phone numbers, emails, links or handles
+const cleanTitle = (title) => clean(String(title || '')
+  .replace(/\b(?:https?:\/\/|www\.)\S+/gi, ' ')
+  .replace(/\S+@\S+\.\S+/g, ' ')
+  .replace(/(?:^|\s)@\w{3,}/g, ' ')
+  .replace(/\+?\d[\d\s().-]{5,}\d/g, (run) => (run.replace(/\D/g, '').length >= 7 ? ' ' : run))
+  .replace(/\b([a-z0-9-]{2,})\.([a-z]{2,})\b/gi, '$1[.]$2'), 90) || null;
+const hashOf = (name) => crypto.createHash('sha256').update(String(name).toLowerCase()).digest('hex').slice(0, 12);
+
 const count = (items) =>
   [...items.reduce((map, key) => map.set(key, (map.get(key) || 0) + 1), new Map())]
     .sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
 const tally = (items) => count(items).map(([code, live]) => ({ country: code, live }));
 const BRAND_COUNTRY = new Map(BRANDS.map((b) => [b.name, b.country || null]));
-// A brand a site pretends to be: one named in its address or its title. A brand that only turns up
-// somewhere in the page text (a "Continue with Facebook" button, say) is not being impersonated.
-const brandsOf = (site) => [...new Set((site.detail?.brands || [])
-  .filter((b) => !b.official && (b.inDomain || b.inTitle)).map((b) => clean(b.name)))].filter(Boolean);
+const brandsOf = (site) => [...new Set((site.detail?.brands || []).filter((b) => !b.official).map((b) => clean(b.name)))].filter(Boolean);
 const kitOf = (site) => clean(site.detail?.kits?.[0]?.name || site.detail?.kits?.[0]?.id) || null;
 const targetsOf = (site) => [...new Set((site.detail?.targets || []).map((t) => country(t.country)).filter(Boolean))];
 const kindOf = (site) => categoryName(site.category) || null;
-// A host's own notice where the scam used to be. The page still answers, so Radar calls it live,
-// but there is nothing left to warn about: it is counted as dealt with, not as a live scam.
-const hostNotice = (site) =>
-  /takedown notice|trust\s*(?:&|and)\s*safety|(?:site|page|project|app|account|deployment) (?:has been|was|is) (?:taken down|removed|suspended|disabled|blocked)/i.test(site.title || '');
 const strong = (site) =>
   site.risk >= NAME_MIN_RISK && ((site.detail?.kits || []).length > 0 || listedBy(site.src).length > 0);
 
@@ -106,8 +112,7 @@ try {
   const nowSec = Math.floor(Date.now() / 1000);
   const lastTick = store.getMeta('lastTick'); // the last cycle's report: { at, checks, ... }
 
-  const up = store.listSites({ state: 'live', minRisk: COUNT_MIN_RISK, limit: 200000 }).filter((s) => s.checks > 0);
-  const live = up.filter((s) => !hostNotice(s));
+  const live = store.listSites({ state: 'live', minRisk: COUNT_MIN_RISK, limit: 200000 }).filter((s) => s.checks > 0);
   const targets = tally(live.flatMap(targetsOf));
   const hosts = tally(live.filter((s) => !s.detail?.sharedNetwork).map((s) => country(s.country)).filter(Boolean));
 
@@ -181,28 +186,19 @@ try {
       targets: targetsOf(site),
     }));
 
-  // The live feed: what Radar saw happen to named sites, newest first. A cycle finds over a hundred
-  // sites live in the same second, so those are capped and the ones that say most come first,
-  // which leaves room for the rarer events: takedowns, new lures, kits, moves.
-  const feedItem = ({ event, site }) => ({
-    at: iso(event.at),
-    domain: defang(site.name),
-    type: event.type,
-    text: eventText(event, site),
-    kind: kindOf(site),
-    brand: brandsOf(site)[0] || null,
-    title: cleanTitle(site.title),
-    targets: targetsOf(site),
-  });
-  const CHANGE_TYPES = ['taken-down', 'back', 'title', 'rebuilt', 'content', 'moved', 'nameservers', 'kit', 'listed'];
-  const changes = eventsOf({ since: nowSec - 2 * DAY, types: CHANGE_TYPES, limit: 4000 }).slice(0, FEED_MAX / 2);
-  const telling = ({ site }) => Number(Boolean(kitOf(site))) + Number(brandsOf(site).length > 0) + Number(Boolean(kindOf(site)));
-  const found = eventsOf({ since: nowSec - 2 * DAY, types: ['first-visit'], limit: 4000 })
-    .filter(({ event, site }) => event.detail?.state === 'live' && !hostNotice(site))
-    .slice(0, 600)
-    .sort((a, b) => telling(b) - telling(a) || b.event.at - a.event.at)
-    .slice(0, FEED_MAX - changes.length);
-  const feed = [...changes, ...found].sort((a, b) => b.event.at - a.event.at).map(feedItem);
+  // The live feed: what Radar saw happen to named sites, newest first
+  const FEED_TYPES = ['first-visit', 'taken-down', 'back', 'title', 'rebuilt', 'content', 'moved', 'nameservers', 'kit', 'listed'];
+  const feed = eventsOf({ since: nowSec - 2 * DAY, types: FEED_TYPES, limit: 8000 })
+    .filter(({ event }) => event.type !== 'first-visit' || event.detail?.state === 'live')
+    .slice(0, FEED_MAX)
+    .map(({ event, site }) => ({
+      at: iso(event.at),
+      domain: defang(site.name),
+      type: event.type,
+      text: eventText(event, site),
+      kind: kindOf(site),
+      targets: targetsOf(site),
+    }));
 
   // How busy the scanner has been, over every watched site (counts only)
   const activityOver = (seconds) => Object.fromEntries(
@@ -227,7 +223,6 @@ try {
       liveNow: stats.live || 0,
       liveHighRisk: live.length,
       critical: live.filter((s) => s.level === 'critical').length,
-      replacedByHostNotice: up.length - live.length,
       named: strongLive.length,
       runningKnownKit: stats.kits || 0,
       takenDown: stats.takenDown || 0,
@@ -272,13 +267,12 @@ try {
     for (const site of worth) {
       const d = site.detail || {};
       const isStrong = strong(site);
-      const noticed = site.state === 'live' && hostNotice(site);
       const record = {
-        state: noticed ? 'blocked' : clean(site.state, 20),
+        state: clean(site.state, 20),
         risk: site.risk,
         level: clean(site.level, 10),
         named: isStrong || undefined,
-        title: isStrong && !noticed ? cleanTitle(site.title) || undefined : undefined,
+        title: isStrong ? cleanTitle(site.title) || undefined : undefined,
         kind: kindOf(site) || undefined,
         kit: kitOf(site) || undefined,
         brands: brandsOf(site).slice(0, 3),
@@ -296,7 +290,7 @@ try {
         upShare: site.checks ? Math.round((100 * site.ups) / site.checks) : undefined,
         downSince: iso(site.down_since) || undefined,
         takenDown: iso(site.taken_down) || undefined,
-        downReason: noticed ? 'Its host has replaced the page with a takedown notice' : clean(site.down_reason, 80) || undefined,
+        downReason: clean(site.down_reason, 80) || undefined,
         registered: clean(site.created, 10) || undefined,
         registrar: clean(site.registrar, 50) || undefined,
       };
@@ -313,7 +307,7 @@ try {
     console.log(`Wrote ${worth.length} lookup records in 256 files`);
 
     // ---- The map: named sites, in the result shape Scam Finder's viewer draws
-    const pool = store.listSites({ minRisk: NAME_MIN_RISK, limit: 5000 }).filter((s) => s.checks > 0 && strong(s) && !hostNotice(s));
+    const pool = store.listSites({ minRisk: NAME_MIN_RISK, limit: 5000 }).filter((s) => s.checks > 0 && strong(s));
     const picked = [...pool.filter((s) => s.state === 'live'), ...pool.filter((s) => s.state !== 'live')].slice(0, MAP_MAX);
     const eventsByName = new Map();
     for (let i = 0; i < picked.length; i += 200) {
@@ -335,12 +329,33 @@ try {
     // Strip what the scammers wrote, after the grouping above has used it
     for (const domain of domains) {
       const site = sitesByName.get(domain.domain);
-      sanitizeDomain(domain);
+      domain.title = cleanTitle(domain.title);
+      domain.urls = [];
+      domain.root = null;
+      domain.seo = null;
+      domain.page = { description: null, spoofedHost: clean(domain.page?.spoofedHost, 60) || null, trackers: [], contacts: [], stages: [] };
+      domain.risk.signals = (domain.risk.signals || []).map(({ id, weight, label }) => ({ id, weight, label: clean(label, 120) }));
+      domain.findings = (domain.findings || []).map(({ id, label, severity, category, hidden }) =>
+        ({ id, label: clean(label, 100), severity, category, hidden: Boolean(hidden), evidence: '' }));
+      domain.kits = (domain.kits || []).map(({ id, name, category, description }) =>
+        ({ id, name: clean(name, 80), category, description: clean(description, 240), evidence: [] }));
+      domain.lures = (domain.lures || []).map(({ id, label }) => ({ id, label: clean(label, 60), cues: [] }));
       domain.track.events = (eventsByName.get(domain.domain) || []).map((event) =>
         ({ at: iso(event.at), type: event.type, text: eventText(event, site), detail: null }));
     }
-    sanitizeCampaigns(campaigns);
-    sanitizeLinks(links);
+    for (const campaign of campaigns) {
+      campaign.title = cleanTitle(campaign.title);
+      campaign.label = campaign.title || clean(campaign.kit, 80) || 'Same kit';
+      if (campaign.key.startsWith('title:')) campaign.key = `title:${hashOf(campaign.key)}`;
+    }
+    for (const link of links) {
+      if (link.kind === 'tracker' || link.kind === 'contact') {
+        const tag = hashOf(link.key).slice(0, 6);
+        link.id = `${link.kind}:${tag}`;
+        link.key = tag;
+        link.label = `${link.kindLabel} (ref ${tag})`;
+      }
+    }
     const levels = Object.fromEntries(LEVELS.map((level) => [level.id, domains.filter((d) => d.risk.level === level.id).length]));
     const { lastTick: _tick, database: _database, batches, ...radar } = view;
     const map = {
