@@ -5323,6 +5323,179 @@ var init_investigate = __esm({
   }
 });
 
+// tools/scam-radar/guarded-request.mjs
+var import_node_dns, import_node_http, import_node_https, import_node_net2, import_node_zlib, DEFAULT_TIMEOUT2, DEFAULT_MAX_BYTES2, MAX_HOPS, v6Groups, privateAddress, failure, makeGuardedRequest;
+var init_guarded_request = __esm({
+  "tools/scam-radar/guarded-request.mjs"() {
+    import_node_dns = __toESM(require("node:dns"), 1);
+    import_node_http = __toESM(require("node:http"), 1);
+    import_node_https = __toESM(require("node:https"), 1);
+    import_node_net2 = __toESM(require("node:net"), 1);
+    import_node_zlib = __toESM(require("node:zlib"), 1);
+    init_net();
+    init_util();
+    DEFAULT_TIMEOUT2 = 15e3;
+    DEFAULT_MAX_BYTES2 = 2 * 1024 * 1024;
+    MAX_HOPS = 6;
+    v6Groups = (ip) => {
+      let text = String(ip).toLowerCase().replace(/^\[|\]$/g, "").split("%")[0];
+      const tail = text.match(/(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+      if (tail) {
+        const [a, b, c, d] = tail.slice(1).map(Number);
+        text = `${text.slice(0, tail.index)}${(a << 8 | b).toString(16)}:${(c << 8 | d).toString(16)}`;
+      }
+      const [head, rest, extra] = text.split("::");
+      if (extra !== void 0) return null;
+      const front = head ? head.split(":") : [];
+      const back = rest === void 0 ? null : rest ? rest.split(":") : [];
+      const groups = back === null ? front : [...front, ...Array(Math.max(0, 8 - front.length - back.length)).fill("0"), ...back];
+      return groups.length === 8 && groups.every((g) => /^[0-9a-f]{1,4}$/.test(g)) ? groups.map((g) => parseInt(g, 16)) : null;
+    };
+    privateAddress = (ip) => {
+      if (isPrivateIp(ip)) return true;
+      const text = String(ip || "").replace(/^\[|\]$/g, "");
+      if (!import_node_net2.default.isIPv6(text)) return false;
+      if (/^(64:ff9b:|2002:)/i.test(text)) return true;
+      const g = v6Groups(text);
+      if (!g) return true;
+      const zeros = (n) => g.slice(0, n).every((x) => x === 0);
+      const inside = `${g[6] >> 8}.${g[6] & 255}.${g[7] >> 8}.${g[7] & 255}`;
+      if (zeros(5) && (g[5] === 0 || g[5] === 65535) || zeros(4) && g[4] === 65535 && g[5] === 0) return isPrivateIp(inside);
+      return false;
+    };
+    failure = (code, host, message) => Object.assign(new Error(`${code} fetching ${host}: ${message}`), { code });
+    makeGuardedRequest = ({ blockedAddress = privateAddress, resolve: resolve2 } = {}) => {
+      const lookupAll = resolve2 || ((host) => import_node_dns.default.promises.lookup(host, { all: true, verbatim: true }));
+      const addressFor = async (url) => {
+        if (url.protocol !== "http:" && url.protocol !== "https:") throw failure("BLOCKED", url.protocol, "not a web address");
+        const host = url.hostname.replace(/^\[|\]$/g, "");
+        if (isLocalName(host)) throw failure("BLOCKED", host, "local hostname");
+        if (isIp(host)) {
+          if (blockedAddress(host)) throw failure("BLOCKED", host, "private address");
+          return { address: host, family: host.includes(":") ? 6 : 4 };
+        }
+        let list;
+        try {
+          list = await lookupAll(host);
+        } catch (error) {
+          throw failure(error.code || "ENOTFOUND", host, "does not resolve");
+        }
+        if (!list.length) throw failure("ENOTFOUND", host, "does not resolve");
+        if (list.some((entry) => blockedAddress(entry.address))) throw failure("BLOCKED", host, "resolves to a private address");
+        return list[0];
+      };
+      const once = (url, pinned, opts, deadline) => new Promise((resolve3, reject) => {
+        const host = url.hostname.replace(/^\[|\]$/g, "");
+        const headers = { "user-agent": TOOL_UA, accept: "*/*", "accept-encoding": "gzip, deflate, br" };
+        for (const [name, value] of Object.entries(opts.headers || {})) headers[name.toLowerCase()] = value;
+        let body;
+        if (opts.body !== void 0) {
+          body = typeof opts.body === "string" ? opts.body : JSON.stringify(opts.body);
+          if (typeof opts.body !== "string") headers["content-type"] ??= "application/json";
+          headers["content-length"] = Buffer.byteLength(body);
+        }
+        const left = deadline - Date.now();
+        if (left <= 0) return reject(failure("TIMEOUT", host, "timed out"));
+        const client = url.protocol === "https:" ? import_node_https.default : import_node_http.default;
+        const request2 = client.request({
+          protocol: url.protocol,
+          hostname: host,
+          port: url.port || void 0,
+          path: `${url.pathname}${url.search}`,
+          method: opts.method || "GET",
+          headers,
+          servername: isIp(host) ? void 0 : host,
+          // The connection goes to the address that was checked, never to a second lookup
+          lookup: (_name, options, callback) => options && options.all ? callback(null, [{ address: pinned.address, family: pinned.family }]) : callback(null, pinned.address, pinned.family),
+          agent: false
+        });
+        const timer = setTimeout(() => request2.destroy(failure("TIMEOUT", host, "timed out")), left);
+        const onAbort = () => request2.destroy(failure("TIMEOUT", host, "aborted"));
+        opts.signal?.addEventListener?.("abort", onAbort, { once: true });
+        const finish = (fn, value) => {
+          clearTimeout(timer);
+          opts.signal?.removeEventListener?.("abort", onAbort);
+          fn(value);
+        };
+        request2.on("error", (error) => finish(reject, error.code && error.message.includes("fetching") ? error : failure(error.code || "NETWORK", host, error.message)));
+        request2.on("response", (response) => {
+          const status = response.statusCode;
+          const bare = status >= 300 && status < 400 || status === 204 || String(opts.method || "GET").toUpperCase() === "HEAD";
+          const encoding = bare ? "" : String(response.headers["content-encoding"] || "").toLowerCase().trim();
+          let stream = response;
+          if (encoding === "gzip" || encoding === "x-gzip") stream = response.pipe(import_node_zlib.default.createGunzip());
+          else if (encoding === "deflate") stream = response.pipe(import_node_zlib.default.createInflate());
+          else if (encoding === "br") stream = response.pipe(import_node_zlib.default.createBrotliDecompress());
+          const max = opts.maxBytes || DEFAULT_MAX_BYTES2;
+          const chunks = [];
+          let total = 0;
+          let truncated = false;
+          const done = () => finish(resolve3, { status: response.statusCode, headers: response.headers, bytes: Buffer.concat(chunks), truncated });
+          stream.on("data", (chunk) => {
+            if (truncated) return;
+            const room = max - total;
+            if (chunk.length >= room) {
+              chunks.push(chunk.subarray(0, room));
+              total = max;
+              truncated = true;
+              response.destroy();
+              done();
+              return;
+            }
+            chunks.push(chunk);
+            total += chunk.length;
+          });
+          stream.on("end", () => {
+            if (!truncated) done();
+          });
+          stream.on("error", (error) => {
+            if (!truncated) finish(reject, failure(error.code || "NETWORK", host, error.message));
+          });
+        });
+        if (body !== void 0) request2.write(body);
+        request2.end();
+      });
+      return async (rawUrl, opts = {}) => {
+        const deadline = Date.now() + (opts.timeoutMs || DEFAULT_TIMEOUT2);
+        const follow = (opts.redirect || "follow") === "follow";
+        let url = new URL(rawUrl);
+        let options = { ...opts };
+        for (let hop = 0; hop <= MAX_HOPS; hop += 1) {
+          const pinned = await addressFor(url);
+          const answer = await once(url, pinned, options, deadline);
+          const location = answer.headers.location;
+          if (follow && answer.status >= 300 && answer.status < 400 && location) {
+            url = new URL(location, url);
+            const method = String(options.method || "GET").toUpperCase();
+            if (answer.status === 303 || (answer.status === 301 || answer.status === 302) && method === "POST") {
+              options = { ...options, method: "GET", body: void 0 };
+            }
+            continue;
+          }
+          const headers = {};
+          for (const [name, value] of Object.entries(answer.headers)) headers[name] = Array.isArray(value) ? value.join(", ") : value;
+          const { bytes } = answer;
+          return {
+            status: answer.status,
+            ok: answer.status >= 200 && answer.status < 300,
+            url: url.href,
+            headers,
+            bytes,
+            truncated: answer.truncated,
+            get text() {
+              return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+            },
+            json() {
+              return JSON.parse(new TextDecoder("utf-8").decode(bytes));
+            }
+          };
+        }
+        throw failure("REDIRECTS", url.hostname, `more than ${MAX_HOPS} redirects`);
+      };
+    };
+  }
+});
+
 // tools/scam-radar/sanitize.mjs
 var import_node_crypto2, clean, cleanTitle, hashOf, barePath, hostsOnly, sanitizeDomain, sanitizeCampaigns, sanitizeLinks;
 var init_sanitize = __esm({
@@ -5429,18 +5602,17 @@ var init_sanitize = __esm({
 var api_core_exports = {};
 __export(api_core_exports, {
   API_VERSION: () => API_VERSION,
-  handle: () => handle,
-  installNetworkGuard: () => installNetworkGuard
+  handle: () => handle
 });
-var import_node_dns, API_VERSION, budgetMs, deepBudgetMs, OPTIONS, privateAddress, blocked2, MAX_HOPS, guarded, installNetworkGuard, LIMITS, allow, reply, tidy, tooMany, checkContact, handle;
+var API_VERSION, budgetMs, deepBudgetMs, OPTIONS, guardedRequest, LIMITS, allow, reply, tidy, tooMany, checkContact, handle;
 var init_api_core = __esm({
   "tools/scam-radar/api-core.mjs"() {
-    import_node_dns = __toESM(require("node:dns"), 1);
     init_contacts();
     init_graph();
     init_investigate();
     init_net();
     init_util();
+    init_guarded_request();
     init_sanitize();
     API_VERSION = 1;
     budgetMs = () => Math.min(6e4, Math.max(5e3, Number(process.env.SCAM_FINDER_BUDGET_MS) || 7e3));
@@ -5459,49 +5631,7 @@ var init_api_core = __esm({
         timeBudgetMs: deepBudgetMs()
       })
     };
-    privateAddress = (ip) => isPrivateIp(ip) || /^(64:ff9b:|2002:)/i.test(String(ip || ""));
-    blocked2 = (what) => Object.assign(new Error(`${what} is not a public internet address`), { code: "BLOCKED" });
-    MAX_HOPS = 6;
-    guarded = false;
-    installNetworkGuard = () => {
-      if (guarded) return;
-      guarded = true;
-      const realLookup = import_node_dns.default.lookup;
-      import_node_dns.default.lookup = function guardedLookup(hostname, options, callback) {
-        const done = typeof options === "function" ? options : callback;
-        const opts = typeof options === "number" ? { family: options } : typeof options === "object" && options ? { ...options } : {};
-        realLookup.call(import_node_dns.default, hostname, { ...opts, all: true }, (error, addresses) => {
-          if (error) return done(error);
-          const list = Array.isArray(addresses) ? addresses : [];
-          if (!list.length || list.some((a) => privateAddress(a.address))) return done(blocked2(hostname));
-          return opts.all ? done(null, list) : done(null, list[0].address, list[0].family);
-        });
-      };
-      const realFetch = globalThis.fetch;
-      const check = (raw) => {
-        const url = new URL(raw);
-        if (url.protocol !== "http:" && url.protocol !== "https:") throw blocked2(url.protocol);
-        const host = url.hostname.replace(/^\[|\]$/g, "");
-        if (isLocalName(host) || isIp(host) && privateAddress(host)) throw blocked2(host);
-      };
-      globalThis.fetch = async (input, init = {}) => {
-        let url = typeof input === "string" || input instanceof URL ? String(input) : input.url;
-        let options = { ...init };
-        const follow = (options.redirect || "follow") === "follow";
-        for (let hop = 0; hop <= MAX_HOPS; hop += 1) {
-          check(url);
-          const response = await realFetch(url, { ...options, redirect: "manual" });
-          const location = response.headers.get("location");
-          if (!follow || response.status < 300 || response.status >= 400 || !location) return response;
-          url = new URL(location, url).href;
-          const method = String(options.method || "GET").toUpperCase();
-          if (response.status === 303 || (response.status === 301 || response.status === 302) && method === "POST") {
-            options = { ...options, method: "GET", body: void 0 };
-          }
-        }
-        throw new Error(`More than ${MAX_HOPS} redirects`);
-      };
-    };
+    guardedRequest = makeGuardedRequest();
     LIMITS = {
       check: { windowMs: 60 * 1e3, perAddress: 8, perInstance: 40, recent: /* @__PURE__ */ new Map() },
       deep: { windowMs: 10 * 60 * 1e3, perAddress: 3, perInstance: 20, recent: /* @__PURE__ */ new Map() }
@@ -5556,7 +5686,7 @@ var init_api_core = __esm({
     checkContact = async (value, address, deps) => {
       if (value.length > 200) return reply(400, { error: "That is too long to be an email address or a phone number" });
       if (!allow(String(address))) return tooMany("a minute");
-      const ctx = new NetContext({ budget: new Budget(1e4), cacheDir: false });
+      const ctx = new NetContext({ budget: new Budget(1e4), cacheDir: false, request: deps.request || guardedRequest });
       try {
         const result = await (deps.describe || describeContact)(ctx, value, { online: true });
         if (!result) return reply(400, { error: "Give an email address, or a phone number with its country code" });
@@ -5590,14 +5720,16 @@ var init_api_core = __esm({
       } catch (error) {
         return reply(400, { error: clean(error.message, 160) });
       }
-      if (isLocalName(target.host) || target.isIp && isPrivateIp(target.host)) {
+      if (isLocalName(target.host) || target.isIp && privateAddress(target.host)) {
         return reply(400, { error: "That address is private or local, so there is nothing public to check" });
       }
       const depth = String(query.depth) === "2" ? 2 : String(query.depth) === "1" ? 1 : 0;
       if (depth === 2 && !allow(String(address), "deep")) return tooMany("ten minutes");
       if (depth < 2 && !allow(String(address))) return tooMany("a minute");
       try {
-        const result = await (deps.run || investigate)(target.url, OPTIONS[depth]());
+        const options = OPTIONS[depth]();
+        const ctx = new NetContext({ budget: new Budget(options.timeBudgetMs), cacheDir: options.cacheDir, request: deps.request || guardedRequest });
+        const result = await (deps.run || investigate)(target.url, { ...options, ctx });
         tidy(result);
         return reply(200, { api: API_VERSION, depth, ...result }, "public, max-age=120, s-maxage=600");
       } catch (error) {

@@ -19,8 +19,9 @@ What was added around it for this site:
   scan runs, and puts the suspicious leads on Radar's watchlist through `watch`. `export.mjs` publishes counts.
 - `publish.sh` pushes the files to the `scam-radar-data` branch as one commit.
 - `api-core.mjs` is Scam Finder's `investigate` as an API (`depth=2` is the deep dive), plus its `describeContact`
-  for `?contact=`, with `api-vercel.cjs` and `api-netlify.cjs` as the wrappers. It checks every address the
-  function connects to, redirects included, and refuses private and local ones. `browser-entry.mjs` is the offline name and link logic for the browser. `build-bundles.mjs` builds all
+  for `?contact=`, with `api-vercel.cjs` and `api-netlify.cjs` as the wrappers. `guarded-request.mjs` is the
+  request function it gives Scam Finder: every address and redirect hop is checked, private and local ones are
+  refused, and the connection goes to the address that was checked. `browser-entry.mjs` is the offline name and link logic for the browser. `build-bundles.mjs` builds all
   three into `/api/scam-finder.js`, `/netlify/functions/scam-finder.js` and `/assets/js/scam-finder-core.js`.
   `shims/` stands in for two Node modules in the browser bundle.
 - `../build-scam-radar-page.py` builds `/scam-radar/`; `assets/js/scam-radar.js` draws the data and runs the
