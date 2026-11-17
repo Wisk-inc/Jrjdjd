@@ -22,6 +22,9 @@ git config gc.auto 0
 # Make the working tree an exact copy of the folder
 find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 cp -R "$src"/. .
+# This branch is data, not a site. Vercel reads vercel.json from the commit it is asked to build, so
+# the setting on main that turns this branch off may not reach it: say it in the branch itself.
+printf '{\n  "git": { "deploymentEnabled": false }\n}\n' > vercel.json
 git add -A
 message="Scam Radar: snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
 if git rev-parse -q --verify HEAD >/dev/null; then

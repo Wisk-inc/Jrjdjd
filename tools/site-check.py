@@ -11,6 +11,8 @@ checkout of main with its history (fetch-depth 0). It changes nothing and report
 - the www redirect, the Content-Security-Policy (the Scam Radar page needs raw.githubusercontent.com in
   connect-src to load fresh data) and whether the scan API answers;
 - how old the published Scam Radar data is.
+- what Vercel reported to GitHub about the latest commits on main and the data branch (needs
+  GITHUB_TOKEN with read access to statuses, checks and deployments).
 
 It writes the same summary to $GITHUB_STEP_SUMMARY when that is set. It exits with 1 only when the
 site cannot be reached at all.
@@ -33,6 +35,7 @@ SITE = (sys.argv[1] if len(sys.argv) > 1 else "https://corx-labs.com").rstrip("/
 ROOT = Path(__file__).resolve().parent.parent
 UA = "corx-labs-site-check/1 (+https://github.com/Wisk-inc/Jrjdjd)"
 DATA = "https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/scam-radar-status.json"
+REPO = os.environ.get("GITHUB_REPOSITORY", "Wisk-inc/Jrjdjd")
 
 # The newest Automa APK on main, and the older ones whose links should redirect to it
 APKS = sorted((ROOT / "downloads").glob("Automa-*.apk"), key=lambda p: [int(x) for x in p.stem.split("-")[1].split(".")])
@@ -286,7 +289,60 @@ def main():
         say(f"Could not read {DATA}: {err or status} {e}")
         problems.append("the Scam Radar data could not be read")
     say()
+    deployments()
     finish()
+
+
+def github(path):
+    """GET from GitHub's API for this repository, with the workflow's token when there is one."""
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": UA}
+    if os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"
+    request = urllib.request.Request(f"https://api.github.com/repos/{REPO}/{path}", headers=headers)
+    with urllib.request.urlopen(request, timeout=20) as answer:
+        return json.load(answer)
+
+
+def deployments():
+    """What Vercel says about the latest commits, from the statuses and deployments it reports to GitHub."""
+    say("## Deployments (what Vercel reported to GitHub)")
+    try:
+        log = subprocess.run(["git", "log", "-5", "--first-parent", "--format=%H %cI %s", "HEAD"], cwd=ROOT,
+                             capture_output=True, text=True, check=True).stdout.splitlines()
+        data = subprocess.run(["git", "ls-remote", "origin", "refs/heads/scam-radar-data"], cwd=ROOT,
+                              capture_output=True, text=True).stdout.split()
+        commits = [(line.split(" ", 2)[0], f"main {line.split(' ', 2)[1][:16]} {line.split(' ', 2)[2][:60]}") for line in log]
+        if data:
+            commits.append((data[0], "scam-radar-data head"))
+        for sha, label in commits:
+            say(f"{sha[:10]} ({label})")
+            seen = set()
+            for st in github(f"commits/{sha}/statuses?per_page=30"):
+                if st.get("context") in seen:
+                    continue
+                seen.add(st.get("context"))
+                say(f"  status {st.get('context')}: {st.get('state')}, {st.get('description')} ({st.get('created_at')})")
+            for run in github(f"commits/{sha}/check-runs?per_page=20").get("check_runs", []):
+                out = run.get("output") or {}
+                text = " ".join(filter(None, [out.get("title"), (out.get("summary") or "")[:300]]))
+                say(f"  check {run.get('name')}: {run.get('status')}/{run.get('conclusion')} {text}".rstrip())
+            for dep in github(f"deployments?sha={sha}&per_page=10"):
+                states = github(f"deployments/{dep['id']}/statuses?per_page=5")
+                last = states[0] if states else {}
+                say(f"  deployment to {dep.get('environment')} at {dep.get('created_at')}: {last.get('state')}, "
+                    f"{last.get('description') or ''}".rstrip(", "))
+            if not seen:
+                say("  no statuses")
+        # How many deployments the data branch has started in the last day (it should be none)
+        day_ago = datetime.now(timezone.utc).timestamp() - 86400
+        recent = [d for d in github("deployments?ref=scam-radar-data&per_page=100")
+                  if datetime.fromisoformat(d["created_at"].replace("Z", "+00:00")).timestamp() > day_ago]
+        say(f"Deployments of the scam-radar-data branch in the last 24 hours: {len(recent)}{' (100 or more)' if len(recent) >= 100 else ''}")
+        if recent:
+            problems.append(f"Vercel deployed the scam-radar-data branch {len(recent)} times in the last day")
+    except Exception as e:  # the token may lack the permissions; the rest of the report still stands
+        say(f"Could not read the deployments: {e}")
+    say()
 
 
 def finish(exit_code=0):
