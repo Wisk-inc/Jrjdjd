@@ -5740,8 +5740,19 @@ var init_api_core = __esm({
 });
 
 // tools/scam-radar/api-vercel.cjs
-var { handle: handle2 } = (init_api_core(), __toCommonJS(api_core_exports));
+var core = null;
 module.exports = async (req, res) => {
+  let handle2;
+  try {
+    core ||= (init_api_core(), __toCommonJS(api_core_exports));
+    ({ handle: handle2 } = core);
+  } catch (error) {
+    res.statusCode = 500;
+    res.setHeader("content-type", "application/json; charset=utf-8");
+    res.setHeader("cache-control", "no-store");
+    res.end(JSON.stringify({ error: `The scan API could not start: ${String(error && error.message).slice(0, 200)}` }));
+    return;
+  }
   const url = new URL(req.url || "/", "https://corx-labs.com");
   const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
   const out = await handle2({
