@@ -38,6 +38,11 @@ Run `python3 tools/style-check.py` before committing; it lists what to fix.
   running (`scan.state`), and the snapshot keeps the last cycles (`recentCycles`) for the page's live chart.
   raw.githubusercontent.com can serve a branch's old files for minutes after a push, so the page and the map
   ask `api/scam-radar-status.js` for the branch's current commit and read files at that commit.
+- Vercel's free plan allows 100 deployments a day, and every push to any branch can start one. The data branch
+  gets a commit a minute, so it must never deploy: Vercel reads `vercel.json` from the commit it builds, so
+  `publish.sh` writes one with deploys turned off into each data commit (main's setting does not reach that
+  branch). Keep pushes to main few. If the site check shows "Deployment rate limited", the site stays on its
+  last build until the limit resets; then push to main again, or redeploy main from Vercel.
 - `.github/workflows/site-check.yml` (manual) checks the live site from a GitHub runner: host, which commit
   each live file matches, the APK, redirects, CSP, scan API, Radar data age, and the pages in a real browser.
   This sandbox cannot reach the site; run that workflow and read its log instead.
