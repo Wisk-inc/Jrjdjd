@@ -254,6 +254,9 @@ def main():
         except Exception:
             text = f"not JSON: {text[:80]!r}"
         say(f"{path}: {err or status}, {text}")
+    # The contact check, on a made-up Jamaican number (555-01xx is reserved for fiction); it asks no one else
+    status, h, body, final, err = fetch(SITE + "/api/scam-finder?contact=%2B18765550100")
+    say(f"/api/scam-finder?contact=+18765550100: {err or status}, {body[:220].decode('utf-8', 'replace')}")
     say()
 
     say("## Scam Radar status function (the page reads data at the branch's current commit through it)")

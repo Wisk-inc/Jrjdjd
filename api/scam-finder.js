@@ -35,6 +35,909 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
+// tools/scam-radar/scam-finder/lib/util.js
+var import_node_crypto, import_node_net, sleep, sha256, sha1, uniq, isIp, COUNTRY_SECOND_LEVELS, COUNTRY_TLDS, PRIVATE_SUFFIXES, secondLevels, countryTlds, privateSuffixes, pslParse, loadPsl, suffixLength, cleanHost, hostingPlatform, registrableDomain, tldOf, registeredLabel, parseTarget, refang, isPrivateIp, isLocalName, shannonEntropy, EMOJI, stripEmoji, normalizeTitle, flagCountries, SCRIPTS, detectScript, daysBetween, mapLimit, Budget;
+var init_util = __esm({
+  "tools/scam-radar/scam-finder/lib/util.js"() {
+    import_node_crypto = __toESM(require("node:crypto"));
+    import_node_net = __toESM(require("node:net"));
+    sleep = (ms) => new Promise((resolve2) => setTimeout(resolve2, ms));
+    sha256 = (data) => import_node_crypto.default.createHash("sha256").update(data).digest("hex");
+    sha1 = (data) => import_node_crypto.default.createHash("sha1").update(data).digest("hex");
+    uniq = (items) => [...new Set(items)];
+    isIp = (host) => import_node_net.default.isIP(host) !== 0;
+    COUNTRY_SECOND_LEVELS = "ac co com edu gov govt gob gouv go gv mil ne net nom or org sch web id in info biz ltd plc me";
+    COUNTRY_TLDS = "ae ag ai al ar at au bb bd bh bn bo br bs bw by bz ch cn co cr cu cy do dz ec eg es et fj gd gh gi gr gt gy hk hn hr hu id il in iq ir it jm jo jp ke kh kr kw ky kz lb lc lk ly ma mm mo mt mu mx my mz na ng ni no np nz om pa pe pg ph pk pl pr pt py qa ro rs ru rw sa sb sc sd se sg sl sv sy th tn tr tt tw tz ua ug uk uy uz vc ve vn ye za zm zw";
+    PRIVATE_SUFFIXES = [
+      "000webhostapp.com",
+      "42web.io",
+      "appspot.com",
+      "azurewebsites.net",
+      "backblazeb2.com",
+      "blob.core.windows.net",
+      "blogspot.com",
+      "bubbleapps.io",
+      "canva.site",
+      "carrd.co",
+      "cloudfront.net",
+      "codeanyapp.com",
+      "cprapid.com",
+      "ddns.net",
+      "deno.dev",
+      "duckdns.org",
+      "edgeone.app",
+      "epizy.com",
+      "firebaseapp.com",
+      "fly.dev",
+      "framer.app",
+      "framer.website",
+      "free.nf",
+      "gitbook.io",
+      "github.io",
+      "gitlab.io",
+      "glitch.me",
+      "godaddysites.com",
+      "great-site.net",
+      "herokuapp.com",
+      "hopto.org",
+      "infinityfreeapp.com",
+      "jimdofree.com",
+      "jimdosite.com",
+      "kesug.com",
+      "lovable.app",
+      "mailchimpsites.com",
+      "myshopify.com",
+      "mystrikingly.com",
+      "netlify.app",
+      "ngrok-free.app",
+      "ngrok.io",
+      "notion.site",
+      "onrender.com",
+      "pages.dev",
+      "pantheonsite.io",
+      "plesk.page",
+      "r2.dev",
+      "repl.co",
+      "replit.app",
+      "replit.dev",
+      "rf.gd",
+      "softr.app",
+      "square.site",
+      "surge.sh",
+      "sytes.net",
+      "tiiny.site",
+      "trycloudflare.com",
+      "typedream.app",
+      "vercel.app",
+      "web.app",
+      "web.core.windows.net",
+      "webflow.io",
+      "weebly.com",
+      "wixsite.com",
+      "wixstudio.com",
+      "wordpress.com",
+      "workers.dev",
+      "wuaze.com",
+      "yolasite.com",
+      "zapto.org"
+    ];
+    secondLevels = new Set(COUNTRY_SECOND_LEVELS.split(" "));
+    countryTlds = new Set(COUNTRY_TLDS.split(" "));
+    privateSuffixes = new Set(PRIVATE_SUFFIXES);
+    pslParse = null;
+    loadPsl = async () => {
+      if (pslParse !== null) return pslParse !== false;
+      try {
+        const mod = await import("psl");
+        const parse = mod.parse || mod.default?.parse;
+        pslParse = typeof parse === "function" ? parse : false;
+      } catch {
+        pslParse = false;
+      }
+      return pslParse !== false;
+    };
+    suffixLength = (labels) => {
+      const count2 = labels.length;
+      for (let take = Math.min(4, count2 - 1); take >= 2; take -= 1) {
+        if (privateSuffixes.has(labels.slice(count2 - take).join("."))) return take;
+      }
+      if (count2 >= 3 && countryTlds.has(labels[count2 - 1]) && secondLevels.has(labels[count2 - 2])) {
+        return 2;
+      }
+      return 1;
+    };
+    cleanHost = (host) => String(host || "").trim().toLowerCase().replace(/^\[|]$/g, "").replace(/\.$/, "");
+    hostingPlatform = (host) => {
+      const labels = cleanHost(host).split(".");
+      for (let take = Math.min(4, labels.length - 1); take >= 2; take -= 1) {
+        const suffix = labels.slice(labels.length - take).join(".");
+        if (privateSuffixes.has(suffix)) return suffix;
+      }
+      return null;
+    };
+    registrableDomain = (hostname) => {
+      const host = cleanHost(hostname);
+      if (!host || isIp(host) || !host.includes(".")) return host;
+      const labels = host.split(".");
+      if (hostingPlatform(host)) return labels.slice(-(suffixLength(labels) + 1)).join(".");
+      if (pslParse) {
+        const parsed = pslParse(host);
+        if (parsed?.domain) return parsed.domain;
+      }
+      return labels.slice(-(suffixLength(labels) + 1)).join(".");
+    };
+    tldOf = (host) => cleanHost(host).split(".").pop() || "";
+    registeredLabel = (host) => registrableDomain(host).split(".")[0] || "";
+    parseTarget = (input) => {
+      const raw = refang(String(input || "").trim());
+      if (!raw) throw new Error("No target provided");
+      const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
+      let url;
+      try {
+        url = new URL(withScheme);
+      } catch {
+        throw new Error(`Could not parse "${input}" as a URL or domain`);
+      }
+      if (!["http:", "https:"].includes(url.protocol)) {
+        throw new Error(`Only http and https targets are supported, got ${url.protocol}`);
+      }
+      const host = cleanHost(url.hostname);
+      if (!host || !isIp(host) && !host.includes(".")) {
+        throw new Error(`"${input}" has no usable hostname`);
+      }
+      const hasPath = url.pathname !== "/" || url.search !== "";
+      return {
+        input: raw,
+        url: url.href,
+        host,
+        domain: registrableDomain(host),
+        path: url.pathname,
+        search: url.search,
+        hasPath,
+        isIp: isIp(host)
+      };
+    };
+    refang = (value) => String(value ?? "").replace(/^hxxp/i, "http").replace(/\[\.\]|\(\.\)|\[dot\]|\(dot\)/gi, ".").replace(/\[:\]/g, ":").replace(/\[\/\]/g, "/");
+    isPrivateIp = (ip) => {
+      const host = cleanHost(ip);
+      if (import_node_net.default.isIPv4(host)) {
+        const [a, b] = host.split(".").map(Number);
+        if (a === 0 || a === 10 || a === 127 || a >= 224) return true;
+        if (a === 172 && b >= 16 && b <= 31) return true;
+        if (a === 192 && b === 168) return true;
+        if (a === 169 && b === 254) return true;
+        if (a === 100 && b >= 64 && b <= 127) return true;
+        return a === 198 && (b === 18 || b === 19);
+      }
+      if (import_node_net.default.isIPv6(host)) {
+        const mapped = host.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i);
+        if (mapped) return isPrivateIp(mapped[1]);
+        return host === "::" || host === "::1" || /^f[cdef]/i.test(host);
+      }
+      return false;
+    };
+    isLocalName = (host) => {
+      const name = cleanHost(host);
+      return name === "localhost" || name.endsWith(".localhost") || name.endsWith(".local") || name.endsWith(".internal") || name.endsWith(".lan") || name.endsWith(".home.arpa");
+    };
+    shannonEntropy = (text) => {
+      const value = String(text || "");
+      if (!value) return 0;
+      const counts = {};
+      for (const char of value) counts[char] = (counts[char] || 0) + 1;
+      return Object.values(counts).reduce((sum, count2) => {
+        const p = count2 / value.length;
+        return sum - p * Math.log2(p);
+      }, 0);
+    };
+    EMOJI = /[\p{Extended_Pictographic}\p{Regional_Indicator}\u200d\ufe0f\u20e3]/gu;
+    stripEmoji = (text) => String(text || "").replace(EMOJI, " ").replace(/\s+/g, " ").trim();
+    normalizeTitle = (title) => stripEmoji(String(title || "").normalize("NFKC")).toLowerCase().replace(/[‘’“”'"`!?.,:;|()[\]{}<>*#~_-]+/g, " ").replace(/\s+/g, " ").trim();
+    flagCountries = (text) => {
+      const codes = [];
+      const flags = String(text || "").match(/[\u{1F1E6}-\u{1F1FF}]{2}/gu) || [];
+      for (const flag of flags) {
+        const [first, second] = [...flag];
+        codes.push(
+          String.fromCharCode(first.codePointAt(0) - 127462 + 65) + String.fromCharCode(second.codePointAt(0) - 127462 + 65)
+        );
+      }
+      return uniq(codes);
+    };
+    SCRIPTS = [
+      ["Sinhala", new RegExp("\\p{Script=Sinhala}", "u"), "LK"],
+      ["Bengali", new RegExp("\\p{Script=Bengali}", "u"), null],
+      ["Tamil", new RegExp("\\p{Script=Tamil}", "u"), null],
+      ["Devanagari", new RegExp("\\p{Script=Devanagari}", "u"), "IN"],
+      ["Gujarati", new RegExp("\\p{Script=Gujarati}", "u"), "IN"],
+      ["Telugu", new RegExp("\\p{Script=Telugu}", "u"), "IN"],
+      ["Kannada", new RegExp("\\p{Script=Kannada}", "u"), "IN"],
+      ["Malayalam", new RegExp("\\p{Script=Malayalam}", "u"), "IN"],
+      ["Oriya", new RegExp("\\p{Script=Oriya}", "u"), "IN"],
+      ["Gurmukhi", new RegExp("\\p{Script=Gurmukhi}", "u"), "IN"],
+      ["Thai", new RegExp("\\p{Script=Thai}", "u"), "TH"],
+      ["Khmer", new RegExp("\\p{Script=Khmer}", "u"), "KH"],
+      ["Myanmar", new RegExp("\\p{Script=Myanmar}", "u"), "MM"],
+      ["Lao", new RegExp("\\p{Script=Lao}", "u"), "LA"],
+      ["Arabic", new RegExp("\\p{Script=Arabic}", "u"), null],
+      ["Hebrew", new RegExp("\\p{Script=Hebrew}", "u"), "IL"],
+      ["Cyrillic", new RegExp("\\p{Script=Cyrillic}", "u"), null],
+      ["Greek", new RegExp("\\p{Script=Greek}", "u"), "GR"],
+      ["Hangul", new RegExp("\\p{Script=Hangul}", "u"), "KR"],
+      ["Japanese", /[\p{Script=Hiragana}\p{Script=Katakana}]/u, "JP"],
+      ["Han", new RegExp("\\p{Script=Han}", "u"), null],
+      ["Ethiopic", new RegExp("\\p{Script=Ethiopic}", "u"), "ET"],
+      ["Georgian", new RegExp("\\p{Script=Georgian}", "u"), "GE"],
+      ["Armenian", new RegExp("\\p{Script=Armenian}", "u"), "AM"]
+    ];
+    detectScript = (text) => {
+      const value = String(text || "");
+      for (const [name, pattern, country] of SCRIPTS) {
+        if (pattern.test(value)) return { script: name, country };
+      }
+      return null;
+    };
+    daysBetween = (from, to = /* @__PURE__ */ new Date()) => {
+      const start = new Date(from).getTime();
+      const end = new Date(to).getTime();
+      if (Number.isNaN(start) || Number.isNaN(end)) return null;
+      return Math.floor((end - start) / 864e5);
+    };
+    mapLimit = async (items, limit, worker) => {
+      const results = new Array(items.length);
+      let next = 0;
+      const run = async () => {
+        while (next < items.length) {
+          const index = next;
+          next += 1;
+          results[index] = await worker(items[index], index);
+        }
+      };
+      await Promise.all(Array.from({ length: Math.min(limit, items.length) || 1 }, run));
+      return results;
+    };
+    Budget = class {
+      constructor(ms) {
+        this.limit = ms > 0 ? ms : Infinity;
+        this.started = Date.now();
+      }
+      elapsed() {
+        return Date.now() - this.started;
+      }
+      left() {
+        return this.limit - this.elapsed();
+      }
+      expired(reserveMs = 0) {
+        return this.left() <= reserveMs;
+      }
+    };
+  }
+});
+
+// tools/scam-radar/scam-finder/lib/net.js
+var import_node_fs, import_node_os, import_node_path, import_node_stream, TOOL_UA, MOBILE_UA, DESKTOP_UA, DEFAULT_TIMEOUT, DEFAULT_MAX_BYTES, readCapped, wrapError, request, openStream, HOST_RULES, DEFAULT_RULE, HostLimiter, DiskCache, MINUTE, TTL, NetContext;
+var init_net = __esm({
+  "tools/scam-radar/scam-finder/lib/net.js"() {
+    import_node_fs = __toESM(require("node:fs"));
+    import_node_os = __toESM(require("node:os"));
+    import_node_path = __toESM(require("node:path"));
+    import_node_stream = require("node:stream");
+    init_util();
+    TOOL_UA = process.env.SCAM_FINDER_UA || "scam-finder/1.0 (OSINT research tool)";
+    MOBILE_UA = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36";
+    DESKTOP_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+    DEFAULT_TIMEOUT = 15e3;
+    DEFAULT_MAX_BYTES = 2 * 1024 * 1024;
+    readCapped = async (response, maxBytes) => {
+      if (!response.body) return { bytes: Buffer.alloc(0), truncated: false };
+      const chunks = [];
+      let total = 0;
+      let truncated = false;
+      const reader = response.body.getReader();
+      try {
+        for (; ; ) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          total += value.byteLength;
+          if (total > maxBytes) {
+            chunks.push(Buffer.from(value.subarray(0, value.byteLength - (total - maxBytes))));
+            truncated = true;
+            break;
+          }
+          chunks.push(Buffer.from(value));
+        }
+      } finally {
+        if (truncated) await reader.cancel().catch(() => {
+        });
+      }
+      return { bytes: Buffer.concat(chunks), truncated };
+    };
+    wrapError = (error, url) => {
+      const code = error.name === "TimeoutError" || error.name === "AbortError" ? "TIMEOUT" : error.cause?.code || error.code || "NETWORK";
+      const wrapped = new Error(`${code} fetching ${new URL(url).host}: ${error.message}`);
+      wrapped.code = code;
+      return wrapped;
+    };
+    request = async (url, opts = {}) => {
+      const headers = { "user-agent": TOOL_UA, accept: "*/*" };
+      for (const [name, value] of Object.entries(opts.headers || {})) {
+        headers[name.toLowerCase()] = value;
+      }
+      const init = {
+        method: opts.method || "GET",
+        headers,
+        redirect: opts.redirect || "follow",
+        signal: AbortSignal.timeout(opts.timeoutMs || DEFAULT_TIMEOUT)
+      };
+      if (opts.body !== void 0) {
+        init.body = typeof opts.body === "string" ? opts.body : JSON.stringify(opts.body);
+        if (typeof opts.body !== "string") headers["content-type"] ??= "application/json";
+      }
+      let response;
+      let body;
+      try {
+        response = await fetch(url, init);
+        body = await readCapped(response, opts.maxBytes || DEFAULT_MAX_BYTES);
+      } catch (error) {
+        throw wrapError(error, url);
+      }
+      const responseHeaders = {};
+      for (const [name, value] of response.headers.entries()) responseHeaders[name] = value;
+      return {
+        status: response.status,
+        ok: response.status >= 200 && response.status < 300,
+        url: response.url || url,
+        headers: responseHeaders,
+        bytes: body.bytes,
+        truncated: body.truncated,
+        get text() {
+          return new TextDecoder("utf-8", { fatal: false }).decode(body.bytes);
+        },
+        json() {
+          return JSON.parse(new TextDecoder("utf-8").decode(body.bytes));
+        }
+      };
+    };
+    openStream = async (url, opts = {}) => {
+      const headers = { "user-agent": TOOL_UA, accept: "*/*" };
+      for (const [name, value] of Object.entries(opts.headers || {}))
+        headers[name.toLowerCase()] = value;
+      let response;
+      try {
+        response = await fetch(url, { headers, redirect: "follow", signal: opts.signal });
+      } catch (error) {
+        throw wrapError(error, url);
+      }
+      if (!response.ok || !response.body) {
+        const error = new Error(`HTTP ${response.status} from ${new URL(url).host}`);
+        error.status = response.status;
+        throw error;
+      }
+      const stream = import_node_stream.Readable.fromWeb(response.body);
+      stream.headers = Object.fromEntries(response.headers.entries());
+      return stream;
+    };
+    HOST_RULES = {
+      "urlscan.io": { concurrency: 1, minIntervalMs: 2100 },
+      "api.certspotter.com": { concurrency: 1, minIntervalMs: 1500 },
+      "crt.sh": { concurrency: 1, minIntervalMs: 1500 },
+      "ip.thc.org": { concurrency: 1, minIntervalMs: 800 },
+      "api.hackertarget.com": { concurrency: 1, minIntervalMs: 1200 },
+      "rdap.org": { concurrency: 1, minIntervalMs: 700 },
+      "dns.google": { concurrency: 8, minIntervalMs: 0 },
+      "cloudflare-dns.com": { concurrency: 8, minIntervalMs: 0 },
+      "raw.githubusercontent.com": { concurrency: 3, minIntervalMs: 0 },
+      "data.commoncrawl.org": { concurrency: 1, minIntervalMs: 500 },
+      "mon.sycamore.ct.letsencrypt.org": { concurrency: 4, minIntervalMs: 0 },
+      "mon.willow.ct.letsencrypt.org": { concurrency: 4, minIntervalMs: 0 },
+      "storage.googleapis.com": { concurrency: 4, minIntervalMs: 0 },
+      "tuscolo2027h1.skylight.geomys.org": { concurrency: 1, minIntervalMs: 400 },
+      "ipwho.is": { concurrency: 1, minIntervalMs: 1100 },
+      "haveibeenpwned.com": { concurrency: 1, minIntervalMs: 6500 },
+      "api.stopforumspam.org": { concurrency: 1, minIntervalMs: 1e3 }
+    };
+    DEFAULT_RULE = { concurrency: 3, minIntervalMs: 150 };
+    HostLimiter = class {
+      constructor(rules = {}) {
+        this.rules = { ...HOST_RULES, ...rules };
+        this.state = /* @__PURE__ */ new Map();
+      }
+      ruleFor(host) {
+        return this.rules[host] || DEFAULT_RULE;
+      }
+      async run(url, task) {
+        const host = new URL(url).host;
+        const rule = this.ruleFor(host);
+        let slot = this.state.get(host);
+        if (!slot) {
+          slot = { active: 0, queue: [], nextAt: 0 };
+          this.state.set(host, slot);
+        }
+        if (slot.active >= rule.concurrency) {
+          await new Promise((resolve2) => slot.queue.push(resolve2));
+        } else {
+          slot.active += 1;
+        }
+        try {
+          const wait = slot.nextAt - Date.now();
+          slot.nextAt = Math.max(Date.now(), slot.nextAt) + rule.minIntervalMs;
+          if (wait > 0) await sleep(wait);
+          return await task();
+        } finally {
+          const next = slot.queue.shift();
+          if (next) next();
+          else slot.active -= 1;
+        }
+      }
+      // Push a host's next allowed request into the future, after it tells us to back off
+      pause(url, ms) {
+        const host = new URL(url).host;
+        const slot = this.state.get(host);
+        if (slot) slot.nextAt = Math.max(slot.nextAt, Date.now() + ms);
+      }
+    };
+    DiskCache = class _DiskCache {
+      constructor(dir) {
+        this.dir = dir === false ? null : dir || _DiskCache.defaultDir();
+        this.ready = false;
+      }
+      static defaultDir() {
+        if (process.env.SCAM_FINDER_NO_CACHE) return null;
+        return process.env.SCAM_FINDER_CACHE_DIR || import_node_path.default.join(import_node_os.default.tmpdir(), "scam-finder-cache");
+      }
+      file(key) {
+        return import_node_path.default.join(this.dir, `${sha1(key)}.cache`);
+      }
+      prepare() {
+        if (this.ready || !this.dir) return;
+        import_node_fs.default.mkdirSync(this.dir, { recursive: true });
+        this.ready = true;
+      }
+      // The cached text for a key, or null when it's missing, stale or unreadable
+      get(key, ttlMs) {
+        if (!this.dir) return null;
+        try {
+          const file = this.file(key);
+          if (Date.now() - import_node_fs.default.statSync(file).mtimeMs > ttlMs) return null;
+          return import_node_fs.default.readFileSync(file, "utf8");
+        } catch {
+          return null;
+        }
+      }
+      // Best effort: a read-only disk (serverless) just means nothing is cached
+      set(key, text) {
+        if (!this.dir) return;
+        try {
+          this.prepare();
+          import_node_fs.default.writeFileSync(this.file(key), text);
+        } catch {
+          this.dir = null;
+        }
+      }
+    };
+    MINUTE = 60 * 1e3;
+    TTL = {
+      dns: 30 * MINUTE,
+      search: 30 * MINUTE,
+      rdap: 12 * 60 * MINUTE,
+      feed: 6 * 60 * MINUTE,
+      static: 7 * 24 * 60 * MINUTE
+    };
+    NetContext = class {
+      constructor(opts = {}) {
+        this.limiter = opts.limiter || new HostLimiter();
+        this.cache = opts.cache || new DiskCache(opts.cacheDir);
+        this.budget = opts.budget || null;
+        this.errors = [];
+        this.stats = { requests: 0, cacheHits: 0 };
+        this.fetchImpl = opts.request || request;
+        this.streamImpl = opts.stream || openStream;
+      }
+      // A rate-limited streaming download (the limiter only spaces out the opening request)
+      async stream(url, opts = {}) {
+        return this.limiter.run(url, () => {
+          this.stats.requests += 1;
+          return this.streamImpl(url, opts);
+        });
+      }
+      // Record a source failure once per source, so reports can say what was unavailable
+      noteError(source, error) {
+        const message = typeof error === "string" ? error : error?.message || String(error);
+        if (!this.errors.some((entry) => entry.source === source && entry.message === message)) {
+          this.errors.push({ source, message });
+        }
+      }
+      outOfTime(reserveMs = 0) {
+        return this.budget ? this.budget.expired(reserveMs) : false;
+      }
+      // Rate-limited request, never started once the time budget has run out
+      async fetch(url, opts = {}) {
+        if (this.outOfTime(opts.reserveMs || 0)) {
+          const error = new Error("Time budget exhausted");
+          error.code = "BUDGET";
+          throw error;
+        }
+        const timeoutMs = this.budget ? Math.max(1e3, Math.min(opts.timeoutMs || DEFAULT_TIMEOUT, this.budget.left())) : opts.timeoutMs;
+        return this.limiter.run(url, () => {
+          this.stats.requests += 1;
+          return this.fetchImpl(url, { ...opts, timeoutMs });
+        });
+      }
+      // GET some text with caching; only successful responses are stored
+      async cachedText(url, opts = {}) {
+        const key = opts.cacheKey || `${opts.method || "GET"} ${url} ${opts.body ? sha1(JSON.stringify(opts.body)) : ""}`;
+        const ttl = opts.ttl ?? TTL.search;
+        const hit = ttl > 0 ? this.cache.get(key, ttl) : null;
+        if (hit !== null) {
+          this.stats.cacheHits += 1;
+          return { status: 200, ok: true, text: hit, cached: true, headers: {} };
+        }
+        const response = await this.fetch(url, opts);
+        const text = response.text;
+        if (response.ok && ttl > 0 && !response.truncated) this.cache.set(key, text);
+        return {
+          status: response.status,
+          ok: response.ok,
+          text,
+          cached: false,
+          headers: response.headers
+        };
+      }
+      // Same, parsed as JSON; throws an error carrying the HTTP status when it isn't a 2xx
+      async cachedJson(url, opts = {}) {
+        const response = await this.cachedText(url, opts);
+        if (!response.ok) {
+          const error = new Error(`HTTP ${response.status} from ${new URL(url).host}`);
+          error.status = response.status;
+          error.headers = response.headers;
+          error.body = response.text.slice(0, 300);
+          throw error;
+        }
+        try {
+          return JSON.parse(response.text);
+        } catch {
+          throw new Error(`Unexpected non-JSON reply from ${new URL(url).host}`);
+        }
+      }
+    };
+  }
+});
+
+// tools/scam-radar/scam-finder/lib/contacts.js
+var FREE_MAIL, THROWAWAY_MAIL, CALLING_CODES, NANP_AREAS, CANADA_AREAS, CALLBACK_WARNING, regionNames, countryName, normalizePhone, phoneInfo, emailInfo, spamReports, breachExposure, CAVEAT, describeContact;
+var init_contacts = __esm({
+  "tools/scam-radar/scam-finder/lib/contacts.js"() {
+    init_net();
+    FREE_MAIL = new Set(
+      "gmail.com googlemail.com outlook.com hotmail.com live.com msn.com icloud.com me.com aol.com proton.me protonmail.com gmx.com gmx.net gmx.de mail.com yandex.com yandex.ru mail.ru zoho.com qq.com 163.com 126.com tutanota.com tuta.io hey.com fastmail.com rediffmail.com web.de naver.com ymail.com rocketmail.com".split(" ")
+    );
+    THROWAWAY_MAIL = new Set(
+      "mailinator.com guerrillamail.com 10minutemail.com tempmail.com temp-mail.org yopmail.com trashmail.com sharklasers.com getnada.com dispostable.com maildrop.cc throwawaymail.com mohmal.com emailondeck.com moakt.com mintemail.com fakeinbox.com mailnesia.com mytemp.email tempail.com".split(" ")
+    );
+    CALLING_CODES = {
+      20: "EG",
+      27: "ZA",
+      30: "GR",
+      31: "NL",
+      32: "BE",
+      33: "FR",
+      34: "ES",
+      36: "HU",
+      39: "IT",
+      40: "RO",
+      41: "CH",
+      43: "AT",
+      44: "GB",
+      45: "DK",
+      46: "SE",
+      47: "NO",
+      48: "PL",
+      49: "DE",
+      51: "PE",
+      52: "MX",
+      53: "CU",
+      54: "AR",
+      55: "BR",
+      56: "CL",
+      57: "CO",
+      58: "VE",
+      60: "MY",
+      61: "AU",
+      62: "ID",
+      63: "PH",
+      64: "NZ",
+      65: "SG",
+      66: "TH",
+      81: "JP",
+      82: "KR",
+      84: "VN",
+      86: "CN",
+      90: "TR",
+      91: "IN",
+      92: "PK",
+      93: "AF",
+      94: "LK",
+      95: "MM",
+      98: "IR",
+      212: "MA",
+      213: "DZ",
+      216: "TN",
+      218: "LY",
+      220: "GM",
+      221: "SN",
+      223: "ML",
+      224: "GN",
+      225: "CI",
+      226: "BF",
+      227: "NE",
+      228: "TG",
+      229: "BJ",
+      231: "LR",
+      232: "SL",
+      233: "GH",
+      234: "NG",
+      237: "CM",
+      241: "GA",
+      242: "CG",
+      243: "CD",
+      244: "AO",
+      249: "SD",
+      250: "RW",
+      251: "ET",
+      252: "SO",
+      254: "KE",
+      255: "TZ",
+      256: "UG",
+      257: "BI",
+      258: "MZ",
+      260: "ZM",
+      261: "MG",
+      263: "ZW",
+      264: "NA",
+      265: "MW",
+      266: "LS",
+      267: "BW",
+      268: "SZ",
+      351: "PT",
+      352: "LU",
+      353: "IE",
+      354: "IS",
+      355: "AL",
+      356: "MT",
+      357: "CY",
+      358: "FI",
+      359: "BG",
+      370: "LT",
+      371: "LV",
+      372: "EE",
+      373: "MD",
+      374: "AM",
+      375: "BY",
+      380: "UA",
+      381: "RS",
+      385: "HR",
+      386: "SI",
+      420: "CZ",
+      421: "SK",
+      501: "BZ",
+      502: "GT",
+      503: "SV",
+      504: "HN",
+      505: "NI",
+      506: "CR",
+      507: "PA",
+      509: "HT",
+      591: "BO",
+      592: "GY",
+      593: "EC",
+      595: "PY",
+      597: "SR",
+      598: "UY",
+      673: "BN",
+      675: "PG",
+      679: "FJ",
+      852: "HK",
+      853: "MO",
+      855: "KH",
+      856: "LA",
+      880: "BD",
+      886: "TW",
+      960: "MV",
+      961: "LB",
+      962: "JO",
+      963: "SY",
+      964: "IQ",
+      965: "KW",
+      966: "SA",
+      967: "YE",
+      968: "OM",
+      971: "AE",
+      972: "IL",
+      973: "BH",
+      974: "QA",
+      975: "BT",
+      976: "MN",
+      977: "NP",
+      992: "TJ",
+      993: "TM",
+      994: "AZ",
+      995: "GE",
+      996: "KG",
+      998: "UZ",
+      7: "RU"
+    };
+    NANP_AREAS = {
+      876: "JM",
+      658: "JM",
+      809: "DO",
+      829: "DO",
+      849: "DO",
+      868: "TT",
+      246: "BB",
+      242: "BS",
+      441: "BM",
+      345: "KY",
+      268: "AG",
+      284: "VG",
+      340: "VI",
+      473: "GD",
+      649: "TC",
+      664: "MS",
+      758: "LC",
+      767: "DM",
+      784: "VC",
+      787: "PR",
+      939: "PR",
+      869: "KN",
+      721: "SX",
+      264: "AI",
+      671: "GU",
+      670: "MP",
+      684: "AS"
+    };
+    CANADA_AREAS = new Set(
+      "204 226 236 249 250 263 289 306 343 354 365 367 368 382 403 416 418 428 431 437 438 450 468 474 506 514 519 548 579 581 584 587 604 613 639 647 672 683 705 709 742 753 778 780 782 807 819 825 867 873 879 902 905".split(" ")
+    );
+    CALLBACK_WARNING = /* @__PURE__ */ new Set([
+      "268",
+      "284",
+      "473",
+      "649",
+      "664",
+      "767",
+      "809",
+      "829",
+      "849",
+      "876",
+      "658"
+    ]);
+    regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+    countryName = (code) => {
+      try {
+        return regionNames.of(code) || code;
+      } catch {
+        return code;
+      }
+    };
+    normalizePhone = (value) => {
+      const digits = String(value || "").replace(/\D/g, "");
+      return digits.length >= 8 && digits.length <= 15 ? `+${digits}` : null;
+    };
+    phoneInfo = (value) => {
+      const phone = normalizePhone(value);
+      if (!phone) return null;
+      const digits = phone.slice(1);
+      let country = null;
+      const notes = [];
+      if (digits[0] === "1" && digits.length === 11) {
+        const area = digits.slice(1, 4);
+        country = NANP_AREAS[area] || (CANADA_AREAS.has(area) ? "CA" : "US");
+        if (CALLBACK_WARNING.has(area)) {
+          notes.push(
+            `Area code ${area} dials like a US number but is international. It features in regulator warnings about lottery and "one ring" callback scams.`
+          );
+        }
+        if (/^(800|833|844|855|866|877|888)$/.test(area))
+          notes.push('Toll-free number: the favourite of fake "support line" scams.');
+      } else {
+        for (const size of [3, 2, 1]) {
+          const code = CALLING_CODES[digits.slice(0, size)];
+          if (code) {
+            country = code;
+            break;
+          }
+        }
+      }
+      return { phone, country, countryName: country ? countryName(country) : null, notes };
+    };
+    emailInfo = (value) => {
+      const email = String(value || "").trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[a-z]{2,24}$/.test(email)) return null;
+      const domain = email.slice(email.indexOf("@") + 1);
+      const yahoo = /^yahoo\.[a-z.]{2,6}$/.test(domain);
+      let provider = "own-domain";
+      if (THROWAWAY_MAIL.has(domain)) provider = "throwaway";
+      else if (FREE_MAIL.has(domain) || yahoo) provider = "free-webmail";
+      const notes = {
+        throwaway: "A disposable mailbox: nobody stands behind it.",
+        "free-webmail": "A free webmail account. Real organisations write from their own domain.",
+        "own-domain": `Uses its own domain (${domain}), which can be investigated like any other site.`
+      };
+      return { email, domain, provider, notes: [notes[provider]] };
+    };
+    spamReports = async (ctx, email) => {
+      try {
+        const data = await ctx.cachedJson(
+          `https://api.stopforumspam.org/api?json&email=${encodeURIComponent(email)}`,
+          { ttl: TTL.rdap, timeoutMs: 12e3 }
+        );
+        const record = data.email || {};
+        return {
+          reported: Boolean(record.appears),
+          reports: record.frequency || 0,
+          lastSeen: record.lastseen || null
+        };
+      } catch (error) {
+        ctx.noteError("stopforumspam", error);
+        return null;
+      }
+    };
+    breachExposure = async (ctx, email) => {
+      const key = process.env.HIBP_API_KEY;
+      if (!key) {
+        return {
+          skipped: "Set HIBP_API_KEY to check breach exposure (haveibeenpwned.com/API/Key). To check your own address without a key, use haveibeenpwned.com."
+        };
+      }
+      try {
+        const response = await ctx.fetch(
+          `https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`,
+          {
+            headers: { "hibp-api-key": key },
+            timeoutMs: 15e3
+          }
+        );
+        if (response.status === 404) return { breaches: [] };
+        if (!response.ok) return { error: `Have I Been Pwned answered HTTP ${response.status}` };
+        return {
+          breaches: response.json().map((breach) => ({
+            name: breach.Title || breach.Name,
+            date: breach.BreachDate,
+            exposed: breach.DataClasses
+          }))
+        };
+      } catch (error) {
+        return { error: error.message };
+      }
+    };
+    CAVEAT = "A contact on a scam page is often a hijacked, spoofed or throwaway account. Treat this as a lead about the scam, not as the identity of a person.";
+    describeContact = async (ctx, value, { online = false } = {}) => {
+      const text = String(value || "").trim();
+      const email = emailInfo(text);
+      if (email) {
+        const result = { kind: "email", ...email, caveat: CAVEAT };
+        if (online && ctx) {
+          result.spamReports = await spamReports(ctx, email.email);
+          result.breachExposure = await breachExposure(ctx, email.email);
+        }
+        return result;
+      }
+      const phone = phoneInfo(text);
+      if (phone) {
+        return {
+          kind: "phone",
+          ...phone,
+          breachExposure: {
+            skipped: "No public service checks phone numbers against breaches, so this is not attempted."
+          },
+          caveat: CAVEAT
+        };
+      }
+      return null;
+    };
+  }
+});
+
 // tools/scam-radar/scam-finder/data/brands.js
 var BRANDS, WELL_KNOWN_DOMAINS;
 var init_brands = __esm({
@@ -469,285 +1372,6 @@ var init_signatures = __esm({
         pivots: []
       }
     ];
-  }
-});
-
-// tools/scam-radar/scam-finder/lib/util.js
-var import_node_crypto, import_node_net, sleep, sha256, sha1, uniq, isIp, COUNTRY_SECOND_LEVELS, COUNTRY_TLDS, PRIVATE_SUFFIXES, secondLevels, countryTlds, privateSuffixes, pslParse, loadPsl, suffixLength, cleanHost, hostingPlatform, registrableDomain, tldOf, registeredLabel, parseTarget, refang, isPrivateIp, isLocalName, shannonEntropy, EMOJI, stripEmoji, normalizeTitle, flagCountries, SCRIPTS, detectScript, daysBetween, mapLimit, Budget;
-var init_util = __esm({
-  "tools/scam-radar/scam-finder/lib/util.js"() {
-    import_node_crypto = __toESM(require("node:crypto"));
-    import_node_net = __toESM(require("node:net"));
-    sleep = (ms) => new Promise((resolve2) => setTimeout(resolve2, ms));
-    sha256 = (data) => import_node_crypto.default.createHash("sha256").update(data).digest("hex");
-    sha1 = (data) => import_node_crypto.default.createHash("sha1").update(data).digest("hex");
-    uniq = (items) => [...new Set(items)];
-    isIp = (host) => import_node_net.default.isIP(host) !== 0;
-    COUNTRY_SECOND_LEVELS = "ac co com edu gov govt gob gouv go gv mil ne net nom or org sch web id in info biz ltd plc me";
-    COUNTRY_TLDS = "ae ag ai al ar at au bb bd bh bn bo br bs bw by bz ch cn co cr cu cy do dz ec eg es et fj gd gh gi gr gt gy hk hn hr hu id il in iq ir it jm jo jp ke kh kr kw ky kz lb lc lk ly ma mm mo mt mu mx my mz na ng ni no np nz om pa pe pg ph pk pl pr pt py qa ro rs ru rw sa sb sc sd se sg sl sv sy th tn tr tt tw tz ua ug uk uy uz vc ve vn ye za zm zw";
-    PRIVATE_SUFFIXES = [
-      "000webhostapp.com",
-      "42web.io",
-      "appspot.com",
-      "azurewebsites.net",
-      "backblazeb2.com",
-      "blob.core.windows.net",
-      "blogspot.com",
-      "bubbleapps.io",
-      "canva.site",
-      "carrd.co",
-      "cloudfront.net",
-      "codeanyapp.com",
-      "cprapid.com",
-      "ddns.net",
-      "deno.dev",
-      "duckdns.org",
-      "edgeone.app",
-      "epizy.com",
-      "firebaseapp.com",
-      "fly.dev",
-      "framer.app",
-      "framer.website",
-      "free.nf",
-      "gitbook.io",
-      "github.io",
-      "gitlab.io",
-      "glitch.me",
-      "godaddysites.com",
-      "great-site.net",
-      "herokuapp.com",
-      "hopto.org",
-      "infinityfreeapp.com",
-      "jimdofree.com",
-      "jimdosite.com",
-      "kesug.com",
-      "lovable.app",
-      "mailchimpsites.com",
-      "myshopify.com",
-      "mystrikingly.com",
-      "netlify.app",
-      "ngrok-free.app",
-      "ngrok.io",
-      "notion.site",
-      "onrender.com",
-      "pages.dev",
-      "pantheonsite.io",
-      "plesk.page",
-      "r2.dev",
-      "repl.co",
-      "replit.app",
-      "replit.dev",
-      "rf.gd",
-      "softr.app",
-      "square.site",
-      "surge.sh",
-      "sytes.net",
-      "tiiny.site",
-      "trycloudflare.com",
-      "typedream.app",
-      "vercel.app",
-      "web.app",
-      "web.core.windows.net",
-      "webflow.io",
-      "weebly.com",
-      "wixsite.com",
-      "wixstudio.com",
-      "wordpress.com",
-      "workers.dev",
-      "wuaze.com",
-      "yolasite.com",
-      "zapto.org"
-    ];
-    secondLevels = new Set(COUNTRY_SECOND_LEVELS.split(" "));
-    countryTlds = new Set(COUNTRY_TLDS.split(" "));
-    privateSuffixes = new Set(PRIVATE_SUFFIXES);
-    pslParse = null;
-    loadPsl = async () => {
-      if (pslParse !== null) return pslParse !== false;
-      try {
-        const mod = await import("psl");
-        const parse = mod.parse || mod.default?.parse;
-        pslParse = typeof parse === "function" ? parse : false;
-      } catch {
-        pslParse = false;
-      }
-      return pslParse !== false;
-    };
-    suffixLength = (labels) => {
-      const count2 = labels.length;
-      for (let take = Math.min(4, count2 - 1); take >= 2; take -= 1) {
-        if (privateSuffixes.has(labels.slice(count2 - take).join("."))) return take;
-      }
-      if (count2 >= 3 && countryTlds.has(labels[count2 - 1]) && secondLevels.has(labels[count2 - 2])) {
-        return 2;
-      }
-      return 1;
-    };
-    cleanHost = (host) => String(host || "").trim().toLowerCase().replace(/^\[|]$/g, "").replace(/\.$/, "");
-    hostingPlatform = (host) => {
-      const labels = cleanHost(host).split(".");
-      for (let take = Math.min(4, labels.length - 1); take >= 2; take -= 1) {
-        const suffix = labels.slice(labels.length - take).join(".");
-        if (privateSuffixes.has(suffix)) return suffix;
-      }
-      return null;
-    };
-    registrableDomain = (hostname) => {
-      const host = cleanHost(hostname);
-      if (!host || isIp(host) || !host.includes(".")) return host;
-      const labels = host.split(".");
-      if (hostingPlatform(host)) return labels.slice(-(suffixLength(labels) + 1)).join(".");
-      if (pslParse) {
-        const parsed = pslParse(host);
-        if (parsed?.domain) return parsed.domain;
-      }
-      return labels.slice(-(suffixLength(labels) + 1)).join(".");
-    };
-    tldOf = (host) => cleanHost(host).split(".").pop() || "";
-    registeredLabel = (host) => registrableDomain(host).split(".")[0] || "";
-    parseTarget = (input) => {
-      const raw = refang(String(input || "").trim());
-      if (!raw) throw new Error("No target provided");
-      const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
-      let url;
-      try {
-        url = new URL(withScheme);
-      } catch {
-        throw new Error(`Could not parse "${input}" as a URL or domain`);
-      }
-      if (!["http:", "https:"].includes(url.protocol)) {
-        throw new Error(`Only http and https targets are supported, got ${url.protocol}`);
-      }
-      const host = cleanHost(url.hostname);
-      if (!host || !isIp(host) && !host.includes(".")) {
-        throw new Error(`"${input}" has no usable hostname`);
-      }
-      const hasPath = url.pathname !== "/" || url.search !== "";
-      return {
-        input: raw,
-        url: url.href,
-        host,
-        domain: registrableDomain(host),
-        path: url.pathname,
-        search: url.search,
-        hasPath,
-        isIp: isIp(host)
-      };
-    };
-    refang = (value) => String(value ?? "").replace(/^hxxp/i, "http").replace(/\[\.\]|\(\.\)|\[dot\]|\(dot\)/gi, ".").replace(/\[:\]/g, ":").replace(/\[\/\]/g, "/");
-    isPrivateIp = (ip) => {
-      const host = cleanHost(ip);
-      if (import_node_net.default.isIPv4(host)) {
-        const [a, b] = host.split(".").map(Number);
-        if (a === 0 || a === 10 || a === 127 || a >= 224) return true;
-        if (a === 172 && b >= 16 && b <= 31) return true;
-        if (a === 192 && b === 168) return true;
-        if (a === 169 && b === 254) return true;
-        if (a === 100 && b >= 64 && b <= 127) return true;
-        return a === 198 && (b === 18 || b === 19);
-      }
-      if (import_node_net.default.isIPv6(host)) {
-        const mapped = host.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i);
-        if (mapped) return isPrivateIp(mapped[1]);
-        return host === "::" || host === "::1" || /^f[cdef]/i.test(host);
-      }
-      return false;
-    };
-    isLocalName = (host) => {
-      const name = cleanHost(host);
-      return name === "localhost" || name.endsWith(".localhost") || name.endsWith(".local") || name.endsWith(".internal") || name.endsWith(".lan") || name.endsWith(".home.arpa");
-    };
-    shannonEntropy = (text) => {
-      const value = String(text || "");
-      if (!value) return 0;
-      const counts = {};
-      for (const char of value) counts[char] = (counts[char] || 0) + 1;
-      return Object.values(counts).reduce((sum, count2) => {
-        const p = count2 / value.length;
-        return sum - p * Math.log2(p);
-      }, 0);
-    };
-    EMOJI = /[\p{Extended_Pictographic}\p{Regional_Indicator}\u200d\ufe0f\u20e3]/gu;
-    stripEmoji = (text) => String(text || "").replace(EMOJI, " ").replace(/\s+/g, " ").trim();
-    normalizeTitle = (title) => stripEmoji(String(title || "").normalize("NFKC")).toLowerCase().replace(/[‘’“”'"`!?.,:;|()[\]{}<>*#~_-]+/g, " ").replace(/\s+/g, " ").trim();
-    flagCountries = (text) => {
-      const codes = [];
-      const flags = String(text || "").match(/[\u{1F1E6}-\u{1F1FF}]{2}/gu) || [];
-      for (const flag of flags) {
-        const [first, second] = [...flag];
-        codes.push(
-          String.fromCharCode(first.codePointAt(0) - 127462 + 65) + String.fromCharCode(second.codePointAt(0) - 127462 + 65)
-        );
-      }
-      return uniq(codes);
-    };
-    SCRIPTS = [
-      ["Sinhala", new RegExp("\\p{Script=Sinhala}", "u"), "LK"],
-      ["Bengali", new RegExp("\\p{Script=Bengali}", "u"), null],
-      ["Tamil", new RegExp("\\p{Script=Tamil}", "u"), null],
-      ["Devanagari", new RegExp("\\p{Script=Devanagari}", "u"), "IN"],
-      ["Gujarati", new RegExp("\\p{Script=Gujarati}", "u"), "IN"],
-      ["Telugu", new RegExp("\\p{Script=Telugu}", "u"), "IN"],
-      ["Kannada", new RegExp("\\p{Script=Kannada}", "u"), "IN"],
-      ["Malayalam", new RegExp("\\p{Script=Malayalam}", "u"), "IN"],
-      ["Oriya", new RegExp("\\p{Script=Oriya}", "u"), "IN"],
-      ["Gurmukhi", new RegExp("\\p{Script=Gurmukhi}", "u"), "IN"],
-      ["Thai", new RegExp("\\p{Script=Thai}", "u"), "TH"],
-      ["Khmer", new RegExp("\\p{Script=Khmer}", "u"), "KH"],
-      ["Myanmar", new RegExp("\\p{Script=Myanmar}", "u"), "MM"],
-      ["Lao", new RegExp("\\p{Script=Lao}", "u"), "LA"],
-      ["Arabic", new RegExp("\\p{Script=Arabic}", "u"), null],
-      ["Hebrew", new RegExp("\\p{Script=Hebrew}", "u"), "IL"],
-      ["Cyrillic", new RegExp("\\p{Script=Cyrillic}", "u"), null],
-      ["Greek", new RegExp("\\p{Script=Greek}", "u"), "GR"],
-      ["Hangul", new RegExp("\\p{Script=Hangul}", "u"), "KR"],
-      ["Japanese", /[\p{Script=Hiragana}\p{Script=Katakana}]/u, "JP"],
-      ["Han", new RegExp("\\p{Script=Han}", "u"), null],
-      ["Ethiopic", new RegExp("\\p{Script=Ethiopic}", "u"), "ET"],
-      ["Georgian", new RegExp("\\p{Script=Georgian}", "u"), "GE"],
-      ["Armenian", new RegExp("\\p{Script=Armenian}", "u"), "AM"]
-    ];
-    detectScript = (text) => {
-      const value = String(text || "");
-      for (const [name, pattern, country] of SCRIPTS) {
-        if (pattern.test(value)) return { script: name, country };
-      }
-      return null;
-    };
-    daysBetween = (from, to = /* @__PURE__ */ new Date()) => {
-      const start = new Date(from).getTime();
-      const end = new Date(to).getTime();
-      if (Number.isNaN(start) || Number.isNaN(end)) return null;
-      return Math.floor((end - start) / 864e5);
-    };
-    mapLimit = async (items, limit, worker) => {
-      const results = new Array(items.length);
-      let next = 0;
-      const run = async () => {
-        while (next < items.length) {
-          const index = next;
-          next += 1;
-          results[index] = await worker(items[index], index);
-        }
-      };
-      await Promise.all(Array.from({ length: Math.min(limit, items.length) || 1 }, run));
-      return results;
-    };
-    Budget = class {
-      constructor(ms) {
-        this.limit = ms > 0 ? ms : Infinity;
-        this.started = Date.now();
-      }
-      elapsed() {
-        return Date.now() - this.started;
-      }
-      left() {
-        return this.limit - this.elapsed();
-      }
-      expired(reserveMs = 0) {
-        return this.left() <= reserveMs;
-      }
-    };
   }
 });
 
@@ -2413,295 +3037,6 @@ var init_profiles = __esm({
   }
 });
 
-// tools/scam-radar/scam-finder/lib/net.js
-var import_node_fs, import_node_os, import_node_path, import_node_stream, TOOL_UA, MOBILE_UA, DESKTOP_UA, DEFAULT_TIMEOUT, DEFAULT_MAX_BYTES, readCapped, wrapError, request, openStream, HOST_RULES, DEFAULT_RULE, HostLimiter, DiskCache, MINUTE, TTL, NetContext;
-var init_net = __esm({
-  "tools/scam-radar/scam-finder/lib/net.js"() {
-    import_node_fs = __toESM(require("node:fs"));
-    import_node_os = __toESM(require("node:os"));
-    import_node_path = __toESM(require("node:path"));
-    import_node_stream = require("node:stream");
-    init_util();
-    TOOL_UA = process.env.SCAM_FINDER_UA || "scam-finder/1.0 (OSINT research tool)";
-    MOBILE_UA = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36";
-    DESKTOP_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-    DEFAULT_TIMEOUT = 15e3;
-    DEFAULT_MAX_BYTES = 2 * 1024 * 1024;
-    readCapped = async (response, maxBytes) => {
-      if (!response.body) return { bytes: Buffer.alloc(0), truncated: false };
-      const chunks = [];
-      let total = 0;
-      let truncated = false;
-      const reader = response.body.getReader();
-      try {
-        for (; ; ) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          total += value.byteLength;
-          if (total > maxBytes) {
-            chunks.push(Buffer.from(value.subarray(0, value.byteLength - (total - maxBytes))));
-            truncated = true;
-            break;
-          }
-          chunks.push(Buffer.from(value));
-        }
-      } finally {
-        if (truncated) await reader.cancel().catch(() => {
-        });
-      }
-      return { bytes: Buffer.concat(chunks), truncated };
-    };
-    wrapError = (error, url) => {
-      const code = error.name === "TimeoutError" || error.name === "AbortError" ? "TIMEOUT" : error.cause?.code || error.code || "NETWORK";
-      const wrapped = new Error(`${code} fetching ${new URL(url).host}: ${error.message}`);
-      wrapped.code = code;
-      return wrapped;
-    };
-    request = async (url, opts = {}) => {
-      const headers = { "user-agent": TOOL_UA, accept: "*/*" };
-      for (const [name, value] of Object.entries(opts.headers || {})) {
-        headers[name.toLowerCase()] = value;
-      }
-      const init = {
-        method: opts.method || "GET",
-        headers,
-        redirect: opts.redirect || "follow",
-        signal: AbortSignal.timeout(opts.timeoutMs || DEFAULT_TIMEOUT)
-      };
-      if (opts.body !== void 0) {
-        init.body = typeof opts.body === "string" ? opts.body : JSON.stringify(opts.body);
-        if (typeof opts.body !== "string") headers["content-type"] ??= "application/json";
-      }
-      let response;
-      let body;
-      try {
-        response = await fetch(url, init);
-        body = await readCapped(response, opts.maxBytes || DEFAULT_MAX_BYTES);
-      } catch (error) {
-        throw wrapError(error, url);
-      }
-      const responseHeaders = {};
-      for (const [name, value] of response.headers.entries()) responseHeaders[name] = value;
-      return {
-        status: response.status,
-        ok: response.status >= 200 && response.status < 300,
-        url: response.url || url,
-        headers: responseHeaders,
-        bytes: body.bytes,
-        truncated: body.truncated,
-        get text() {
-          return new TextDecoder("utf-8", { fatal: false }).decode(body.bytes);
-        },
-        json() {
-          return JSON.parse(new TextDecoder("utf-8").decode(body.bytes));
-        }
-      };
-    };
-    openStream = async (url, opts = {}) => {
-      const headers = { "user-agent": TOOL_UA, accept: "*/*" };
-      for (const [name, value] of Object.entries(opts.headers || {}))
-        headers[name.toLowerCase()] = value;
-      let response;
-      try {
-        response = await fetch(url, { headers, redirect: "follow", signal: opts.signal });
-      } catch (error) {
-        throw wrapError(error, url);
-      }
-      if (!response.ok || !response.body) {
-        const error = new Error(`HTTP ${response.status} from ${new URL(url).host}`);
-        error.status = response.status;
-        throw error;
-      }
-      const stream = import_node_stream.Readable.fromWeb(response.body);
-      stream.headers = Object.fromEntries(response.headers.entries());
-      return stream;
-    };
-    HOST_RULES = {
-      "urlscan.io": { concurrency: 1, minIntervalMs: 2100 },
-      "api.certspotter.com": { concurrency: 1, minIntervalMs: 1500 },
-      "crt.sh": { concurrency: 1, minIntervalMs: 1500 },
-      "ip.thc.org": { concurrency: 1, minIntervalMs: 800 },
-      "api.hackertarget.com": { concurrency: 1, minIntervalMs: 1200 },
-      "rdap.org": { concurrency: 1, minIntervalMs: 700 },
-      "dns.google": { concurrency: 8, minIntervalMs: 0 },
-      "cloudflare-dns.com": { concurrency: 8, minIntervalMs: 0 },
-      "raw.githubusercontent.com": { concurrency: 3, minIntervalMs: 0 },
-      "data.commoncrawl.org": { concurrency: 1, minIntervalMs: 500 },
-      "mon.sycamore.ct.letsencrypt.org": { concurrency: 4, minIntervalMs: 0 },
-      "mon.willow.ct.letsencrypt.org": { concurrency: 4, minIntervalMs: 0 },
-      "storage.googleapis.com": { concurrency: 4, minIntervalMs: 0 },
-      "tuscolo2027h1.skylight.geomys.org": { concurrency: 1, minIntervalMs: 400 },
-      "ipwho.is": { concurrency: 1, minIntervalMs: 1100 },
-      "haveibeenpwned.com": { concurrency: 1, minIntervalMs: 6500 },
-      "api.stopforumspam.org": { concurrency: 1, minIntervalMs: 1e3 }
-    };
-    DEFAULT_RULE = { concurrency: 3, minIntervalMs: 150 };
-    HostLimiter = class {
-      constructor(rules = {}) {
-        this.rules = { ...HOST_RULES, ...rules };
-        this.state = /* @__PURE__ */ new Map();
-      }
-      ruleFor(host) {
-        return this.rules[host] || DEFAULT_RULE;
-      }
-      async run(url, task) {
-        const host = new URL(url).host;
-        const rule = this.ruleFor(host);
-        let slot = this.state.get(host);
-        if (!slot) {
-          slot = { active: 0, queue: [], nextAt: 0 };
-          this.state.set(host, slot);
-        }
-        if (slot.active >= rule.concurrency) {
-          await new Promise((resolve2) => slot.queue.push(resolve2));
-        } else {
-          slot.active += 1;
-        }
-        try {
-          const wait = slot.nextAt - Date.now();
-          slot.nextAt = Math.max(Date.now(), slot.nextAt) + rule.minIntervalMs;
-          if (wait > 0) await sleep(wait);
-          return await task();
-        } finally {
-          const next = slot.queue.shift();
-          if (next) next();
-          else slot.active -= 1;
-        }
-      }
-      // Push a host's next allowed request into the future, after it tells us to back off
-      pause(url, ms) {
-        const host = new URL(url).host;
-        const slot = this.state.get(host);
-        if (slot) slot.nextAt = Math.max(slot.nextAt, Date.now() + ms);
-      }
-    };
-    DiskCache = class _DiskCache {
-      constructor(dir) {
-        this.dir = dir === false ? null : dir || _DiskCache.defaultDir();
-        this.ready = false;
-      }
-      static defaultDir() {
-        if (process.env.SCAM_FINDER_NO_CACHE) return null;
-        return process.env.SCAM_FINDER_CACHE_DIR || import_node_path.default.join(import_node_os.default.tmpdir(), "scam-finder-cache");
-      }
-      file(key) {
-        return import_node_path.default.join(this.dir, `${sha1(key)}.cache`);
-      }
-      prepare() {
-        if (this.ready || !this.dir) return;
-        import_node_fs.default.mkdirSync(this.dir, { recursive: true });
-        this.ready = true;
-      }
-      // The cached text for a key, or null when it's missing, stale or unreadable
-      get(key, ttlMs) {
-        if (!this.dir) return null;
-        try {
-          const file = this.file(key);
-          if (Date.now() - import_node_fs.default.statSync(file).mtimeMs > ttlMs) return null;
-          return import_node_fs.default.readFileSync(file, "utf8");
-        } catch {
-          return null;
-        }
-      }
-      // Best effort: a read-only disk (serverless) just means nothing is cached
-      set(key, text) {
-        if (!this.dir) return;
-        try {
-          this.prepare();
-          import_node_fs.default.writeFileSync(this.file(key), text);
-        } catch {
-          this.dir = null;
-        }
-      }
-    };
-    MINUTE = 60 * 1e3;
-    TTL = {
-      dns: 30 * MINUTE,
-      search: 30 * MINUTE,
-      rdap: 12 * 60 * MINUTE,
-      feed: 6 * 60 * MINUTE,
-      static: 7 * 24 * 60 * MINUTE
-    };
-    NetContext = class {
-      constructor(opts = {}) {
-        this.limiter = opts.limiter || new HostLimiter();
-        this.cache = opts.cache || new DiskCache(opts.cacheDir);
-        this.budget = opts.budget || null;
-        this.errors = [];
-        this.stats = { requests: 0, cacheHits: 0 };
-        this.fetchImpl = opts.request || request;
-        this.streamImpl = opts.stream || openStream;
-      }
-      // A rate-limited streaming download (the limiter only spaces out the opening request)
-      async stream(url, opts = {}) {
-        return this.limiter.run(url, () => {
-          this.stats.requests += 1;
-          return this.streamImpl(url, opts);
-        });
-      }
-      // Record a source failure once per source, so reports can say what was unavailable
-      noteError(source, error) {
-        const message = typeof error === "string" ? error : error?.message || String(error);
-        if (!this.errors.some((entry) => entry.source === source && entry.message === message)) {
-          this.errors.push({ source, message });
-        }
-      }
-      outOfTime(reserveMs = 0) {
-        return this.budget ? this.budget.expired(reserveMs) : false;
-      }
-      // Rate-limited request, never started once the time budget has run out
-      async fetch(url, opts = {}) {
-        if (this.outOfTime(opts.reserveMs || 0)) {
-          const error = new Error("Time budget exhausted");
-          error.code = "BUDGET";
-          throw error;
-        }
-        const timeoutMs = this.budget ? Math.max(1e3, Math.min(opts.timeoutMs || DEFAULT_TIMEOUT, this.budget.left())) : opts.timeoutMs;
-        return this.limiter.run(url, () => {
-          this.stats.requests += 1;
-          return this.fetchImpl(url, { ...opts, timeoutMs });
-        });
-      }
-      // GET some text with caching; only successful responses are stored
-      async cachedText(url, opts = {}) {
-        const key = opts.cacheKey || `${opts.method || "GET"} ${url} ${opts.body ? sha1(JSON.stringify(opts.body)) : ""}`;
-        const ttl = opts.ttl ?? TTL.search;
-        const hit = ttl > 0 ? this.cache.get(key, ttl) : null;
-        if (hit !== null) {
-          this.stats.cacheHits += 1;
-          return { status: 200, ok: true, text: hit, cached: true, headers: {} };
-        }
-        const response = await this.fetch(url, opts);
-        const text = response.text;
-        if (response.ok && ttl > 0 && !response.truncated) this.cache.set(key, text);
-        return {
-          status: response.status,
-          ok: response.ok,
-          text,
-          cached: false,
-          headers: response.headers
-        };
-      }
-      // Same, parsed as JSON; throws an error carrying the HTTP status when it isn't a 2xx
-      async cachedJson(url, opts = {}) {
-        const response = await this.cachedText(url, opts);
-        if (!response.ok) {
-          const error = new Error(`HTTP ${response.status} from ${new URL(url).host}`);
-          error.status = response.status;
-          error.headers = response.headers;
-          error.body = response.text.slice(0, 300);
-          throw error;
-        }
-        try {
-          return JSON.parse(response.text);
-        } catch {
-          throw new Error(`Unexpected non-JSON reply from ${new URL(url).host}`);
-        }
-      }
-    };
-  }
-});
-
 // tools/scam-radar/scam-finder/lib/dns.js
 var RESOLVERS, TYPE_NUMBERS, SHARED_NETWORKS, unquoteTxt, resolve, lookupDomain, asnNames, asnName, cymruName, ipInfo, nameserverKey;
 var init_dns = __esm({
@@ -4222,7 +4557,7 @@ var init_investigate = __esm({
         profile.seedUrl = target.url;
         this.progress("seed", `Profiling ${target.domain}`);
         const origin = new URL(target.url).origin;
-        const [dns, registration, page, root, certs, history] = await Promise.all([
+        const [dns2, registration, page, root, certs, history] = await Promise.all([
           lookupDomain(ctx, target.host, {
             full: true,
             zone: target.isIp ? target.host : target.domain
@@ -4240,7 +4575,7 @@ var init_investigate = __esm({
             { maxResults: 100 }
           )
         ]);
-        profile.dns = dns;
+        profile.dns = dns2;
         profile.registration = registration;
         profile.root = root;
         profile.certificates = certs;
@@ -4253,7 +4588,7 @@ var init_investigate = __esm({
         }
         profile.historyWindowDays = history.windowDays;
         this.ingestScans(history.scans, { type: "history", value: target.domain, depth: 0 });
-        const addresses = target.isIp ? [target.host] : dns.a.slice(0, 4);
+        const addresses = target.isIp ? [target.host] : dns2.a.slice(0, 4);
         profile.network = await Promise.all(addresses.map((ip) => ipInfo(ctx, ip)));
         if (profile.page) {
           profile.resourceHashes = await hashResources(ctx, profile.page.resources, 3);
@@ -5094,35 +5429,94 @@ var init_sanitize = __esm({
 var api_core_exports = {};
 __export(api_core_exports, {
   API_VERSION: () => API_VERSION,
-  handle: () => handle
+  handle: () => handle,
+  installNetworkGuard: () => installNetworkGuard
 });
-var API_VERSION, budgetMs, OPTIONS, WINDOW_MS, PER_ADDRESS, PER_INSTANCE, recent, allow, reply, tidy, handle;
+var import_node_dns, API_VERSION, budgetMs, deepBudgetMs, OPTIONS, privateAddress, blocked2, MAX_HOPS, guarded, installNetworkGuard, LIMITS, allow, reply, tidy, tooMany, checkContact, handle;
 var init_api_core = __esm({
   "tools/scam-radar/api-core.mjs"() {
+    import_node_dns = __toESM(require("node:dns"), 1);
+    init_contacts();
     init_graph();
     init_investigate();
+    init_net();
     init_util();
     init_sanitize();
     API_VERSION = 1;
     budgetMs = () => Math.min(6e4, Math.max(5e3, Number(process.env.SCAM_FINDER_BUDGET_MS) || 7e3));
+    deepBudgetMs = () => Math.min(55e3, Math.max(1e4, Number(process.env.SCAM_FINDER_DEEP_BUDGET_MS) || 4e4));
     OPTIONS = {
       0: () => ({ depth: 0, feeds: "light", timeBudgetMs: budgetMs(), cacheDir: void 0 }),
-      1: () => ({ quick: true, depth: 1, maxPivots: 4, pages: 4, rdap: 4, maxDomains: 80, feeds: "light", timeBudgetMs: budgetMs() })
+      1: () => ({ quick: true, depth: 1, maxPivots: 4, pages: 4, rdap: 4, maxDomains: 80, feeds: "light", timeBudgetMs: budgetMs() }),
+      2: () => ({
+        depth: 1,
+        maxPivots: 10,
+        pages: 10,
+        rdap: 12,
+        maxDomains: 200,
+        maxResultsPerPivot: 200,
+        feeds: "default",
+        timeBudgetMs: deepBudgetMs()
+      })
     };
-    WINDOW_MS = 60 * 1e3;
-    PER_ADDRESS = 8;
-    PER_INSTANCE = 40;
-    recent = /* @__PURE__ */ new Map();
-    allow = (address, now = Date.now()) => {
+    privateAddress = (ip) => isPrivateIp(ip) || /^(64:ff9b:|2002:)/i.test(String(ip || ""));
+    blocked2 = (what) => Object.assign(new Error(`${what} is not a public internet address`), { code: "BLOCKED" });
+    MAX_HOPS = 6;
+    guarded = false;
+    installNetworkGuard = () => {
+      if (guarded) return;
+      guarded = true;
+      const realLookup = import_node_dns.default.lookup;
+      import_node_dns.default.lookup = function guardedLookup(hostname, options, callback) {
+        const done = typeof options === "function" ? options : callback;
+        const opts = typeof options === "number" ? { family: options } : typeof options === "object" && options ? { ...options } : {};
+        realLookup.call(import_node_dns.default, hostname, { ...opts, all: true }, (error, addresses) => {
+          if (error) return done(error);
+          const list = Array.isArray(addresses) ? addresses : [];
+          if (!list.length || list.some((a) => privateAddress(a.address))) return done(blocked2(hostname));
+          return opts.all ? done(null, list) : done(null, list[0].address, list[0].family);
+        });
+      };
+      const realFetch = globalThis.fetch;
+      const check = (raw) => {
+        const url = new URL(raw);
+        if (url.protocol !== "http:" && url.protocol !== "https:") throw blocked2(url.protocol);
+        const host = url.hostname.replace(/^\[|\]$/g, "");
+        if (isLocalName(host) || isIp(host) && privateAddress(host)) throw blocked2(host);
+      };
+      globalThis.fetch = async (input, init = {}) => {
+        let url = typeof input === "string" || input instanceof URL ? String(input) : input.url;
+        let options = { ...init };
+        const follow = (options.redirect || "follow") === "follow";
+        for (let hop = 0; hop <= MAX_HOPS; hop += 1) {
+          check(url);
+          const response = await realFetch(url, { ...options, redirect: "manual" });
+          const location = response.headers.get("location");
+          if (!follow || response.status < 300 || response.status >= 400 || !location) return response;
+          url = new URL(location, url).href;
+          const method = String(options.method || "GET").toUpperCase();
+          if (response.status === 303 || (response.status === 301 || response.status === 302) && method === "POST") {
+            options = { ...options, method: "GET", body: void 0 };
+          }
+        }
+        throw new Error(`More than ${MAX_HOPS} redirects`);
+      };
+    };
+    LIMITS = {
+      check: { windowMs: 60 * 1e3, perAddress: 8, perInstance: 40, recent: /* @__PURE__ */ new Map() },
+      deep: { windowMs: 10 * 60 * 1e3, perAddress: 3, perInstance: 20, recent: /* @__PURE__ */ new Map() }
+    };
+    allow = (address, kind = "check", now = Date.now()) => {
+      const { windowMs, perAddress, perInstance, recent } = LIMITS[kind];
       let total = 0;
       for (const [key, times] of recent) {
-        const kept = times.filter((time) => now - time < WINDOW_MS);
+        const kept = times.filter((time) => now - time < windowMs);
         if (kept.length) recent.set(key, kept);
         else recent.delete(key);
         total += kept.length;
       }
       const mine = recent.get(address) || [];
-      if (mine.length >= PER_ADDRESS || total >= PER_INSTANCE) return false;
+      if (mine.length >= perAddress || total >= perInstance) return false;
       recent.set(address, [...mine, now]);
       return true;
     };
@@ -5132,12 +5526,20 @@ var init_api_core = __esm({
         "content-type": "application/json; charset=utf-8",
         "cache-control": cache,
         "x-content-type-options": "nosniff",
-        "x-robots-tag": "noindex"
+        "x-robots-tag": "noindex",
+        "cross-origin-resource-policy": "same-origin",
+        "referrer-policy": "no-referrer"
       },
       body
     });
     tidy = (result) => {
-      for (const domain of result.domains || []) sanitizeDomain(domain);
+      for (const domain of result.domains || []) {
+        sanitizeDomain(domain);
+        if (domain.dns) {
+          const txt = Array.isArray(domain.dns.txt) ? domain.dns.txt : [];
+          domain.dns = { ...domain.dns, txt: void 0, spf: txt.some((t) => /^"?v=spf1/i.test(String(t))) };
+        }
+      }
       sanitizeCampaigns(result.campaigns);
       sanitizeLinks(result.links);
       result.pivots = (result.pivots || []).map(({ type, why, status, total, windowDays, depth }) => ({ type, why: type === "title" ? cleanTitle(why) || "Same page title" : clean(why, 140), status, total, windowDays, depth }));
@@ -5147,16 +5549,39 @@ var init_api_core = __esm({
       result.graph = toGraph(result);
       return result;
     };
+    tooMany = (wait) => {
+      const base = reply(429, { error: `Too many checks from this address. Wait ${wait} and try again.` });
+      return { ...base, headers: { ...base.headers, "retry-after": wait === "a minute" ? "60" : "600" } };
+    };
+    checkContact = async (value, address, deps) => {
+      if (value.length > 200) return reply(400, { error: "That is too long to be an email address or a phone number" });
+      if (!allow(String(address))) return tooMany("a minute");
+      const ctx = new NetContext({ budget: new Budget(1e4), cacheDir: false });
+      try {
+        const result = await (deps.describe || describeContact)(ctx, value, { online: true });
+        if (!result) return reply(400, { error: "Give an email address, or a phone number with its country code" });
+        return reply(200, { api: API_VERSION, kind: "contact", ...result }, "private, max-age=300");
+      } catch (error) {
+        return reply(502, { error: `The check could not be finished: ${clean(error.message, 160)}` });
+      }
+    };
     handle = async ({ method = "GET", query = {}, address = "unknown" }, deps = {}) => {
       if (method !== "GET" && method !== "HEAD") return reply(405, { error: "Only GET is supported" });
       if (query.ping !== void 0) {
-        return reply(
-          200,
-          { ok: true, tool: "scam-finder", api: API_VERSION, depths: [0, 1], budgetMs: budgetMs() },
-          "public, max-age=300, s-maxage=3600"
-        );
+        return reply(200, {
+          ok: true,
+          tool: "scam-finder",
+          api: API_VERSION,
+          depths: [0, 1, 2],
+          contact: true,
+          budgetMs: budgetMs(),
+          deepBudgetMs: deepBudgetMs()
+        }, "public, max-age=300, s-maxage=3600");
       }
-      const input = String(query.url || "").trim();
+      const raw = String(query.contact ?? query.url ?? "");
+      if (/[\u0000-\u001f\u007f]/.test(raw)) return reply(400, { error: "That has characters a link or an address never has" });
+      if (query.contact !== void 0) return checkContact(raw.trim(), address, deps);
+      const input = raw.trim();
       if (!input) return reply(400, { error: "Give a link or a domain: /api/scam-finder?url=example.com" });
       if (input.length > 2048) return reply(400, { error: "That link is too long" });
       let target;
@@ -5168,10 +5593,9 @@ var init_api_core = __esm({
       if (isLocalName(target.host) || target.isIp && isPrivateIp(target.host)) {
         return reply(400, { error: "That address is private or local, so there is nothing public to check" });
       }
-      const depth = String(query.depth) === "1" ? 1 : 0;
-      if (!allow(String(address))) {
-        return { ...reply(429, { error: "Too many checks from this address. Wait a minute and try again." }), headers: { ...reply(429, {}).headers, "retry-after": "60" } };
-      }
+      const depth = String(query.depth) === "2" ? 2 : String(query.depth) === "1" ? 1 : 0;
+      if (depth === 2 && !allow(String(address), "deep")) return tooMany("ten minutes");
+      if (depth < 2 && !allow(String(address))) return tooMany("a minute");
       try {
         const result = await (deps.run || investigate)(target.url, OPTIONS[depth]());
         tidy(result);
@@ -5184,14 +5608,15 @@ var init_api_core = __esm({
 });
 
 // tools/scam-radar/api-vercel.cjs
-var { handle: handle2 } = (init_api_core(), __toCommonJS(api_core_exports));
+var { handle: handle2, installNetworkGuard: installNetworkGuard2 } = (init_api_core(), __toCommonJS(api_core_exports));
+installNetworkGuard2();
 module.exports = async (req, res) => {
   const url = new URL(req.url || "/", "https://corx-labs.com");
   const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
   const out = await handle2({
     method: req.method,
     query: Object.fromEntries(url.searchParams),
-    address: forwarded || req.socket?.remoteAddress || "unknown"
+    address: String(req.headers["x-real-ip"] || "").trim() || forwarded || req.socket?.remoteAddress || "unknown"
   });
   res.statusCode = out.status;
   for (const [name, value] of Object.entries(out.headers)) res.setHeader(name, value);

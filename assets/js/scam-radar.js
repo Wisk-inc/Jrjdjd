@@ -8,7 +8,11 @@
    - "Your country" is guessed from the device's time zone, on the device. Nothing is sent anywhere.
    - "Check a site" has three parts: the address judged by Scam Finder's own rules in the browser
      (scam-finder-core.js), Radar's record for the site (looked up by a hash of its name), and, where
-     this host runs the API, a live visit.
+     this host runs the API, a deep dive: a visit, the registration, DNS and mail, certificate logs,
+     earlier scans and the sites linked to it.
+   - A pasted email address, phone number, Telegram account or wallet is checked instead against the
+     contacts Radar saw on named scam pages (by a hash, so what was typed is not sent) and, for email
+     and phone, against what Scam Finder's contact check says about it. No one is looked up anywhere.
    Every value from the data goes in through textContent, never as HTML. No checked site is ever linked. */
 (() => {
   'use strict';
@@ -307,9 +311,11 @@
     const rows = filter ? all.filter((r) => [r.domain, r.domain.replace(/\[\.\]/g, '.'), r.title, r.kit, r.kind, ...(r.impersonates || []),
       ...(r.listedBy || []), ...(r.targets || []).map(countryName), countryName(r.hostedIn)].join(' ').toLowerCase().includes(filter)) : all;
     const total = typeof data.namedTotal === 'number' ? data.namedTotal : all.length;
+    const hacked = (data.totals || {}).hackedLive || 0;
     $('#sr-named-count').textContent = filter
       ? `${plural(rows.length, 'match', 'matches')} among the ${num(all.length)} listed`
-      : `${plural(total, 'live site')} ${total === 1 ? 'meets' : 'meet'} the bar${total > all.length ? `; the ${num(all.length)} with the highest scores are listed` : ''}`;
+      : `${plural(total, 'live site')} ${total === 1 ? 'meets' : 'meet'} the bar${total > all.length ? `; the ${num(all.length)} with the highest scores are listed` : ''}.` +
+        `${hacked ? ` ${plural(hacked, 'more live scam page')} ${hacked === 1 ? 'sits' : 'sit'} on real sites that were hacked: counted, not named.` : ''}`;
     if (!rows.length) {
       const tr = el('tr'); const td = el('td', filter ? 'No named site matches that.' : 'No live site met the bar in the latest scan.'); td.colSpan = 5; tr.append(td); body.append(tr);
     }
@@ -510,6 +516,29 @@
   };
   const tickTimes = () => document.querySelectorAll('.sr-ev-time[data-at]').forEach((node) => { node.textContent = ago(node.dataset.at); });
 
+  // Jamaica watch: the hourly Jamaica hunt (hunt-jamaica.mjs) and Jamaican numbers on named scam sites.
+  // A snapshot from before the hunt existed has no "jamaica": then only what the rest of it shows is used.
+  const drawJamaica = () => {
+    const jm = data.jamaica || null;
+    const aimed = jm ? jm.liveAimedAtJamaica : ((data.byCountry || {}).JM || {}).live || 0;
+    const named = jm ? jm.namedAimedAtJamaica : (data.named || []).filter((r) => (r.targets || []).includes('JM')).length;
+    const rows = [['Live scam sites aimed at Jamaica', num(aimed)], ['Named here', num(named)]];
+    if (jm) {
+      rows.push(['Found by the hunt, watched', `${num(jm.huntWatching)}: ${num(jm.huntVisited)} visited so far, ${num(jm.huntUp)} up`]);
+      rows.push(['Jamaican numbers on named scam sites', `${num(jm.jamaicanNumbers)}, on ${plural(jm.sitesWithJamaicanNumbers, 'site')}`]);
+    }
+    $('#sr-jm-stats').replaceChildren(...rows.map(([name, value]) => {
+      const row = el('div');
+      row.append(el('dt', name), el('dd', value));
+      return row;
+    }));
+    const hunt = jm && jm.lastHunt;
+    $('#sr-jm-hunt').textContent = hunt
+      ? `Last hunt ${ago(hunt.at)}: ${plural(hunt.searches, 'search', 'searches')} of the scan archive and ${plural(hunt.keywords, 'word')} checked against the blocklists found ${plural(hunt.leads, 'lead')}, ${num(hunt.suspect)} of them suspicious and ${num(hunt.aimedAtJamaica)} aimed at Jamaica. ${num(hunt.added)} went on the watchlist.` +
+        (jm.last24h && jm.last24h.hunts > 1 ? ` In the last 24 hours: ${num(jm.last24h.hunts)} hunts, ${plural(jm.last24h.added, 'site')} added.` : '')
+      : 'No Jamaica hunt has finished yet. One starts with each hourly scan run and takes about eight minutes.';
+  };
+
   const draw = (before) => {
     // What is new is marked only between consecutive updates: the copy in the page can be hours older
     // than the first live snapshot, and everything would look new
@@ -517,6 +546,7 @@
     drawStats(before);
     fillPicker();
     drawHome();
+    drawJamaica();
     pickView();
     shadeMap(currentView());
     drawCycles(fresh);
@@ -630,13 +660,117 @@
     return dl;
   };
 
+  const defangName = (name) => String(name || '').replace(/\.$/, '').replace(/\./g, '[.]');
+  const hostOf = (url) => { try { return new URL(url).hostname; } catch { return ''; } };
+  const LINK_WORDS = { title: 'same page title', ip: 'same server', kit: 'same scam kit', path: 'same unusual file path',
+    hash: 'identical file', resource: 'loads a file from it', ns: 'same nameservers', cert: 'same certificate',
+    query: 'found by a search', tracker: 'same tracker', contact: 'same contact', structure: 'same page layout' };
+  // The deep dive, in five parts: the site now, its registration, its servers and mail, its history,
+  // and the sites linked to it. Everything comes from Scam Finder's investigation of the link.
+  const deepBlocks = (result, seed) => {
+    const blocks = [];
+    const page = seed.page || {};
+    const reg = seed.registration || {};
+    const dnsr = seed.dns || {};
+    const certs = seed.certificates || {};
+    const scans = seed.scans || null;
+    const title = result.deep ? 'Deep dive: the site right now' : 'A visit just now';
+    const now = block(title);
+    const up = seed.live ? (seed.live.ok ? `Up, answering with HTTP ${seed.live.status}` : `No answer${seed.live.error ? `: ${seed.live.error}` : ''}`)
+      : seed.state === 'offline' ? 'Gone from DNS' : 'Not reached';
+    const finalHost = hostOf(page.finalUrl);
+    const withheld = Object.entries(page.contactsWithheld || {}).map(([kind, n]) => plural(n, kind));
+    const external = page.externalHosts || [];
+    now.append(facts([
+      ['Right now', up],
+      ['Shows', seed.title ? `“${seed.title}”` : ''],
+      ['Ends up at', finalHost && finalHost !== seed.domain && !finalHost.endsWith(`.${seed.domain}`) ? defangName(finalHost) : ''],
+      ['Scam kit', (seed.kits || []).map((k) => k.name).join(', ')],
+      ['Pretends to be', (seed.brands || []).filter((b) => !b.official && (b.inDomain || b.inTitle)).map((b) => b.name).join(', ')],
+      ['Bait', (seed.lures || []).map((l) => l.label).join(', ')],
+      ['Link preview claims', page.spoofedHost ? defangName(page.spoofedHost) : ''],
+      ['Asks for', [page.forms && page.forms.passwordFields ? 'a password' : '', page.forms && page.forms.cardFields ? 'card details' : ''].filter(Boolean).join(' and ')],
+      ['Sends forms to', ((page.forms && page.forms.actionHosts) || []).map(defangName).join(', ')],
+      ['Loads files from', external.length ? `${plural(external.length, 'other host')}: ${external.slice(0, 5).map(defangName).join(', ')}${external.length > 5 ? ', …' : ''}` : ''],
+      ['Listed on', (seed.blocklists || []).map((b) => b.name).join(', ')],
+      ['On the page', withheld.length ? `${withheld.join(', ')} (not shown here)` : ''],
+    ]));
+    if (result.partial) now.append(el('p', 'The deep dive ran out of time before every source answered, so some facts may be missing.', 'sr-note'));
+    if (result.deepError) now.append(el('p', `The deep dive could not run (${result.deepError}), so this is the short visit.`, 'sr-note'));
+    blocks.push(now);
+
+    const who = block('Registration');
+    who.append(facts([
+      ['Registered', reg.created ? `${dayYear(reg.created)}${typeof reg.ageDays === 'number' ? `, ${plural(reg.ageDays, 'day')} ago` : ''}` : 'Not published'],
+      ['Registrar', reg.registrar],
+      ['Expires', reg.expires ? dayYear(reg.expires) : ''],
+      ['Status', (reg.statuses || []).join(', ')],
+      ['Signed with DNSSEC', reg.dnssec === true ? 'Yes' : reg.dnssec === false ? 'No' : ''],
+      ['Registrant', [reg.registrantOrg, isCC(reg.registrantCountry) ? label(reg.registrantCountry) : ''].filter(Boolean).join(', ')],
+      ['Report abuse to', reg.abuseEmail],
+    ]));
+    blocks.push(who);
+
+    const servers = block('Servers and mail');
+    servers.append(facts([
+      ['Server', (seed.network || []).slice(0, 3).map((n) => [n.ip, n.shared ? `behind ${n.shared}, so the real server is hidden` : '', n.asnName,
+        isCC(n.country) ? label(n.country) : ''].filter(Boolean).join(', ')).join('; ')],
+      ['Nameservers', [(dnsr.ns || []).slice(0, 4).map((n) => defangName(n)).join(', '), seed.nameservers && seed.nameservers.provider].filter(Boolean).join(' · ')],
+      ['Mail servers', Array.isArray(dnsr.mx) ? (dnsr.mx.length ? `${plural(dnsr.mx.length, 'mail server')}: it can receive email` : 'None: it cannot receive email') : ''],
+      ['Sender rules (SPF)', dnsr.spf === true ? 'Published' : dnsr.spf === false ? 'None published' : ''],
+    ]));
+    blocks.push(servers);
+
+    const past = block('History');
+    past.append(facts([
+      ['Certificates', certs.count ? `${plural(certs.count, 'certificate')}${certs.firstIssued ? ` since ${dayYear(certs.firstIssued)}` : ''}` : 'None found in certificate logs'],
+      ['Names on its certificates', (certs.hosts || []).slice(0, 8).map(defangName).join(', ')],
+      ['Earlier scans', scans && scans.count ? `${plural(scans.count, 'scan')} on urlscan.io, ${dayYear(scans.first)} to ${dayYear(scans.last)}` : 'None found on urlscan.io'],
+      ['Titles seen before', scans ? (scans.titles || []).slice(0, 3).map((t) => `“${t.title}”`).join(', ') : ''],
+      ['Its name', seed.lexical && seed.lexical.randomLooking ? 'Looks machine-generated' : ''],
+    ]));
+    blocks.push(past);
+
+    const related = (result.domains || []).filter((d) => d !== seed && d.domain);
+    const links = block('Sites linked to it');
+    if (!related.length) {
+      links.append(el('p', `No other site shares its title, files or server in the scan archives${result.deep ? '' : ' the short visit searched'}.`, 'sr-note'));
+    } else {
+      links.append(el('p', `${plural(related.length, 'site')} ${related.length === 1 ? 'shares' : 'share'} something with it. Click one to check it.`, 'sr-note'));
+      const list = el('ul', null, 'sr-linked');
+      related.sort((a, b) => ((b.risk && b.risk.score) || 0) - ((a.risk && a.risk.score) || 0)).slice(0, 12).forEach((d) => {
+        const li = el('li', null, `sr-level-${(d.risk && d.risk.level) || 'low'}`);
+        const name = el('button', defangName(d.domain), 'sr-domain sr-site');
+        name.type = 'button'; name.dataset.check = defangName(d.domain);
+        const why = [...new Set((d.foundBy || []).map((f) => LINK_WORDS[f.type] || f.type))].slice(0, 3).join(', ');
+        li.append(name, el('span', ` ${LEVEL_WORDS[(d.risk && d.risk.level) || 'low'] || ''}${d.risk ? `, ${d.risk.score}` : ''}${why ? `. ${why}` : ''}`));
+        list.append(li);
+      });
+      links.append(list);
+    }
+    const map = el('a', 'Map the sites linked to it', 'btn btn-ghost btn-sm');
+    map.href = `/scam-radar/map/?url=${encodeURIComponent((result.seed && result.seed.url) || seed.domain)}`;
+    links.append(map);
+    blocks.push(links);
+
+    const score = block('Why it scores what it does');
+    const why = ((seed.risk && seed.risk.signals) || []).map((s) => s.label);
+    score.append(why.length ? bullets(why) : el('p', 'Nothing in the visit raised its score.', 'sr-note'));
+    const code = (seed.findings || []).map((f) => `${f.label}${f.hidden ? ' (hidden in encoded script)' : ''}`);
+    if (code.length) { score.append(el('p', 'What its code does:', 'sr-home-label')); score.append(bullets(code)); }
+    blocks.push(score);
+    return blocks;
+  };
+
   const renderCheck = (verdict, state) => {
     const out = $('#sr-check-result');
     out.replaceChildren();
     const radar = state.radar && state.radar.record;
-    const seed = state.live && state.live.domains && state.live.domains[0];
+    const domains = (state.live && state.live.domains) || [];
+    const seed = domains.find((d) => d.role === 'seed') || domains[0];
     // The headline follows the best evidence there is: a live visit, then Radar's record, then the address
-    const best = seed ? { score: seed.risk.score, level: seed.risk.level, from: 'from a visit to the site just now' }
+    const best = seed && seed.risk ? { score: seed.risk.score, level: seed.risk.level,
+      from: state.live.deep ? 'from a deep dive into the site just now' : 'from a visit to the site just now' }
       : radar ? { score: radar.risk, level: radar.level, from: `from Radar’s ${plural(radar.checks || 1, 'visit')} to the site` }
         : { score: verdict.score, level: verdict.level, from: 'from the address alone; the site was not visited' };
     const trusted = verdict.wellKnown || (verdict.official.length && best.level === 'low');
@@ -669,6 +803,9 @@
     } else {
       const down = radar.takenDown ? `Taken down on ${dayYear(radar.takenDown)}` : radar.downSince ? `Down since ${dayYear(radar.downSince)}` : null;
       record.append(el('p', `${STATE_WORDS[radar.state] || 'It was checked'} when Radar last visited, ${ago(radar.lastChecked)}.${down ? ` ${down}.` : ''}${radar.downReason ? ` ${radar.downReason}.` : ''}`, 'sr-note'));
+      if (radar.hacked) {
+        record.append(el('p', `This looks like a real site that was hacked to host a scam page: its domain was registered${radar.registered ? ` on ${dayYear(radar.registered)}` : ''}, long before the scam page appeared. Radar counts it but does not name it as a scam site. If it is yours, the scam page is a file someone put on your hosting: remove it and change your hosting and site passwords.`, 'sr-note sr-hacked'));
+      }
       record.append(facts([
         ['Kind', radar.kind],
         ['Scam kit', radar.kit],
@@ -685,44 +822,21 @@
     }
     out.append(record);
 
-    // 3. a live visit, where this host can make one
-    if (state.live !== 'none') {
-      const live = block('A visit just now');
-      if (state.live === 'loading') live.append(el('p', 'Visiting the site as plain text. Nothing on it is run. This takes about five seconds.', 'sr-note'));
-      else if (!seed) live.append(el('p', (state.live && state.live.error) || 'The visit could not be finished. Try again in a minute.', 'sr-note'));
-      else {
-        const page = seed.page || {};
-        const reg = seed.registration || {};
-        const net = (seed.network || [])[0] || {};
-        const up = seed.live ? (seed.live.ok ? `Up, answering with HTTP ${seed.live.status}` : `No answer${seed.live.error ? `: ${seed.live.error}` : ''}`)
-          : seed.state === 'offline' ? 'Gone from DNS' : 'Not reached';
-        const withheld = Object.entries(page.contactsWithheld || {}).map(([kind, n]) => plural(n, kind));
-        live.append(facts([
-          ['Right now', up],
-          ['Shows', seed.title ? `“${seed.title}”` : ''],
-          ['Scam kit', (seed.kits || []).map((k) => k.name).join(', ')],
-          ['Pretends to be', (seed.brands || []).filter((b) => !b.official && (b.inDomain || b.inTitle)).map((b) => b.name).join(', ')],
-          ['Link preview claims', page.spoofedHost],
-          ['Asks for', [page.forms && page.forms.passwordFields ? 'a password' : '', page.forms && page.forms.cardFields ? 'card details' : ''].filter(Boolean).join(' and ')],
-          ['Sends forms to', ((page.forms && page.forms.actionHosts) || []).map((h) => h.replace(/\./g, '[.]')).join(', ')],
-          ['Listed on', (seed.blocklists || []).map((b) => b.name).join(', ')],
-          ['Registered', [reg.created && dayYear(reg.created), reg.registrar && `through ${reg.registrar}`].filter(Boolean).join(' ')],
-          ['Report abuse to', reg.abuseEmail],
-          ['Hosted', net.shared ? `Behind ${net.shared}, so the real server is hidden` : [net.country && label(net.country), net.asnName].filter(Boolean).join(', ')],
-          ['On the page', withheld.length ? `${withheld.join(', ')} (not shown here)` : ''],
-        ]));
-        const why = (seed.risk.signals || []).map((s) => s.label);
-        if (why.length) { live.append(el('p', 'Why it scores what it does:', 'sr-home-label')); live.append(bullets(why)); }
-        const code = (seed.findings || []).map((f) => `${f.label}${f.hidden ? ' (hidden in encoded script)' : ''}`);
-        if (code.length) { live.append(el('p', 'What its code does:', 'sr-home-label')); live.append(bullets(code)); }
-        if (state.live.partial) live.append(el('p', 'The visit ran out of time before every source answered, so some facts may be missing.', 'sr-note'));
-        const map = el('a', 'Map the sites linked to it', 'btn btn-ghost btn-sm');
-        map.href = `/scam-radar/map/?url=${encodeURIComponent(verdict.url)}`;
-        live.append(map);
-      }
+    // 3. the deep dive, where this host can make one
+    if (state.live === 'loading') {
+      const live = block('Deep dive');
+      live.append(el('p', 'Visiting the site as plain text (nothing on it is run), reading its registration, DNS and mail servers, its certificates and earlier scans, and searching for other sites that share its title, files or server. This takes up to 40 seconds.', 'sr-note'));
+      const clock = el('p', '0 s', 'sr-deep-clock');
+      clock.dataset.started = String(state.started || Date.now());
+      live.append(clock);
+      out.append(live);
+    } else if (state.live !== 'none' && seed) {
+      deepBlocks(state.live, seed).forEach((node) => out.append(node));
+    } else if (state.live !== 'none') {
+      const live = block('Deep dive');
+      live.append(el('p', (state.live && state.live.error) || 'The visit could not be finished. Try again in a minute.', 'sr-note'));
       out.append(live);
     }
-
     const advice = el('div', null, 'sr-check-block sr-advice');
     advice.append(el('p', 'A score is a reason to look, not a verdict. Low does not mean safe: it means nothing was found.'));
     const report = el('p', 'If it is a scam, report it so browsers warn the next person: ');
@@ -733,11 +847,174 @@
     out.append(advice);
   };
 
+  // ---------------------------------------------------------------- check a contact
+  const KIND_WORDS = { email: 'Email address', phone: 'Phone number', telegram: 'Telegram account',
+    bitcoin: 'Bitcoin wallet', ethereum: 'Ethereum wallet', tron: 'TRON wallet' };
+  const FREE_MAIL = new Set(['gmail.com', 'googlemail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com', 'icloud.com',
+    'aol.com', 'proton.me', 'protonmail.com', 'gmx.com', 'mail.com', 'yandex.com', 'zoho.com']);
+  // What was pasted, if it is a contact and not a link, spelled the way Radar records contacts
+  const contactOf = (raw) => {
+    const text = String(raw || '').trim();
+    const mail = text.replace(/^mailto:/i, '').toLowerCase();
+    if (/^[^@\s/:]+@[^@\s/:]+\.[a-z]{2,24}$/.test(mail)) return { kind: 'email', value: mail, domain: mail.slice(mail.indexOf('@') + 1) };
+    const tg = text.match(/^(?:@|(?:https?:\/\/)?(?:www\.)?(?:t\.me|telegram\.me)\/)(\+?[a-z0-9_]{5,40})\/?$/i);
+    if (tg) return { kind: 'telegram', value: tg[1].toLowerCase() };
+    const wa = text.match(/^(?:https?:\/\/)?(?:wa\.me\/|(?:api\.)?whatsapp\.com\/send\/?\?phone=)\+?(\d{7,15})/i);
+    if (wa) return { kind: 'phone', value: `+${wa[1]}` };
+    if (/^(?:\+|00)?[\d\s().-]{7,22}$/.test(text) && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(text)) {
+      let digits = text.replace(/\D/g, '');
+      const international = text.startsWith('+') || text.startsWith('00');
+      if (text.startsWith('00')) digits = digits.slice(2);
+      // Ten digits with no country code: North America and the Caribbean, Jamaica included (+1)
+      else if (!international && digits.length === 10 && /^[2-9]/.test(digits)) digits = `1${digits}`;
+      // Anything else without a country code can't be matched to the numbers Radar keeps
+      else if (!international && !(digits.length === 11 && digits.startsWith('1'))) return { kind: 'phone', value: null, needsArea: true };
+      if (digits.length >= 8 && digits.length <= 15) return { kind: 'phone', value: `+${digits}` };
+    }
+    if (/^bc1[ac-hj-np-z02-9]{25,59}$/i.test(text)) return { kind: 'bitcoin', value: text.toLowerCase() };
+    if (/^0x[a-f0-9]{40}$/i.test(text)) return { kind: 'ethereum', value: text.toLowerCase() };
+    if (/^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(text)) return { kind: 'tron', value: text };
+    return null;
+  };
+  // Radar's record for a contact, looked up by a key worked out here, so what was typed never leaves
+  // the browser. The key is a slow one-way hash (PBKDF2-SHA256, a million rounds, as in export.mjs),
+  // so the published files can't be read back as a list by hashing every number in a country.
+  // undefined means the records could not be reached.
+  const CONTACT_SALT = 'corx-labs scam-radar contacts v1';
+  const contactKey = async (id) => {
+    const text = new TextEncoder();
+    const base = await crypto.subtle.importKey('raw', text.encode(id), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: text.encode(CONTACT_SALT), iterations: 1000000 }, base, 64);
+    return [...new Uint8Array(bits)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  };
+  const lookupContact = async (c) => {
+    const key = await contactKey(`${c.kind}:${c.value}`.toLowerCase());
+    const shard = await getJson(commit ? `${RAW}${commit}/contacts/${key.slice(0, 2)}.json`
+      : `${DATA}contacts/${key.slice(0, 2)}.json?t=${Math.floor(minute() / 10)}`);
+    if (!shard) return undefined;
+    return shard[key] || null;
+  };
+  const renderContact = (raw, c, state) => {
+    const out = $('#sr-check-result');
+    out.replaceChildren();
+    const rec = state.radar && state.radar !== 'loading' ? state.radar : null;
+    const head = el('div', null, `sr-verdict sr-level-${rec ? (rec.live ? 'critical' : 'high') : 'low'}`);
+    head.append(el('p', `${KIND_WORDS[c.kind]}: ${c.value}`, 'sr-domain sr-verdict-name'));
+    const line = el('p', null, 'sr-verdict-line');
+    line.append(el('strong', state.radar === 'loading' ? 'Checking' : rec ? `Seen on ${plural(rec.sites, 'named scam site')}`
+      : state.radar === undefined ? 'Radar’s records could not be reached' : 'Not seen on any named scam site'));
+    if (rec) line.append(el('span', ` ${rec.live ? `${num(rec.live)} up when last visited. ` : ''}First seen ${dayYear(rec.first)}.`));
+    head.append(line);
+    out.append(head);
+
+    const record = block('Radar’s record');
+    if (state.radar === 'loading') record.append(el('p', 'Looking it up.', 'sr-note'));
+    else if (state.radar === undefined) record.append(el('p', 'Radar’s records could not be reached just now. Try again in a minute.', 'sr-note'));
+    else if (!rec) {
+      record.append(el('p', `Radar keeps the contacts that named scam sites ask people to use, and this ${c.kind === 'email' ? 'address' : c.kind === 'phone' ? 'number' : 'one'} is not among them. That is not a clean bill of health: most scams are never seen by any scanner.`, 'sr-note'));
+    } else {
+      record.append(facts([
+        ['Scam sites', `${plural(rec.sites, 'named site')}${rec.live ? `, ${num(rec.live)} up when last visited` : ''}`],
+        ['Kind of scam', (rec.kinds || []).join(', ')],
+        ['Pretending to be', (rec.brands || []).join(', ')],
+        ['Seen', rec.first ? `${dayYear(rec.first)} to ${dayYear(rec.last)}` : ''],
+      ]));
+      if ((rec.names || []).length) {
+        record.append(el('p', 'Sites it was on (click one to check it):', 'sr-home-label'));
+        const list = el('ul', null, 'sr-linked');
+        rec.names.forEach((name) => {
+          const li = el('li');
+          const button = el('button', name, 'sr-domain sr-site');
+          button.type = 'button'; button.dataset.check = name;
+          li.append(button);
+          list.append(li);
+        });
+        record.append(list);
+      }
+    }
+    record.append(el('p', 'A contact on a scam page is often a hijacked, spoofed or throwaway account, so this is a lead about the scam, not who is behind it.', 'sr-note'));
+    out.append(record);
+
+    // What the address or number says about itself: Scam Finder's contact check, on this site's server
+    if (state.info !== 'none') {
+      const self = block(c.kind === 'phone' ? 'What the number says about itself' : 'What the address says about itself');
+      const info = state.info;
+      if (info === 'loading') self.append(el('p', 'Asking spam-report services.', 'sr-note'));
+      else if (!info || info.error) self.append(el('p', (info && info.error) || 'The check could not be finished.', 'sr-note'));
+      else {
+        const spam = info.spamReports;
+        const breaches = info.breachExposure && Array.isArray(info.breachExposure.breaches) ? info.breachExposure.breaches : null;
+        self.append(facts([
+          ['Mailbox', info.kind === 'email' ? ({ throwaway: 'A disposable mailbox', 'free-webmail': 'A free webmail account',
+            'own-domain': `On its own domain, ${defangName(info.domain)}` }[info.provider] || '') : ''],
+          ['Country', info.kind === 'phone' ? (isCC(info.country) ? label(info.country) : 'Not known from the number') : ''],
+          ['Spam reports', spam ? (spam.reported ? `Reported ${plural(spam.reports, 'time')}${dayYear(String(spam.lastSeen || '').replace(' ', 'T')) ? `, last on ${dayYear(String(spam.lastSeen).replace(' ', 'T'))}` : ''} (StopForumSpam)` : 'None (StopForumSpam)') : ''],
+          ['Data breaches', breaches ? (breaches.length ? breaches.slice(0, 6).map((b) => `${b.name}${b.date ? ` (${b.date})` : ''}`).join(', ') : 'In none known to Have I Been Pwned') : ''],
+        ]));
+        if ((info.notes || []).length) self.append(bullets(info.notes));
+      }
+      out.append(self);
+    }
+
+    // An address on its own domain: the domain can be checked like any site
+    const provider = state.info && state.info.provider;
+    if (c.kind === 'email' && c.domain && !FREE_MAIL.has(c.domain) && (!provider || provider === 'own-domain')) {
+      const box = block('Its domain');
+      box.append(el('p', 'An address on its own domain says more than a free mailbox: the domain can be checked like any site.', 'sr-note'));
+      const button = el('button', `Deep-dive ${defangName(c.domain)}`, 'btn btn-ghost btn-sm');
+      button.type = 'button'; button.dataset.check = c.domain;
+      box.append(button);
+      out.append(box);
+    }
+    const advice = el('div', null, 'sr-check-block sr-advice');
+    advice.append(el('p', 'Never send money, a code or a password to a contact from a message you did not expect. Call the company on the number on its own website, and report the scam to the police.'));
+    out.append(advice);
+  };
+  const runContactCheck = async (raw, c, scroll) => {
+    const out = $('#sr-check-result');
+    const run = ++checkRun;
+    if (scroll) { $('#sr-check-input').value = raw; $('#check').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    if (c.needsArea) {
+      out.replaceChildren(el('p', 'Add the area code (876 or 658 for a Jamaican number) or the country code, so the number can be matched.', 'sr-check-error'));
+      return;
+    }
+    renderContact(raw, c, { radar: 'loading', info: 'none' });
+    const online = c.kind === 'email' || c.kind === 'phone';
+    const [radar, api] = await Promise.all([lookupContact(c).catch(() => undefined), online ? hasApi() : Promise.resolve(false)]);
+    if (run !== checkRun) return;
+    renderContact(raw, c, { radar, info: api ? 'loading' : 'none' });
+    if (!api) return;
+    const answer = await askApi(`contact=${encodeURIComponent(c.value)}`);
+    if (run !== checkRun) return;
+    renderContact(raw, c, { radar, info: answer && answer.status === 200 && answer.body ? answer.body
+      : { error: (answer && answer.body && answer.body.error) || 'The check could not be finished. Try again in a minute.' } });
+  };
+
+  // The deep dive (depth 2) needs a host that lets a function run for up to a minute. Where it can't
+  // run, or this address has used its deep dives for now, the short visit is made instead.
+  const askApi = (query) => fetch(`${API}?${query}`)
+    .then(async (r) => ({ status: r.status, body: await r.json().catch(() => null) })).catch(() => null);
+  const deepDive = async (url) => {
+    const deep = await askApi(`depth=2&url=${encodeURIComponent(url)}`);
+    if (deep && deep.status === 200 && deep.body && deep.body.domains) return { ...deep.body, deep: true };
+    const quick = await askApi(`url=${encodeURIComponent(url)}`);
+    if (quick && quick.status === 200 && quick.body && quick.body.domains) {
+      return { ...quick.body, deep: false, deepError: (deep && deep.body && deep.body.error) || 'the server took too long' };
+    }
+    return { error: (deep && deep.body && deep.body.error) || (quick && quick.body && quick.body.error) || 'The visit could not be finished. Try again in a minute.' };
+  };
+  // The seconds count while a deep dive runs
+  setInterval(() => document.querySelectorAll('.sr-deep-clock').forEach((node) => {
+    node.textContent = `${Math.round((Date.now() - Number(node.dataset.started)) / 1000)} s`;
+  }), 1000);
+
   let checkRun = 0;
   const runCheck = async (raw, scroll) => {
     const out = $('#sr-check-result');
     const input = $('#sr-check-input');
     const core = window.ScamFinderCore;
+    const pasted = contactOf(raw);
+    if (pasted) { runContactCheck(raw, pasted, scroll); return; }
     const run = ++checkRun;
     let verdict;
     try {
@@ -754,11 +1031,11 @@
     renderCheck(verdict, { radar: 'loading', live: 'none' });
     const [radar, api] = await Promise.all([lookup(verdict.names).catch(() => undefined), hasApi()]);
     if (run !== checkRun) return;
-    renderCheck(verdict, { radar, live: api ? 'loading' : 'none' });
+    renderCheck(verdict, { radar, live: api ? 'loading' : 'none', started: Date.now() });
     if (!api) return;
-    const live = await fetch(`${API}?url=${encodeURIComponent(verdict.url)}`).then((r) => r.json()).catch(() => null);
+    const live = await deepDive(verdict.url);
     if (run !== checkRun) return;
-    renderCheck(verdict, { radar, live: live || { error: 'The visit could not be finished. Try again in a minute.' } });
+    renderCheck(verdict, { radar, live });
   };
 
   // ---------------------------------------------------------------- wiring
@@ -771,6 +1048,12 @@
   });
   $('#sr-named-filter').addEventListener('input', () => { namedShown = NAMED_STEP; if (data) drawNamed(); });
   $('#sr-named-more').addEventListener('click', () => { namedShown += NAMED_STEP; if (data) drawNamed(); });
+  $('#sr-jm-named').addEventListener('click', () => {
+    $('#sr-named-filter').value = 'Jamaica';
+    namedShown = NAMED_STEP;
+    if (data) drawNamed();
+    $('#named').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  });
   $('#sr-check').addEventListener('submit', (event) => {
     event.preventDefault();
     const value = $('#sr-check-input').value.trim();
