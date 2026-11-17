@@ -79,8 +79,11 @@
 .sr-empty { color: var(--faint); }
 
 /* risk levels: the only colour on the page, kept low */
-:root { --sr-critical: #9c2f1c; --sr-high: #a85a12; --sr-medium: #7d6a1c; --sr-low: #4f6b4a; }
-@media (prefers-color-scheme: dark) { :root { --sr-critical: #f0907c; --sr-high: #e7a866; --sr-medium: #d6c377; --sr-low: #a7c4a0; } }
+:root { --sr-critical: #9c2f1c; --sr-high: #a85a12; --sr-medium: #7d6a1c; --sr-low: #4f6b4a; --sr-live: #2c6e44; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { --sr-critical: #f0907c; --sr-high: #e7a866; --sr-medium: #d6c377; --sr-low: #a7c4a0; --sr-live: #86d19f; }
+}
+:root[data-theme='dark'] { --sr-critical: #f0907c; --sr-high: #e7a866; --sr-medium: #d6c377; --sr-low: #a7c4a0; --sr-live: #86d19f; }
 
 /* eight headline numbers */
 .sr-stats-8 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -162,3 +165,64 @@
 .sr-mapcta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; }
 .sr-mapcta p { color: var(--muted); max-width: 62ch; }
 .sr-mapcta h3 { margin-bottom: 6px; }
+
+/* the live console: what the scanner is doing, its numbers, a minute-by-minute chart and the newest events.
+   Everything here moves only when new data lands. */
+.sr-console { border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--paper-raised);
+  padding: clamp(16px, 2.6vw, 28px); box-shadow: 0 18px 40px -30px rgba(0, 0, 0, .45); }
+.sr-console-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; margin-bottom: 16px; }
+.sr-console-state { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin: 0; font-size: .95rem; color: var(--muted); max-width: 74ch; }
+.sr-console-state b { color: var(--ink-strong); font-weight: 600; }
+.sr-pulse { position: relative; flex: none; align-self: center; width: 9px; height: 9px; border-radius: 50%; background: var(--faint); }
+.sr-console[data-mode="scanning"] .sr-pulse { background: var(--sr-live); }
+.sr-console[data-mode="scanning"] .sr-pulse::after { content: ""; position: absolute; inset: -5px; border-radius: 50%;
+  border: 2px solid var(--sr-live); opacity: 0; animation: sr-ping 1.8s var(--ease) infinite; }
+.sr-console[data-mode="handover"] .sr-pulse, .sr-console[data-mode="waiting"] .sr-pulse { background: var(--sr-medium); }
+@keyframes sr-ping { 0% { transform: scale(.6); opacity: .9; } 80%, 100% { transform: scale(1.7); opacity: 0; } }
+.sr-console-link { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 600; color: var(--ink-strong);
+  text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+.sr-console-link:hover { text-decoration-color: currentColor; }
+.sr-console .sr-stats { background: var(--paper); }
+.sr-console .sr-stats dd { display: inline-block; }
+.sr-delta { display: inline-block; margin-left: 8px; vertical-align: .6em; font-size: .76rem; font-weight: 600; font-variant-numeric: tabular-nums;
+  color: var(--sr-live); opacity: 0; transform: translateY(4px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.sr-delta.is-on { opacity: 1; transform: none; }
+.sr-delta.is-down { color: var(--faint); }
+.sr-states { margin-top: 10px; }
+.sr-console-body { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(18px, 2.6vw, 32px); margin-top: 20px; }
+@media (max-width: 860px) { .sr-console-body { grid-template-columns: minmax(0, 1fr); } }
+.sr-cycles { margin: 0; min-width: 0; }
+.sr-cycles figcaption { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 14px;
+  margin-bottom: 10px; font-size: .78rem; color: var(--faint); }
+.sr-cycles figcaption b { font-size: .86rem; font-weight: 600; color: var(--ink-strong); }
+.sr-key-up, .sr-key-down { display: inline-block; width: 9px; height: 9px; margin-left: 8px; border-radius: 2px; vertical-align: -1px; }
+.sr-key-up, .sr-col-up { background: var(--sr-live); }
+.sr-key-down, .sr-col-down { background: color-mix(in srgb, var(--espresso) 34%, transparent); }
+.sr-cycles-chart { display: flex; align-items: stretch; gap: 2px; height: clamp(96px, 13vw, 140px); border-bottom: 1px solid var(--line-strong); }
+.sr-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column-reverse; }
+.sr-col i { display: block; width: 100%; border-radius: 1px; }
+.sr-col.is-new i { transform-origin: bottom; animation: sr-grow .9s var(--ease) both; }
+@keyframes sr-grow { from { transform: scaleY(0); } to { transform: none; } }
+.sr-cycles-axis { display: flex; justify-content: space-between; margin-top: 6px; font-family: var(--mono); font-size: .72rem; color: var(--faint); }
+.sr-cycle-now { margin: 10px 0 0; font-size: .84rem; color: var(--muted); }
+.sr-console-latest { min-width: 0; }
+.sr-console-label { margin: 0 0 8px; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.sr-console-feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.sr-console-feed li { display: grid; grid-template-columns: 8.5ch minmax(0, 1fr); column-gap: 10px; margin: 0 -8px; padding: 6px 8px;
+  border-radius: 8px; font-size: .84rem; color: var(--muted); }
+.sr-console-feed .sr-ev-time { grid-row: 1 / 3; font-family: var(--mono); font-size: .72rem; }
+.sr-console-feed b { font-weight: 600; color: var(--ink-strong); }
+.sr-console-feed .sr-site { grid-column: 2; justify-self: start; font-size: .8rem; }
+.sr-console-feed .sr-ev-taken-down b { color: var(--sr-low); }
+.sr-console-feed .sr-ev-first-visit b, .sr-console-feed .sr-ev-kit b, .sr-console-feed .sr-ev-back b { color: var(--sr-critical); }
+.sr-console-feed li.is-new, .sr-feed li.is-new { animation: sr-new 7s var(--ease) both; }
+@keyframes sr-new { from { background: color-mix(in srgb, var(--sr-live) 20%, transparent); } to { background: transparent; } }
+.sr-feed[hidden], .sr-console-latest[hidden] { display: none; }
+.tag-live.is-live { color: var(--sr-live); }
+.tag-live.is-live .dot { animation: sr-blink 1.8s ease-in-out infinite; }
+@keyframes sr-blink { 50% { opacity: .3; } }
+.sr-map path { transition: fill .8s var(--ease); }
+.sr-bar { transition: width .8s var(--ease); }
+@media (prefers-reduced-motion: reduce) {
+  .sr-console *, .sr-console *::after, .sr-feed li, .tag-live .dot, .sr-map path, .sr-bar { animation: none !important; transition: none !important; }
+}

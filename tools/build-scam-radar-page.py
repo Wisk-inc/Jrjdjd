@@ -4,7 +4,7 @@
 The page ships with real numbers already in it: this script fills them in from
 assets/data/scam-radar.json, a copy of the scanner's latest snapshot. assets/js/scam-radar.js then
 redraws everything from the newest snapshot on the scam-radar-data branch, which the scan workflow
-(.github/workflows/scam-radar.yml) republishes every five minutes while a scan runs.
+(.github/workflows/scam-radar.yml) republishes after every one-minute scan cycle, around the clock.
 
 Refresh the copy before building, so the built page starts close to the truth:
     curl -s https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/scam-radar.json -o assets/data/scam-radar.json
@@ -126,8 +126,53 @@ MAP = (f'<svg class="sr-map" viewBox="0 0 {W:g} {H:.0f}" role="img" aria-labelle
 T = SNAP["totals"]
 when = datetime.fromisoformat(SNAP["generated"].replace("Z", "+00:00")).astimezone(timezone.utc)
 WHEN = f"{when.day} {when:%B %Y} at {when:%H:%M} UTC"
-STATUS = (f"Last scan published on {WHEN}, after {num(SNAP['scanCycles'])} scan cycles and "
-          f"{num(T['visitsMade'])} site visits.")
+
+# The live console. Before the script runs it says what the copy in the page is: one scan, with its time.
+STATIC_DETAIL = (f"Numbers from the scan published on {WHEN}, after {num(SNAP['scanCycles'])} scan cycles and "
+                 f"{num(T['visitsMade'])} site visits.")
+SHORT_WHEN = f"{when.day} {when:%b}, {when:%H:%M} UTC"
+LC = SNAP.get("lastCycle") or {}
+
+
+def cycle_text(c):
+    if not c:
+        return ""
+    parts = [f"{num(c.get('visited'))} sites visited ({num(c.get('up'))} up, {num(c.get('down'))} down)"]
+    if c.get("newFromCertificates"):
+        parts.append(f"{num(c['newFromCertificates'])} new names from certificate logs")
+    if c.get("takedowns"):
+        parts.append(f"{num(c['takedowns'])} taken down")
+    return "Last cycle: " + ", ".join(parts) + "."
+
+
+LAST_CYCLE = cycle_text(LC)
+
+
+def cycle_bars(cycles, slots=60):
+    """The per-minute chart, drawn once here from the copy in the page; the script redraws it live."""
+    dated = sorted((datetime.fromisoformat(c["at"].replace("Z", "+00:00")), c) for c in cycles if c.get("at"))
+    if not dated:
+        return "", "", ""
+    end = int(dated[-1][0].timestamp() // 60)
+    start = end - slots + 1
+    by_minute = {int(t.timestamp() // 60): c for t, c in dated}
+    peak = max(1, *(c.get("visited", 0) for _, c in dated))
+    cols = []
+    for minute in range(start, end + 1):
+        c = by_minute.get(minute)
+        if not c:
+            cols.append('<span class="sr-col is-empty"></span>')
+            continue
+        at = datetime.fromtimestamp(minute * 60, timezone.utc)
+        cols.append(f'<span class="sr-col" title="{at:%H:%M} UTC: {num(c.get("visited"))} sites visited, '
+                    f'{num(c.get("up"))} up"><i class="sr-col-down" style="height:{100 * c.get("down", 0) / peak:.1f}%"></i>'
+                    f'<i class="sr-col-up" style="height:{100 * c.get("up", 0) / peak:.1f}%"></i></span>')
+    first = datetime.fromtimestamp(start * 60, timezone.utc)
+    last = datetime.fromtimestamp(end * 60, timezone.utc)
+    return "".join(cols), f"{first:%H:%M} UTC", f"{last:%H:%M} UTC"
+
+
+CHART, CHART_FROM, CHART_TO = cycle_bars(SNAP.get("recentCycles") or [])
 
 STATS = [
     ("domainsIndexed", "Domains indexed", "every name it knows"),
@@ -140,7 +185,7 @@ STATS = [
     ("takenDown", "Taken down", "while being watched"),
 ]
 stats_html = "\n".join(
-    f'        <div><dt>{label}</dt><dd data-k="{key}">{num(T.get(key))}</dd><small>{note}</small></div>'
+    f'          <div><dt>{label}</dt><dd data-k="{key}">{num(T.get(key))}</dd><span class="sr-delta" aria-hidden="true"></span><small>{note}</small></div>'
     for key, label, note in STATS)
 
 STATE_WORDS = {"live": "up", "unreachable": "not answering", "offline": "gone from DNS", "blocked": "flagged by their host",
@@ -210,12 +255,12 @@ FAQ = [
      "by a scrambled form of the name. Where this site&rsquo;s scan server is running, the page is also visited "
      "as plain text and its code is read for 23 scam behaviours. You are never sent to the site."),
     ("How often does it update?",
-     "A scan runs about once an hour, for about 25 minutes, and publishes what it has found every five "
-     "minutes while it runs. Each scan starts the next one, which begins once the last publish is 35 minutes "
-     "old. This page shows how old its data is, to the second, and checks for new data every minute. Between "
-     "scans the scanner is not running, so the numbers don&rsquo;t change. Updating every second would need a "
-     "server that scans around the clock. No scanner visits millions of sites a second: this one scores 18 "
-     "million names from their spelling in seconds, then visits up to 300 of the most suspicious a minute."),
+     "About once a minute. The scanner runs around the clock in one-minute cycles and publishes what it has "
+     "found after every cycle, and this page checks for new data every 15 seconds and shows what changed. Once "
+     "an hour the scan moves to a fresh GitHub runner, which takes about two minutes, and the page says so "
+     "while it happens. It runs on GitHub&rsquo;s servers, so if it stops, the page says how old its numbers "
+     "are. No scanner visits millions of sites a second: this one scores 18 million names from their spelling "
+     "in seconds, then visits up to 300 of the most suspicious a minute."),
     ("How does it know my country?",
      "From your device&rsquo;s time zone, worked out in your browser. Nothing about you is sent anywhere, and "
      "you can pick another country from the list; the choice is remembered on this device only."),
@@ -346,18 +391,44 @@ page = f"""<!DOCTYPE html>
       </ol>
     </nav>
     <div class="tag-row" style="margin-top:22px">
-      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> <span id="sr-age">Live data</span></span>
+      <span class="tag tag-live" id="sr-live-tag"><i class="dot" aria-hidden="true"></i> <span id="sr-age">Scan of {SHORT_WHEN}</span></span>
       <span class="tag">Scam &amp; phishing sites</span>
       <span class="tag">Every country</span>
-      <span class="tag">Updates by itself</span>
+      <span class="tag">New data every minute</span>
     </div>
     <h1>Scam Radar</h1>
     <p class="lede">Scam websites going up right now, where they are hosted and which countries they aim at. A
-      scanner watches more than 18 million domains, every new web certificate and every newly registered name,
-      visits the suspicious ones, and records when each goes live and when it is taken down. Paste any link to
-      check it.</p>
-    <p class="mt-s sr-status" id="sr-status" aria-live="polite">{STATUS}</p>
+      scanner watches more than 18 million domains and visits the suspicious ones around the clock. Paste any
+      link to check it.</p>
   </div>
+
+  <section class="section-tight" id="live" aria-label="The scanner right now" style="padding-top:clamp(22px,3.4vw,40px)">
+    <div class="shell">
+      <div class="sr-console" id="sr-console" data-mode="static">
+        <div class="sr-console-head">
+          <p class="sr-console-state"><i class="sr-pulse" aria-hidden="true"></i><b id="sr-live-state">Last scan</b>
+            <span id="sr-live-detail">{STATIC_DETAIL}</span></p>
+          <a class="sr-console-link" href="/scam-radar/map/">Open the live map <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <dl class="sr-stats sr-stats-8" id="sr-stats">
+{stats_html}
+        </dl>
+        <p class="sr-note sr-states" id="sr-states">{STATES}</p>
+        <div class="sr-console-body">
+          <figure class="sr-cycles">
+            <figcaption><b>Sites visited, minute by minute</b><span><i class="sr-key-up"></i> up <i class="sr-key-down"></i> down</span></figcaption>
+            <div class="sr-cycles-chart" id="sr-cycles-chart" role="img" aria-label="Sites visited in each scan cycle over the last hour">{CHART}</div>
+            <div class="sr-cycles-axis" aria-hidden="true"><span id="sr-cycles-from">{CHART_FROM}</span><span id="sr-cycles-to">{CHART_TO}</span></div>
+            <p class="sr-cycle-now" id="sr-cycle-now">{LAST_CYCLE}</p>
+          </figure>
+          <div class="sr-console-latest" id="sr-console-latest" hidden>
+            <p class="sr-console-label">Latest on named sites</p>
+            <ol class="sr-console-feed" id="sr-console-feed"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="section-tight" id="check" style="padding-top:clamp(28px,4vw,48px)">
     <div class="shell">
@@ -377,15 +448,6 @@ page = f"""<!DOCTYPE html>
           of the name, so the name itself is not sent. A live visit sends the link to this site&rsquo;s server,
           which fetches the page as text and keeps nothing.</p>
       </div>
-    </div>
-  </section>
-
-  <section class="section-tight" id="numbers" aria-label="Headline numbers" style="padding-top:0">
-    <div class="shell">
-      <dl class="sr-stats sr-stats-8" id="sr-stats">
-{stats_html}
-      </dl>
-      <p class="sr-note">{STATES}</p>
     </div>
   </section>
 
@@ -436,7 +498,8 @@ page = f"""<!DOCTYPE html>
       <div class="prose"><p>Named sites going live, changing and being taken down, newest first. Click a name to
         check it.</p></div>
       <p class="sr-note" id="sr-activity">{ACTIVITY}</p>
-      <div class="sr-card sr-feed-wrap"><ul class="sr-feed" id="sr-feed"><li class="sr-empty">The feed is drawn from the latest scan when the page loads.</li></ul></div>
+      <div class="sr-card sr-feed-wrap"><ul class="sr-feed" id="sr-feed" hidden></ul>
+        <noscript><p class="sr-note">The feed needs JavaScript: site names are never written into this page, only drawn in your browser.</p></noscript></div>
     </div>
   </section>
 
@@ -542,10 +605,9 @@ page = f"""<!DOCTYPE html>
         <li><div><h3>Watched until they go</h3><p>Live high-risk sites are revisited every half hour to two hours.
           When one stops answering twice in a row, the takedown is recorded with when and why: gone from DNS,
           suspended by the registrar, or flagged by its host.</p></div></li>
-        <li><div><h3>Published by itself</h3><p>Each scan starts the next one, about an hour apart. A scan runs
-          for about 25 minutes, up to 300 site visits a minute, and publishes what it has found every five
-          minutes. This page checks for new data every minute. Nobody edits the list by
-          hand.</p></div></li>
+        <li><div><h3>Published every minute</h3><p>The scanner runs around the clock in one-minute cycles, up to
+          300 site visits each, and publishes what it has found after every cycle. This page checks for new data
+          every 15 seconds and shows what changed. Nobody edits the list by hand.</p></div></li>
       </ol>
       <div class="callout mt-m">
         <p><strong>What it can&rsquo;t tell you.</strong> How many people clicked: only the scammers know. Who is

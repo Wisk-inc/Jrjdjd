@@ -151,7 +151,7 @@
           "name": "How often does it update?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A scan runs about once an hour, for about 25 minutes, and publishes what it has found every five minutes while it runs. Each scan starts the next one, which begins once the last publish is 35 minutes old. This page shows how old its data is, to the second, and checks for new data every minute. Between scans the scanner is not running, so the numbers don’t change. Updating every second would need a server that scans around the clock. No scanner visits millions of sites a second: this one scores 18 million names from their spelling in seconds, then visits up to 300 of the most suspicious a minute."
+            "text": "About once a minute. The scanner runs around the clock in one-minute cycles and publishes what it has found after every cycle, and this page checks for new data every 15 seconds and shows what changed. Once an hour the scan moves to a fresh GitHub runner, which takes about two minutes, and the page says so while it happens. It runs on GitHub’s servers, so if it stops, the page says how old its numbers are. No scanner visits millions of sites a second: this one scores 18 million names from their spelling in seconds, then visits up to 300 of the most suspicious a minute."
           }
         },
         {
@@ -263,18 +263,51 @@
       </ol>
     </nav>
     <div class="tag-row" style="margin-top:22px">
-      <span class="tag tag-live"><i class="dot" aria-hidden="true"></i> <span id="sr-age">Live data</span></span>
+      <span class="tag tag-live" id="sr-live-tag"><i class="dot" aria-hidden="true"></i> <span id="sr-age">Scan of 16 Nov, 23:41 UTC</span></span>
       <span class="tag">Scam &amp; phishing sites</span>
       <span class="tag">Every country</span>
-      <span class="tag">Updates by itself</span>
+      <span class="tag">New data every minute</span>
     </div>
     <h1>Scam Radar</h1>
     <p class="lede">Scam websites going up right now, where they are hosted and which countries they aim at. A
-      scanner watches more than 18 million domains, every new web certificate and every newly registered name,
-      visits the suspicious ones, and records when each goes live and when it is taken down. Paste any link to
-      check it.</p>
-    <p class="mt-s sr-status" id="sr-status" aria-live="polite">Last scan published on 16 November 2026 at 23:41 UTC, after 130 scan cycles and 16,795 site visits.</p>
+      scanner watches more than 18 million domains and visits the suspicious ones around the clock. Paste any
+      link to check it.</p>
   </div>
+
+  <section class="section-tight" id="live" aria-label="The scanner right now" style="padding-top:clamp(22px,3.4vw,40px)">
+    <div class="shell">
+      <div class="sr-console" id="sr-console" data-mode="static">
+        <div class="sr-console-head">
+          <p class="sr-console-state"><i class="sr-pulse" aria-hidden="true"></i><b id="sr-live-state">Last scan</b>
+            <span id="sr-live-detail">Numbers from the scan published on 16 November 2026 at 23:41 UTC, after 130 scan cycles and 16,795 site visits.</span></p>
+          <a class="sr-console-link" href="/scam-radar/map/">Open the live map <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <dl class="sr-stats sr-stats-8" id="sr-stats">
+          <div><dt>Domains indexed</dt><dd data-k="domainsIndexed">18,802,049</dd><span class="sr-delta" aria-hidden="true"></span><small>every name it knows</small></div>
+          <div><dt>Worth a visit</dt><dd data-k="worthVisiting">1,274,391</dd><span class="sr-delta" aria-hidden="true"></span><small>scored 50 or more by spelling and source</small></div>
+          <div><dt>Sites watched</dt><dd data-k="watched">19,800</dd><span class="sr-delta" aria-hidden="true"></span><small>on the watchlist</small></div>
+          <div><dt>Visits made</dt><dd data-k="visitsMade">16,795</dd><span class="sr-delta" aria-hidden="true"></span><small>pages fetched and read</small></div>
+          <div><dt>Live, high risk</dt><dd data-k="liveHighRisk">2,041</dd><span class="sr-delta" aria-hidden="true"></span><small>up now, scoring 60 or more</small></div>
+          <div><dt>Named</dt><dd data-k="named">1,808</dd><span class="sr-delta" aria-hidden="true"></span><small>strong evidence, listed below</small></div>
+          <div><dt>Known scam kits</dt><dd data-k="runningKnownKit">47</dd><span class="sr-delta" aria-hidden="true"></span><small>sites running one</small></div>
+          <div><dt>Taken down</dt><dd data-k="takenDown">0</dd><span class="sr-delta" aria-hidden="true"></span><small>while being watched</small></div>
+        </dl>
+        <p class="sr-note sr-states" id="sr-states">Of 11,738 sites visited so far: 5,420 up, 4,279 gone from DNS, 1,955 not answering, 57 flagged by their host, 20 parked, 7 suspended by their host.</p>
+        <div class="sr-console-body">
+          <figure class="sr-cycles">
+            <figcaption><b>Sites visited, minute by minute</b><span><i class="sr-key-up"></i> up <i class="sr-key-down"></i> down</span></figcaption>
+            <div class="sr-cycles-chart" id="sr-cycles-chart" role="img" aria-label="Sites visited in each scan cycle over the last hour"></div>
+            <div class="sr-cycles-axis" aria-hidden="true"><span id="sr-cycles-from"></span><span id="sr-cycles-to"></span></div>
+            <p class="sr-cycle-now" id="sr-cycle-now">Last cycle: 76 sites visited (1 up, 75 down), 1,455 new names from certificate logs.</p>
+          </figure>
+          <div class="sr-console-latest" id="sr-console-latest" hidden>
+            <p class="sr-console-label">Latest on named sites</p>
+            <ol class="sr-console-feed" id="sr-console-feed"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="section-tight" id="check" style="padding-top:clamp(28px,4vw,48px)">
     <div class="shell">
@@ -294,22 +327,6 @@
           of the name, so the name itself is not sent. A live visit sends the link to this site&rsquo;s server,
           which fetches the page as text and keeps nothing.</p>
       </div>
-    </div>
-  </section>
-
-  <section class="section-tight" id="numbers" aria-label="Headline numbers" style="padding-top:0">
-    <div class="shell">
-      <dl class="sr-stats sr-stats-8" id="sr-stats">
-        <div><dt>Domains indexed</dt><dd data-k="domainsIndexed">18,802,049</dd><small>every name it knows</small></div>
-        <div><dt>Worth a visit</dt><dd data-k="worthVisiting">1,274,391</dd><small>scored 50 or more by spelling and source</small></div>
-        <div><dt>Sites watched</dt><dd data-k="watched">19,800</dd><small>on the watchlist</small></div>
-        <div><dt>Visits made</dt><dd data-k="visitsMade">16,795</dd><small>pages fetched and read</small></div>
-        <div><dt>Live, high risk</dt><dd data-k="liveHighRisk">2,041</dd><small>up now, scoring 60 or more</small></div>
-        <div><dt>Named</dt><dd data-k="named">1,808</dd><small>strong evidence, listed below</small></div>
-        <div><dt>Known scam kits</dt><dd data-k="runningKnownKit">47</dd><small>sites running one</small></div>
-        <div><dt>Taken down</dt><dd data-k="takenDown">0</dd><small>while being watched</small></div>
-      </dl>
-      <p class="sr-note">Of 11,738 sites visited so far: 5,420 up, 4,279 gone from DNS, 1,955 not answering, 57 flagged by their host, 20 parked, 7 suspended by their host.</p>
     </div>
   </section>
 
@@ -384,7 +401,8 @@
       <div class="prose"><p>Named sites going live, changing and being taken down, newest first. Click a name to
         check it.</p></div>
       <p class="sr-note" id="sr-activity">In the hour before that scan: 2,025 sites visited for the first time.</p>
-      <div class="sr-card sr-feed-wrap"><ul class="sr-feed" id="sr-feed"><li class="sr-empty">The feed is drawn from the latest scan when the page loads.</li></ul></div>
+      <div class="sr-card sr-feed-wrap"><ul class="sr-feed" id="sr-feed" hidden></ul>
+        <noscript><p class="sr-note">The feed needs JavaScript: site names are never written into this page, only drawn in your browser.</p></noscript></div>
     </div>
   </section>
 
@@ -501,10 +519,9 @@
         <li><div><h3>Watched until they go</h3><p>Live high-risk sites are revisited every half hour to two hours.
           When one stops answering twice in a row, the takedown is recorded with when and why: gone from DNS,
           suspended by the registrar, or flagged by its host.</p></div></li>
-        <li><div><h3>Published by itself</h3><p>Each scan starts the next one, about an hour apart. A scan runs
-          for about 25 minutes, up to 300 site visits a minute, and publishes what it has found every five
-          minutes. This page checks for new data every minute. Nobody edits the list by
-          hand.</p></div></li>
+        <li><div><h3>Published every minute</h3><p>The scanner runs around the clock in one-minute cycles, up to
+          300 site visits each, and publishes what it has found after every cycle. This page checks for new data
+          every 15 seconds and shows what changed. Nobody edits the list by hand.</p></div></li>
       </ol>
       <div class="callout mt-m">
         <p><strong>What it can&rsquo;t tell you.</strong> How many people clicked: only the scammers know. Who is
@@ -529,7 +546,7 @@
         </details>
         <details>
           <summary>How often does it update?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>A scan runs about once an hour, for about 25 minutes, and publishes what it has found every five minutes while it runs. Each scan starts the next one, which begins once the last publish is 35 minutes old. This page shows how old its data is, to the second, and checks for new data every minute. Between scans the scanner is not running, so the numbers don&rsquo;t change. Updating every second would need a server that scans around the clock. No scanner visits millions of sites a second: this one scores 18 million names from their spelling in seconds, then visits up to 300 of the most suspicious a minute.</p></div>
+          <div class="faq-body"><p>About once a minute. The scanner runs around the clock in one-minute cycles and publishes what it has found after every cycle, and this page checks for new data every 15 seconds and shows what changed. Once an hour the scan moves to a fresh GitHub runner, which takes about two minutes, and the page says so while it happens. It runs on GitHub&rsquo;s servers, so if it stops, the page says how old its numbers are. No scanner visits millions of sites a second: this one scores 18 million names from their spelling in seconds, then visits up to 300 of the most suspicious a minute.</p></div>
         </details>
         <details>
           <summary>How does it know my country?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>

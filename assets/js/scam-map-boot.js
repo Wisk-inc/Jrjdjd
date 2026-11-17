@@ -14,7 +14,7 @@
   window.fetch = async (input, init) => {
     const url = typeof input === 'string' ? input : (input && input.url) || '';
     if (url.startsWith('/api/scam-radar')) {
-      const stamp = Math.floor(Date.now() / 300000); // the published map changes at most every five minutes
+      const stamp = Math.floor(Date.now() / 60000); // the published map changes about once a minute; the viewer asks every minute
       const response = await realFetch(`${RADAR_MAP}?t=${stamp}`, { cache: 'no-cache' }).catch(() => null);
       return response && response.ok ? response : answer({ error: 'the published map could not be reached. Try again in a minute' });
     }
