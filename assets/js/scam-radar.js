@@ -631,14 +631,17 @@
     }
     return reached ? null : undefined;
   };
-  let apiHere = null;
-  const hasApi = async () => {
-    if (apiHere === null) {
-      const pong = await getJson(`${API}?ping=1`);
-      apiHere = Boolean(pong && pong.ok === true && pong.tool === 'scam-finder');
-    }
-    return apiHere;
-  };
+  // Is this site's scan API here? Asked once per page; a host without it, or one that does not answer
+  // within 8 seconds, gets the checks that need no server.
+  let apiCheck = null;
+  const hasApi = () => (apiCheck ||= (async () => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    const pong = await fetch(`${API}?ping=1`, { cache: 'no-cache', signal: controller.signal })
+      .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    clearTimeout(timer);
+    return Boolean(pong && pong.ok === true && pong.tool === 'scam-finder');
+  })());
 
   const block = (title) => {
     const box = el('div', null, 'sr-check-block');
@@ -985,10 +988,13 @@
     }
     renderContact(raw, c, { radar: 'loading', info: 'none' });
     const online = c.kind === 'email' || c.kind === 'phone';
-    const [radar, api] = await Promise.all([lookupContact(c).catch(() => undefined), online ? hasApi() : Promise.resolve(false)]);
+    const apiReady = online ? hasApi() : Promise.resolve(false);
+    const radar = await lookupContact(c).catch(() => undefined);
     if (run !== checkRun) return;
-    renderContact(raw, c, { radar, info: api ? 'loading' : 'none' });
-    if (!api) return;
+    renderContact(raw, c, { radar, info: online ? 'loading' : 'none' });
+    const api = await apiReady;
+    if (run !== checkRun) return;
+    if (!api) { renderContact(raw, c, { radar, info: 'none' }); return; }
     const answer = await askApi(`contact=${encodeURIComponent(c.value)}`);
     if (run !== checkRun) return;
     renderContact(raw, c, { radar, info: answer && answer.status === 200 && answer.body ? answer.body
@@ -1034,10 +1040,15 @@
       $('#check').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     renderCheck(verdict, { radar: 'loading', live: 'none' });
-    const [radar, api] = await Promise.all([lookup(verdict.names).catch(() => undefined), hasApi()]);
+    // Radar's record shows as soon as it is in; the visit follows if the scan API answers
+    const apiReady = hasApi();
+    const radar = await lookup(verdict.names).catch(() => undefined);
     if (run !== checkRun) return;
-    renderCheck(verdict, { radar, live: api ? 'loading' : 'none', started: Date.now() });
-    if (!api) return;
+    const started = Date.now();
+    renderCheck(verdict, { radar, live: 'loading', started });
+    const api = await apiReady;
+    if (run !== checkRun) return;
+    if (!api) { renderCheck(verdict, { radar, live: 'none' }); return; }
     const live = await deepDive(verdict.url);
     if (run !== checkRun) return;
     renderCheck(verdict, { radar, live });
