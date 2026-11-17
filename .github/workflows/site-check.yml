@@ -12,6 +12,9 @@ on:
 
 permissions:
   contents: read
+  statuses: read
+  checks: read
+  deployments: read
 
 jobs:
   check:
@@ -26,6 +29,8 @@ jobs:
           fetch-depth: 0   # the history tells which commit a live file comes from
 
       - name: Files, headers and redirects
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: python3 tools/site-check.py "$SITE"
 
       - uses: actions/setup-node@v4
