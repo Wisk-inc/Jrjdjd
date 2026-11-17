@@ -1,0 +1,34 @@
+# Keeps the Scam Radar scans going. Each scan starts the next one (see scam-radar.yml), so while
+# they run this has nothing to do and ends in seconds. If that chain stops (a run was cancelled by
+# hand, or a scan stopped early), this starts a scan that begins as soon as one is due.
+#
+# GitHub starts scheduled workflows when it has room and skips many of them, so this asks every
+# ten minutes and may still take a while to notice. Starting "Scam Radar" by hand from the Actions
+# tab works at once.
+name: Scam Radar keep-alive
+
+on:
+  schedule:
+    - cron: '3,13,23,33,43,53 * * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write   # start a scan
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Start a scan if none is running or waiting
+        run: |
+          busy=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow scam-radar.yml --limit 20 --json status \
+            --jq '[.[] | select(.status != "completed")] | length') || busy=0
+          if [ "${busy:-0}" -gt 0 ]; then
+            echo "A scan is running or waiting to start: nothing to do."
+            exit 0
+          fi
+          gh workflow run scam-radar.yml --repo "$GITHUB_REPOSITORY" --ref main -f chained=yes
+          echo "No scan was running or waiting, so one was started. It scans once the last scan is 35 minutes old."

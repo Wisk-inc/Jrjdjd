@@ -3,8 +3,8 @@
 
 The page ships with real numbers already in it: this script fills them in from
 assets/data/scam-radar.json, a copy of the scanner's latest snapshot. assets/js/scam-radar.js then
-redraws everything from the newest snapshot on the scam-radar-data branch, which the scheduled job
-(.github/workflows/scam-radar.yml) republishes several times an hour.
+redraws everything from the newest snapshot on the scam-radar-data branch, which the scan workflow
+(.github/workflows/scam-radar.yml) republishes every five minutes while a scan runs.
 
 Refresh the copy before building, so the built page starts close to the truth:
     curl -s https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/scam-radar.json -o assets/data/scam-radar.json
@@ -210,9 +210,9 @@ FAQ = [
      "by a scrambled form of the name. Where this site&rsquo;s scan server is running, the page is also visited "
      "as plain text and its code is read for 23 scam behaviours. You are never sent to the site."),
     ("How often does it update?",
-     "A scan is started about once an hour and runs for about 25 minutes, publishing what it has found every "
-     "five minutes while it runs. GitHub starts each scan when it has room, so the gap between scans varies, "
-     "and this page shows how old its data is, to the second. It checks for new data every minute. Between "
+     "A scan runs about once an hour, for about 25 minutes, and publishes what it has found every five "
+     "minutes while it runs. Each scan starts the next one, which begins once the last publish is 35 minutes "
+     "old. This page shows how old its data is, to the second, and checks for new data every minute. Between "
      "scans the scanner is not running, so the numbers don&rsquo;t change. Updating every second would need a "
      "server that scans around the clock. No scanner visits millions of sites a second: this one scores 18 "
      "million names from their spelling in seconds, then visits up to 300 of the most suspicious a minute."),
@@ -542,9 +542,9 @@ page = f"""<!DOCTYPE html>
         <li><div><h3>Watched until they go</h3><p>Live high-risk sites are revisited every half hour to two hours.
           When one stops answering twice in a row, the takedown is recorded with when and why: gone from DNS,
           suspended by the registrar, or flagged by its host.</p></div></li>
-        <li><div><h3>Published by itself</h3><p>A scheduled job starts a scan about once an hour, when GitHub has
-          room for it. A scan runs for about 25 minutes, up to 300 site visits a minute, and publishes what it has
-          found every five minutes. This page checks for new data every minute. Nobody edits the list by
+        <li><div><h3>Published by itself</h3><p>Each scan starts the next one, about an hour apart. A scan runs
+          for about 25 minutes, up to 300 site visits a minute, and publishes what it has found every five
+          minutes. This page checks for new data every minute. Nobody edits the list by
           hand.</p></div></li>
       </ol>
       <div class="callout mt-m">
