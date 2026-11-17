@@ -12,7 +12,11 @@
    Every value from the data goes in through textContent, never as HTML. No checked site is ever linked. */
 (() => {
   'use strict';
-  const DATA = 'https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/';
+  const RAW = 'https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/';
+  const DATA = `${RAW}scam-radar-data/`;
+  // Where the data branch points right now (see api/scam-radar-status.js). Read by name, the branch
+  // can lag a push by a few minutes; read by commit, a file is exactly what was published.
+  const STATUS_API = '/api/scam-radar-status';
   const LOCAL = '/assets/data/scam-radar.json';
   const API = '/api/scam-finder';
   const REFRESH_MS = 15 * 1000;
@@ -90,6 +94,9 @@
 
   let data = null;
   let chartEnd = null; // the minute the chart was last drawn to
+  let commit = null;   // the data branch's commit the page last read
+  let statusApi = true;
+  let apiMisses = 0;
   let home = null; // the visitor's country
   let viewChosen = false; // has the visitor picked a map view themselves?
   let namedShown = NAMED_STEP;
@@ -530,17 +537,32 @@
     data = snapshot;
     draw(before);
   };
-  const latest = () => getJson(`${DATA}scam-radar.json?t=${Date.now()}`).then(adopt);
+  const readStatus = async () => {
+    if (statusApi) {
+      const status = await getJson(STATUS_API);
+      if (status && /^[0-9a-f]{40}$/.test(status.commit || '') && Date.parse(status.generated)) { apiMisses = 0; return status; }
+      apiMisses += 1;
+      if (apiMisses >= 3) statusApi = false; // this host has no status function: read the branch by name
+    }
+    return getJson(`${DATA}scam-radar-status.json?t=${Math.floor(Date.now() / REFRESH_MS)}`);
+  };
+  const latest = (at) => getJson(at ? `${RAW}${at}/scam-radar.json` : `${DATA}scam-radar.json?t=${Date.now()}`).then(adopt);
   let misses = 0;
   const poll = async () => {
     if (document.hidden) return; // a tab in the background catches up when it is shown again
-    const status = await getJson(`${DATA}scam-radar-status.json?t=${Math.floor(Date.now() / REFRESH_MS)}`);
-    if (!status) { misses += 1; if (misses % 4 === 0) await latest(); return; }
+    const status = await readStatus();
+    if (!status) { misses += 1; if (misses % 4 === 0) await latest(null); return; }
     misses = 0;
-    if (!data || Date.parse(status.generated) > Date.parse(data.generated)) await latest();
+    if (!data || Date.parse(status.generated) > Date.parse(data.generated)) {
+      if (status.commit) commit = status.commit;
+      await latest(status.commit || null);
+    }
   };
   const start = async () => {
-    await Promise.all([getJson(LOCAL).then(adopt), latest()]);
+    const local = getJson(LOCAL).then(adopt);
+    const status = await readStatus();
+    if (status && status.commit) commit = status.commit;
+    await Promise.all([local, latest(commit)]);
     if (!data) $('#sr-live-detail').textContent = ' The latest scan could not be loaded. This page tries again every 15 seconds.';
   };
 
@@ -571,7 +593,8 @@
     let reached = false;
     for (const name of names) {
       const key = await sha12(name);
-      const shard = await getJson(`${DATA}lookup/${key.slice(0, 2)}.json?t=${Math.floor(minute() / 10)}`);
+      const shard = await getJson(commit ? `${RAW}${commit}/lookup/${key.slice(0, 2)}.json`
+        : `${DATA}lookup/${key.slice(0, 2)}.json?t=${Math.floor(minute() / 10)}`);
       if (!shard) continue;
       reached = true;
       if (shard[key]) return { name, record: shard[key] };

@@ -24,6 +24,9 @@ What was added around it for this site:
   link checker.
 - `../build-scam-map-page.py` builds `/scam-radar/map/` from `scam-finder/viewer/`. The viewer's script and
   stylesheet are copied unedited; `assets/js/scam-map-boot.js` points its two requests at this site.
+- `/api/scam-radar-status.js` (Vercel edge function) says which commit the `scam-radar-data` branch points to now
+  and returns that commit's status file. Read by branch name, raw.githubusercontent.com can lag a push by
+  minutes; the page and the map read files at that commit instead.
 - `.github/workflows/scam-radar.yml` scans in one-minute cycles around the clock and publishes after every cycle.
   Each 55-minute run starts the next; `scam-radar-keepalive.yml` starts it again if that chain stops.
 
