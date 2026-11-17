@@ -22,8 +22,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = (ROOT / "models/naturev1/index.html").read_text(encoding="utf-8")
 OUT = ROOT / "scam-radar/index.html"
-URL = "https://corx-labs.com/scam-radar/"
-OG = "https://corx-labs.com/assets/img/og-scam-radar.jpg"
+URL = "https://www.corx-labs.com/scam-radar/"
+OG = "https://www.corx-labs.com/assets/img/og-scam-radar.jpg"
 PUBLISHED = "2026-11-16"
 DATE = "2026-11-16"
 PLUS = ('<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" '
@@ -249,7 +249,7 @@ faq_html = "\n".join(f"""        <details>
           <div class="faq-body"><p>{a}</p></div>
         </details>""" for q, a in FAQ)
 
-person = {"@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/"}
+person = {"@type": "Person", "@id": "https://www.corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://www.corx-labs.com/nathan/"}
 graph = [
     {"@type": "WebApplication", "@id": URL + "#app", "name": "Scam Radar", "url": URL,
      "applicationCategory": "SecurityApplication", "operatingSystem": "Any (web browser)",
@@ -261,15 +261,15 @@ graph = [
      "featureList": ["Check a link or domain for scam signals", "Live scam websites by country", "Live feed of new scam sites and takedowns",
                      "Leaderboards of faked brands, scam kinds, scam kits and hosting networks", "3D map of scam campaigns"],
      "isAccessibleForFree": True, "image": OG, "author": person,
-     "publisher": {"@id": "https://corx-labs.com/#organization"}, "datePublished": PUBLISHED, "dateModified": DATE,
+     "publisher": {"@id": "https://www.corx-labs.com/#organization"}, "datePublished": PUBLISHED, "dateModified": DATE,
      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock"},
      "countryOfOrigin": {"@type": "Country", "name": "Jamaica"}},
     {"@type": "WebPage", "@id": URL + "#webpage", "url": URL, "name": "Scam Radar: live scam websites by country",
-     "isPartOf": {"@id": "https://corx-labs.com/#website"}, "mainEntity": {"@id": URL + "#app"},
+     "isPartOf": {"@id": "https://www.corx-labs.com/#website"}, "mainEntity": {"@id": URL + "#app"},
      "inLanguage": "en", "datePublished": PUBLISHED, "dateModified": DATE,
      "breadcrumb": {"@id": URL + "#breadcrumb"}},
     {"@type": "BreadcrumbList", "@id": URL + "#breadcrumb", "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/"},
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.corx-labs.com/"},
         {"@type": "ListItem", "position": 2, "name": "Scam Radar", "item": URL}]},
     {"@type": "FAQPage", "@id": URL + "#faq", "isPartOf": {"@id": URL + "#webpage"},
      "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": plain(a)}}

@@ -86,4 +86,4 @@ Allow: /
 User-agent: YandexBot
 Allow: /
 
-Sitemap: https://corx-labs.com/sitemap.xml
+Sitemap: https://www.corx-labs.com/sitemap.xml

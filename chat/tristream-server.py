@@ -3,7 +3,7 @@
 #
 # The build number is printed at startup and reported by /health. If a log does
 # not say "build 14", the copy running is an older one — re-copy from
-# https://corx-labs.com/chat/documentation/#tristream
+# https://www.corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
 # Cloudflare quick tunnel, so the voice studio in the CorX chat can reach it.
@@ -64,7 +64,7 @@ REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 # drop the file at <workdir>/model_def.py and leave this empty. Whatever class
 # it defines is constructed from config.json and checked tensor by tensor
 # against the checkpoint before it is used.
-MODEL_DEF    = "https://corx-labs.com/chat/tristream-model.py"
+MODEL_DEF    = "https://www.corx-labs.com/chat/tristream-model.py"
 
 PORT         = 811
 SAMPLE_RATE  = 24000          # TriStream decodes mel at 24 kHz
@@ -1791,7 +1791,7 @@ if url:
     print()
     print("  URL:  " + url)
     print()
-    print("  1. Open https://corx-labs.com/chat/")
+    print("  1. Open https://www.corx-labs.com/chat/")
     print("  2. Press the microphone button in the header")
     print("  3. Paste the URL above, press Connect")
     print()

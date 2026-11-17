@@ -6,23 +6,23 @@
 
 <title>HELIX — Linear Scaling, Exact Long-Range Recall | CorX Labs</title>
 <meta name="description" content="HELIX is a linear-scaling sequence architecture that keeps exact long-range recall: a local window, a recurrent state and a landmark-tree index per block.">
-<link rel="canonical" href="https://corx-labs.com/models/helix/">
+<link rel="canonical" href="https://www.corx-labs.com/models/helix/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="author" content="Nathan Lyttle">
 <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
-<link rel="alternate" hreflang="en" href="https://corx-labs.com/models/helix/">
-<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/models/helix/">
+<link rel="alternate" hreflang="en" href="https://www.corx-labs.com/models/helix/">
+<link rel="alternate" hreflang="x-default" href="https://www.corx-labs.com/models/helix/">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="CorX Labs">
 <meta property="og:locale" content="en_US">
-<meta property="og:url" content="https://corx-labs.com/models/helix/">
+<meta property="og:url" content="https://www.corx-labs.com/models/helix/">
 <meta property="og:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
 <meta property="og:description" content="Hierarchical Episodic Linear IndeX. Three mixers braided over one residual stream (a local window, a delta-rule recurrent state, and a top-k index over a landmark tree) for linear cost without losing exact recall.">
-<meta property="og:image" content="https://corx-labs.com/assets/img/og-helix.jpg">
+<meta property="og:image" content="https://www.corx-labs.com/assets/img/og-helix.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="HELIX — linear scaling, exact recall">
@@ -31,7 +31,7 @@
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
 <meta name="twitter:description" content="A sequence architecture that separates memory capacity from memory bandwidth: O(1) hot state, O(log N) probes, and recall that survives past the local window.">
-<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-helix.jpg">
+<meta name="twitter:image" content="https://www.corx-labs.com/assets/img/og-helix.jpg">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/icon-192.png" type="image/png" sizes="192x192">
@@ -50,10 +50,10 @@
   "@graph": [
     {
       "@type": ["SoftwareApplication", "SoftwareSourceCode"],
-      "@id": "https://corx-labs.com/models/helix/#architecture",
+      "@id": "https://www.corx-labs.com/models/helix/#architecture",
       "name": "HELIX",
       "alternateName": ["helix-lm", "Hierarchical Episodic Linear IndeX"],
-      "url": "https://corx-labs.com/models/helix/",
+      "url": "https://www.corx-labs.com/models/helix/",
       "description": "HELIX (Hierarchical Episodic Linear IndeX) is a sequence architecture from CorX Labs that scales linearly in context length while keeping exact long-range recall. Each block braids three mixers over one residual stream: a local strand that reads a fixed window exactly with a different span per head, a recurrent strand that compresses everything into a matrix-valued delta-rule state, and an index strand that retrieves top-k memory blocks from anywhere in the past through a beam descent over a landmark tree. Storage is O(N) and append-only, hot state is O(1), and a single step performs O(log N) probes. Published as the helix-lm Python package under Apache-2.0.",
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Sequence architecture",
@@ -70,10 +70,10 @@
       "dateModified": "2026-11-16",
       "inLanguage": "en",
       "license": "https://www.apache.org/licenses/LICENSE-2.0",
-      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
-      "creator": { "@id": "https://corx-labs.com/#nathan" },
-      "publisher": { "@id": "https://corx-labs.com/#organization" },
-      "provider": { "@id": "https://corx-labs.com/#organization" },
+      "author": { "@type": "Person", "@id": "https://www.corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://www.corx-labs.com/nathan/" },
+      "creator": { "@id": "https://www.corx-labs.com/#nathan" },
+      "publisher": { "@id": "https://www.corx-labs.com/#organization" },
+      "provider": { "@id": "https://www.corx-labs.com/#organization" },
       "countryOfOrigin": { "@type": "Country", "name": "Jamaica" },
       "keywords": "linear attention, sparse attention, long context, associative recall, delta rule, state space model, landmark tree, sequence architecture, PyTorch, transformer alternative",
       "featureList": [
@@ -90,59 +90,59 @@
         "Property tests for causality, decode/prefill equivalence, padding invariance and constant per-token work"
       ],
       "sameAs": ["https://pypi.org/project/helix-lm/"],
-      "isPartOf": { "@id": "https://corx-labs.com/models/#list" }
+      "isPartOf": { "@id": "https://www.corx-labs.com/models/#list" }
     },
     {
       "@type": "WebPage",
-      "@id": "https://corx-labs.com/models/helix/#webpage",
-      "url": "https://corx-labs.com/models/helix/",
+      "@id": "https://www.corx-labs.com/models/helix/#webpage",
+      "url": "https://www.corx-labs.com/models/helix/",
       "name": "HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall",
-      "isPartOf": { "@id": "https://corx-labs.com/#website" },
-      "mainEntity": { "@id": "https://corx-labs.com/models/helix/#architecture" },
+      "isPartOf": { "@id": "https://www.corx-labs.com/#website" },
+      "mainEntity": { "@id": "https://www.corx-labs.com/models/helix/#architecture" },
       "inLanguage": "en",
       "dateModified": "2026-11-16",
-      "breadcrumb": { "@id": "https://corx-labs.com/models/helix/#breadcrumb" },
+      "breadcrumb": { "@id": "https://www.corx-labs.com/models/helix/#breadcrumb" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://corx-labs.com/models/helix/#breadcrumb",
+      "@id": "https://www.corx-labs.com/models/helix/#breadcrumb",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/" },
-        { "@type": "ListItem", "position": 3, "name": "HELIX", "item": "https://corx-labs.com/models/helix/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://www.corx-labs.com/models/" },
+        { "@type": "ListItem", "position": 3, "name": "HELIX", "item": "https://www.corx-labs.com/models/helix/" }
       ]
     },
     {
       "@type": "ImageObject",
-      "@id": "https://corx-labs.com/models/helix/#block-diagram",
+      "@id": "https://www.corx-labs.com/models/helix/#block-diagram",
       "name": "HELIX block diagram",
       "caption": "One HELIX block: the residual stream feeds three parallel mixers (a local strand reading a fixed exact window, a recurrent strand holding a matrix-valued delta-rule state, and an index strand retrieving top-k blocks through a landmark tree) whose outputs are braided back into the residual stream. Each strand's decode-time state is shown alongside it.",
       "representativeOfPage": true
     },
     {
       "@type": "ImageObject",
-      "@id": "https://corx-labs.com/models/helix/#index-diagram",
+      "@id": "https://www.corx-labs.com/models/helix/#index-diagram",
       "name": "HELIX landmark tree and beam descent",
       "caption": "The past is cut into fixed-size blocks, each closed block is pooled into a landmark, and landmarks are pooled again into a tree. A query block descends the tree keeping a fixed beam width per level, choosing top-k blocks to read exactly. Nodes whose span has not closed before the query block are ineligible and never consulted."
     },
     {
       "@type": "TechArticle",
-      "@id": "https://corx-labs.com/models/helix/#article",
+      "@id": "https://www.corx-labs.com/models/helix/#article",
       "headline": "HELIX: linear scaling without giving up exact recall",
-      "about": { "@id": "https://corx-labs.com/models/helix/#architecture" },
-      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
-      "publisher": { "@id": "https://corx-labs.com/#organization" },
+      "about": { "@id": "https://www.corx-labs.com/models/helix/#architecture" },
+      "author": { "@type": "Person", "@id": "https://www.corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://www.corx-labs.com/nathan/" },
+      "publisher": { "@id": "https://www.corx-labs.com/#organization" },
       "datePublished": "2026-09-14",
       "dateModified": "2026-11-16",
       "inLanguage": "en",
-      "isPartOf": { "@id": "https://corx-labs.com/models/helix/#webpage" },
+      "isPartOf": { "@id": "https://www.corx-labs.com/models/helix/#webpage" },
       "proficiencyLevel": "Expert"
     },
     {
       "@type": "FAQPage",
-      "@id": "https://corx-labs.com/models/helix/#faq",
-      "isPartOf": { "@id": "https://corx-labs.com/models/helix/#webpage" },
+      "@id": "https://www.corx-labs.com/models/helix/#faq",
+      "isPartOf": { "@id": "https://www.corx-labs.com/models/helix/#webpage" },
       "mainEntity": [
         {
           "@type": "Question",

@@ -3,7 +3,7 @@
 #
 # Point the server at this file:
 #
-#     MODEL_DEF = "https://corx-labs.com/chat/tristream-model.py"
+#     MODEL_DEF = "https://www.corx-labs.com/chat/tristream-model.py"
 #
 # or drop it at <workdir>/model_def.py and leave MODEL_DEF empty.
 #

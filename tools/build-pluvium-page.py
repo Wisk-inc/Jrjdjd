@@ -26,11 +26,11 @@ import pluvium_scorecard as sc  # noqa: E402
 SRC = (ROOT / "models/naturev1/index.html").read_text(encoding="utf-8")
 OUT = ROOT / "models/pluvium/index.html"
 
-URL = "https://corx-labs.com/models/pluvium/"
+URL = "https://www.corx-labs.com/models/pluvium/"
 PYPI = "https://pypi.org/project/pluvium/"
 HF_REPO = "https://huggingface.co/CorxLabs/Pluvium-500"      # Pluvium-500's repository on the Hugging Face Hub
 HF_CKPT = HF_REPO + "/tree/main/checkpoint/stage_a/best"     # its stage A checkpoint
-OG = "https://corx-labs.com/assets/img/og-pluvium.jpg"
+OG = "https://www.corx-labs.com/assets/img/og-pluvium.jpg"
 DATE = "2026-11-14"        # first published
 MODIFIED = "2026-11-17"    # Pluvium-500 stage A checkpoint linked
 ODPEM = '<a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>'
@@ -139,8 +139,8 @@ faq_html = "\n".join(
         </details>""" for q, a in FAQ)
 
 # ---------------------------------------------------------------- JSON-LD
-person = {"@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle",
-          "url": "https://corx-labs.com/nathan/"}
+person = {"@type": "Person", "@id": "https://www.corx-labs.com/#nathan", "name": "Nathan Lyttle",
+          "url": "https://www.corx-labs.com/nathan/"}
 graph = [
     {
         "@type": ["SoftwareApplication", "SoftwareSourceCode"],
@@ -181,9 +181,9 @@ graph = [
         "inLanguage": "en",
         "license": "https://www.apache.org/licenses/LICENSE-2.0",
         "author": person,
-        "creator": {"@id": "https://corx-labs.com/#nathan"},
-        "publisher": {"@id": "https://corx-labs.com/#organization"},
-        "provider": {"@id": "https://corx-labs.com/#organization"},
+        "creator": {"@id": "https://www.corx-labs.com/#nathan"},
+        "publisher": {"@id": "https://www.corx-labs.com/#organization"},
+        "provider": {"@id": "https://www.corx-labs.com/#organization"},
         "countryOfOrigin": {"@type": "Country", "name": "Jamaica"},
         "keywords": ("Caribbean rain forecast, Jamaica rain forecast, AI rain forecast, hourly rain forecast, "
                      "Jamaican AI weather model, precipitation forecasting, probabilistic forecasting, "
@@ -216,15 +216,15 @@ graph = [
             {"@type": "Place", "name": "Caribbean", "sameAs": "https://en.wikipedia.org/wiki/Caribbean"},
         ],
         "locationCreated": {"@type": "Place", "name": "Jamaica", "sameAs": "https://en.wikipedia.org/wiki/Jamaica"},
-        "isBasedOn": {"@id": "https://corx-labs.com/models/naturev1/#model"},
-        "isPartOf": {"@id": "https://corx-labs.com/models/#list"},
+        "isBasedOn": {"@id": "https://www.corx-labs.com/models/naturev1/#model"},
+        "isPartOf": {"@id": "https://www.corx-labs.com/models/#list"},
     },
     {
         "@type": "WebPage",
         "@id": URL + "#webpage",
         "url": URL,
         "name": "Pluvium — AI Rain Forecasts for Every Caribbean Town",
-        "isPartOf": {"@id": "https://corx-labs.com/#website"},
+        "isPartOf": {"@id": "https://www.corx-labs.com/#website"},
         "mainEntity": {"@id": URL + "#model"},
         "primaryImageOfPage": {"@type": "ImageObject", "url": OG, "width": 1200, "height": 630},
         "inLanguage": "en",
@@ -237,8 +237,8 @@ graph = [
         "@type": "BreadcrumbList",
         "@id": URL + "#breadcrumb",
         "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/"},
-            {"@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://corx-labs.com/models/"},
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.corx-labs.com/"},
+            {"@type": "ListItem", "position": 2, "name": "Our Products", "item": "https://www.corx-labs.com/models/"},
             {"@type": "ListItem", "position": 3, "name": "Pluvium", "item": URL},
         ],
     },
@@ -250,7 +250,7 @@ graph = [
         "mainEntityOfPage": {"@id": URL + "#webpage"},
         "about": {"@id": URL + "#model"},
         "author": person,
-        "publisher": {"@id": "https://corx-labs.com/#organization"},
+        "publisher": {"@id": "https://www.corx-labs.com/#organization"},
         "datePublished": DATE,
         "dateModified": MODIFIED,
         "inLanguage": "en",
@@ -279,23 +279,23 @@ HEAD = """<!DOCTYPE html>
 
 <title>Pluvium — AI Rain Forecasts for Every Caribbean Town | CorX Labs</title>
 <meta name="description" content="Pluvium is an open-source AI rain forecast made in Jamaica: hour by hour for every town, daily to 14 days, plus hurricane tracks. A research model.">
-<link rel="canonical" href="https://corx-labs.com/models/pluvium/">
+<link rel="canonical" href="https://www.corx-labs.com/models/pluvium/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="author" content="Nathan Lyttle">
 <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
-<link rel="alternate" hreflang="en" href="https://corx-labs.com/models/pluvium/">
-<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/models/pluvium/">
+<link rel="alternate" hreflang="en" href="https://www.corx-labs.com/models/pluvium/">
+<link rel="alternate" hreflang="x-default" href="https://www.corx-labs.com/models/pluvium/">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="CorX Labs">
 <meta property="og:locale" content="en_US">
-<meta property="og:url" content="https://corx-labs.com/models/pluvium/">
+<meta property="og:url" content="https://www.corx-labs.com/models/pluvium/">
 <meta property="og:title" content="Pluvium — hour-by-hour rain forecasts for every Caribbean town">
 <meta property="og:description" content="Open-source rain forecasts made in Jamaica: hour by hour for every town, daily to 14 days, and hurricane tracks. Over a full year in seven places it beat ECMWF and NOAA for rain on days 1 to 7, and its losses are published too.">
-<meta property="og:image" content="https://corx-labs.com/assets/img/og-pluvium.jpg">
+<meta property="og:image" content="https://www.corx-labs.com/assets/img/og-pluvium.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Pluvium — rain, hour by hour, town by town. An open-source rain model made in Jamaica">
@@ -305,7 +305,7 @@ HEAD = """<!DOCTYPE html>
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="Pluvium — hour-by-hour rain forecasts for every Caribbean town">
 <meta name="twitter:description" content="Rain for every town, hour by hour and daily to 14 days, plus hurricane tracks. Open source, made in Jamaica, scored for a full year against ECMWF and NOAA. A research model.">
-<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-pluvium.jpg">
+<meta name="twitter:image" content="https://www.corx-labs.com/assets/img/og-pluvium.jpg">
 <meta name="twitter:image:alt" content="Pluvium — rain, hour by hour, town by town. An open-source rain model made in Jamaica">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">

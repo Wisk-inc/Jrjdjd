@@ -1,6 +1,6 @@
 // Opens the live pages in a real browser and reports what a visitor gets:
 //
-//   NODE_PATH=<dir with playwright-core> node tools/site-check-browser.cjs https://corx-labs.com
+//   NODE_PATH=<dir with playwright-core> node tools/site-check-browser.cjs https://www.corx-labs.com
 //
 // Run by .github/workflows/site-check.yml after tools/site-check.py. For each page: errors in the
 // console (a Content-Security-Policy refusal shows up here), failed requests and error answers. On
@@ -9,7 +9,7 @@
 // It changes nothing. It exits with 0 even when it finds problems; the log says what they are.
 const { chromium } = require('playwright-core');
 
-const site = (process.argv[2] || 'https://corx-labs.com').replace(/\/$/, '');
+const site = (process.argv[2] || 'https://www.corx-labs.com').replace(/\/$/, '');
 const problems = [];
 
 const launch = async () => {

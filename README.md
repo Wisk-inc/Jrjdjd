@@ -177,22 +177,23 @@ and headers.
 **GitHub Pages** — Settings → Pages → deploy from branch, root. `CNAME` and `.nojekyll` are already
 in place.
 
-Then, in your registrar's DNS, point `corx-labs.com` at the host and set `www` to redirect to the
-apex (the redirect rules assume apex is canonical).
+The site's address is `https://www.corx-labs.com`: Vercel serves it there and redirects
+`corx-labs.com` to it. Every canonical link, the sitemap, llms.txt and the redirect rules in
+`netlify.toml` and `_redirects` use www, so keep the host's domain settings that way round.
 
 ## After it's live — do these in order
 
 1. **Google Search Console** — add `corx-labs.com` as a *domain* property, verify by DNS TXT record,
-   submit `https://corx-labs.com/sitemap.xml`, then use **URL Inspection → Request indexing** on the
+   submit `https://www.corx-labs.com/sitemap.xml`, then use **URL Inspection → Request indexing** on the
    homepage and the CorX1.5 page.
 2. **Bing Webmaster Tools** — add the site (you can import straight from Search Console) and submit
    the same sitemap. Bing feeds ChatGPT search, so this matters more than it used to.
 3. **IndexNow** — the key file is already deployed. Ping it whenever you publish or update a page:
    ```
-   curl "https://api.indexnow.org/indexnow?url=https://corx-labs.com/models/corx1-5/&key=522b160f9003ae389df5dd38325a824c"
+   curl "https://api.indexnow.org/indexnow?url=https://www.corx-labs.com/models/corx1-5/&key=522b160f9003ae389df5dd38325a824c"
    ```
 4. **Link back from Hugging Face.** This is the single highest-value thing you can do. Add
-   `https://corx-labs.com` to the CorX1.5 model card and to your Hugging Face profile. Search
+   `https://www.corx-labs.com` to the CorX1.5 model card and to your Hugging Face profile. Search
    engines learn that *CorX1.5 → corx-labs.com* mostly from links on pages that already rank, and
    your Hugging Face page is exactly that.
 5. **Be consistent everywhere.** Use the same name (*CorX Labs*), the same logo, and the same

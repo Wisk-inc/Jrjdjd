@@ -6,22 +6,22 @@
 
 <title>CorX3.8 Chat — Set-up &amp; How It Works | CorX Labs</title>
 <meta name="description" content="Run CorX3.8-27B and connect it to the CorX chat: copy the server code, run it on a GPU, paste the URL. Plus how Agent mode, search and memory work.">
-<link rel="canonical" href="https://corx-labs.com/chat/documentation/">
+<link rel="canonical" href="https://www.corx-labs.com/chat/documentation/">
 
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="Nathan Lyttle">
 <meta name="theme-color" content="#f4f2ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
-<link rel="alternate" hreflang="en" href="https://corx-labs.com/chat/documentation/">
-<link rel="alternate" hreflang="x-default" href="https://corx-labs.com/chat/documentation/">
+<link rel="alternate" hreflang="en" href="https://www.corx-labs.com/chat/documentation/">
+<link rel="alternate" hreflang="x-default" href="https://www.corx-labs.com/chat/documentation/">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="CorX Labs">
-<meta property="og:url" content="https://corx-labs.com/chat/documentation/">
+<meta property="og:url" content="https://www.corx-labs.com/chat/documentation/">
 <meta property="og:title" content="CorX3.8 Chat — Set-up &amp; How It Works">
 <meta property="og:description" content="Run CorX3.8-27B, connect it to the CorX chat, and use Agent mode with a real terminal, web search, files, memory and effort levels.">
-<meta property="og:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+<meta property="og:image" content="https://www.corx-labs.com/assets/img/og-corx3-8.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
@@ -29,7 +29,7 @@
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="CorX3.8 Chat — Set-up &amp; How It Works">
 <meta name="twitter:description" content="Run CorX3.8-27B, connect it to the CorX chat, and use Agent mode with search, memory and effort levels.">
-<meta name="twitter:image" content="https://corx-labs.com/assets/img/og-corx3-8.jpg">
+<meta name="twitter:image" content="https://www.corx-labs.com/assets/img/og-corx3-8.jpg">
 <meta name="twitter:image:alt" content="CorX3.8-27B — Jamaica's first large open-weight LLM">
 
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -55,24 +55,24 @@ pre.server-code{max-height:460px;overflow:auto}</style>
   "@graph": [
     {
       "@type": "TechArticle",
-      "@id": "https://corx-labs.com/chat/documentation/#article",
+      "@id": "https://www.corx-labs.com/chat/documentation/#article",
       "headline": "CorX3.8 Chat — set-up and how it works",
       "name": "CorX3.8 Chat set-up guide",
       "description": "How to run CorX3.8-27B on a GPU, connect it to the CorX chat by pasting its URL into settings, and use Agent mode with a real Python sandbox: terminal, files, package installs, zip uploads, real web search, cross-chat memory, effort levels and task planning.",
-      "url": "https://corx-labs.com/chat/documentation/",
-      "mainEntityOfPage": "https://corx-labs.com/chat/documentation/",
-      "image": "https://corx-labs.com/assets/img/og-corx3-8.jpg",
+      "url": "https://www.corx-labs.com/chat/documentation/",
+      "mainEntityOfPage": "https://www.corx-labs.com/chat/documentation/",
+      "image": "https://www.corx-labs.com/assets/img/og-corx3-8.jpg",
       "inLanguage": "en",
       "datePublished": "2026-08-31",
       "dateModified": "2026-11-09",
-      "author": { "@type": "Person", "@id": "https://corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://corx-labs.com/nathan/" },
-      "publisher": { "@id": "https://corx-labs.com/#organization" },
-      "about": { "@id": "https://corx-labs.com/chat/#app" },
+      "author": { "@type": "Person", "@id": "https://www.corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://www.corx-labs.com/nathan/" },
+      "publisher": { "@id": "https://www.corx-labs.com/#organization" },
+      "about": { "@id": "https://www.corx-labs.com/chat/#app" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
     {
       "@type": "HowTo",
-      "@id": "https://corx-labs.com/chat/documentation/#howto",
+      "@id": "https://www.corx-labs.com/chat/documentation/#howto",
       "name": "How to run CorX3.8 and connect it to the CorX chat",
       "step": [
         { "@type": "HowToStep", "position": 1, "name": "Open a GPU notebook", "text": "Open a notebook with a GPU big enough for CorX3.8-27B (about 24GB in 4-bit, ~54GB in full bf16), for example an RTX PRO 6000 Blackwell, H100, A100, or a rented GPU box. The server picks the precision to match the card automatically." },
@@ -83,16 +83,16 @@ pre.server-code{max-height:460px;overflow:auto}</style>
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://corx-labs.com/chat/documentation/#breadcrumb",
+      "@id": "https://www.corx-labs.com/chat/documentation/#breadcrumb",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corx-labs.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Chat", "item": "https://corx-labs.com/chat/" },
-        { "@type": "ListItem", "position": 3, "name": "Set-up guide", "item": "https://corx-labs.com/chat/documentation/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.corx-labs.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Chat", "item": "https://www.corx-labs.com/chat/" },
+        { "@type": "ListItem", "position": 3, "name": "Set-up guide", "item": "https://www.corx-labs.com/chat/documentation/" }
       ]
     },
     {
       "@type": "FAQPage",
-      "@id": "https://corx-labs.com/chat/documentation/#faq",
+      "@id": "https://www.corx-labs.com/chat/documentation/#faq",
       "mainEntity": [
         {
           "@type": "Question",
@@ -2860,7 +2860,7 @@ else:
       <p style="margin-bottom:14px;font-size:.9rem">Press <strong>Copy</strong> for the whole
         script, all 1879 lines, not just what is on screen. If you would rather not paste it
         by hand, the same file is at
-        <code>curl -O https://corx-labs.com/chat/tristream-server.py</code>.</p>
+        <code>curl -O https://www.corx-labs.com/chat/tristream-server.py</code>.</p>
       <div class="code-wrap">
         <button class="code-copy" type="button" id="copy-tristream">Copy</button>
         <pre class="server-code"><code id="tristream-code"># =============================================================================
@@ -2868,7 +2868,7 @@ else:
 #
 # The build number is printed at startup and reported by /health. If a log does
 # not say "build 14", the copy running is an older one — re-copy from
-# https://corx-labs.com/chat/documentation/#tristream
+# https://www.corx-labs.com/chat/documentation/#tristream
 #
 # Serves Sigmandndnns/TriStream-SVS-300M behind an OpenAI-shaped HTTP API and a
 # Cloudflare quick tunnel, so the voice studio in the CorX chat can reach it.
@@ -2929,7 +2929,7 @@ REPO_ID      = "Sigmandndnns/TriStream-SVS-300M"
 # drop the file at &lt;workdir&gt;/model_def.py and leave this empty. Whatever class
 # it defines is constructed from config.json and checked tensor by tensor
 # against the checkpoint before it is used.
-MODEL_DEF    = "https://corx-labs.com/chat/tristream-model.py"
+MODEL_DEF    = "https://www.corx-labs.com/chat/tristream-model.py"
 
 PORT         = 811
 SAMPLE_RATE  = 24000          # TriStream decodes mel at 24 kHz
@@ -4656,7 +4656,7 @@ if url:
     print()
     print("  URL:  " + url)
     print()
-    print("  1. Open https://corx-labs.com/chat/")
+    print("  1. Open https://www.corx-labs.com/chat/")
     print("  2. Press the microphone button in the header")
     print("  3. Paste the URL above, press Connect")
     print()

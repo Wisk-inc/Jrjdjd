@@ -24,6 +24,8 @@ Run `python3 tools/style-check.py` before committing; it lists what to fix.
 
 - Work on the session's `claude/...` branch, then merge into `main` with `git merge --no-ff` and push.
 - Page titles don't change.
+- The site's address is `https://www.corx-labs.com` (Vercel redirects `corx-labs.com` there). Every absolute link
+  in a page, the sitemap, llms.txt and feed links use www. Feed `<guid>` values stay as first published.
 - FAQ answers must match their FAQPage JSON-LD text exactly.
 - Check pages in a browser under the CSP in `_headers`, at 360, 390 and 1440 px, in light and dark.
 - `models/pluvium/index.html` is generated: edit `tools/build-pluvium-page.py` and `tools/pluvium_scorecard.py`,
