@@ -11,14 +11,14 @@
 // request, then passes the result through sanitize.mjs before it leaves.
 //
 // Guards: GET only, http and https only, private and local addresses refused here, at every redirect
-// hop and at every connection (installNetworkGuard below), one page plus a few of its files fetched
+// hop and at every connection (guarded-request.mjs), one page plus a few of its files fetched
 // with size caps, a time budget, input limits and per-address rate limits. Nothing is stored.
-import dns from 'node:dns';
 import { describeContact } from './scam-finder/lib/contacts.js';
 import { toGraph } from './scam-finder/lib/graph.js';
 import { investigate } from './scam-finder/lib/investigate.js';
 import { NetContext } from './scam-finder/lib/net.js';
-import { Budget, isIp, isLocalName, isPrivateIp, parseTarget } from './scam-finder/lib/util.js';
+import { Budget, isLocalName, parseTarget } from './scam-finder/lib/util.js';
+import { makeGuardedRequest, privateAddress } from './guarded-request.mjs';
 import { clean, cleanTitle, sanitizeCampaigns, sanitizeDomain, sanitizeLinks } from './sanitize.mjs';
 
 export const API_VERSION = 1;
@@ -34,55 +34,12 @@ const OPTIONS = {
     timeBudgetMs: deepBudgetMs() }),
 };
 
-// ---- Network guard. Every request this process makes goes through two checks: the address of each
-// request and of each redirect hop (fetch below), and every DNS answer used to open a connection
-// (dns.lookup below, which Node's sockets call). Scam Finder checks the pages it visits itself; this
-// also covers the few files it downloads from a page, which it fetched with automatic redirects, and
-// a name that gives one address to a check and another to the connection (DNS rebinding).
-const privateAddress = (ip) => isPrivateIp(ip) || /^(64:ff9b:|2002:)/i.test(String(ip || ''));
-const blocked = (what) => Object.assign(new Error(`${what} is not a public internet address`), { code: 'BLOCKED' });
-const MAX_HOPS = 6;
-let guarded = false;
-export const installNetworkGuard = () => {
-  if (guarded) return;
-  guarded = true;
-  const realLookup = dns.lookup;
-  dns.lookup = function guardedLookup(hostname, options, callback) {
-    const done = typeof options === 'function' ? options : callback;
-    const opts = typeof options === 'number' ? { family: options } : typeof options === 'object' && options ? { ...options } : {};
-    realLookup.call(dns, hostname, { ...opts, all: true }, (error, addresses) => {
-      if (error) return done(error);
-      const list = Array.isArray(addresses) ? addresses : [];
-      if (!list.length || list.some((a) => privateAddress(a.address))) return done(blocked(hostname));
-      return opts.all ? done(null, list) : done(null, list[0].address, list[0].family);
-    });
-  };
-  const realFetch = globalThis.fetch;
-  const check = (raw) => {
-    const url = new URL(raw);
-    if (url.protocol !== 'http:' && url.protocol !== 'https:') throw blocked(url.protocol);
-    const host = url.hostname.replace(/^\[|\]$/g, '');
-    if (isLocalName(host) || (isIp(host) && privateAddress(host))) throw blocked(host);
-  };
-  globalThis.fetch = async (input, init = {}) => {
-    let url = typeof input === 'string' || input instanceof URL ? String(input) : input.url;
-    let options = { ...init };
-    const follow = (options.redirect || 'follow') === 'follow';
-    for (let hop = 0; hop <= MAX_HOPS; hop += 1) {
-      check(url);
-      const response = await realFetch(url, { ...options, redirect: 'manual' });
-      const location = response.headers.get('location');
-      if (!follow || response.status < 300 || response.status >= 400 || !location) return response;
-      url = new URL(location, url).href;
-      // As browsers do: a 303, or a 301 or 302 after a POST, continues as a GET without a body
-      const method = String(options.method || 'GET').toUpperCase();
-      if (response.status === 303 || ((response.status === 301 || response.status === 302) && method === 'POST')) {
-        options = { ...options, method: 'GET', body: undefined };
-      }
-    }
-    throw new Error(`More than ${MAX_HOPS} redirects`);
-  };
-};
+// ---- Every request Scam Finder makes for this API goes through guarded-request.mjs: the address of
+// each request and of each redirect hop is checked, and the connection goes to the checked address.
+// Scam Finder checks the pages it visits itself; this also covers the files it downloads from a page,
+// which it fetches with automatic redirects, and a name that would give one address to a check and
+// another to the connection (DNS rebinding). Nothing outside Scam Finder's requests is touched.
+const guardedRequest = makeGuardedRequest();
 
 // A small per-address limit. It lives in one instance's memory, so it slows a script down
 // without pretending to be a wall.
@@ -143,7 +100,7 @@ const tidy = (result) => {
 
 /**
  * @param {{ method?: string, query: Record<string, string | undefined>, address?: string }} request
- * @param {{ run?: typeof investigate }} [deps] swapped in tests
+ * @param {{ run?: typeof investigate, describe?: typeof describeContact, request?: Function }} [deps] swapped in tests
  */
 const tooMany = (wait) => {
   const base = reply(429, { error: `Too many checks from this address. Wait ${wait} and try again.` });
@@ -157,7 +114,7 @@ const tooMany = (wait) => {
 const checkContact = async (value, address, deps) => {
   if (value.length > 200) return reply(400, { error: 'That is too long to be an email address or a phone number' });
   if (!allow(String(address))) return tooMany('a minute');
-  const ctx = new NetContext({ budget: new Budget(10000), cacheDir: false });
+  const ctx = new NetContext({ budget: new Budget(10000), cacheDir: false, request: deps.request || guardedRequest });
   try {
     const result = await (deps.describe || describeContact)(ctx, value, { online: true });
     if (!result) return reply(400, { error: 'Give an email address, or a phone number with its country code' });
@@ -187,7 +144,7 @@ export const handle = async ({ method = 'GET', query = {}, address = 'unknown' }
   } catch (error) {
     return reply(400, { error: clean(error.message, 160) });
   }
-  if (isLocalName(target.host) || (target.isIp && isPrivateIp(target.host))) {
+  if (isLocalName(target.host) || (target.isIp && privateAddress(target.host))) {
     return reply(400, { error: 'That address is private or local, so there is nothing public to check' });
   }
   const depth = String(query.depth) === '2' ? 2 : String(query.depth) === '1' ? 1 : 0;
@@ -195,7 +152,9 @@ export const handle = async ({ method = 'GET', query = {}, address = 'unknown' }
   if (depth < 2 && !allow(String(address))) return tooMany('a minute');
 
   try {
-    const result = await (deps.run || investigate)(target.url, OPTIONS[depth]());
+    const options = OPTIONS[depth]();
+    const ctx = new NetContext({ budget: new Budget(options.timeBudgetMs), cacheDir: options.cacheDir, request: deps.request || guardedRequest });
+    const result = await (deps.run || investigate)(target.url, { ...options, ctx });
     tidy(result);
     return reply(200, { api: API_VERSION, depth, ...result }, 'public, max-age=120, s-maxage=600');
   } catch (error) {

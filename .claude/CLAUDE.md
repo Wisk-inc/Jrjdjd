@@ -58,7 +58,9 @@ Run `python3 tools/style-check.py` before committing; it lists what to fix.
   process writes to Radar's database at a time.
 - The link checker's deep dive is `GET /api/scam-finder?depth=2` (up to 40 s; `vercel.json` gives the function
   60 s), three per ten minutes per address. `?contact=` checks an email address or phone number. Breach checks
-  need `HIBP_API_KEY` on the host. `api-core.mjs` checks every address the function connects to.
+  need `HIBP_API_KEY` on the host. `guarded-request.mjs` checks every address Scam Finder connects to for the API.
+  Never patch `dns.lookup` or the global `fetch` in the API: Vercel's runtime shares the process and talks to
+  local addresses, and every request then fails with a 500.
 - `scam-radar/map/index.html`, `assets/css/scam-map.css` and `assets/js/scam-map.js` come from
   `python3 tools/build-scam-map-page.py` (Scam Finder's viewer, unedited; this site's changes are in
   `assets/js/scam-map-boot.js`).
