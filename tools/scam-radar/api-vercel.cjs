@@ -1,8 +1,5 @@
 // Vercel wrapper for api-core.mjs. build-bundles.mjs turns this into /api/scam-finder.js.
-const { handle, installNetworkGuard } = require('./api-core.mjs');
-
-// Every request this function makes is checked before it connects (see api-core.mjs)
-installNetworkGuard();
+const { handle } = require('./api-core.mjs');
 
 module.exports = async (req, res) => {
   const url = new URL(req.url || '/', 'https://corx-labs.com');
