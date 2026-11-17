@@ -92,6 +92,8 @@ const text = (page, selector) => page.locator(selector).first().textContent({ ti
     // A made-up look-alike: the deep dive takes up to 40 seconds, so wait for its result
     await page.fill('#sr-check-input', 'paypal-account-verify-login.top');
     await page.locator('#sr-check button[type="submit"], #sr-check button').first().click();
+    // The clock shows once Radar's record is in; then wait for it to go
+    await page.locator('.sr-deep-clock').first().waitFor({ timeout: 10000 }).catch(() => {});
     const began = Date.now();
     while (Date.now() - began < 60000 && await page.locator('.sr-deep-clock').count()) await page.waitForTimeout(1000);
     console.log(`  link checker on a made-up look-alike, after ${Math.round((Date.now() - began) / 1000)} s: ${(await text(page, '#sr-check-result')).slice(0, 500)}`);
