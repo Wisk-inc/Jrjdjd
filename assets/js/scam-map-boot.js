@@ -4,9 +4,19 @@
      on the scam-radar-data branch, read at the branch's current commit, so it works on any host;
    - the viewer asks /api/scam-finder to trace a link; here the request asks for the related
      sites too, and a host with no API gets a plain answer instead of a parse error;
-   - the live map opens by itself when the page loads, unless a link was passed in. */
+   - the live map opens by itself when the page loads, unless a link was passed in;
+   - the viewer can be pointed at another server with ?api= or ?radar-api=. On this site that would let
+     a crafted link show made-up verdicts under this site's name, so those two are removed before the
+     viewer reads the address. */
 (() => {
   'use strict';
+  const asked = new URLSearchParams(location.search);
+  if (asked.has('api') || asked.has('radar-api')) {
+    asked.delete('api');
+    asked.delete('radar-api');
+    const query = asked.toString();
+    history.replaceState(history.state, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
+  }
   const RAW = 'https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/';
   const realFetch = window.fetch.bind(window);
   const answer = (body) => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });

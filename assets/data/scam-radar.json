@@ -1,44 +1,44 @@
 {
- "generated": "2026-11-17T14:06:28.486Z",
- "lastScan": "2026-11-17T14:05:33.485Z",
- "scanCycles": 469,
+ "generated": "2026-11-17T15:02:41.914Z",
+ "lastScan": "2026-11-17T15:01:38.836Z",
+ "scanCycles": 520,
  "scan": {
   "state": "scanning",
-  "cycle": 14,
+  "cycle": 10,
   "cycles": 55,
   "cycleSeconds": 60,
-  "startedAt": "2026-11-17T13:51:51Z",
-  "run": 20
+  "startedAt": "2026-11-17T14:52:10Z",
+  "run": 21
  },
  "totals": {
-  "domainsIndexed": 19135217,
+  "domainsIndexed": 19168437,
   "newlyRegistered": 2090779,
-  "fromCertificates": 529722,
-  "alreadyBlocklisted": 1196103,
-  "worthVisiting": 1289735,
-  "inBulkBatches": 129577,
-  "watched": 72043,
-  "visited": 39671,
-  "liveNow": 8581,
-  "liveHighRisk": 3863,
-  "critical": 2448,
+  "fromCertificates": 565009,
+  "alreadyBlocklisted": 1196329,
+  "worthVisiting": 1290622,
+  "inBulkBatches": 130440,
+  "watched": 79741,
+  "visited": 42904,
+  "liveNow": 8979,
+  "liveHighRisk": 4130,
+  "critical": 2479,
   "replacedByHostNotice": 4,
-  "named": 2434,
-  "runningKnownKit": 377,
+  "named": 2464,
+  "runningKnownKit": 428,
   "takenDown": 113,
-  "visitsMade": 69622,
-  "eventsLogged": 111336
+  "visitsMade": 76499,
+  "eventsLogged": 122368
  },
  "lastCycle": {
-  "visited": 167,
-  "up": 20,
-  "down": 147,
-  "newFromCertificates": 568,
+  "visited": 156,
+  "up": 37,
+  "down": 119,
+  "newFromCertificates": 706,
   "addedToWatchlist": 150,
-  "events": 9,
+  "events": 131,
   "takedowns": 0,
-  "seconds": 49.6,
-  "at": "2026-11-17T14:05:33.485Z"
+  "seconds": 56,
+  "at": "2026-11-17T15:01:38.836Z"
  },
  "recentCycles": [
   {
@@ -194,70 +194,631 @@
    "takedowns": 0,
    "events": 9,
    "newNames": 568
+  },
+  {
+   "at": "2026-11-17T14:06:34.020Z",
+   "seconds": 50.6,
+   "visited": 158,
+   "up": 16,
+   "down": 142,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 6,
+   "newNames": 657
+  },
+  {
+   "at": "2026-11-17T14:07:34.626Z",
+   "seconds": 56,
+   "visited": 183,
+   "up": 11,
+   "down": 172,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 5,
+   "newNames": 575
+  },
+  {
+   "at": "2026-11-17T14:08:43.513Z",
+   "seconds": 49.5,
+   "visited": 208,
+   "up": 13,
+   "down": 195,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 2,
+   "newNames": 644
+  },
+  {
+   "at": "2026-11-17T14:09:43.849Z",
+   "seconds": 53.6,
+   "visited": 223,
+   "up": 5,
+   "down": 218,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 5,
+   "newNames": 624
+  },
+  {
+   "at": "2026-11-17T14:10:48.712Z",
+   "seconds": 50.9,
+   "visited": 213,
+   "up": 3,
+   "down": 210,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 6,
+   "newNames": 508
+  },
+  {
+   "at": "2026-11-17T14:11:49.859Z",
+   "seconds": 49.5,
+   "visited": 258,
+   "up": 8,
+   "down": 250,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 10,
+   "newNames": 620
+  },
+  {
+   "at": "2026-11-17T14:12:49.676Z",
+   "seconds": 56,
+   "visited": 179,
+   "up": 3,
+   "down": 176,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 7,
+   "newNames": 773
+  },
+  {
+   "at": "2026-11-17T14:13:55.558Z",
+   "seconds": 52.6,
+   "visited": 199,
+   "up": 4,
+   "down": 195,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 8,
+   "newNames": 676
+  },
+  {
+   "at": "2026-11-17T14:14:58.265Z",
+   "seconds": 53.4,
+   "visited": 215,
+   "up": 6,
+   "down": 209,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 7,
+   "newNames": 658
+  },
+  {
+   "at": "2026-11-17T14:16:01.854Z",
+   "seconds": 50.5,
+   "visited": 159,
+   "up": 4,
+   "down": 155,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 7,
+   "newNames": 655
+  },
+  {
+   "at": "2026-11-17T14:17:04.705Z",
+   "seconds": 56,
+   "visited": 183,
+   "up": 5,
+   "down": 178,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 2,
+   "newNames": 769
+  },
+  {
+   "at": "2026-11-17T14:18:15.627Z",
+   "seconds": 53,
+   "visited": 187,
+   "up": 8,
+   "down": 179,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 8,
+   "newNames": 755
+  },
+  {
+   "at": "2026-11-17T14:19:18.817Z",
+   "seconds": 49.5,
+   "visited": 161,
+   "up": 8,
+   "down": 153,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 7,
+   "newNames": 668
+  },
+  {
+   "at": "2026-11-17T14:20:20.240Z",
+   "seconds": 50.8,
+   "visited": 152,
+   "up": 30,
+   "down": 122,
+   "firstVisits": 0,
+   "takedowns": 0,
+   "events": 8,
+   "newNames": 658
+  },
+  {
+   "at": "2026-11-17T14:21:23.051Z",
+   "seconds": 56.1,
+   "visited": 137,
+   "up": 54,
+   "down": 83,
+   "firstVisits": 23,
+   "takedowns": 0,
+   "events": 29,
+   "newNames": 652
+  },
+  {
+   "at": "2026-11-17T14:22:29.110Z",
+   "seconds": 51.7,
+   "visited": 105,
+   "up": 13,
+   "down": 92,
+   "firstVisits": 104,
+   "takedowns": 0,
+   "events": 104,
+   "newNames": 739
+  },
+  {
+   "at": "2026-11-17T14:23:30.551Z",
+   "seconds": 50.7,
+   "visited": 140,
+   "up": 35,
+   "down": 105,
+   "firstVisits": 92,
+   "takedowns": 0,
+   "events": 92,
+   "newNames": 647
+  },
+  {
+   "at": "2026-11-17T14:24:31.322Z",
+   "seconds": 49.7,
+   "visited": 93,
+   "up": 12,
+   "down": 81,
+   "firstVisits": 80,
+   "takedowns": 0,
+   "events": 81,
+   "newNames": 605
+  },
+  {
+   "at": "2026-11-17T14:25:31.679Z",
+   "seconds": 53.2,
+   "visited": 94,
+   "up": 19,
+   "down": 75,
+   "firstVisits": 55,
+   "takedowns": 0,
+   "events": 59,
+   "newNames": 500
+  },
+  {
+   "at": "2026-11-17T14:26:39.587Z",
+   "seconds": 56,
+   "visited": 85,
+   "up": 11,
+   "down": 74,
+   "firstVisits": 83,
+   "takedowns": 0,
+   "events": 83,
+   "newNames": 880
+  },
+  {
+   "at": "2026-11-17T14:27:48.443Z",
+   "seconds": 54,
+   "visited": 133,
+   "up": 36,
+   "down": 97,
+   "firstVisits": 79,
+   "takedowns": 0,
+   "events": 80,
+   "newNames": 717
+  },
+  {
+   "at": "2026-11-17T14:28:52.259Z",
+   "seconds": 53.6,
+   "visited": 110,
+   "up": 18,
+   "down": 92,
+   "firstVisits": 80,
+   "takedowns": 0,
+   "events": 83,
+   "newNames": 628
+  },
+  {
+   "at": "2026-11-17T14:29:55.602Z",
+   "seconds": 50.9,
+   "visited": 166,
+   "up": 32,
+   "down": 134,
+   "firstVisits": 142,
+   "takedowns": 0,
+   "events": 142,
+   "newNames": 730
+  },
+  {
+   "at": "2026-11-17T14:30:56.554Z",
+   "seconds": 54.2,
+   "visited": 115,
+   "up": 40,
+   "down": 75,
+   "firstVisits": 60,
+   "takedowns": 0,
+   "events": 61,
+   "newNames": 692
+  },
+  {
+   "at": "2026-11-17T14:32:00.723Z",
+   "seconds": 56,
+   "visited": 90,
+   "up": 9,
+   "down": 81,
+   "firstVisits": 89,
+   "takedowns": 0,
+   "events": 89,
+   "newNames": 741
+  },
+  {
+   "at": "2026-11-17T14:33:13.465Z",
+   "seconds": 53.9,
+   "visited": 130,
+   "up": 31,
+   "down": 99,
+   "firstVisits": 86,
+   "takedowns": 0,
+   "events": 88,
+   "newNames": 606
+  },
+  {
+   "at": "2026-11-17T14:34:17.893Z",
+   "seconds": 47.7,
+   "visited": 108,
+   "up": 23,
+   "down": 85,
+   "firstVisits": 72,
+   "takedowns": 0,
+   "events": 76,
+   "newNames": 698
+  },
+  {
+   "at": "2026-11-17T14:35:17.553Z",
+   "seconds": 53.3,
+   "visited": 168,
+   "up": 26,
+   "down": 142,
+   "firstVisits": 150,
+   "takedowns": 0,
+   "events": 152,
+   "newNames": 633
+  },
+  {
+   "at": "2026-11-17T14:36:20.706Z",
+   "seconds": 52.2,
+   "visited": 126,
+   "up": 30,
+   "down": 96,
+   "firstVisits": 70,
+   "takedowns": 0,
+   "events": 73,
+   "newNames": 548
+  },
+  {
+   "at": "2026-11-17T14:37:22.875Z",
+   "seconds": 53.7,
+   "visited": 73,
+   "up": 0,
+   "down": 73,
+   "firstVisits": 72,
+   "takedowns": 0,
+   "events": 72,
+   "newNames": 801
+  },
+  {
+   "at": "2026-11-17T14:38:26.326Z",
+   "seconds": 56,
+   "visited": 85,
+   "up": 25,
+   "down": 60,
+   "firstVisits": 42,
+   "takedowns": 0,
+   "events": 44,
+   "newNames": 699
+  },
+  {
+   "at": "2026-11-17T14:39:38.073Z",
+   "seconds": 50.7,
+   "visited": 149,
+   "up": 25,
+   "down": 124,
+   "firstVisits": 112,
+   "takedowns": 0,
+   "events": 113,
+   "newNames": 703
+  },
+  {
+   "at": "2026-11-17T14:40:38.757Z",
+   "seconds": 46.6,
+   "visited": 81,
+   "up": 17,
+   "down": 64,
+   "firstVisits": 64,
+   "takedowns": 0,
+   "events": 65,
+   "newNames": 572
+  },
+  {
+   "at": "2026-11-17T14:41:38.922Z",
+   "seconds": 47.6,
+   "visited": 71,
+   "up": 14,
+   "down": 57,
+   "firstVisits": 70,
+   "takedowns": 0,
+   "events": 70,
+   "newNames": 606
+  },
+  {
+   "at": "2026-11-17T14:42:38.302Z",
+   "seconds": 52.6,
+   "visited": 146,
+   "up": 45,
+   "down": 101,
+   "firstVisits": 104,
+   "takedowns": 0,
+   "events": 107,
+   "newNames": 662
+  },
+  {
+   "at": "2026-11-17T14:43:41.558Z",
+   "seconds": 56,
+   "visited": 111,
+   "up": 33,
+   "down": 78,
+   "firstVisits": 75,
+   "takedowns": 0,
+   "events": 77,
+   "newNames": 649
+  },
+  {
+   "at": "2026-11-17T14:44:50.584Z",
+   "seconds": 56,
+   "visited": 112,
+   "up": 6,
+   "down": 106,
+   "firstVisits": 112,
+   "takedowns": 0,
+   "events": 112,
+   "newNames": 662
+  },
+  {
+   "at": "2026-11-17T14:46:02.603Z",
+   "seconds": 54.3,
+   "visited": 131,
+   "up": 40,
+   "down": 91,
+   "firstVisits": 90,
+   "takedowns": 0,
+   "events": 95,
+   "newNames": 621
+  },
+  {
+   "at": "2026-11-17T14:47:06.992Z",
+   "seconds": 53.1,
+   "visited": 121,
+   "up": 30,
+   "down": 91,
+   "firstVisits": 91,
+   "takedowns": 0,
+   "events": 91,
+   "newNames": 626
+  },
+  {
+   "at": "2026-11-17T14:48:12.392Z",
+   "seconds": 56,
+   "visited": 116,
+   "up": 7,
+   "down": 109,
+   "firstVisits": 114,
+   "takedowns": 0,
+   "events": 114,
+   "newNames": 548
+  },
+  {
+   "at": "2026-11-17T14:49:23.966Z",
+   "seconds": 52.8,
+   "visited": 81,
+   "up": 34,
+   "down": 47,
+   "firstVisits": 45,
+   "takedowns": 0,
+   "events": 51,
+   "newNames": 523
+  },
+  {
+   "at": "2026-11-17T14:52:12.422Z",
+   "seconds": 56,
+   "visited": 119,
+   "up": 7,
+   "down": 112,
+   "firstVisits": 88,
+   "takedowns": 0,
+   "events": 88,
+   "newNames": 577
+  },
+  {
+   "at": "2026-11-17T14:53:19.949Z",
+   "seconds": 49.8,
+   "visited": 124,
+   "up": 37,
+   "down": 87,
+   "firstVisits": 96,
+   "takedowns": 0,
+   "events": 96,
+   "newNames": 619
+  },
+  {
+   "at": "2026-11-17T14:54:20.718Z",
+   "seconds": 55.9,
+   "visited": 76,
+   "up": 11,
+   "down": 65,
+   "firstVisits": 76,
+   "takedowns": 0,
+   "events": 76,
+   "newNames": 527
+  },
+  {
+   "at": "2026-11-17T14:55:30.183Z",
+   "seconds": 50.1,
+   "visited": 155,
+   "up": 44,
+   "down": 111,
+   "firstVisits": 127,
+   "takedowns": 0,
+   "events": 129,
+   "newNames": 572
+  },
+  {
+   "at": "2026-11-17T14:56:32.312Z",
+   "seconds": 47.6,
+   "visited": 108,
+   "up": 32,
+   "down": 76,
+   "firstVisits": 88,
+   "takedowns": 0,
+   "events": 90,
+   "newNames": 634
+  },
+  {
+   "at": "2026-11-17T14:57:32.657Z",
+   "seconds": 49,
+   "visited": 133,
+   "up": 40,
+   "down": 93,
+   "firstVisits": 95,
+   "takedowns": 0,
+   "events": 97,
+   "newNames": 682
+  },
+  {
+   "at": "2026-11-17T14:58:33.483Z",
+   "seconds": 48.3,
+   "visited": 120,
+   "up": 51,
+   "down": 69,
+   "firstVisits": 86,
+   "takedowns": 0,
+   "events": 91,
+   "newNames": 624
+  },
+  {
+   "at": "2026-11-17T14:59:33.763Z",
+   "seconds": 50.1,
+   "visited": 94,
+   "up": 20,
+   "down": 74,
+   "firstVisits": 94,
+   "takedowns": 0,
+   "events": 94,
+   "newNames": 572
+  },
+  {
+   "at": "2026-11-17T15:00:37.076Z",
+   "seconds": 48.5,
+   "visited": 121,
+   "up": 51,
+   "down": 70,
+   "firstVisits": 97,
+   "takedowns": 0,
+   "events": 99,
+   "newNames": 651
+  },
+  {
+   "at": "2026-11-17T15:01:38.836Z",
+   "seconds": 56,
+   "visited": 156,
+   "up": 37,
+   "down": 119,
+   "firstVisits": 130,
+   "takedowns": 0,
+   "events": 131,
+   "newNames": 706
   }
  ],
  "states": [
   {
    "state": "offline",
-   "sites": 17723
+   "sites": 19036
   },
   {
    "state": "unreachable",
-   "sites": 12761
+   "sites": 14257
   },
   {
    "state": "live",
-   "sites": 8581
+   "sites": 8979
   },
   {
    "state": "parked",
-   "sites": 326
+   "sites": 347
   },
   {
    "state": "blocked",
-   "sites": 262
+   "sites": 264
   },
   {
    "state": "suspended",
-   "sites": 18
+   "sites": 21
   }
  ],
  "targets": [
   {
    "country": "IN",
-   "live": 102
+   "live": 117
   },
   {
    "country": "PK",
-   "live": 34
+   "live": 39
+  },
+  {
+   "country": "BD",
+   "live": 32
   },
   {
    "country": "KR",
    "live": 32
   },
   {
-   "country": "BD",
-   "live": 28
-  },
-  {
    "country": "PH",
    "live": 25
+  },
+  {
+   "country": "EG",
+   "live": 21
   },
   {
    "country": "US",
    "live": 20
   },
   {
-   "country": "EG",
+   "country": "ET",
    "live": 19
   },
   {
-   "country": "ET",
-   "live": 17
-  },
-  {
    "country": "JP",
-   "live": 17
+   "live": 19
   },
   {
    "country": "GB",
@@ -265,15 +826,15 @@
   },
   {
    "country": "TH",
-   "live": 14
+   "live": 15
   },
   {
    "country": "LK",
-   "live": 11
+   "live": 13
   },
   {
    "country": "ZA",
-   "live": 9
+   "live": 10
   },
   {
    "country": "CO",
@@ -300,15 +861,15 @@
    "live": 3
   },
   {
-   "country": "ID",
-   "live": 3
-  },
-  {
    "country": "IL",
    "live": 3
   },
   {
    "country": "NG",
+   "live": 3
+  },
+  {
+   "country": "OM",
    "live": 3
   },
   {
@@ -324,11 +885,11 @@
    "live": 2
   },
   {
-   "country": "KH",
+   "country": "ID",
    "live": 2
   },
   {
-   "country": "OM",
+   "country": "KH",
    "live": 2
   },
   {
@@ -379,35 +940,35 @@
  "hosts": [
   {
    "country": "LT",
-   "live": 1254
+   "live": 1329
   },
   {
    "country": "US",
-   "live": 208
+   "live": 224
   },
   {
    "country": "HK",
-   "live": 128
+   "live": 142
   },
   {
    "country": "SC",
-   "live": 74
-  },
-  {
-   "country": "DE",
-   "live": 43
+   "live": 83
   },
   {
    "country": "SG",
-   "live": 34
+   "live": 46
+  },
+  {
+   "country": "DE",
+   "live": 44
   },
   {
    "country": "CN",
-   "live": 33
+   "live": 35
   },
   {
    "country": "GB",
-   "live": 20
+   "live": 21
   },
   {
    "country": "ZA",
@@ -427,7 +988,11 @@
   },
   {
    "country": "KR",
-   "live": 8
+   "live": 10
+  },
+  {
+   "country": "RU",
+   "live": 7
   },
   {
    "country": "AU",
@@ -435,10 +1000,6 @@
   },
   {
    "country": "RO",
-   "live": 5
-  },
-  {
-   "country": "RU",
    "live": 5
   },
   {
@@ -538,6 +1099,10 @@
    "live": 1
   },
   {
+   "country": "TW",
+   "live": 1
+  },
+  {
    "country": "VN",
    "live": 1
   }
@@ -546,39 +1111,39 @@
   "countries": [
    {
     "country": "IN",
-    "live": 102
+    "live": 117
    },
    {
     "country": "PK",
-    "live": 34
+    "live": 39
+   },
+   {
+    "country": "BD",
+    "live": 32
    },
    {
     "country": "KR",
     "live": 32
    },
    {
-    "country": "BD",
-    "live": 28
-   },
-   {
     "country": "PH",
     "live": 25
+   },
+   {
+    "country": "EG",
+    "live": 21
    },
    {
     "country": "US",
     "live": 20
    },
    {
-    "country": "EG",
+    "country": "ET",
     "live": 19
    },
    {
-    "country": "ET",
-    "live": 17
-   },
-   {
     "country": "JP",
-    "live": 17
+    "live": 19
    },
    {
     "country": "GB",
@@ -586,15 +1151,15 @@
    },
    {
     "country": "TH",
-    "live": 14
+    "live": 15
    },
    {
     "country": "LK",
-    "live": 11
+    "live": 13
    },
    {
     "country": "ZA",
-    "live": 9
+    "live": 10
    },
    {
     "country": "CO",
@@ -621,15 +1186,15 @@
     "live": 3
    },
    {
-    "country": "ID",
-    "live": 3
-   },
-   {
     "country": "IL",
     "live": 3
    },
    {
     "country": "NG",
+    "live": 3
+   },
+   {
+    "country": "OM",
     "live": 3
    },
    {
@@ -648,35 +1213,35 @@
   "hosting": [
    {
     "country": "LT",
-    "live": 1254
+    "live": 1329
    },
    {
     "country": "US",
-    "live": 208
+    "live": 224
    },
    {
     "country": "HK",
-    "live": 128
+    "live": 142
    },
    {
     "country": "SC",
-    "live": 74
-   },
-   {
-    "country": "DE",
-    "live": 43
+    "live": 83
    },
    {
     "country": "SG",
-    "live": 34
+    "live": 46
+   },
+   {
+    "country": "DE",
+    "live": 44
    },
    {
     "country": "CN",
-    "live": 33
+    "live": 35
    },
    {
     "country": "GB",
-    "live": 20
+    "live": 21
    },
    {
     "country": "ZA",
@@ -696,7 +1261,11 @@
    },
    {
     "country": "KR",
-    "live": 8
+    "live": 10
+   },
+   {
+    "country": "RU",
+    "live": 7
    },
    {
     "country": "AU",
@@ -704,10 +1273,6 @@
    },
    {
     "country": "RO",
-    "live": 5
-   },
-   {
-    "country": "RU",
     "live": 5
    },
    {
@@ -751,7 +1316,17 @@
    {
     "name": "Facebook / Instagram",
     "country": null,
-    "live": 153
+    "live": 139
+   },
+   {
+    "name": "Airtel",
+    "country": null,
+    "live": 50
+   },
+   {
+    "name": "WhatsApp",
+    "country": null,
+    "live": 47
    },
    {
     "name": "Amazon",
@@ -759,17 +1334,7 @@
     "live": 46
    },
    {
-    "name": "Airtel",
-    "country": null,
-    "live": 44
-   },
-   {
     "name": "Google",
-    "country": null,
-    "live": 42
-   },
-   {
-    "name": "WhatsApp",
     "country": null,
     "live": 42
    },
@@ -779,14 +1344,14 @@
     "live": 36
    },
    {
+    "name": "Ledger",
+    "country": null,
+    "live": 31
+   },
+   {
     "name": "Binance",
     "country": null,
     "live": 30
-   },
-   {
-    "name": "Ledger",
-    "country": null,
-    "live": 29
    },
    {
     "name": "Microsoft",
@@ -801,12 +1366,12 @@
    {
     "name": "Coinbase",
     "country": null,
-    "live": 21
+    "live": 22
    },
    {
     "name": "Apple",
     "country": null,
-    "live": 19
+    "live": 20
    },
    {
     "name": "FedEx",
@@ -826,7 +1391,7 @@
    {
     "name": "Ethio Telecom",
     "country": "ET",
-    "live": 12
+    "live": 13
    },
    {
     "name": "GCash",
@@ -844,17 +1409,17 @@
     "live": 12
    },
    {
-    "name": "Shopee",
-    "country": null,
-    "live": 11
-   },
-   {
     "name": "Cash App",
     "country": "US",
     "live": 10
    },
    {
     "name": "Samsung",
+    "country": null,
+    "live": 10
+   },
+   {
+    "name": "Shopee",
     "country": null,
     "live": 10
    },
@@ -871,13 +1436,13 @@
    {
     "name": "Grameenphone",
     "country": "BD",
-    "live": 7
+    "live": 8
    }
   ],
   "kits": [
    {
     "name": "WhatsApp chain \"brand gift\" kit",
-    "live": 369
+    "live": 420
    },
    {
     "name": "Credential phishing kit (Telegram drop)",
@@ -887,19 +1452,19 @@
   "kinds": [
    {
     "name": "Giveaway or prize scam",
-    "live": 377
+    "live": 428
    },
    {
     "name": "Malware delivery",
-    "live": 33
+    "live": 35
    },
    {
     "name": "Phishing",
-    "live": 24
+    "live": 25
    },
    {
     "name": "Crypto scam",
-    "live": 17
+    "live": 16
    },
    {
     "name": "Job scam",
@@ -922,37 +1487,37 @@
    {
     "name": "AS-HOSTINGER - Hostinger International Limited, CY",
     "country": "LT",
-    "live": 1254
+    "live": 1329
    },
    {
     "name": "DNC-AS - Dimension Network & Communication Limited",
     "country": "HK",
-    "live": 43
+    "live": 52
    },
    {
     "name": "POWERLINE-AS-AP - POWER LINE DATACENTER, HK",
     "country": "HK",
-    "live": 36
+    "live": 39
    },
    {
     "name": "FD-298-8796 - FASTNET DATA INC, US",
     "country": "US",
-    "live": 19
+    "live": 22
    },
    {
     "name": "PEG-SV - PEG TECH INC, US",
     "country": "US",
-    "live": 19
+    "live": 20
    },
    {
     "name": "HKIDC-AS-AP - LUOGELANG (FRANCE) LIMITED, HK",
     "country": "SC",
-    "live": 17
+    "live": 19
    },
    {
     "name": "NEBULA-GLOBAL - Nebula Global LLC, US",
     "country": "US",
-    "live": 17
+    "live": 19
    },
    {
     "name": "CAPL-AS-AP - Contabo Asia Private Limited, SG",
@@ -962,16 +1527,21 @@
    {
     "name": "ML-1432-54994 - Meteverse Limited., CA",
     "country": "US",
-    "live": 14
-   },
-   {
-    "name": "CLOUDIE-AS-AP - Cloudie Limited, HK",
-    "country": "ZA",
-    "live": 13
+    "live": 16
    },
    {
     "name": "YANCYLIMITED-AS-HK - Yancy Limited, HK",
     "country": "SC",
+    "live": 16
+   },
+   {
+    "name": "CTGSERVERLIMITED-AS-AP - CTG Server Limited, HK",
+    "country": "SG",
+    "live": 15
+   },
+   {
+    "name": "CLOUDIE-AS-AP - Cloudie Limited, HK",
+    "country": "ZA",
     "live": 13
    },
    {
@@ -985,8 +1555,18 @@
     "live": 12
    },
    {
+    "name": "ALIBABA-CN-NET - Hangzhou Alibaba Advertising Co.,",
+    "country": "CN",
+    "live": 11
+   },
+   {
     "name": "INTECLOU-CDNK-NET - INTECLOUD CDNK LTD, GB",
     "country": "US",
+    "live": 11
+   },
+   {
+    "name": "HETZNER-AS - Hetzner Online GmbH, DE",
+    "country": "DE",
     "live": 10
    },
    {
@@ -1000,13 +1580,18 @@
     "live": 10
    },
    {
-    "name": "ALIBABA-CN-NET - Hangzhou Alibaba Advertising Co.,",
-    "country": "CN",
+    "name": "ANTBOX1-AS-AP - Antbox Networks Limited, HK",
+    "country": "SC",
     "live": 9
    },
    {
-    "name": "ANTBOX1-AS-AP - Antbox Networks Limited, HK",
-    "country": "SC",
+    "name": "AS-VULTR - The Constant Company, LLC, US",
+    "country": "US",
+    "live": 9
+   },
+   {
+    "name": "BGPNETPTELTD-AS-AP - BGPNET PTE. LTD., SG",
+    "country": "SG",
     "live": 9
    },
    {
@@ -1015,44 +1600,24 @@
     "live": 9
    },
    {
-    "name": "CTGSERVERLIMITED-AS-AP - CTG Server Limited, HK",
-    "country": "SG",
-    "live": 9
-   },
-   {
-    "name": "HETZNER-AS - Hetzner Online GmbH, DE",
-    "country": "DE",
-    "live": 9
-   },
-   {
     "name": "NAMECHEAP-NET - Namecheap, Inc., US",
     "country": "US",
+    "live": 9
+   },
+   {
+    "name": "ZILLION-NETWORK - Zillion Network Inc., US",
+    "country": "SC",
     "live": 8
-   },
-   {
-    "name": "AS-VULTR - The Constant Company, LLC, US",
-    "country": "US",
-    "live": 7
-   },
-   {
-    "name": "BGNL-HK - BGP Network Limited, HK",
-    "country": "SG",
-    "live": 7
-   },
-   {
-    "name": "EVOXTSDNBHD-AS-AP - Evoxt Sdn. Bhd., MY",
-    "country": "US",
-    "live": 7
    }
   ]
  },
  "byCountry": {
   "IN": {
-   "live": 102,
+   "live": 117,
    "brands": [
     {
      "name": "Airtel",
-     "live": 23
+     "live": 27
     },
     {
      "name": "Netflix",
@@ -1078,7 +1643,42 @@
    "kits": [
     {
      "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 94
+     "live": 109
+    }
+   ]
+  },
+  "AE": {
+   "live": 7,
+   "brands": [],
+   "kits": [
+    {
+     "name": "WhatsApp chain \"brand gift\" kit",
+     "live": 7
+    }
+   ]
+  },
+  "MX": {
+   "live": 1,
+   "brands": [
+    {
+     "name": "Santander",
+     "live": 1
+    }
+   ],
+   "kits": []
+  },
+  "BD": {
+   "live": 32,
+   "brands": [
+    {
+     "name": "Grameenphone",
+     "live": 8
+    }
+   ],
+   "kits": [
+    {
+     "name": "WhatsApp chain \"brand gift\" kit",
+     "live": 30
     }
    ]
   },
@@ -1136,7 +1736,7 @@
    ]
   },
   "TH": {
-   "live": 14,
+   "live": 15,
    "brands": [
     {
      "name": "AIS",
@@ -1144,6 +1744,10 @@
     },
     {
      "name": "Amazon",
+     "live": 1
+    },
+    {
+     "name": "Ledger",
      "live": 1
     }
    ],
@@ -1181,7 +1785,7 @@
    "kits": []
   },
   "ZA": {
-   "live": 9,
+   "live": 10,
    "brands": [
     {
      "name": "FNB",
@@ -1190,12 +1794,16 @@
     {
      "name": "Vodacom",
      "live": 2
+    },
+    {
+     "name": "Shoprite",
+     "live": 1
     }
    ],
    "kits": [
     {
      "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 6
+     "live": 7
     }
    ]
   },
@@ -1234,28 +1842,8 @@
     }
    ]
   },
-  "AE": {
-   "live": 7,
-   "brands": [],
-   "kits": [
-    {
-     "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 7
-    }
-   ]
-  },
-  "MX": {
-   "live": 1,
-   "brands": [
-    {
-     "name": "Santander",
-     "live": 1
-    }
-   ],
-   "kits": []
-  },
   "PK": {
-   "live": 34,
+   "live": 39,
    "brands": [
     {
      "name": "Jazz",
@@ -1265,82 +1853,18 @@
    "kits": [
     {
      "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 31
+     "live": 36
     }
    ]
   },
-  "GB": {
-   "live": 16,
-   "brands": [
-    {
-     "name": "Tesco",
-     "live": 14
-    },
-    {
-     "name": "Barclays",
-     "live": 2
-    }
-   ],
-   "kits": []
-  },
   "ET": {
-   "live": 17,
+   "live": 19,
    "brands": [
     {
      "name": "Ethio Telecom",
-     "live": 12
+     "live": 13
     }
    ],
-   "kits": [
-    {
-     "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 17
-    }
-   ]
-  },
-  "BD": {
-   "live": 28,
-   "brands": [
-    {
-     "name": "Grameenphone",
-     "live": 7
-    }
-   ],
-   "kits": [
-    {
-     "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 26
-    }
-   ]
-  },
-  "LK": {
-   "live": 11,
-   "brands": [
-    {
-     "name": "Bank of Ceylon",
-     "live": 1
-    }
-   ],
-   "kits": [
-    {
-     "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 10
-    }
-   ]
-  },
-  "OM": {
-   "live": 2,
-   "brands": [],
-   "kits": [
-    {
-     "name": "WhatsApp chain \"brand gift\" kit",
-     "live": 2
-    }
-   ]
-  },
-  "EG": {
-   "live": 19,
-   "brands": [],
    "kits": [
     {
      "name": "WhatsApp chain \"brand gift\" kit",
@@ -1348,29 +1872,15 @@
     }
    ]
   },
-  "ID": {
-   "live": 3,
-   "brands": [
+  "EG": {
+   "live": 21,
+   "brands": [],
+   "kits": [
     {
-     "name": "Facebook / Instagram",
-     "live": 1
-    },
-    {
-     "name": "Shopee",
-     "live": 1
+     "name": "WhatsApp chain \"brand gift\" kit",
+     "live": 21
     }
-   ],
-   "kits": []
-  },
-  "JP": {
-   "live": 17,
-   "brands": [
-    {
-     "name": "Google",
-     "live": 2
-    }
-   ],
-   "kits": []
+   ]
   },
   "KE": {
    "live": 7,
@@ -1390,6 +1900,65 @@
      "live": 4
     }
    ]
+  },
+  "LK": {
+   "live": 13,
+   "brands": [
+    {
+     "name": "Bank of Ceylon",
+     "live": 1
+    }
+   ],
+   "kits": [
+    {
+     "name": "WhatsApp chain \"brand gift\" kit",
+     "live": 12
+    }
+   ]
+  },
+  "GB": {
+   "live": 16,
+   "brands": [
+    {
+     "name": "Tesco",
+     "live": 14
+    },
+    {
+     "name": "Barclays",
+     "live": 2
+    }
+   ],
+   "kits": []
+  },
+  "OM": {
+   "live": 3,
+   "brands": [],
+   "kits": [
+    {
+     "name": "WhatsApp chain \"brand gift\" kit",
+     "live": 3
+    }
+   ]
+  },
+  "ID": {
+   "live": 2,
+   "brands": [
+    {
+     "name": "Facebook / Instagram",
+     "live": 1
+    }
+   ],
+   "kits": []
+  },
+  "JP": {
+   "live": 19,
+   "brands": [
+    {
+     "name": "Google",
+     "live": 2
+    }
+   ],
+   "kits": []
   },
   "DZ": {
    "live": 3,
@@ -1558,6 +2127,66 @@
  },
  "named": [
   {
+   "domain": "facebook-login-page-kappa[.]vercel[.]app",
+   "risk": 100,
+   "title": "Create Next App",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "beefmaster-germany[.]com",
+   "risk": 100,
+   "title": "Simplii Financial Mobile Banking Sign On",
+   "kind": "Phishing",
+   "kit": "Credential phishing kit (Telegram drop)",
+   "impersonates": [],
+   "lure": "Account or banking sign-in bait",
+   "targets": [],
+   "hostedIn": "DE",
+   "behindSharedNetwork": false,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "trustwallet-helpcenter[.]vercel[.]app",
+   "risk": 100,
+   "title": "Trust Wallet Support",
+   "kind": "Crypto scam",
+   "kit": null,
+   "impersonates": [
+    "Trust Wallet"
+   ],
+   "lure": "Crypto or investment bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
    "domain": "instagram157[.]github[.]io",
    "risk": 100,
    "title": "Instagram",
@@ -1660,27 +2289,6 @@
    "upShare": 100
   },
   {
-   "domain": "trustwallet-helpcenter[.]vercel[.]app",
-   "risk": 100,
-   "title": "Trust Wallet Support",
-   "kind": "Crypto scam",
-   "kit": null,
-   "impersonates": [
-    "Trust Wallet"
-   ],
-   "lure": "Crypto or investment bait",
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "crypto-scam blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:39.000Z",
-   "upShare": 100
-  },
-  {
    "domain": "outlook-phi-one[.]vercel[.]app",
    "risk": 100,
    "title": "Welcome Back!",
@@ -1701,28 +2309,119 @@
    "upShare": 100
   },
   {
-   "domain": "beefmaster-germany[.]com",
-   "risk": 100,
-   "title": "Simplii Financial Mobile Banking Sign On",
+   "domain": "outlook-live365[.]github[.]io",
+   "risk": 99,
+   "title": "Verificacion Microsoft",
    "kind": "Phishing",
-   "kit": "Credential phishing kit (Telegram drop)",
-   "impersonates": [],
-   "lure": "Account or banking sign-in bait",
+   "kit": null,
+   "impersonates": [
+    "Microsoft"
+   ],
+   "lure": null,
    "targets": [],
-   "hostedIn": "DE",
-   "behindSharedNetwork": false,
+   "hostedIn": null,
+   "behindSharedNetwork": true,
    "listedBy": [
     "phishing blocklist",
-    "threat blocklist",
     "live phishing feed"
    ],
    "firstSeen": "2026-11-16T02:12:39.000Z",
    "upShare": 100
   },
   {
-   "domain": "facebook-login-page-kappa[.]vercel[.]app",
-   "risk": 100,
-   "title": "Create Next App",
+   "domain": "meharislivegamingyoutube[.]github[.]io",
+   "risk": 99,
+   "title": "Sign in - Google Accounts",
+   "kind": "Phishing",
+   "kit": null,
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "vloxs[.]buzz",
+   "risk": 99,
+   "title": "📢Everyone can receive 60GB of free mobile data as a special gift to celebrate Republic Da",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "microsoft0117[.]vercel[.]app",
+   "risk": 99,
+   "title": "Microsoft",
+   "kind": "Crypto scam",
+   "kit": null,
+   "impersonates": [
+    "Microsoft"
+   ],
+   "lure": "Crypto or investment bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "binance-red-packet[.]vercel[.]app",
+   "risk": 99,
+   "title": "Binance Red Packet Code - Claim USDT",
+   "kind": "Giveaway or prize scam",
+   "kit": null,
+   "impersonates": [
+    "Binance"
+   ],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "vmccf[.]buzz",
+   "risk": 99,
+   "title": "👆Everyone can receive AED 200 in cash as a special gift to celebrate Eid Al Etihad!💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [
+    "AE"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "photos-instagram[.]vercel[.]app",
+   "risk": 99,
+   "title": "Instagram",
    "kind": null,
    "kit": null,
    "impersonates": [
@@ -1737,6 +2436,157 @@
     "live phishing feed"
    ],
    "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "kxqpd[.]buzz",
+   "risk": 99,
+   "title": "📢Happy Black Friday! Get $30 for Free Now!💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebook-new-security[.]blogspot[.]com",
+   "risk": 99,
+   "title": "Facebook",
+   "kind": "Phishing",
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": "Account or banking sign-in bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 75
+  },
+  {
+   "domain": "kiwrz[.]buzz",
+   "risk": 99,
+   "title": "📢Everyone can receive 60GB of free mobile data as a special gift to celebrate President A",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "outlook-silk-nine[.]vercel[.]app",
+   "risk": 99,
+   "title": "Security verification - Microsoft account",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Microsoft"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "whatsappsedzuan[.]bond",
+   "risk": 99,
+   "title": "登录 - WatsApp Web",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "WhatsApp"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": "US",
+   "behindSharedNetwork": false,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-17T06:13:28.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "santander-inicio[.]vercel[.]app",
+   "risk": 99,
+   "title": "Santander Mexico",
+   "kind": "Phishing",
+   "kit": null,
+   "impersonates": [
+    "Santander"
+   ],
+   "lure": null,
+   "targets": [
+    "MX"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xmrdh[.]buzz",
+   "risk": 99,
+   "title": "🎉Grameenphone - ৩০ বছর পূর্তি উপলক্ষে উপহার!💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Grameenphone"
+   ],
+   "lure": "Prize or giveaway bait",
+   "targets": [
+    "BD"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "netflix-upgrade[.]com",
+   "risk": 99,
+   "title": "Google",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Netflix"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": "DE",
+   "behindSharedNetwork": false,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-17T01:06:39.000Z",
    "upShare": 100
   },
   {
@@ -2822,38 +3672,6 @@
    "upShare": 100
   },
   {
-   "domain": "vloxs[.]buzz",
-   "risk": 99,
-   "title": "📢Everyone can receive 60GB of free mobile data as a special gift to celebrate Republic Da",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vmccf[.]buzz",
-   "risk": 99,
-   "title": "👆Everyone can receive AED 200 in cash as a special gift to celebrate Eid Al Etihad!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "AE"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
    "domain": "netflix-abonnement[.]com",
    "risk": 99,
    "title": null,
@@ -2872,46 +3690,6 @@
     "live phishing feed"
    ],
    "firstSeen": "2026-11-16T02:12:54.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "photos-instagram[.]vercel[.]app",
-   "risk": 99,
-   "title": "Instagram",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Facebook / Instagram"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:39.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "outlook-silk-nine[.]vercel[.]app",
-   "risk": 99,
-   "title": "Security verification - Microsoft account",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Microsoft"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:39.000Z",
    "upShare": 100
   },
   {
@@ -2957,20 +3735,18 @@
    "upShare": 100
   },
   {
-   "domain": "santander-inicio[.]vercel[.]app",
-   "risk": 99,
-   "title": "Santander Mexico",
-   "kind": "Phishing",
+   "domain": "santandercitas[.]com",
+   "risk": 98,
+   "title": "SantanderCitas",
+   "kind": null,
    "kit": null,
    "impersonates": [
     "Santander"
    ],
    "lure": null,
-   "targets": [
-    "MX"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
+   "targets": [],
+   "hostedIn": "GB",
+   "behindSharedNetwork": false,
    "listedBy": [
     "phishing blocklist",
     "live phishing feed"
@@ -2979,13 +3755,30 @@
    "upShare": 100
   },
   {
-   "domain": "outlook-live365[.]github[.]io",
-   "risk": 99,
-   "title": "Verificacion Microsoft",
-   "kind": "Phishing",
+   "domain": "zqqwz[.]buzz",
+   "risk": 98,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "PK"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "netflixfeitoaqui[.]com[.]br",
+   "risk": 98,
+   "title": "Feito Aqui",
+   "kind": null,
    "kit": null,
    "impersonates": [
-    "Microsoft"
+    "Netflix"
    ],
    "lure": null,
    "targets": [],
@@ -2999,15 +3792,98 @@
    "upShare": 100
   },
   {
-   "domain": "facebook-new-security[.]blogspot[.]com",
-   "risk": 99,
+   "domain": "hnwtz[.]buzz",
+   "risk": 98,
+   "title": "🪔DMart - Diwali Gifts!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hnwlg[.]buzz",
+   "risk": 98,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "PK"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hntlu[.]buzz",
+   "risk": 98,
+   "title": "🎉Ethio Telecom - Kennaa Waggaa 16ffaa!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Ethio Telecom"
+   ],
+   "lure": null,
+   "targets": [
+    "ET"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hndhh[.]buzz",
+   "risk": 98,
+   "title": "🪔 இந்த தீபாவளியில், ஒவ்வொரு இந்திய குடிமகனும் ₹8,000 ரொக்கப் பரிசைப் பெறலாம். 💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hmyyq[.]buzz",
+   "risk": 98,
+   "title": "🎉Orange Money - 14th Anniversary Gifts!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebook-services-login[.]blogspot[.]com",
+   "risk": 98,
    "title": "Facebook",
-   "kind": "Phishing",
+   "kind": null,
    "kit": null,
    "impersonates": [
     "Facebook / Instagram"
    ],
-   "lure": "Account or banking sign-in bait",
+   "lure": null,
    "targets": [],
    "hostedIn": null,
    "behindSharedNetwork": true,
@@ -3016,18 +3892,18 @@
     "live phishing feed"
    ],
    "firstSeen": "2026-11-16T02:12:39.000Z",
-   "upShare": 67
+   "upShare": 75
   },
   {
-   "domain": "microsoft0117[.]vercel[.]app",
-   "risk": 99,
-   "title": "Microsoft",
-   "kind": "Crypto scam",
+   "domain": "buscarmi-icloud[.]app",
+   "risk": 98,
+   "title": "Google",
+   "kind": null,
    "kit": null,
    "impersonates": [
-    "Microsoft"
+    "Apple"
    ],
-   "lure": "Crypto or investment bait",
+   "lure": null,
    "targets": [],
    "hostedIn": null,
    "behindSharedNetwork": true,
@@ -3039,13 +3915,279 @@
    "upShare": 100
   },
   {
-   "domain": "binance-red-packet[.]vercel[.]app",
-   "risk": 99,
-   "title": "Binance Red Packet Code - Claim USDT",
+   "domain": "hkzej[.]buzz",
+   "risk": 98,
+   "title": "✨Claim 60GB of Free Data for All Saints’ Day!💰",
    "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hkjdn[.]buzz",
+   "risk": 98,
+   "title": "🪔Airtel - દિવાળીની ભેટ!💵",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Airtel"
+   ],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "metamaskuxlogen[.]gitbook[.]io",
+   "risk": 98,
+   "title": "𝗠𝗲𝘁å𝗺å𝘀𝗸 @ 𝗟𝗼𝗴𝗶𝗻",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "MetaMask"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hjqeo[.]buzz",
+   "risk": 98,
+   "title": "🔔Everyone can receive 100,000 FC in cash as a special gift to celebrate President Félix A",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hjgro[.]buzz",
+   "risk": 98,
+   "title": "🪔PNB - দিওয়ালি উপহার!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "zpyqe[.]buzz",
+   "risk": 98,
+   "title": "🎄Merry Christmas! Enjoy 60GB of free data!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebook1019key[.]blogspot[.]com",
+   "risk": 98,
+   "title": "Facebook",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 75
+  },
+  {
+   "domain": "amazon-slots[.]digital",
+   "risk": 98,
+   "title": "Amazon Slots",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Amazon"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "zzmft[.]buzz",
+   "risk": 98,
+   "title": "🪔Airtel - দিওয়ালি উপহার!💵",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Airtel"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xwxhx[.]buzz",
+   "risk": 98,
+   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "EG"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "binancereferralid[.]github[.]io",
+   "risk": 98,
+   "title": "Binance Referral ID: BQ0EAIF5 Great referral program | BQ0EAIF5",
+   "kind": null,
    "kit": null,
    "impersonates": [
     "Binance"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xlncv[.]buzz",
+   "risk": 98,
+   "title": "🔔اقبال جي ڏينهن جي ياد ۾ هر ڪو خاص تحفي طور 60GB مفت موبائل ڊيٽا حاصل ڪري سگهي ٿو!💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "hcmhs[.]buzz",
+   "risk": 98,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "PK"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "instagram-frontpage[.]vercel[.]app",
+   "risk": 98,
+   "title": "Instagram",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "noreply-icloud[.]app",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Apple"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "bluetick-aurorafb-1001[.]vercel[.]app",
+   "risk": 98,
+   "title": "Official Notice from Facebook",
+   "kind": "Giveaway or prize scam",
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
    ],
    "lure": "Prize or giveaway bait",
    "targets": [],
@@ -3059,10 +4201,414 @@
    "upShare": 100
   },
   {
-   "domain": "meharislivegamingyoutube[.]github[.]io",
-   "risk": 99,
-   "title": "Sign in - Google Accounts",
-   "kind": "Phishing",
+   "domain": "xemtb[.]buzz",
+   "risk": 98,
+   "title": "🎉Ethio Telecom - Kennaa Waggaa 16ffaa!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Ethio Telecom"
+   ],
+   "lure": null,
+   "targets": [
+    "ET"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "gzvum[.]buzz",
+   "risk": 98,
+   "title": "🪔Paytm - দিওয়ালি উপহার!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "gztbo[.]buzz",
+   "risk": 98,
+   "title": "🪔PNB - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "microsoft365updates[.]com",
+   "risk": 98,
+   "title": "Sign in to your account",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Microsoft"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "gyhxl[.]buzz",
+   "risk": 98,
+   "title": "🎉ኢትዮ ቴሌኮም - 16ኛ ዓመት የምስረታ ስጦታ!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "ET"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "whatsappcampaign[.]online",
+   "risk": 98,
+   "title": "What's Campaign | Local Android Campaign Management",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "WhatsApp"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "metamask-login[.]vercel[.]app",
+   "risk": 98,
+   "title": "Metamask Login",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "MetaMask"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "scam blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "coinbaseprotect[.]com",
+   "risk": 98,
+   "title": "Can’t Find the Server",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Coinbase"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": "US",
+   "behindSharedNetwork": false,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "gthst[.]buzz",
+   "risk": 98,
+   "title": "🪔NIMB - Tihar Gift!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:05.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "google-apk[.]com",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Google"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebooklogin17[.]blogspot[.]com",
+   "risk": 98,
+   "title": "Facebook",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 75
+  },
+  {
+   "domain": "microsoft-telemetry[.]at",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Microsoft"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "ledger-live-download-sso-conect[.]typedream[.]app",
+   "risk": 98,
+   "title": "Ledger Live - Download Your Ledger Live Now I Ledger",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Ledger"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebook-logo[.]blogspot[.]com",
+   "risk": 98,
+   "title": "facebook",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 75
+  },
+  {
+   "domain": "metamaskiologii[.]gitbook[.]io",
+   "risk": 98,
+   "title": "𝗠𝗲𝘁å𝗺å𝘀𝗸 𝗟𝗼𝗴𝗶𝗻 - us",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "MetaMask"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "lgekb[.]buzz",
+   "risk": 98,
+   "title": "🪔Airtel - દિવાળીની ભેટ!💵",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Airtel"
+   ],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "instagramchatsview999[.]blogspot[.]com",
+   "risk": 98,
+   "title": "Instagram",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 25
+  },
+  {
+   "domain": "securedsupport-coinbase[.]com",
+   "risk": 98,
+   "title": "Coming Soon",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Coinbase"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "lcnfp[.]buzz",
+   "risk": 98,
+   "title": "🪔NIMB - Tihar Gift!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "vodafone-business-berlin[.]store",
+   "risk": 98,
+   "title": "Vodafone Business Center Berlin | Ansprechpartner in Berlin | Angebote",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Vodafone"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": "DE",
+   "behindSharedNetwork": false,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "ossama-instagram[.]vercel[.]app",
+   "risk": 98,
+   "title": "Instagram - Ossama",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "akhilprakash634[.]github[.]io",
+   "risk": 98,
+   "title": "Document",
+   "kind": null,
    "kit": null,
    "impersonates": [],
    "lure": null,
@@ -3074,6 +4620,985 @@
     "live phishing feed"
    ],
    "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "zzyis[.]buzz",
+   "risk": 98,
+   "title": "🎉Safaricom - Zawadi ya Miaka 26!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Safaricom"
+   ],
+   "lure": null,
+   "targets": [
+    "KE"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "metamask-connect[.]vercel[.]app",
+   "risk": 98,
+   "title": "Connect Your Metamask",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "MetaMask"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "kxpzt[.]buzz",
+   "risk": 98,
+   "title": "🎉१७औँ वार्षिकोत्सवको अवसरमा रु. १,७०० निःशुल्क प्राप्त गर्नुहोस्!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "theamazon[.]vercel[.]app",
+   "risk": 98,
+   "title": "Amazon-Clone",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Amazon"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "coinbaseplogininin[.]gitbook[.]io",
+   "risk": 98,
+   "title": "Çoinbase Pro: Login | us",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Coinbase"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "portall-stpmex[.]com",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xhgoy[.]buzz",
+   "risk": 98,
+   "title": "🎉Happy Lamu Cultural Festival! Enjoy KSh 3,000 in cash!💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "KE"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebook-theta[.]vercel[.]app",
+   "risk": 98,
+   "title": "Facebook",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "ktjdn[.]buzz",
+   "risk": 98,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "PK"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "ksvsl[.]buzz",
+   "risk": 98,
+   "title": "✨Cargills Food City - උඳුවප් පෝය තෑග්ග!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "LK"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xsdfq[.]buzz",
+   "risk": 98,
+   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "zwfst[.]buzz",
+   "risk": 98,
+   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "outlookmails[.]de",
+   "risk": 98,
+   "title": "mail[.]outlookmails.de - mail UI",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Microsoft"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": "AT",
+   "behindSharedNetwork": false,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "instagram-test[.]vercel[.]app",
+   "risk": 98,
+   "title": "Instagram",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "klyrr[.]buzz",
+   "risk": 98,
+   "title": "📢Everyone can receive 60GB of free mobile data as a special gift to celebrate Republic Da",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "ztggr[.]buzz",
+   "risk": 98,
+   "title": "🪔Airtel - दिवाली का तोहफ़ा!💵",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Airtel"
+   ],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xrdcy[.]buzz",
+   "risk": 98,
+   "title": "🪔PNB - दिवाळीची भेट!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "vivekashar[.]github[.]io",
+   "risk": 98,
+   "title": "Sign In - Netflix Birthday",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Netflix"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "an-usps[.]com",
+   "risk": 98,
+   "title": "Coming Soon",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "USPS"
+   ],
+   "lure": null,
+   "targets": [
+    "US"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "metamask-web[.]vercel[.]app",
+   "risk": 98,
+   "title": "MetaMask",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "MetaMask"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "scam blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "kkkhb[.]buzz",
+   "risk": 98,
+   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": "Prize or giveaway bait",
+   "targets": [
+    "BD"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebook-five-gamma[.]vercel[.]app",
+   "risk": 98,
+   "title": "facebook",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "dapp-main-one[.]pages[.]dev",
+   "risk": 98,
+   "title": "Import Wallet",
+   "kind": "Crypto scam",
+   "kit": null,
+   "impersonates": [],
+   "lure": "Crypto or investment bait",
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "instagramfollowers146[.]blogspot[.]com",
+   "risk": 98,
+   "title": "Instagram",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 25
+  },
+  {
+   "domain": "zxiqp[.]buzz",
+   "risk": 98,
+   "title": "🎊APC Instant ₦50,000 Naira Campaign Giveaway💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "NG"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "khohm[.]buzz",
+   "risk": 98,
+   "title": "🎉२९औँ वार्षिकोत्सवको अवसरमा रु. २,९०० निःशुल्क प्राप्त गर्नुहोस्!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:06.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xkvpq[.]buzz",
+   "risk": 98,
+   "title": "🪔 ఈ దీపావళికి, ప్రతి భారతీయ పౌరుడు ₹8,000 నగదు ప్రయోజనాన్ని పొందవచ్చు. 🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "google-do-do-junoo[.]netlify[.]app",
+   "risk": 98,
+   "title": "Juno Sign In",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Google"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "uspss[.]pages[.]dev",
+   "risk": 98,
+   "title": "Welcome | USPS",
+   "kind": "Delivery-fee scam",
+   "kit": null,
+   "impersonates": [
+    "USPS"
+   ],
+   "lure": "Parcel or delivery fee bait",
+   "targets": [
+    "US"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "icloud-my[.]rip",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Apple"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:54.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "3177550-coinbase[.]com",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Coinbase"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "scam blocklist",
+    "crypto-scam blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:43.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "whatsapp-iamsuyash[.]vercel[.]app",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "WhatsApp"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "www-app-google[.]com",
+   "risk": 98,
+   "title": "Google Chrome官网-极速浏览、安全防护、多端同步的现代化浏览器",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Google"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "threat blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "zrwbn[.]buzz",
+   "risk": 98,
+   "title": "✨Algérie Télécom - Revolution Day Gift!💰",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:14.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "facebookloginf[.]blogspot[.]com",
+   "risk": 98,
+   "title": "facebook",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Facebook / Instagram"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 75
+  },
+  {
+   "domain": "metamask-ai-agent[.]vercel[.]app",
+   "risk": 98,
+   "title": "MetaMask Assist AI",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "MetaMask"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xmqfn[.]buzz",
+   "risk": 98,
+   "title": "🛍️Jumia Black Friday - Answer & Earn Real Cash!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "metamaskextensionnn[.]gitbook[.]io",
+   "risk": 98,
+   "title": "Metamask () Extension | Extension",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "MetaMask"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "crypto-scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "ld-icloud[.]info",
+   "risk": 98,
+   "title": null,
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Apple"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "scam blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xsaxv[.]buzz",
+   "risk": 98,
+   "title": "🪔Airtel - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [
+    "Airtel"
+   ],
+   "lure": null,
+   "targets": [
+    "IN"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "netflixbymanoj[.]vercel[.]app",
+   "risk": 98,
+   "title": "Netflix",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Netflix"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "mirror-google[.]com",
+   "risk": 98,
+   "title": "谷歌浏览器免费下载 - 官方原版高速下载 - Google Chrome",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Google"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "bebarsahmed-wq[.]github[.]io",
+   "risk": 98,
+   "title": "Netflix - Watch TV Shows Online, Watch Movies Online",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Netflix"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-16T02:12:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "yoxjm[.]buzz",
+   "risk": 98,
+   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "EG"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 50
+  },
+  {
+   "domain": "xlwrh[.]buzz",
+   "risk": 98,
+   "title": "🛍️BLACK FRIDAY SALE! Get $300 for FREE!💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xtsgw[.]buzz",
+   "risk": 98,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [
+    "PK"
+   ],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "xgwpp[.]buzz",
+   "risk": 98,
+   "title": "👉Yas - All Saints’ Day Gift!🎁",
+   "kind": "Giveaway or prize scam",
+   "kit": "WhatsApp chain \"brand gift\" kit",
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [],
+   "firstSeen": "2026-11-16T02:13:13.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "trezrhiwanlt[.]gitbook[.]io",
+   "risk": 98,
+   "title": "Trezor$$ Wallet | The Official Wallet",
+   "kind": "Crypto scam",
+   "kit": null,
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-17T01:06:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "shopee60[.]blogspot[.]com",
+   "risk": 98,
+   "title": "SHOPEE",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Shopee"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-17T01:06:39.000Z",
+   "upShare": 50
+  },
+  {
+   "domain": "magiconcandle[.]com",
+   "risk": 98,
+   "title": "Security verification - Microsoft account",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Microsoft"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": "GB",
+   "behindSharedNetwork": false,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-17T01:06:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "chipper-sawine-239128[.]netlify[.]app",
+   "risk": 98,
+   "title": "Zimbra Web Client Sign In",
+   "kind": null,
+   "kit": null,
+   "impersonates": [],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-17T01:06:39.000Z",
+   "upShare": 100
+  },
+  {
+   "domain": "binance3[.]github[.]io",
+   "risk": 98,
+   "title": "Binance Futures Referral Code",
+   "kind": null,
+   "kit": null,
+   "impersonates": [
+    "Binance"
+   ],
+   "lure": null,
+   "targets": [],
+   "hostedIn": null,
+   "behindSharedNetwork": true,
+   "listedBy": [
+    "phishing blocklist",
+    "live phishing feed"
+   ],
+   "firstSeen": "2026-11-17T01:06:39.000Z",
    "upShare": 100
   },
   {
@@ -8996,2038 +11521,57 @@
    "listedBy": [],
    "firstSeen": "2026-11-16T02:13:12.000Z",
    "upShare": 100
-  },
-  {
-   "domain": "vbhug[.]buzz",
-   "risk": 98,
-   "title": "🎉Celebrate the Lamu Cultural Festival with 60GB of Free Data!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uzuwv[.]buzz",
-   "risk": 98,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uyeji[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - دیوالی کا تحفہ!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uxrst[.]buzz",
-   "risk": 98,
-   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uwxwh[.]buzz",
-   "risk": 98,
-   "title": "🇦🇿Zəfər Gününüz mübarək! 100 ₼-ni pulsuz əldə edin!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "AZ"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uvluq[.]buzz",
-   "risk": 98,
-   "title": "👉Mvola - All Saints’ Day Gift!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uugcd[.]buzz",
-   "risk": 98,
-   "title": "✨Claim 100.000 Fbu in Cash for All Saints’ Day!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "utxrv[.]buzz",
-   "risk": 98,
-   "title": "🎉ኢትዮ ቴሌኮም - 16ኛ ዓመት የምስረታ ስጦታ!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "ET"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ustbm[.]buzz",
-   "risk": 98,
-   "title": "🎉Ethio Telecom - Kennaa Waggaa 16ffaa!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Ethio Telecom"
-   ],
-   "lure": null,
-   "targets": [
-    "ET"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "usrqr[.]buzz",
-   "risk": 98,
-   "title": "🎊বিকাশ - ১৫তম বার্ষিকীর উপহার💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uqigd[.]buzz",
-   "risk": 98,
-   "title": "📢ټولو پاکستانیانو ته د یومِ اقبال په مناسبت د 13,000 روپیو نغدي انعام💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "uosbn[.]buzz",
-   "risk": 98,
-   "title": "👆Everyone can receive AED 200 as a special gift to celebrate UAE Flag Day!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "AE"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ujjsu[.]buzz",
-   "risk": 98,
-   "title": "🪔PNB - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ugcxa[.]buzz",
-   "risk": 98,
-   "title": "🎊Paytm - దీపావళి కానుక!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ufwzt[.]buzz",
-   "risk": 98,
-   "title": "✨Cargills Food City - උඳුවප් පෝය තෑග්ග!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "LK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ufiyb[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ufghq[.]buzz",
-   "risk": 98,
-   "title": "🪔 ഈ ദീപാവലിക്ക്, എല്ലാ ഇന്ത്യൻ പൗരന്മാർക്കും ₹8,000 ക്യാഷ് ആനുകൂല്യം ലഭിക്കും. 💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tyvsy[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - दिवाली का तोहफ़ा!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "twuiq[.]buzz",
-   "risk": 98,
-   "title": "🪔Paytm - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "twnda[.]buzz",
-   "risk": 98,
-   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "telegrambot[.]click",
-   "risk": 98,
-   "title": null,
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Telegram"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": "AU",
-   "behindSharedNetwork": false,
-   "listedBy": [
-    "scam blocklist",
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T07:15:53.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "google-manual-action-penalty-recovery[.]com",
-   "risk": 98,
-   "title": "SearchRemedy | Google Manual Action Recovery",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Google"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T07:15:53.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tvjse[.]buzz",
-   "risk": 98,
-   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "EG"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tswzv[.]buzz",
-   "risk": 98,
-   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "zdhvr[.]buzz",
-   "risk": 98,
-   "title": "🪔 ଏହି ଦୀପାବଳିରେ, ପ୍ରତ୍ୟେକ ଭାରତୀୟ ନାଗରିକ ₹8,000 ନଗଦ ପୁରସ୍କାର ପାଇପାରିବେ। 💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ywpdi[.]buzz",
-   "risk": 98,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yuuor[.]buzz",
-   "risk": 98,
-   "title": "🪔PhonePe दिवाली बोनस — सभी उपयोगकर्ताओं के लिए ₹8,000💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yzkza[.]buzz",
-   "risk": 98,
-   "title": "🎉ኢትዮ ቴሌኮም - 16ኛ ዓመት የምስረታ ስጦታ!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "ET"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yytyt[.]buzz",
-   "risk": 98,
-   "title": "🪔Paytm - દિવાળીની ભેટ!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ywlpd[.]buzz",
-   "risk": 98,
-   "title": "✨Algérie Télécom - Revolution Day Gift!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wnqee[.]buzz",
-   "risk": 98,
-   "title": "🪔PNB - दिवाळीची भेट!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yxeom[.]buzz",
-   "risk": 98,
-   "title": "🎉ኢትዮ ቴሌኮም - 16ኛ ዓመት የምስረታ ስጦታ!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "ET"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yukoe[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - தீபாவளி பரிசு!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wfihu[.]buzz",
-   "risk": 98,
-   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "EG"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yvjpb[.]buzz",
-   "risk": 98,
-   "title": "👉Mvola - All Saints’ Day Gift!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wnvfg[.]buzz",
-   "risk": 98,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wjlik[.]buzz",
-   "risk": 98,
-   "title": "🔔Everyone can receive 50,000 ج.س in cash from Zain to celebrate the 30th anniversary!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 50
-  },
-  {
-   "domain": "wdtxj[.]buzz",
-   "risk": 98,
-   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "EG"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wkvuk[.]buzz",
-   "risk": 98,
-   "title": "🌹Everyone in Pakistan can receive 60GB of free mobile data as a special gift to commemora",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wajje[.]buzz",
-   "risk": 98,
-   "title": "✨PNB - దీపావళి కానుక!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wdcwn[.]buzz",
-   "risk": 98,
-   "title": "🇦🇿Zəfər Gününüz mübarək! 100 ₼-ni pulsuz əldə edin!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "AZ"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "xn--facebook-z09lrnh71a304bgqbn6wdvm37ilm0g8sydoj9a[.]com",
-   "risk": 98,
-   "title": "Home - xn-facebook-z09lrnh71a304bgqbn6wdvm37ilm0g8sydoj9a",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Facebook / Instagram"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T01:07:40.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vyvdq[.]buzz",
-   "risk": 98,
-   "title": "👉Jazz - يومِ اقبال جو تحفو!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vyezs[.]buzz",
-   "risk": 98,
-   "title": "🇩🇿Soummam - Revolution Day Gift!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "DZ"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "wbpuf[.]buzz",
-   "risk": 98,
-   "title": "🪔Paytm - ਦੀਵਾਲੀ ਦਾ ਤੋਹਫ਼ਾ!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "pgcash88[.]digital",
-   "risk": 98,
-   "title": "PG CASH88 | สล็อต PG เว็บตรง True Wallet",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "GCash"
-   ],
-   "lure": null,
-   "targets": [
-    "PH"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T01:07:40.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "dhl-france[.]com",
-   "risk": 98,
-   "title": "Beste nettcasinoer 2026 – Topp 5 sammenligning",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "DHL"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T01:07:40.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "instagrambusinesssubscription[.]com",
-   "risk": 98,
-   "title": "For Sale Domain: instagrambusinesssubscription[.]com",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Facebook / Instagram"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-16T23:17:04.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "pgcash[.]site",
-   "risk": 98,
-   "title": "PGCASH - พีจีแคลส",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "GCash"
-   ],
-   "lure": null,
-   "targets": [
-    "PH"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T01:07:40.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "dhl-logisticservices[.]live",
-   "risk": 98,
-   "title": "Bot Verification",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "DHL"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": "US",
-   "behindSharedNetwork": false,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T01:07:40.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "sunnyledger[.]app",
-   "risk": 98,
-   "title": "小太陽記帳",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Ledger"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-16T23:17:04.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "g2gcashv1[.]site",
-   "risk": 98,
-   "title": "G2GCASH กับการเล่นสล็อตในเวลาว่างอย่างมีขอบเขต",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "GCash"
-   ],
-   "lure": null,
-   "targets": [
-    "PH"
-   ],
-   "hostedIn": "US",
-   "behindSharedNetwork": false,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-16T23:17:04.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "bigcashsweep[.]com",
-   "risk": 98,
-   "title": "Big Cash Sweep Casino",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "GCash"
-   ],
-   "lure": null,
-   "targets": [
-    "PH"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T01:07:40.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "acc-update-netflix[.]click",
-   "risk": 98,
-   "title": null,
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Netflix"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T01:07:40.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tpqcv[.]buzz",
-   "risk": 98,
-   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "EG"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tmyvm[.]buzz",
-   "risk": 98,
-   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tmhdx[.]buzz",
-   "risk": 98,
-   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tjzvy[.]buzz",
-   "risk": 98,
-   "title": "🪔इस दिवाली, हर भारतीय नागरिक ₹8,000 का नकद लाभ प्राप्त कर सकता है।🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tjrtf[.]buzz",
-   "risk": 98,
-   "title": "🎉Ethio Telecom - Kennaa Waggaa 16ffaa!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Ethio Telecom"
-   ],
-   "lure": null,
-   "targets": [
-    "ET"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tjndz[.]buzz",
-   "risk": 98,
-   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "thgkp[.]buzz",
-   "risk": 98,
-   "title": "✨Cargills Food City - උඳුවප් පෝය තෑග්ග!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "LK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "tgxiy[.]buzz",
-   "risk": 98,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:12.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ysmgo[.]buzz",
-   "risk": 98,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "trackamazonprices[.]com",
-   "risk": 98,
-   "title": "Trackamazonprices[.]com is for sale | GVLR",
-   "kind": "Phishing",
-   "kit": null,
-   "impersonates": [
-    "Amazon"
-   ],
-   "lure": "Account or banking sign-in bait",
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T06:14:31.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "secure-web3-binance[.]com",
-   "risk": 98,
-   "title": "Secure Notification Service — Messagerie de conformité",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Binance"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": "LT",
-   "behindSharedNetwork": false,
-   "listedBy": [
-    "crypto-scam blocklist",
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T06:14:31.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "scope-binance[.]com[.]cn",
-   "risk": 98,
-   "title": "Binance 币安 - 数字资产交易平台",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Binance"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "crypto-scam blocklist",
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T06:14:31.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "fedexwpp[.]com",
-   "risk": 98,
-   "title": "Just a moment...",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "FedEx"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "threat blocklist"
-   ],
-   "firstSeen": "2026-11-17T06:14:31.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yqpks[.]buzz",
-   "risk": 98,
-   "title": "📢سڀني پاڪستانين کي يومِ اقبال جي موقعي تي 13,000 رپين جي ڪيش ٽرانسفر🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ykkzw[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yggcf[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - ଦୀପାବଳୀ ଉପହାର!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yfjaw[.]buzz",
-   "risk": 98,
-   "title": "✨Jazz - یومِ اقبال کا تحفہ!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ycxhg[.]buzz",
-   "risk": 98,
-   "title": "🪔 ఈ దీపావళికి, ప్రతి భారతీయ పౌరుడు ₹8,000 నగదు ప్రయోజనాన్ని పొందవచ్చు. 🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yccdc[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - દિવાળીની ભેટ!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "yblgw[.]buzz",
-   "risk": 98,
-   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "EG"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "trezrhiwanlt[.]gitbook[.]io",
-   "risk": 98,
-   "title": "Trezor$$ Wallet | The Official Wallet",
-   "kind": "Crypto scam",
-   "kit": null,
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-17T01:06:39.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "magiconcandle[.]com",
-   "risk": 98,
-   "title": "Security verification - Microsoft account",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Microsoft"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": "GB",
-   "behindSharedNetwork": false,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-17T01:06:39.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "chipper-sawine-239128[.]netlify[.]app",
-   "risk": 98,
-   "title": "Zimbra Web Client Sign In",
-   "kind": null,
-   "kit": null,
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-17T01:06:39.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "netflix-upgrade[.]com",
-   "risk": 98,
-   "title": "Domain Default page",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Netflix"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": "DE",
-   "behindSharedNetwork": false,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-17T01:06:39.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "metamaskemailverification[.]com",
-   "risk": 98,
-   "title": null,
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "MetaMask"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "crypto-scam blocklist",
-    "threat blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:52.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "infoundianshopee31[.]blogspot[.]com",
-   "risk": 98,
-   "title": "SHOPEE12.12",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Shopee"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-17T01:06:39.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "icloud-id[.]rip",
-   "risk": 98,
-   "title": null,
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Apple"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "threat blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:54.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "binance3[.]github[.]io",
-   "risk": 98,
-   "title": "Binance Futures Referral Code",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Binance"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-17T01:06:39.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "instagramloginpassword[.]blogspot[.]com",
-   "risk": 98,
-   "title": "Instagram",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Facebook / Instagram"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:39.000Z",
-   "upShare": 33
-  },
-  {
-   "domain": "vvycw[.]buzz",
-   "risk": 98,
-   "title": "✨Grameenphone - জাতীয় বিপ্লব ও সংহতি দিবসের উপহার!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Grameenphone"
-   ],
-   "lure": null,
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vwugb[.]buzz",
-   "risk": 98,
-   "title": "🎉Ethio Telecom - Kennaa Waggaa 16ffaa!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Ethio Telecom"
-   ],
-   "lure": null,
-   "targets": [
-    "ET"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 50
-  },
-  {
-   "domain": "vrpka[.]buzz",
-   "risk": 98,
-   "title": "🎊Paytm - దీపావళి కానుక!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "profil-facebook-saya[.]blogspot[.]com",
-   "risk": 98,
-   "title": "profil facebook",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Facebook / Instagram"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:39.000Z",
-   "upShare": 33
-  },
-  {
-   "domain": "vtmbc[.]buzz",
-   "risk": 98,
-   "title": "🎊5 වැනි සංවත්සරයට සුබ පැතුම්! රු. 5,000ක් නොමිලේ ලබාගන්න!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "LK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vqjhq[.]buzz",
-   "risk": 98,
-   "title": "🎉Vivo - Republic Proclamation Day Gift!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "instagramlikescheap[.]blogspot[.]com",
-   "risk": 98,
-   "title": "Instagram",
-   "kind": null,
-   "kit": null,
-   "impersonates": [
-    "Facebook / Instagram"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [
-    "phishing blocklist",
-    "live phishing feed"
-   ],
-   "firstSeen": "2026-11-16T02:12:39.000Z",
-   "upShare": 33
-  },
-  {
-   "domain": "vtyzp[.]buzz",
-   "risk": 98,
-   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 50
-  },
-  {
-   "domain": "vnzdc[.]buzz",
-   "risk": 98,
-   "title": "🎈Grameenphone - ৩০ বছর পূর্তি উপলক্ষে উপহার!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Grameenphone"
-   ],
-   "lure": null,
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vsuvj[.]buzz",
-   "risk": 98,
-   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "PK"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vrtdg[.]buzz",
-   "risk": 98,
-   "title": "🎉१७औँ वार्षिकोत्सवको अवसरमा रु. १,७०० निःशुल्क प्राप्त गर्नुहोस्!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vqrkq[.]buzz",
-   "risk": 98,
-   "title": "🔔Everyone can receive a SAR 200 cash gift for King Salman’s Birthday.🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "SA"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "zxmhy[.]buzz",
-   "risk": 98,
-   "title": "✨PNB - దీపావళి కానుక!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vjuvw[.]buzz",
-   "risk": 98,
-   "title": "✨Algérie Télécom - Revolution Day Gift!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "zzbfl[.]buzz",
-   "risk": 98,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": "Prize or giveaway bait",
-   "targets": [
-    "BD"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ztggr[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - दिवाली का तोहफ़ा!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [
-    "IN"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "zzmft[.]buzz",
-   "risk": 98,
-   "title": "🪔Airtel - দিওয়ালি উপহার!💵",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Airtel"
-   ],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "zwfst[.]buzz",
-   "risk": 98,
-   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "zzyis[.]buzz",
-   "risk": 98,
-   "title": "🎉Safaricom - Zawadi ya Miaka 26!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [
-    "Safaricom"
-   ],
-   "lure": null,
-   "targets": [
-    "KE"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "ztyxz[.]buzz",
-   "risk": 98,
-   "title": "🛍️Boxer - Black Friday!💸",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "vixzw[.]buzz",
-   "risk": 98,
-   "title": "🎉Azam - Zawadi ya Miaka 51!💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:13.000Z",
-   "upShare": 100
-  },
-  {
-   "domain": "zxiqp[.]buzz",
-   "risk": 98,
-   "title": "🎊APC Instant ₦50,000 Naira Campaign Giveaway💰",
-   "kind": "Giveaway or prize scam",
-   "kit": "WhatsApp chain \"brand gift\" kit",
-   "impersonates": [],
-   "lure": null,
-   "targets": [
-    "NG"
-   ],
-   "hostedIn": null,
-   "behindSharedNetwork": true,
-   "listedBy": [],
-   "firstSeen": "2026-11-16T02:13:14.000Z",
-   "upShare": 100
   }
  ],
- "namedTotal": 2434,
+ "namedTotal": 2464,
  "feed": [
   {
-   "at": "2026-11-17T14:06:23.000Z",
-   "domain": "yt7566trtrr[.]blogspot[.]com",
-   "type": "back",
-   "text": "Came back online",
-   "kind": null,
-   "brand": null,
-   "title": "Roblox",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:06:23.000Z",
-   "domain": "metxmsaklogan[.]gitbook[.]io",
-   "type": "rebuilt",
-   "text": "Page rebuilt with a different layout",
-   "kind": null,
-   "brand": null,
-   "title": "𝗠𝗲𝘁å𝗺å𝘀𝗸 𝗟𝗼𝗴𝗶𝗻",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:06:23.000Z",
-   "domain": "metaimsklogiz[.]gitbook[.]io",
-   "type": "rebuilt",
-   "text": "Page rebuilt with a different layout",
-   "kind": null,
-   "brand": null,
-   "title": "𝗠𝗲𝘁å𝗺å𝘀𝗸 𝗟𝗼𝗴𝗶𝗻 | - us",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:06:23.000Z",
-   "domain": "ecuador-2026--loguin[.]replit[.]app",
-   "type": "title",
-   "text": "Switched to a new lure",
-   "kind": "Phishing",
-   "brand": null,
-   "title": "Banco Pichincha - Validación de Seguridad",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:06:23.000Z",
-   "domain": "vnmyj[.]buzz",
-   "type": "back",
-   "text": "Came back online",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:05:20.000Z",
-   "domain": "deoaryan[.]github[.]io",
-   "type": "title",
-   "text": "Switched to a new lure",
-   "kind": null,
-   "brand": null,
-   "title": "Checkout",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:05:20.000Z",
-   "domain": "telegram-online[.]info",
+   "at": "2026-11-17T15:02:34.000Z",
+   "domain": "santandercitas[.]com",
    "type": "moved",
    "text": "Moved to a different server",
    "kind": null,
-   "brand": "Telegram",
-   "title": "TELEGRAM_TITTLE ·",
+   "brand": "Santander",
+   "title": "SantanderCitas",
    "targets": []
   },
   {
-   "at": "2026-11-17T14:05:20.000Z",
-   "domain": "vqloh[.]buzz",
-   "type": "back",
-   "text": "Came back online",
+   "at": "2026-11-17T15:02:34.000Z",
+   "domain": "hoxrj[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
    "kind": "Giveaway or prize scam",
    "brand": "Airtel",
-   "title": "🪔Airtel - دیوالی کا تحفہ!🎁",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:05:20.000Z",
-   "domain": "fedexthw[.]com",
-   "type": "content",
-   "text": "Wording on the page changed",
-   "kind": null,
-   "brand": "FedEx",
-   "title": "Just a moment...",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:05:20.000Z",
-   "domain": "siirtescortgercek[.]xyz",
-   "type": "content",
-   "text": "Wording on the page changed",
-   "kind": null,
-   "brand": "Tesco",
-   "title": "Siirt Escort – Escort – Gerçek Eskort Partner Bayan",
+   "title": "🪔Airtel - ଦୀପାବଳୀ ଉପହାର!🎁",
    "targets": [
-    "GB"
+    "IN"
    ]
   },
   {
-   "at": "2026-11-17T14:05:20.000Z",
-   "domain": "love0017[.]top",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:04:19.000Z",
-   "domain": "youtuber[.]lol",
-   "type": "content",
-   "text": "Wording on the page changed",
-   "kind": null,
-   "brand": null,
-   "title": "You had one thought. We made it wearable. &ndash; Me[.]LOL",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:04:19.000Z",
-   "domain": "j4n8td3[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:03:21.000Z",
-   "domain": "hvj5td10[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:03:21.000Z",
-   "domain": "cryptocasinositescompared[.]org",
-   "type": "rebuilt",
-   "text": "Page rebuilt with a different layout",
-   "kind": "Crypto scam",
-   "brand": "Tesco",
-   "title": "Crypto Casinos with Instant Payouts - Top BTC Platforms",
+   "at": "2026-11-17T15:02:34.000Z",
+   "domain": "hntlu[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Ethio Telecom",
+   "title": "🎉Ethio Telecom - Kennaa Waggaa 16ffaa!💸",
    "targets": [
-    "GB"
+    "ET"
    ]
   },
   {
-   "at": "2026-11-17T14:03:21.000Z",
-   "domain": "fyi4td23[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
+   "at": "2026-11-17T15:02:34.000Z",
+   "domain": "hnwtz[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
    "brand": null,
-   "title": null,
+   "title": "🪔DMart - Diwali Gifts!💸",
    "targets": []
   },
   {
-   "at": "2026-11-17T14:02:14.000Z",
-   "domain": "kucoinlogenac[.]gitbook[.]io",
-   "type": "rebuilt",
-   "text": "Page rebuilt with a different layout",
-   "kind": null,
-   "brand": null,
-   "title": "Kucoin Login | Crypto Exchange | Bitcoin Exchange | Bitcoin Tradi",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:02:14.000Z",
-   "domain": "kdvyx[.]buzz",
+   "at": "2026-11-17T15:02:34.000Z",
+   "domain": "hnwlg[.]buzz",
    "type": "first-visit",
    "text": "Found live",
    "kind": "Giveaway or prize scam",
@@ -11038,30 +11582,196 @@
    ]
   },
   {
-   "at": "2026-11-17T14:02:14.000Z",
-   "domain": "kdczt[.]buzz",
+   "at": "2026-11-17T15:02:34.000Z",
+   "domain": "hndhh[.]buzz",
    "type": "first-visit",
    "text": "Found live",
    "kind": "Giveaway or prize scam",
    "brand": null,
-   "title": "🛍️Melcom - Black Friday Sale!💰",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T14:01:15.000Z",
-   "domain": "kbtsn[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🇩🇿Commemorate Revolution Day! Claim your FREE 60GB of mobile data!🎁",
+   "title": "🪔 இந்த தீபாவளியில், ஒவ்வொரு இந்திய குடிமகனும் ₹8,000 ரொக்கப் பரிசைப் பெறலாம். 💸",
    "targets": [
-    "DZ"
+    "IN"
    ]
   },
   {
-   "at": "2026-11-17T13:58:02.000Z",
-   "domain": "ohx7td4[.]pro",
+   "at": "2026-11-17T15:01:25.000Z",
+   "domain": "roblox[.]rw",
+   "type": "title",
+   "text": "Switched to a new lure",
+   "kind": null,
+   "brand": null,
+   "title": "Acacioalmeida - Roblox",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T15:01:25.000Z",
+   "domain": "buscarmi-icloud[.]app",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": "Apple",
+   "title": "Google",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T15:01:25.000Z",
+   "domain": "hmhjn[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Grameenphone",
+   "title": "✨Grameenphone - জাতীয় বিপ্লব ও সংহতি দিবসের উপহার!💰",
+   "targets": [
+    "BD"
+   ]
+  },
+  {
+   "at": "2026-11-17T15:01:25.000Z",
+   "domain": "hmyyq[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🎉Orange Money - 14th Anniversary Gifts!🎁",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T15:01:25.000Z",
+   "domain": "hmgju[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🪔 ഈ ദീപാവലിക്ക്, എല്ലാ ഇന്ത്യൻ പൗരന്മാർക്കും ₹8,000 ക്യാഷ് ആനുകൂല്യം ലഭിക്കും. 💸",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T15:00:23.000Z",
+   "domain": "hkjdn[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Airtel",
+   "title": "🪔Airtel - દિવાળીની ભેટ!💵",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T15:00:23.000Z",
+   "domain": "hkzej[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "✨Claim 60GB of Free Data for All Saints’ Day!💰",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:59:21.000Z",
+   "domain": "smart-92492[.]cfd",
+   "type": "nameservers",
+   "text": "Nameservers changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:59:21.000Z",
+   "domain": "smart-92492[.]cfd",
+   "type": "moved",
+   "text": "Moved to a different server",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:59:21.000Z",
+   "domain": "g5[.]lu",
+   "type": "title",
+   "text": "Switched to a new lure",
+   "kind": null,
+   "brand": null,
+   "title": "Acacioalmeida - Roblox",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:59:21.000Z",
+   "domain": "metamaskuxlogen[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": "MetaMask",
+   "title": "𝗠𝗲𝘁å𝗺å𝘀𝗸 @ 𝗟𝗼𝗴𝗶𝗻",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:59:21.000Z",
+   "domain": "trezorsuite-app[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "Trezor Suite | Connect your Trezor Wallet | App (Official Site)",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:59:21.000Z",
+   "domain": "hjqeo[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🔔Everyone can receive 100,000 FC in cash as a special gift to celebrate President Félix A",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:59:21.000Z",
+   "domain": "hjgro[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🪔PNB - দিওয়ালি উপহার!💸",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:58:21.000Z",
+   "domain": "pl-ogloszezenle891241[.]shop",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:58:21.000Z",
+   "domain": "hhpvw[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "✨Claim 100.000 Fbu in Cash for All Saints’ Day!💰",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:56:20.000Z",
+   "domain": "ofe83204[.]sbs",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:56:20.000Z",
+   "domain": "cyo5td32[.]pro",
    "type": "moved",
    "text": "Moved to a different server",
    "kind": null,
@@ -11070,18 +11780,244 @@
    "targets": []
   },
   {
-   "at": "2026-11-17T13:55:50.000Z",
-   "domain": "support-ledgrcom-start-web[.]typedream[.]app",
+   "at": "2026-11-17T14:56:20.000Z",
+   "domain": "hfixb[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🎊Paytm - దీపావళి కానుక!💸",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:55:16.000Z",
+   "domain": "hcmhs[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "targets": [
+    "PK"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:50:16.000Z",
+   "domain": "kucoinnxlogis[.]gitbook[.]io",
    "type": "rebuilt",
    "text": "Page rebuilt with a different layout",
    "kind": null,
    "brand": null,
-   "title": "Official Site® | Ledger[.]com/Start®® | Getting started — Ledger",
+   "title": "KuCōin @ Login",
    "targets": []
   },
   {
-   "at": "2026-11-17T13:55:50.000Z",
-   "domain": "jzpya[.]buzz",
+   "at": "2026-11-17T14:50:16.000Z",
+   "domain": "trezoorr--thego[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "Trezor® Wallet® | The Next Generation of Hardware©",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:50:16.000Z",
+   "domain": "pwpwwp[.]sbs",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:49:08.000Z",
+   "domain": "gztbo[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🪔PNB - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!🎁",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:49:08.000Z",
+   "domain": "gzvum[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🪔Paytm - দিওয়ালি উপহার!💸",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:48:00.000Z",
+   "domain": "gyhxl[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🎉ኢትዮ ቴሌኮም - 16ኛ ዓመት የምስረታ ስጦታ!🎁",
+   "targets": [
+    "ET"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:46:56.000Z",
+   "domain": "alibabatradeonline[.]com",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "Alibaba[.]com: Manufacturers, Suppliers, Exporters & Importers from the world's largest on",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:46:56.000Z",
+   "domain": "kucoinloign[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "Kucoin",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:46:56.000Z",
+   "domain": "suite-app-docs-trezr[.]typedream[.]app",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "Trézōr Suite (Official) | Desktop & Web Crypto® Management",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:46:56.000Z",
+   "domain": "gwkqn[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "targets": [
+    "PK"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:46:56.000Z",
+   "domain": "gwmme[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🪔PNB - দিওয়ালি উপহার!💸",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:46:56.000Z",
+   "domain": "gwixy[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🇴🇲Happy Oman National Day! Get 60GB Free Data Now!✨",
+   "targets": [
+    "OM"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:45:46.000Z",
+   "domain": "gthst[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🪔NIMB - Tihar Gift!💸",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:44:37.000Z",
+   "domain": "kuc0inlgin5[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "【₭ucõin Login】 ➟ Sign in | US",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "ledger-live-download-sso-conect[.]typedream[.]app",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": "Ledger",
+   "title": "Ledger Live - Download Your Ledger Live Now I Ledger",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "metamaskiologii[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": "MetaMask",
+   "title": "𝗠𝗲𝘁å𝗺å𝘀𝗸 𝗟𝗼𝗴𝗶𝗻 - us",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "lgekb[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Airtel",
+   "title": "🪔Airtel - દિવાળીની ભેટ!💵",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "gsbro[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🛍️Boxer - Black Friday!💸",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "grvoh[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "📢Everyone can receive $2,000 in cash as a special gift to celebrate Day of the Dead!💵",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "grzvl[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "✨PNB - దీపావళి కానుక!💵",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "grrql[.]buzz",
    "type": "first-visit",
    "text": "Found live",
    "kind": "Giveaway or prize scam",
@@ -11092,23 +12028,329 @@
    ]
   },
   {
-   "at": "2026-11-17T13:54:47.000Z",
-   "domain": "o2b4td42[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
+   "at": "2026-11-17T14:43:30.000Z",
+   "domain": "grqhd[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
    "brand": null,
-   "title": null,
+   "title": "🪔PNB - ਦੀਵਾਲੀ ਦਾ ਤੋਹਫ਼ਾ!🎁",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:42:26.000Z",
+   "domain": "lgbjv[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Airtel",
+   "title": "🪔Airtel - দিওয়ালি উপহার!💵",
    "targets": []
   },
   {
-   "at": "2026-11-17T13:54:47.000Z",
-   "domain": "tianhao19[.]cc",
+   "at": "2026-11-17T14:40:28.000Z",
+   "domain": "instagramchatsview999[.]blogspot[.]com",
+   "type": "back",
+   "text": "Came back online",
+   "kind": null,
+   "brand": "Facebook / Instagram",
+   "title": "Instagram",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:40:28.000Z",
+   "domain": "lcnfp[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🪔NIMB - Tihar Gift!💸",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:39:22.000Z",
+   "domain": "o10202038[.]shop",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:37:12.000Z",
+   "domain": "pl-ogloszenie142908[.]shop",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:36:10.000Z",
+   "domain": "coinbaseplogininin[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": "Coinbase",
+   "title": "Çoinbase Pro: Login | us",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:36:10.000Z",
+   "domain": "kyxll[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Shoprite",
+   "title": "🛍️Shoprite - Black Friday Deals!🎁",
+   "targets": [
+    "ZA"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:36:10.000Z",
+   "domain": "kygzl[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "✨Algérie Télécom - Revolution Day Gift!💰",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:36:10.000Z",
+   "domain": "kxqpd[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "📢Happy Black Friday! Get $30 for Free Now!💰",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:36:10.000Z",
+   "domain": "kxpzt[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🎉१७औँ वार्षिकोत्सवको अवसरमा रु. १,७०० निःशुल्क प्राप्त गर्नुहोस्!💸",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:35:05.000Z",
+   "domain": "ogoszenie-9583315[.]sbs",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:35:05.000Z",
+   "domain": "pousadaparaisodocarmo[.]com[.]br",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Pousada Paraíso do Carmo",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:34:07.000Z",
+   "domain": "kuomy[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "🇪🇬Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!💸",
+   "targets": [
+    "EG"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:32:56.000Z",
+   "domain": "ktjdn[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "✨تمام پاکستانیوں کو یومِ اقبال کے موقع پر 13,000 روپے کیش ٹرانسفر💸",
+   "targets": [
+    "PK"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:30:46.000Z",
+   "domain": "kqxqe[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Airtel",
+   "title": "🪔Airtel - தீபாவளி பரிசு!💸",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:29:45.000Z",
+   "domain": "secure-bridge-trezr-apps[.]typedream[.]app",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "learn-bridge",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:26:24.000Z",
+   "domain": "instagramfollowers146[.]blogspot[.]com",
+   "type": "back",
+   "text": "Came back online",
+   "kind": null,
+   "brand": "Facebook / Instagram",
+   "title": "Instagram",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:24:21.000Z",
+   "domain": "kgtna[.]buzz",
+   "type": "first-visit",
+   "text": "Found live",
+   "kind": "Giveaway or prize scam",
+   "brand": "Airtel",
+   "title": "🪔Airtel - ದೀಪಾವಳಿ ಉಡುಗೊರೆ!💸",
+   "targets": [
+    "IN"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:22:19.000Z",
+   "domain": "policy-transparency-advisory[.]onrender[.]com",
    "type": "moved",
    "text": "Moved to a different server",
    "kind": null,
    "brand": null,
-   "title": null,
+   "title": "Meta | Community Standards Violation",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:22:19.000Z",
+   "domain": "kucoinloginii-1[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "KuCōin | Crypto Exchange | Bitcoin Exchange | Bitcoin Trade",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:22:19.000Z",
+   "domain": "oferty-24[.]sbs",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:22:19.000Z",
+   "domain": "pl-ogloszezenle978142[.]shop",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:21:11.000Z",
+   "domain": "metamaskextensionnn[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": "MetaMask",
+   "title": "Metamask () Extension | Extension",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:21:11.000Z",
+   "domain": "steamcommunity[.]ing",
+   "type": "content",
+   "text": "Wording on the page changed",
+   "kind": null,
+   "brand": null,
+   "title": "CSCheck[.]ing — Steam Profile Checker, VAC Ban & CS2 Cheat Lookup",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:21:11.000Z",
+   "domain": "page-kucoin-en-us[.]typedream[.]app",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "KuCoin: Log In | Sign In",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:20:08.000Z",
+   "domain": "yoxjm[.]buzz",
+   "type": "kit",
+   "text": "Scam kit detected: WhatsApp chain \"brand gift\" kit",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
+   "targets": [
+    "EG"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:20:08.000Z",
+   "domain": "yoxjm[.]buzz",
+   "type": "back",
+   "text": "Came back online",
+   "kind": "Giveaway or prize scam",
+   "brand": null,
+   "title": "⏰Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!🎁",
+   "targets": [
+    "EG"
+   ]
+  },
+  {
+   "at": "2026-11-17T14:10:37.000Z",
+   "domain": "trezrhiwanlt[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": "Crypto scam",
+   "brand": null,
+   "title": "Trezor$$ Wallet | The Official Wallet",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:09:32.000Z",
+   "domain": "policycomplianceinsight[.]onrender[.]com",
+   "type": "moved",
+   "text": "Moved to a different server",
+   "kind": null,
+   "brand": null,
+   "title": "Meta | Community Standards Violation",
+   "targets": []
+  },
+  {
+   "at": "2026-11-17T14:09:32.000Z",
+   "domain": "uiphlodlogen[.]gitbook[.]io",
+   "type": "rebuilt",
+   "text": "Page rebuilt with a different layout",
+   "kind": null,
+   "brand": null,
+   "title": "Ûphold Loℊin | Sign In 💎",
    "targets": []
   },
   {
@@ -11124,18 +12366,6 @@
    ]
   },
   {
-   "at": "2026-11-17T13:54:47.000Z",
-   "domain": "jxnuh[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔PNB - ദീപാവലി സമ്മാനം!💸",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
    "at": "2026-11-17T13:53:49.000Z",
    "domain": "jwpmw[.]buzz",
    "type": "first-visit",
@@ -11144,602 +12374,33 @@
    "brand": "Airtel",
    "title": "🎉Airtel - Lamu Cultural Festival Gift!💵",
    "targets": []
-  },
-  {
-   "at": "2026-11-17T13:53:49.000Z",
-   "domain": "jvwaj[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "📢Everyone can receive 60GB of free mobile data as a special gift to celebrate Republic Da",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:53:49.000Z",
-   "domain": "jvpku[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔PhonePe दिवाली बोनस — सभी उपयोगकर्ताओं के लिए ₹8,000💰",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:53:49.000Z",
-   "domain": "jvvwo[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🍒سارے پاکستانیواں کوں یومِ اقبال دے موقع تے 13,000 روپے دی نقد رقم💸",
-   "targets": [
-    "PK"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:49:24.000Z",
-   "domain": "hsbcverifyadvisorhelp[.]com",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:49:24.000Z",
-   "domain": "lordtv[.]top",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:49:24.000Z",
-   "domain": "jsqkq[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🎉१७औँ वार्षिकोत्सवको अवसरमा रु. १,७०० निःशुल्क प्राप्त गर्नुहोस्!💸",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:48:31.000Z",
-   "domain": "jqiie[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Airtel",
-   "title": "🪔Airtel - દિવાળીની ભેટ!💵",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:48:31.000Z",
-   "domain": "jqxqs[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔Paytm - दिवाळीची भेट!💵",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:48:31.000Z",
-   "domain": "jqiue[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔Paytm - ਦੀਵਾਲੀ ਦਾ ਤੋਹਫ਼ਾ!💸",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:48:31.000Z",
-   "domain": "jqizk[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "targets": [
-    "BD"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:47:25.000Z",
-   "domain": "pclvm[.]vip",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:47:25.000Z",
-   "domain": "promoter[.]lol",
-   "type": "content",
-   "text": "Wording on the page changed",
-   "kind": null,
-   "brand": null,
-   "title": "You had one thought. We made it wearable. &ndash; Me[.]LOL",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:47:25.000Z",
-   "domain": "jqfff[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔PNB - দিওয়ালি উপহার!💸",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:47:25.000Z",
-   "domain": "jpnct[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🇧🇩জাতীয় বিপ্লব ও সংহতি দিবস স্মরণে! ৬০ জিবি ফ্রি ইন্টারনেট ডেটা সংগ্রহ করুন!💰",
-   "targets": [
-    "BD"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:45:21.000Z",
-   "domain": "4jp4td31[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:45:21.000Z",
-   "domain": "jnyqn[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔 ఈ దీపావళికి, ప్రతి భారతీయ పౌరుడు ₹8,000 నగదు ప్రయోజనాన్ని పొందవచ్చు. 🎁",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:45:21.000Z",
-   "domain": "jnxbe[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🇹🇷Turkcell - Republic Day Gift!🎁",
-   "targets": [
-    "TR"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:45:21.000Z",
-   "domain": "jnjhx[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔यावर्षी दिवाळीत प्रत्येक भारतीय नागरिकाला ₹8,000 चा रोख लाभ मिळू शकतो.💸",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:45:21.000Z",
-   "domain": "jnbuu[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:44:21.000Z",
-   "domain": "olayr[.]my",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:44:21.000Z",
-   "domain": "jktqs[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Grameenphone",
-   "title": "✨Grameenphone - জাতীয় বিপ্লব ও সংহতি দিবসের উপহার!💰",
-   "targets": [
-    "BD"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:44:21.000Z",
-   "domain": "jljby[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🎉ኢትዮ ቴሌኮም - 16ኛ ዓመት የምስረታ ስጦታ!🎁",
-   "targets": [
-    "ET"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:44:21.000Z",
-   "domain": "jkxhm[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🇪🇬Celebrate President Abdel Fattah El-Sisi's Birthday and Get EGP 3,000 for Free!💸",
-   "targets": [
-    "EG"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:43:16.000Z",
-   "domain": "4s87td70[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:43:16.000Z",
-   "domain": "avipp[.]vip",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": "u8澳门新葡京",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:43:16.000Z",
-   "domain": "8b89td17[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:43:16.000Z",
-   "domain": "jjykf[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Globe Telecom",
-   "title": "👉Globe - Bonifacio Day Gift!🎁",
-   "targets": [
-    "PH"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:41:22.000Z",
-   "domain": "o3l2td21[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:41:22.000Z",
-   "domain": "bankofamerica-financial[.]com",
-   "type": "rebuilt",
-   "text": "Page rebuilt with a different layout",
-   "kind": null,
-   "brand": "Bank of America",
-   "title": "BANK OF AMERICA",
-   "targets": [
-    "US"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:40:18.000Z",
-   "domain": "jepsq[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Airtel",
-   "title": "🪔Airtel - தீபாவளி பரிசு!💸",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:40:18.000Z",
-   "domain": "jgxli[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "📢උඳුවප් පොහොය සමරන්න සහ නොමිලේ රු. 15,000ක් ලබාගන්න!💰",
-   "targets": [
-    "LK"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:39:15.000Z",
-   "domain": "petsonpoint[.]co[.]uk",
-   "type": "back",
-   "text": "Came back online",
-   "kind": null,
-   "brand": null,
-   "title": "Bet365 Casino: £1,800 Bonus + 200 Free Spins",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:39:15.000Z",
-   "domain": "kucoinloginaa[.]gitbook[.]io",
-   "type": "rebuilt",
-   "text": "Page rebuilt with a different layout",
-   "kind": null,
-   "brand": null,
-   "title": "Crypto Exchange | Bitcoin Exchange | Bitcoin Trading | Kucoin Login",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:39:15.000Z",
-   "domain": "ecr3td31[.]pro",
-   "type": "nameservers",
-   "text": "Nameservers changed",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:39:15.000Z",
-   "domain": "ecr3td31[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:39:15.000Z",
-   "domain": "emekastudios[.]co[.]za",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": "Google",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:39:15.000Z",
-   "domain": "spspspsps[.]shop",
-   "type": "content",
-   "text": "Wording on the page changed",
-   "kind": null,
-   "brand": null,
-   "title": "Allegro Lokalnie - Wystaw ogłoszenia za darmo i kupuj od osób z Twojej okolicy",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:38:19.000Z",
-   "domain": "jcaqa[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Airtel",
-   "title": "🪔Airtel - দিওয়ালি উপহার!💵",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:38:19.000Z",
-   "domain": "jbwtu[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🎊Everyone in South Africa can receive R1,500 as a cash gift to celebrate President Cyril ",
-   "targets": [
-    "ZA"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:37:17.000Z",
-   "domain": "standardsverificationcenter-b2u7[.]onrender[.]com",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": "Meta | Community Standards Violation",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:37:17.000Z",
-   "domain": "h7b2td33[.]pro",
-   "type": "moved",
-   "text": "Moved to a different server",
-   "kind": null,
-   "brand": null,
-   "title": null,
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:33:11.000Z",
-   "domain": "mnnuu[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔Paytm - दिवाळीची भेट!💵",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:33:11.000Z",
-   "domain": "mndtn[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🔔Everyone can receive 100,000 FC in cash as a special gift to celebrate President Félix A",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:32:08.000Z",
-   "domain": "mlpfq[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Globe Telecom",
-   "title": "👉Globe - Bonifacio Day Gift!🎁",
-   "targets": [
-    "PH"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:29:03.000Z",
-   "domain": "mhgvp[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🌹বিজয় দিবসের উপহার হিসেবে সবাই ৬০GB বিনামূল্যে মোবাইল ডেটা পেতে পারেন।🎁",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:29:03.000Z",
-   "domain": "mgnrl[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🪔Paytm - দিওয়ালি উপহার!💸",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T13:27:04.000Z",
-   "domain": "mdczl[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Ethio Telecom",
-   "title": "🎉Ethio Telecom - Kennaa Waggaa 16ffaa!💸",
-   "targets": [
-    "ET"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:27:04.000Z",
-   "domain": "mdxiz[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "🎊Paytm - దీపావళి కానుక!💸",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T13:27:04.000Z",
-   "domain": "mdqzd[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": null,
-   "title": "📢Everyone can receive 60GB of free mobile data as a special gift to celebrate Republic Da",
-   "targets": []
-  },
-  {
-   "at": "2026-11-17T12:46:41.000Z",
-   "domain": "lwihd[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Grameenphone",
-   "title": "👉Grameenphone - ৩০ বছর পূর্তি উপলক্ষে উপহার!🎁",
-   "targets": [
-    "BD"
-   ]
-  },
-  {
-   "at": "2026-11-17T12:31:42.000Z",
-   "domain": "onfxo[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Airtel",
-   "title": "🪔Airtel - दिवाली का तोहफ़ा!💵",
-   "targets": [
-    "IN"
-   ]
-  },
-  {
-   "at": "2026-11-17T12:31:42.000Z",
-   "domain": "omxcx[.]buzz",
-   "type": "first-visit",
-   "text": "Found live",
-   "kind": "Giveaway or prize scam",
-   "brand": "Airtel",
-   "title": "🪔Airtel - ਦੀਵਾਲੀ ਦਾ ਤੋਹਫ਼ਾ!💸",
-   "targets": [
-    "IN"
-   ]
   }
  ],
  "activity": {
   "hour": {
-   "back": 13,
-   "content": 8,
-   "first-visit": 2467,
-   "moved": 56,
+   "back": 34,
+   "content": 20,
+   "first-visit": 3233,
+   "kit": 1,
+   "moved": 59,
    "nameservers": 1,
-   "rebuilt": 16,
-   "risk": 3,
-   "title": 2,
-   "watched": 5850
+   "rebuilt": 35,
+   "risk": 34,
+   "title": 6,
+   "watched": 8250
   },
   "day": {
-   "back": 308,
-   "content": 67,
-   "first-visit": 31078,
-   "kit": 11,
-   "moved": 426,
-   "nameservers": 11,
-   "rebuilt": 114,
-   "risk": 210,
+   "back": 333,
+   "content": 82,
+   "first-visit": 34311,
+   "kit": 12,
+   "moved": 469,
+   "nameservers": 12,
+   "rebuilt": 142,
+   "risk": 242,
    "taken-down": 131,
-   "title": 12,
-   "watched": 57600
+   "title": 16,
+   "watched": 65250
   }
  },
  "takedowns": [
@@ -12447,28 +13108,28 @@
  "batches": [
   {
    "shape": "8 random letters and digits + .top",
-   "names": 19826,
-   "timesOverRepresented": 232.9
+   "names": 19839,
+   "timesOverRepresented": 229.9
   },
   {
    "shape": "7 random letters + .top",
-   "names": 9111,
-   "timesOverRepresented": 39.2
+   "names": 9126,
+   "timesOverRepresented": 38.7
   },
   {
    "shape": "6 random letters + .cn",
-   "names": 8972,
+   "names": 9032,
    "timesOverRepresented": 9.9
   },
   {
    "shape": "8 random letters and digits + .lol",
-   "names": 6191,
-   "timesOverRepresented": 1445.7
+   "names": 6192,
+   "timesOverRepresented": 1426.3
   },
   {
    "shape": "7 random letters + .com.cn",
-   "names": 6064,
-   "timesOverRepresented": 28.2
+   "names": 6073,
+   "timesOverRepresented": 27.9
   },
   {
    "shape": "5 random letters + .cn",
@@ -12478,32 +13139,32 @@
   {
    "shape": "20 random letters and digits + .shop",
    "names": 4456,
-   "timesOverRepresented": 252.6
+   "timesOverRepresented": 249.2
   },
   {
    "shape": "8 random letters + .top",
-   "names": 4306,
-   "timesOverRepresented": 18.4
+   "names": 4316,
+   "timesOverRepresented": 18.2
   },
   {
    "shape": "5 random letters + .top",
-   "names": 3254,
-   "timesOverRepresented": 23
+   "names": 3273,
+   "timesOverRepresented": 22.8
   },
   {
    "shape": "6 random letters + .shop",
-   "names": 3118,
-   "timesOverRepresented": 14.3
+   "names": 3135,
+   "timesOverRepresented": 14.2
   },
   {
    "shape": "6 random letters + .top",
-   "names": 3109,
-   "timesOverRepresented": 13.1
+   "names": 3124,
+   "timesOverRepresented": 13
   },
   {
    "shape": "7 random letters and digits + .top",
-   "names": 2880,
-   "timesOverRepresented": 15.1
+   "names": 2891,
+   "timesOverRepresented": 14.9
   }
  ],
  "rules": {

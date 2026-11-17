@@ -103,6 +103,11 @@ jobs:
           }
           # Brand look-alikes nobody has listed yet go to the front of the queue
           node tools/scam-radar/prioritize.mjs --limit 300 || echo "::warning::could not prioritise brand look-alikes"
+          # The Jamaica hunt searches the scan archive and the blocklists while the scan runs. It only
+          # writes a file; its leads join the watchlist between two cycles (see hunt-jamaica.mjs).
+          leads="$RUNNER_TEMP/jamaica-leads.json"
+          hunt_log="$RUNNER_TEMP/jamaica-hunt.log"
+          node tools/scam-radar/hunt-jamaica.mjs --hunt "$leads" --minutes 8 > "$hunt_log" 2>&1 &
           failed=0
           for cycle in $(seq 1 "$SCAN_MINUTES"); do
             began=$(date +%s)
@@ -119,6 +124,11 @@ jobs:
                 publish finished "$cycle"
                 exit 1
               fi
+            fi
+            if [ -s "$leads" ]; then
+              node tools/scam-radar/hunt-jamaica.mjs --add "$leads" || echo "::warning::the Jamaica hunt's leads could not be added"
+              rm -f "$leads"
+              tail -n 40 "$hunt_log" || true
             fi
             publish scanning "$cycle"
             echo "::endgroup::"

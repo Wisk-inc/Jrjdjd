@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": true,
+  "functions": {
+    "api/scam-finder.js": { "maxDuration": 60 }
+  },
   "git": {
     "deploymentEnabled": {
       "scam-radar-data": false

@@ -3,7 +3,7 @@
 //   node tools/scam-radar/export.mjs [--db FILE] [--out assets/data/scam-radar.json]
 //   node tools/scam-radar/export.mjs --all DIR      everything, for the scam-radar-data branch
 //
-// Files written with --all:
+// Files written with --all (see also contacts/ below):
 //   scam-radar.json          the snapshot /scam-radar/ draws
 //   scam-radar-status.json   a few hundred bytes the page polls to see if there is a new snapshot
 //   lookup/xx.json           one record per watched site, keyed by a hash of its name ("Check a site")
@@ -21,6 +21,7 @@
 //   tables: the kit, the brand being impersonated, the kind of lure, the reasons behind the score.
 // - The lookup holds records for sites that are not named, but under a hash, so it answers a
 //   question about a site somebody already has. It cannot be read as a list.
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { BRANDS } from './scam-finder/data/brands.js';
@@ -29,6 +30,7 @@ import { categoryName } from './scam-finder/lib/radar/checker.js';
 import { RadarStore, SRC, defaultDbPath } from './scam-finder/lib/radar/store.js';
 import { overview, toMapDomain } from './scam-finder/lib/radar/view.js';
 import { LEVELS } from './scam-finder/lib/score.js';
+import { hostingPlatform } from './scam-finder/lib/util.js';
 import { clean, cleanTitle, defang, hashOf, sanitizeCampaigns, sanitizeDomain, sanitizeLinks } from './sanitize.mjs';
 
 const args = process.argv.slice(2);
@@ -84,8 +86,23 @@ const kindOf = (site) => categoryName(site.category) || null;
 // but there is nothing left to warn about: it is counted as dealt with, not as a live scam.
 const hostNotice = (site) =>
   /takedown notice|trust\s*(?:&|and)\s*safety|(?:site|page|project|app|account|deployment) (?:has been|was|is) (?:taken down|removed|suspended|disabled|blocked)/i.test(site.title || '');
+// A real site broken into to host a scam page, such as a small firm's website with a fake login page
+// planted in it. Scam domains are days or weeks old when Radar first sees them; this one's domain was
+// registered at least a year before, it is not a page on a free hosting platform (where the platform's
+// own domain is old and anyone can open a site in a minute), and its name borrows no brand. Such a site
+// is counted, and its record says it was hacked, but it is never named as a scam site.
+const HACKED_AFTER_DAYS = 365;
+const oldDomain = (site) => {
+  const created = Date.parse(site.created || '');
+  return Boolean(created && site.first_seen) && site.first_seen * 1000 - created >= HACKED_AFTER_DAYS * DAY * 1000;
+};
+const hackedSite = (site) =>
+  oldDomain(site) && !hostingPlatform(site.name) && !(site.detail?.brands || []).some((b) => !b.official && b.inDomain);
 const strong = (site) =>
-  site.risk >= NAME_MIN_RISK && ((site.detail?.kits || []).length > 0 || listedBy(site.src).length > 0);
+  site.risk >= NAME_MIN_RISK && ((site.detail?.kits || []).length > 0 || listedBy(site.src).length > 0) && !hackedSite(site);
+// Reasons that do not hold for a domain registered long before: a name that looks machine-made says
+// a script registered it for a scam, which a years-old business domain was not.
+const reasonsOf = (site) => (site.detail?.signals || []).filter((s) => !(s.id === 'random-name' && oldDomain(site)));
 
 // What happened, in Radar's own words. Nothing from the page is repeated here.
 const EVENT_TEXT = {
@@ -263,6 +280,61 @@ try {
   const activity = { hour: activityOver(HOUR), day: activityOver(DAY) };
 
   const view = overview(store);
+  // Jamaica: what the hourly Jamaica hunt found (hunt-jamaica.mjs keeps jamaica-hunt.json next to the
+  // database), and the Jamaican numbers (+1 876, +1 658) on named scam sites. Counts only: no number is
+  // published. One can be checked on the page by pasting it.
+  const jamaica = (() => {
+    let hunts = [];
+    try {
+      hunts = JSON.parse(fs.readFileSync(path.join(path.dirname(dbFile), 'jamaica-hunt.json'), 'utf8'));
+    } catch {
+      hunts = [];
+    }
+    hunts = Array.isArray(hunts) ? hunts.filter((h) => h && Date.parse(h.at)) : [];
+    const dayAgo = Date.now() - DAY * 1000;
+    const today = hunts.filter((h) => Date.parse(h.at) >= dayAgo);
+    const numbers = new Set();
+    const numberSites = new Set();
+    for (const row of store.prepare("SELECT value, name FROM indicators WHERE kind IN ('phone', 'whatsapp')").all()) {
+      const digits = String(row.value || '').replace(/\D/g, '');
+      if (!/^1(?:876|658)\d{7}$/.test(digits)) continue;
+      const site = siteFor(row.name);
+      if (!site || !strong(site)) continue;
+      numbers.add(digits);
+      numberSites.add(site.name);
+    }
+    const watched = store.prepare(
+      "SELECT count(*) AS n, sum(checks > 0) AS visited, sum(state = 'live') AS up FROM sites WHERE why LIKE 'Jamaica hunt%'",
+    ).get();
+    const aimed = live.filter((site) => targetsOf(site).includes('JM'));
+    const last = hunts.at(-1);
+    const whole = (n) => (Number.isFinite(Number(n)) ? Number(n) : 0);
+    return {
+      liveAimedAtJamaica: aimed.length,
+      namedAimedAtJamaica: aimed.filter(strong).length,
+      jamaicanNumbers: numbers.size,
+      sitesWithJamaicanNumbers: numberSites.size,
+      huntWatching: whole(watched?.n),
+      huntVisited: whole(watched?.visited),
+      huntUp: whole(watched?.up),
+      lastHunt: last ? {
+        at: new Date(Date.parse(last.at)).toISOString(),
+        seconds: whole(last.seconds),
+        searches: whole(last.searches),
+        keywords: whole(last.keywords),
+        leads: whole(last.leads),
+        suspect: whole(last.suspect),
+        aimedAtJamaica: whole(last.aimedAtJamaica),
+        added: whole(last.added),
+      } : null,
+      last24h: {
+        hunts: today.length,
+        leads: today.reduce((sum, h) => sum + whole(h.leads), 0),
+        added: today.reduce((sum, h) => sum + whole(h.added), 0),
+      },
+    };
+  })();
+
   const snapshot = {
     generated: new Date().toISOString(),
     lastScan: typeof lastTick?.at === 'string' ? lastTick.at : null,
@@ -281,6 +353,7 @@ try {
       liveHighRisk: live.length,
       critical: live.filter((s) => s.level === 'critical').length,
       replacedByHostNotice: up.length - live.length,
+      hackedLive: live.filter(hackedSite).length,
       named: strongLive.length,
       runningKnownKit: stats.kits || 0,
       takenDown: stats.takenDown || 0,
@@ -304,6 +377,7 @@ try {
     hosts,
     leaderboards,
     byCountry,
+    jamaica,
     named,
     namedTotal: strongLive.length,
     feed,
@@ -336,7 +410,8 @@ try {
         risk: site.risk,
         level: clean(site.level, 10),
         named: isStrong || undefined,
-        title: isStrong && !noticed ? cleanTitle(site.title) || undefined : undefined,
+        hacked: hackedSite(site) || undefined,
+        title: (isStrong || hackedSite(site)) && !noticed ? cleanTitle(site.title) || undefined : undefined,
         kind: kindOf(site) || undefined,
         kit: kitOf(site) || undefined,
         brands: brandsOf(site).slice(0, 3),
@@ -345,7 +420,7 @@ try {
         shared: d.sharedNetwork ? true : undefined,
         network: clean(site.network, 50) || undefined,
         listedBy: listedBy(site.src),
-        why: (d.signals || []).slice(0, 6).map((s) => clean(s.label, 90)).filter(Boolean),
+        why: reasonsOf(site).slice(0, 6).map((s) => clean(s.label, 90)).filter(Boolean),
         code: (d.findings || []).slice(0, 6)
           .map((f) => `${clean(f.label, 80)}${f.hidden ? ' (hidden in encoded script)' : ''}`).filter(Boolean),
         firstSeen: iso(site.first_seen),
@@ -369,6 +444,90 @@ try {
       writeJson(path.join(allDir, 'lookup', `${shard}.json`), shards.get(shard) || {});
     }
     console.log(`Wrote ${worth.length} lookup records in 256 files`);
+
+    // ---- Contacts: emails, phone numbers, Telegram handles and wallets that named scam pages ask
+    // victims to use, so someone holding one from a message can check it. Only a key for each is
+    // published, never the contact itself, and only those seen on sites that meet the naming bar,
+    // whose pages anyone can already read. A contact on a scam page is often a hijacked or spoofed
+    // account, and the page says so with every match.
+    //
+    // The key is a slow one-way hash (PBKDF2-SHA256, a million rounds). A fast hash would not do:
+    // a country has only so many phone numbers, and hashing every one of them takes seconds, which
+    // would turn the files back into a list. A key takes about 0.1 s here and in a browser, so a
+    // visitor checking one contact waits a moment, while guessing every number takes a long time.
+    // Keys are kept in contact-keys.json next to the database; new ones are worked out a few
+    // seconds' worth per export, and the rest wait for the next.
+    const CONTACT_SALT = 'corx-labs scam-radar contacts v1';
+    const CONTACT_ROUNDS = 1000000;
+    const keysFile = path.join(path.dirname(dbFile), 'contact-keys.json');
+    let keyCache = {};
+    try {
+      keyCache = JSON.parse(fs.readFileSync(keysFile, 'utf8')) || {};
+    } catch {
+      keyCache = {};
+    }
+    const hashUntil = Date.now() + 4000;
+    let keysAdded = 0;
+    let keysWaiting = 0;
+    const CONTACT_KINDS = { email: 'email', phone: 'phone', whatsapp: 'phone', telegram: 'telegram',
+      bitcoin: 'bitcoin', ethereum: 'ethereum', tron: 'tron' };
+    const contactKey = (kind, value) => {
+      let v = String(value || '').trim();
+      if (kind === 'telegram') v = v.replace(/^@/, '');
+      if (kind === 'phone') v = `+${v.replace(/\D/g, '')}`;
+      if (v.length <= 2) return null;
+      const id = `${kind}:${v}`.toLowerCase();
+      if (keyCache[id]) return keyCache[id];
+      if (Date.now() > hashUntil) {
+        keysWaiting += 1;
+        return null;
+      }
+      keyCache[id] = crypto.pbkdf2Sync(id, CONTACT_SALT, CONTACT_ROUNDS, 8, 'sha256').toString('hex');
+      keysAdded += 1;
+      return keyCache[id];
+    };
+    const contactRows = store.prepare(
+      `SELECT kind, value, name FROM indicators WHERE kind IN (${Object.keys(CONTACT_KINDS).map(() => '?').join(', ')})`,
+    ).all(...Object.keys(CONTACT_KINDS));
+    const contacts = new Map();
+    for (const row of contactRows) {
+      const site = siteFor(row.name);
+      if (!site || !strong(site)) continue;
+      const kind = CONTACT_KINDS[row.kind];
+      const key = contactKey(kind, row.value);
+      if (!key) continue;
+      const entry = contacts.get(key) || { kind, sites: new Set(), live: 0, first: Infinity, last: 0, kinds: [], brands: [] };
+      if (entry.sites.has(site.name)) continue;
+      entry.sites.add(site.name);
+      if (site.state === 'live') entry.live += 1;
+      entry.first = Math.min(entry.first, site.first_seen || Infinity);
+      entry.last = Math.max(entry.last, site.last_check || 0);
+      if (kindOf(site)) entry.kinds.push(kindOf(site));
+      if (brandOf(site)) entry.brands.push(brandOf(site));
+      contacts.set(key, entry);
+    }
+    const contactShards = new Map();
+    for (const [key, entry] of contacts) {
+      const shard = key.slice(0, 2);
+      if (!contactShards.has(shard)) contactShards.set(shard, {});
+      contactShards.get(shard)[key] = {
+        kind: entry.kind,
+        sites: entry.sites.size,
+        live: entry.live,
+        first: Number.isFinite(entry.first) ? iso(entry.first) : null,
+        last: iso(entry.last) || null,
+        names: [...entry.sites].slice(0, 5).map(defang),
+        kinds: count(entry.kinds).slice(0, 3).map(([name]) => name),
+        brands: count(entry.brands).slice(0, 3).map(([name]) => name),
+      };
+    }
+    fs.rmSync(path.join(allDir, 'contacts'), { recursive: true, force: true });
+    for (let i = 0; i < 256; i += 1) {
+      const shard = i.toString(16).padStart(2, '0');
+      writeJson(path.join(allDir, 'contacts', `${shard}.json`), contactShards.get(shard) || {});
+    }
+    if (keysAdded) fs.writeFileSync(keysFile, JSON.stringify(keyCache));
+    console.log(`Wrote ${contacts.size} contact records in 256 files (${keysAdded} new keys${keysWaiting ? `, ${keysWaiting} waiting for the next export` : ''})`);
 
     // ---- The map: named sites, in the result shape Scam Finder's viewer draws
     const pool = store.listSites({ minRisk: NAME_MIN_RISK, limit: 5000 }).filter((s) => s.checks > 0 && strong(s) && !hostNotice(s));

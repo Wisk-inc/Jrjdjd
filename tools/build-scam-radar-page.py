@@ -133,6 +133,37 @@ STATIC_DETAIL = (f"Numbers from the scan published on {WHEN}, after {num(SNAP['s
 SHORT_WHEN = f"{when.day} {when:%b}, {when:%H:%M} UTC"
 LC = SNAP.get("lastCycle") or {}
 
+# Jamaica watch: the hourly Jamaica hunt and Jamaican numbers on named scam sites (counts only).
+# A snapshot from before the hunt existed has no "jamaica"; then only what the rest of it shows is used.
+JM = SNAP.get("jamaica") or {}
+JM_AIMED = JM.get("liveAimedAtJamaica", (SNAP.get("byCountry", {}).get("JM") or {}).get("live", 0))
+JM_NAMED = JM.get("namedAimedAtJamaica", sum(1 for n in SNAP.get("named", []) if "JM" in (n.get("targets") or [])))
+
+
+def jm_rows():
+    rows = [("Live scam sites aimed at Jamaica", num(JM_AIMED)), ("Named here", num(JM_NAMED))]
+    if JM:
+        rows.append(("Found by the hunt, watched", f"{num(JM.get('huntWatching'))}: {num(JM.get('huntVisited'))} visited so far, "
+                     f"{num(JM.get('huntUp'))} up"))
+        rows.append(("Jamaican numbers on named scam sites", f"{num(JM.get('jamaicanNumbers'))}, on {num(JM.get('sitesWithJamaicanNumbers'))} "
+                     f"site{'' if JM.get('sitesWithJamaicanNumbers') == 1 else 's'}"))
+    return "\n".join(f"          <div><dt>{esc(a)}</dt><dd>{esc(b)}</dd></div>" for a, b in rows)
+
+
+def jm_hunt():
+    last = JM.get("lastHunt")
+    if not last:
+        return "No Jamaica hunt has finished yet. One starts with each hourly scan run and takes about eight minutes."
+    at = datetime.fromisoformat(last["at"].replace("Z", "+00:00")).astimezone(timezone.utc)
+    return (f"Last hunt {at.day} {at:%b}, {at:%H:%M} UTC: {num(last.get('searches'))} searches of the scan archive and "
+            f"{num(last.get('keywords'))} words checked against the blocklists found {num(last.get('leads'))} leads, "
+            f"{num(last.get('suspect'))} of them suspicious and {num(last.get('aimedAtJamaica'))} aimed at Jamaica. "
+            f"{num(last.get('added'))} went on the watchlist.")
+
+
+JM_STATS = jm_rows()
+JM_HUNT = esc(jm_hunt())
+
 
 def cycle_text(c):
     if not c:
@@ -248,12 +279,17 @@ FAQ = [
      "appear. It keeps an index of more than 18 million domains, reads newly issued web certificates and newly "
      "registered names, visits the suspicious ones, and records when each goes live, changes or is taken "
      "down. This page shows what it has found, by country, and checks any link you paste into it."),
-    ("How do I check a link?",
-     "Paste it into the box at the top of the page. The address is judged in your browser with the "
-     "scanner&rsquo;s own rules: borrowed brand names, bait words, cheap endings, machine-made names and the "
-     "marks of a link built to be passed around. Radar&rsquo;s record for the site, if it has one, is looked up "
-     "by a scrambled form of the name. Where this site&rsquo;s scan server is running, the page is also visited "
-     "as plain text and its code is read for 23 scam behaviours. You are never sent to the site."),
+    ("How do I check a link, an email or a number?",
+     "Paste it into the box at the top of the page. A link is judged in your browser with the scanner&rsquo;s "
+     "own rules: borrowed brand names, bait words, cheap endings, machine-made names and the marks of a link built "
+     "to be passed around. Radar&rsquo;s record for the site, if it has one, is looked up by a scrambled form of "
+     "the name. Where this site&rsquo;s scan server is running, a deep dive of up to 40 seconds follows: the page "
+     "is visited as plain text and its code is read for 23 scam behaviours, its registration, servers, mail setup "
+     "and certificate history are looked up, and the sites that share its server, page title or files are found "
+     "and scored. An email address, phone number, Telegram name or crypto wallet is matched, again by a scrambled "
+     "form, against the contacts that named scam sites ask people to use. An email address is also checked with "
+     "StopForumSpam, and a phone number gets its country and any regulator warning about its area code. You are "
+     "never sent to the site."),
     ("How often does it update?",
      "About once a minute. The scanner runs around the clock in one-minute cycles and publishes what it has "
      "found after every cycle, and this page checks for new data every 15 seconds and shows what changed. Once "
@@ -277,7 +313,7 @@ FAQ = [
      "else&rsquo;s hijacked account."),
     ("What do the countries mean?",
      "Hosted in is the country of the server, when that can be seen. Many scam sites hide behind networks such "
-     "as Cloudflare, and for those the server&rsquo;s country is not shown rather than guessed. Aimed at is "
+     "as Cloudflare, and for those the server&rsquo;s country is not shown. It is never guessed. Aimed at is "
      "the country a scam targets, worked out from the brand it impersonates, the currency or flag in its "
      "title, or the language it uses. Most scam sites aim at nobody in particular, so far fewer have one."),
     ("I got a scam link. What should I do?",
@@ -303,7 +339,9 @@ graph = [
                     "websites by the country that hosts them and the country they target, from a scanner that "
                     "watches more than 18 million domains, newly issued certificates and newly registered names, "
                     "and records when each scam site goes live or is taken down.",
-     "featureList": ["Check a link or domain for scam signals", "Live scam websites by country", "Live feed of new scam sites and takedowns",
+     "featureList": ["Check a link or domain for scam signals", "Deep dive into a site: registration, servers, mail, certificates and linked sites",
+                     "Check an email address, phone number, Telegram name or crypto wallet against named scam sites",
+                     "Hourly hunt for scam sites aimed at Jamaica", "Live scam websites by country", "Live feed of new scam sites and takedowns",
                      "Leaderboards of faked brands, scam kinds, scam kits and hosting networks", "3D map of scam campaigns"],
      "isAccessibleForFree": True, "image": OG, "author": person,
      "publisher": {"@id": "https://www.corx-labs.com/#organization"}, "datePublished": PUBLISHED, "dateModified": DATE,
@@ -433,20 +471,30 @@ page = f"""<!DOCTYPE html>
   <section class="section-tight" id="check" style="padding-top:clamp(28px,4vw,48px)">
     <div class="shell">
       <div class="sr-card">
-        <h2>Check a link</h2>
-        <p class="sr-note">Paste a link or a domain from a message you don&rsquo;t trust. You get what the address
-          itself gives away, what Radar has on record for the site and, where this site&rsquo;s scan server is
-          running, what the page does when it is visited right now. You are never sent to the site.</p>
+        <h2>Check a link, an email or a number</h2>
+        <p class="sr-note">Paste a link, a domain, an email address, a phone number, a Telegram name or a crypto
+          wallet from a message you don&rsquo;t trust. You are never sent to the site.</p>
+        <ul class="sr-check-kinds">
+          <li><strong>A link</strong> gets what its address gives away and Radar&rsquo;s record for the site. Where
+            this site&rsquo;s scan server is running, a deep dive of up to 40 seconds follows: the page is visited
+            as text and read for 23 scam behaviours, its registration, servers, mail setup and certificate history
+            are looked up, and the sites that share its server, page title or files are found and scored.</li>
+          <li><strong>A contact</strong> gets the named scam sites that asked people to use it. An email address is
+            also checked with StopForumSpam. A phone number gets its country and any regulator warning about its
+            area code.</li>
+        </ul>
         <form class="sr-check-form" id="sr-check" action="/scam-radar/" method="get" autocomplete="off">
-          <label class="visually-hidden" for="sr-check-input">Link or domain to check</label>
-          <input id="sr-check-input" name="check" type="text" inputmode="url" autocapitalize="off" spellcheck="false"
-            maxlength="2048" placeholder="example.buzz/abc123" required>
+          <label class="visually-hidden" for="sr-check-input">Link, domain, email address, phone number or wallet to check</label>
+          <input id="sr-check-input" name="check" type="text" autocapitalize="off" spellcheck="false"
+            maxlength="2048" placeholder="example.buzz/abc123 or name@example.com" required>
           <button class="btn btn-primary" type="submit">Check</button>
         </form>
         <div class="sr-check-result" id="sr-check-result" aria-live="polite"></div>
-        <p class="sr-note">The address is judged in your browser. Radar&rsquo;s record is looked up by a scrambled form
-          of the name, so the name itself is not sent. A live visit sends the link to this site&rsquo;s server,
-          which fetches the page as text and keeps nothing.</p>
+        <p class="sr-note">A link&rsquo;s address is judged in your browser. Radar&rsquo;s records are looked up by a
+          scrambled form of the name or contact, so what you typed is not sent. A deep dive sends the link to this
+          site&rsquo;s server, which fetches the page as text, asks public records about the site and keeps nothing.
+          An email address or phone number is sent to the same server, which keeps nothing. An email address is
+          passed on to StopForumSpam for its spam check.</p>
       </div>
     </div>
   </section>
@@ -462,6 +510,28 @@ page = f"""<!DOCTYPE html>
         <div id="sr-home-body"><p class="sr-note">Choose your country to see the scams aimed at it and the scam
           sites hosted in it.</p></div>
         <p class="sr-note">Your country is guessed from your device&rsquo;s time zone, in your browser. Nothing is sent anywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" id="jamaica" style="padding-top:0">
+    <div class="shell">
+      <div class="sr-card">
+        <h2>Jamaica watch</h2>
+        <p class="sr-note">Every hour Radar hunts for scam sites aimed at Jamaica. It looks for copies of Jamaican
+          banks, telecoms and agencies on other domains, pages that pair Jamaica with prize, grant or sign-in
+          wording, holiday giveaway kits, and lottery-winner and advance-fee pages. It searches urlscan.io&rsquo;s
+          public scan archive and the blocklists, visits the most suspicious and puts them on the watchlist. A site
+          is named only on its own strong evidence. Being Jamaican never makes a site suspect.</p>
+        <dl class="sr-facts" id="sr-jm-stats">
+{JM_STATS}
+        </dl>
+        <p class="sr-note" id="sr-jm-hunt">{JM_HUNT}</p>
+        <p class="sr-note">Got a call or a WhatsApp message from an 876 or 658 number about a prize, a grant or your
+          bank? Paste the number into the <a href="#check">checker</a>. Those area codes dial like US numbers, and
+          they feature in regulator warnings about lottery and callback scams. Numbers found on named scam sites
+          are counted here, never shown.</p>
+        <button class="btn btn-ghost btn-sm" type="button" id="sr-jm-named">Show named sites aimed at Jamaica</button>
       </div>
     </div>
   </section>

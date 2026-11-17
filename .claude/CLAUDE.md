@@ -43,7 +43,17 @@ Run `python3 tools/style-check.py` before committing; it lists what to fix.
   This sandbox cannot reach the site; run that workflow and read its log instead.
 - What may be published is decided in `tools/scam-radar/sanitize.mjs` and `export.mjs`: a site is named only on
   strong evidence, defanged, and from a scam page only its title is kept, with phone numbers, emails and links
-  removed. Never contacts, tracking IDs, page text or code.
+  removed. Never contacts, tracking IDs, page text or code. Contacts from named sites go out only as slow one-way
+  keys (`contacts/xx.json`, PBKDF2-SHA256 with a million rounds, cached in `contact-keys.json` next to the database)
+  so the page can match one a visitor pastes. A fast hash would let anyone hash every number in a country and
+  get the list back. Jamaican numbers are counted, never listed. A real site hacked to host a scam page (domain registered a year or more
+  before Radar first saw it, no borrowed brand in its name, not a hosting platform) is counted, never named.
+- Each scan run starts `tools/scam-radar/hunt-jamaica.mjs --hunt` in the background (Scam Finder's `jamaica` and
+  `lottery` hunt profiles, about eight minutes). Its leads are added between two cycles with `--add`, so only one
+  process writes to Radar's database at a time.
+- The link checker's deep dive is `GET /api/scam-finder?depth=2` (up to 40 s; `vercel.json` gives the function
+  60 s), three per ten minutes per address. `?contact=` checks an email address or phone number. Breach checks
+  need `HIBP_API_KEY` on the host. `api-core.mjs` checks every address the function connects to.
 - `scam-radar/map/index.html`, `assets/css/scam-map.css` and `assets/js/scam-map.js` come from
   `python3 tools/build-scam-map-page.py` (Scam Finder's viewer, unedited; this site's changes are in
   `assets/js/scam-map-boot.js`).

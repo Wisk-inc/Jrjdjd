@@ -5,7 +5,8 @@
 // Run by .github/workflows/site-check.yml after tools/site-check.py. For each page: errors in the
 // console (a Content-Security-Policy refusal shows up here), failed requests and error answers. On
 // Scam Radar it also reads how old the data on screen is, whether fresh data came from the
-// scam-radar-data branch, the numbers drawn, and what the link checker says about a test link.
+// scam-radar-data branch, the numbers drawn, the Jamaica watch, what the link checker's deep dive says
+// about a made-up link and what the contact checker says about a made-up number.
 // It changes nothing. It exits with 0 even when it finds problems; the log says what they are.
 const { chromium } = require('playwright-core');
 
@@ -87,15 +88,29 @@ const text = (page, selector) => page.locator(selector).first().textContent({ ti
     const feed = await page.locator('#sr-feed li').count().catch(() => 0);
     const named = await page.locator('#named li, #named tr').count().catch(() => 0);
     console.log(`  feed items: ${feed}, named rows: ${named}`);
+    console.log(`  Jamaica watch: ${await text(page, '#sr-jm-stats')} | ${await text(page, '#sr-jm-hunt')}`);
+    // A made-up look-alike: the deep dive takes up to 40 seconds, so wait for its result
     await page.fill('#sr-check-input', 'paypal-account-verify-login.top');
     await page.locator('#sr-check button[type="submit"], #sr-check button').first().click();
-    await page.waitForTimeout(6000);
-    console.log(`  link checker on a made-up look-alike: ${(await text(page, '#sr-check-result')).slice(0, 300)}`);
+    const began = Date.now();
+    while (Date.now() - began < 60000 && await page.locator('.sr-deep-clock').count()) await page.waitForTimeout(1000);
+    console.log(`  link checker on a made-up look-alike, after ${Math.round((Date.now() - began) / 1000)} s: ${(await text(page, '#sr-check-result')).slice(0, 500)}`);
+    // A made-up Jamaican number (555-01xx numbers are reserved for fiction)
+    await page.fill('#sr-check-input', '+1 876 555 0100');
+    await page.locator('#sr-check button[type="submit"], #sr-check button').first().click();
+    await page.waitForTimeout(5000);
+    console.log(`  contact checker on a made-up number: ${(await text(page, '#sr-check-result')).slice(0, 400)}`);
   });
 
   await visit(browser, '/scam-radar/map/', 1440, async (page) => {
     const main = await page.evaluate(() => document.body.innerText.replace(/\s+/g, ' ').trim().slice(0, 300));
     console.log(`  page text: ${main}`);
+  });
+  // A crafted link must not point the map at another server
+  await visit(browser, '/scam-radar/map/?api=https://example.trycloudflare.com/x&radar-api=https://example.trycloudflare.com/y', 1440, async (page) => {
+    const left = new URL(page.url()).search;
+    console.log(`  address after the page loaded: ${left || '(no parameters)'}`);
+    if (/api=/.test(left)) problems.push('/scam-radar/map/ kept ?api= or ?radar-api= in its address');
   });
 
   await visit(browser, '/models/pluvium/', 390, async (page) => {

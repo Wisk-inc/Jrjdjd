@@ -20,6 +20,7 @@ const reply = (body, status, shareSeconds) =>
     status,
     headers: {
       'content-type': 'application/json; charset=utf-8',
+      'x-content-type-options': 'nosniff',
       'cache-control': shareSeconds ? 'public, max-age=0, must-revalidate' : 'no-store',
       // Vercel's edge follows this one; browsers ask again every time
       ...(shareSeconds ? { 'vercel-cdn-cache-control': `max-age=${shareSeconds}, stale-while-revalidate=30` } : {}),
