@@ -887,22 +887,26 @@
     const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: text.encode(CONTACT_SALT), iterations: 1000000 }, base, 64);
     return [...new Uint8Array(bits)].map((b) => b.toString(16).padStart(2, '0')).join('');
   };
+  // Every export writes all 256 files, so a missing one means none has been published yet
   const lookupContact = async (c) => {
     const key = await contactKey(`${c.kind}:${c.value}`.toLowerCase());
-    const shard = await getJson(commit ? `${RAW}${commit}/contacts/${key.slice(0, 2)}.json`
-      : `${DATA}contacts/${key.slice(0, 2)}.json?t=${Math.floor(minute() / 10)}`);
+    const answer = await fetch(commit ? `${RAW}${commit}/contacts/${key.slice(0, 2)}.json`
+      : `${DATA}contacts/${key.slice(0, 2)}.json?t=${Math.floor(minute() / 10)}`, { cache: 'no-cache' }).catch(() => null);
+    if (answer && answer.status === 404) return 'unpublished';
+    const shard = answer && answer.ok ? await answer.json().catch(() => null) : null;
     if (!shard) return undefined;
     return shard[key] || null;
   };
   const renderContact = (raw, c, state) => {
     const out = $('#sr-check-result');
     out.replaceChildren();
-    const rec = state.radar && state.radar !== 'loading' ? state.radar : null;
+    const rec = state.radar && typeof state.radar === 'object' ? state.radar : null;
     const head = el('div', null, `sr-verdict sr-level-${rec ? (rec.live ? 'critical' : 'high') : 'low'}`);
     head.append(el('p', `${KIND_WORDS[c.kind]}: ${c.value}`, 'sr-domain sr-verdict-name'));
     const line = el('p', null, 'sr-verdict-line');
     line.append(el('strong', state.radar === 'loading' ? 'Checking' : rec ? `Seen on ${plural(rec.sites, 'named scam site')}`
-      : state.radar === undefined ? 'Radar’s records could not be reached' : 'Not seen on any named scam site'));
+      : state.radar === undefined ? 'Radar’s records could not be reached'
+        : state.radar === 'unpublished' ? 'Radar’s contact records are not published yet' : 'Not seen on any named scam site'));
     if (rec) line.append(el('span', ` ${rec.live ? `${num(rec.live)} up when last visited. ` : ''}First seen ${dayYear(rec.first)}.`));
     head.append(line);
     out.append(head);
@@ -910,6 +914,7 @@
     const record = block('Radar’s record');
     if (state.radar === 'loading') record.append(el('p', 'Looking it up.', 'sr-note'));
     else if (state.radar === undefined) record.append(el('p', 'Radar’s records could not be reached just now. Try again in a minute.', 'sr-note'));
+    else if (state.radar === 'unpublished') record.append(el('p', 'The first contact records are published by the next hourly scan run. Try again in an hour.', 'sr-note'));
     else if (!rec) {
       record.append(el('p', `Radar keeps the contacts that named scam sites ask people to use, and this ${c.kind === 'email' ? 'address' : c.kind === 'phone' ? 'number' : 'one'} is not among them. That is not a clean bill of health: most scams are never seen by any scanner.`, 'sr-note'));
     } else {
