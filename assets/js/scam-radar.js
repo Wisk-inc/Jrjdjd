@@ -1,6 +1,10 @@
 /* Scam Radar: draws what the scanner publishes, and checks a single site on request.
    - Data: the newest of the published snapshot (scam-radar-data branch) and the copy on this site.
-     Whichever answers first is drawn at once; a tiny status file is polled every minute after that.
+     Whichever answers first is drawn at once. A tiny status file is polled every 15 seconds after that,
+     and when a new snapshot lands (about once a minute while the scanner runs) what changed is shown:
+     numbers roll to their new values, new cycles join the chart and new events are marked.
+   - The console says what the scanner is doing from what it published: scanning, moving to a fresh
+     run, waiting or paused. Nothing on the page moves unless the data did.
    - "Your country" is guessed from the device's time zone, on the device. Nothing is sent anywhere.
    - "Check a site" has three parts: the address judged by Scam Finder's own rules in the browser
      (scam-finder-core.js), Radar's record for the site (looked up by a hash of its name), and, where
@@ -11,8 +15,9 @@
   const DATA = 'https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/';
   const LOCAL = '/assets/data/scam-radar.json';
   const API = '/api/scam-finder';
-  const REFRESH_MS = 60 * 1000;
-  const STALE_HOURS = 6;
+  const REFRESH_MS = 15 * 1000;
+  const HANDOVER_S = 150; // a fresh run's first update lands about two and a half minutes after the hand-over
+  const SLOTS = 60;       // minutes in the chart
   const NAMED_STEP = 25;
 
   const $ = (sel) => document.querySelector(sel);
@@ -50,8 +55,9 @@
   const ago = (iso) => { // coarser, for lists
     const t = Date.parse(iso);
     if (!t) return '';
-    const m = Math.max(0, Math.round((Date.now() - t) / 60000));
-    if (m < 1) return 'just now';
+    const s = Math.max(0, Math.round((Date.now() - t) / 1000));
+    if (s < 60) return `${s} s ago`;
+    const m = Math.round(s / 60);
     if (m < 60) return `${m} min ago`;
     if (m < 48 * 60) return `${Math.round(m / 60)} h ago`;
     return `${Math.round(m / 1440)} days ago`;
@@ -70,8 +76,20 @@
   };
   const getJson = (url) => fetch(url, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   const minute = () => Math.floor(Date.now() / 60000);
+  const clockOf = (ms) => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const clock = (iso) => (Date.parse(iso) ? clockOf(Date.parse(iso)) : '');
+  const dayTime = (iso) => {
+    const t = Date.parse(iso);
+    return t ? `${new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}, ${clockOf(t)}` : '';
+  };
+  const span = (seconds) => {
+    const s = Math.max(0, Math.round(seconds));
+    return s >= 60 ? `${Math.floor(s / 60)} min ${s % 60} s` : `${s} s`;
+  };
+  const reduceMotion = Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   let data = null;
+  let chartEnd = null; // the minute the chart was last drawn to
   let home = null; // the visitor's country
   let viewChosen = false; // has the visitor picked a map view themselves?
   let namedShown = NAMED_STEP;
@@ -238,13 +256,16 @@
   };
 
   // ---------------------------------------------------------------- live feed
-  const drawFeed = () => {
+  const feedKey = (r) => `${r.at}|${r.domain}|${r.type}`;
+  const drawFeed = (before) => {
     const list = $('#sr-feed');
     list.replaceChildren();
+    list.hidden = false;
     const rows = data.feed || [];
+    const had = new Set(((before && before.feed) || []).map(feedKey));
     if (!rows.length) list.append(el('li', 'Nothing has changed on a named site in the last two days.', 'sr-empty'));
     rows.slice(0, 40).forEach((r) => {
-      const li = el('li', null, `sr-ev sr-ev-${String(r.type).replace(/[^a-z-]/g, '')}`);
+      const li = el('li', null, `sr-ev sr-ev-${String(r.type).replace(/[^a-z-]/g, '')}${before && !had.has(feedKey(r)) ? ' is-new' : ''}`);
       const when = el('time', ago(r.at), 'sr-ev-time');
       when.dateTime = r.at; when.dataset.at = r.at;
       const what = el('span', null, 'sr-ev-what');
@@ -340,47 +361,187 @@
     });
   };
 
-  // ---------------------------------------------------------------- status, ticking every second
-  const tick = () => {
+  // ---------------------------------------------------------------- the console
+  // What the scanner is doing, from what it last published
+  const liveMode = () => {
+    if (!data) return { mode: 'static' };
+    const age = Math.max(0, (Date.now() - Date.parse(data.generated)) / 1000);
+    const scan = data.scan || null;
+    const every = (scan && scan.cycleSeconds) || 60;
+    if (scan && scan.state === 'scanning' && age < every * 2.5) return { mode: 'scanning', age, every, scan };
+    if (scan && scan.state === 'finished' && age < 600) return { mode: 'handover', age };
+    if (age < 600) return { mode: 'waiting', age };
+    return { mode: 'paused', age };
+  };
+
+  // Numbers roll to their new values, and say how much they moved since the update before
+  const rolling = new WeakMap();
+  const roll = (node, from, to) => {
+    cancelAnimationFrame(rolling.get(node));
+    if (reduceMotion || typeof from !== 'number' || from === to) { node.textContent = num(to); return; }
+    const began = performance.now();
+    const step = (now) => {
+      const k = Math.min(1, (now - began) / 900);
+      node.textContent = num(Math.round(from + (to - from) * (1 - (1 - k) ** 3)));
+      if (k < 1) rolling.set(node, requestAnimationFrame(step));
+    };
+    rolling.set(node, requestAnimationFrame(step));
+  };
+  const drawStats = (before) => {
+    const now = data.totals || {};
+    const was = before && before.totals;
+    // Only consecutive updates are compared: the copy in the page can be hours older than the first live one
+    const consecutive = Boolean(was) && Date.parse(data.generated) - Date.parse(before.generated) <= 5 * 60000;
+    document.querySelectorAll('#sr-stats dd').forEach((dd) => {
+      const to = typeof now[dd.dataset.k] === 'number' ? now[dd.dataset.k] : 0;
+      const from = was && typeof was[dd.dataset.k] === 'number' ? was[dd.dataset.k] : undefined;
+      roll(dd, from, to);
+      const chip = dd.parentElement.querySelector('.sr-delta');
+      if (!chip) return;
+      const change = consecutive && typeof from === 'number' ? to - from : 0;
+      chip.textContent = change ? `${change > 0 ? '+' : '−'}${num(Math.abs(change))}` : '';
+      chip.className = `sr-delta${change ? ' is-on' : ''}${change < 0 ? ' is-down' : ''}`;
+    });
+    const words = { live: 'up', unreachable: 'not answering', offline: 'gone from DNS', blocked: 'flagged by their host',
+      parked: 'parked', suspended: 'suspended by their host', seized: 'seized', resolves: 'in DNS but not fetched',
+      pending: 'still to be finished' };
+    const states = (data.states || []).map((r) => `${num(r.sites)} ${words[r.state] || r.state}`);
+    $('#sr-states').textContent = states.length ? `Of ${num(now.visited)} sites visited so far: ${states.join(', ')}.` : '';
+  };
+
+  // One bar per minute: sites visited in that minute's cycle, the ones found up in the darker part
+  const drawCycles = (before) => {
+    const chart = $('#sr-cycles-chart');
+    if (!chart) return;
+    const cycles = (data.recentCycles || []).filter((c) => Date.parse(c.at));
+    const byMinute = new Map(cycles.map((c) => [Math.floor(Date.parse(c.at) / 60000), c]));
+    const newest = cycles.length ? Math.max(...byMinute.keys()) : null;
+    // While scanning the chart ends at the newest cycle; otherwise at this minute, so a pause shows as a gap
+    const end = liveMode().mode === 'scanning' && newest !== null ? newest : minute();
+    const start = end - SLOTS + 1;
+    const shown = [...byMinute].filter(([m]) => m >= start && m <= end).map(([, c]) => c);
+    const peak = Math.max(1, ...shown.map((c) => c.visited || 0));
+    const had = new Set(((before && before.recentCycles) || []).map((c) => c.at));
+    const cols = [];
+    for (let m = start; m <= end; m += 1) {
+      const c = byMinute.get(m);
+      const col = el('span', null, c ? 'sr-col' : 'sr-col is-empty');
+      if (c) {
+        col.title = `${clock(c.at)}: ${plural(c.visited || 0, 'site')} visited, ${num(c.up || 0)} up, ${num(c.down || 0)} down` +
+          `${c.firstVisits ? `, ${num(c.firstVisits)} seen for the first time` : ''}`;
+        const down = el('i', null, 'sr-col-down');
+        down.style.height = `${(100 * (c.down || 0)) / peak}%`;
+        const up = el('i', null, 'sr-col-up');
+        up.style.height = `${(100 * (c.up || 0)) / peak}%`;
+        col.append(down, up);
+        if (before && !had.has(c.at)) col.classList.add('is-new');
+      }
+      cols.push(col);
+    }
+    chart.replaceChildren(...cols);
+    chartEnd = end;
+    const visits = shown.reduce((sum, c) => sum + (c.visited || 0), 0);
+    chart.setAttribute('aria-label', shown.length
+      ? `Sites visited in each scan cycle over the last hour: ${plural(shown.length, 'cycle')}, ${plural(visits, 'visit')} in all`
+      : 'No scan cycle in the last hour');
+    $('#sr-cycles-from').textContent = clockOf(start * 60000);
+    $('#sr-cycles-to').textContent = clockOf(end * 60000);
+    const lc = data.lastCycle;
+    $('#sr-cycle-now').textContent = lc
+      ? `Last cycle${lc.at ? `, ${clock(lc.at)}` : ''}: ${plural(lc.visited || 0, 'site')} visited (${num(lc.up || 0)} up, ${num(lc.down || 0)} down)` +
+        `${lc.newFromCertificates ? `, ${plural(lc.newFromCertificates, 'new name')} from certificate logs` : ''}` +
+        `${lc.takedowns ? `, ${plural(lc.takedowns, 'takedown')}` : ''}.`
+      : '';
+  };
+
+  // The newest events on named sites, beside the chart
+  const drawLatest = (before) => {
+    const wrap = $('#sr-console-latest');
+    const rows = (data.feed || []).slice(0, 6);
+    if (!wrap || !rows.length) { if (wrap) wrap.hidden = true; return; }
+    const had = new Set(((before && before.feed) || []).map(feedKey));
+    $('#sr-console-feed').replaceChildren(...rows.map((r) => {
+      const li = el('li', null, `sr-ev-${String(r.type).replace(/[^a-z-]/g, '')}${before && !had.has(feedKey(r)) ? ' is-new' : ''}`);
+      const when = el('time', ago(r.at), 'sr-ev-time');
+      when.dateTime = r.at; when.dataset.at = r.at;
+      const name = el('button', r.domain, 'sr-domain sr-site');
+      name.type = 'button'; name.dataset.check = r.domain;
+      li.append(when, el('b', r.text), name);
+      return li;
+    }));
+    wrap.hidden = false;
+  };
+
+  // Every second: what the scanner is doing and when the next update is due
+  const liveTick = () => {
     if (!data) return;
-    const hours = (Date.now() - Date.parse(data.generated)) / 3600000;
-    const totals = data.totals || {};
-    $('#sr-status').textContent = `Last scan published ${since(data.generated)}, after ${num(data.scanCycles)} scan cycles and ${num(totals.visitsMade)} site visits. ` +
-      (hours > STALE_HOURS ? 'That is older than it should be: the scheduled scan may have stopped.' : 'This page checks for a new one every minute.');
-    $('#sr-age').textContent = hours > STALE_HOURS ? 'Data out of date' : `Updated ${since(data.generated)}`;
+    const live = liveMode();
+    let state;
+    let detail;
+    if (live.mode === 'scanning') {
+      const due = live.every - live.age;
+      state = 'Scanning now';
+      detail = `${live.scan.cycle && live.scan.cycles ? `Cycle ${num(live.scan.cycle)} of ${num(live.scan.cycles)} in this run. ` : ''}` +
+        `${due >= 1 ? `Next update in ${span(due)}.` : 'Next update any moment.'}`;
+    } else if (live.mode === 'handover') {
+      const due = HANDOVER_S - live.age;
+      state = 'Moving to a fresh run';
+      detail = `Once an hour the scan starts again on a new GitHub runner. ${due >= 1 ? `The next update is due in about ${span(due)}.` : 'The next update is due any moment.'}`;
+    } else if (live.mode === 'waiting') {
+      state = 'Waiting for the next update';
+      detail = `The last one landed ${since(data.generated)}.`;
+    } else {
+      state = 'Paused';
+      detail = `No new data since ${dayTime(data.generated)}, ${since(data.generated)}. The numbers below are from then.`;
+    }
+    $('#sr-console').dataset.mode = live.mode;
+    $('#sr-live-state').textContent = state;
+    $('#sr-live-detail').textContent = ` ${detail}`;
+    $('#sr-age').textContent = live.mode === 'paused' ? 'Paused' : `Updated ${since(data.generated)}`;
+    $('#sr-live-tag').classList.toggle('is-live', live.mode === 'scanning');
+    if (live.mode !== 'scanning' && chartEnd !== minute()) drawCycles(null);
   };
   const tickTimes = () => document.querySelectorAll('.sr-ev-time[data-at]').forEach((node) => { node.textContent = ago(node.dataset.at); });
 
-  const draw = () => {
-    document.querySelectorAll('#sr-stats dd').forEach((dd) => { dd.textContent = num((data.totals || {})[dd.dataset.k]); });
+  const draw = (before) => {
+    // What is new is marked only between consecutive updates: the copy in the page can be hours older
+    // than the first live snapshot, and everything would look new
+    const fresh = before && Date.parse(data.generated) - Date.parse(before.generated) <= 5 * 60000 ? before : null;
+    drawStats(before);
     fillPicker();
     drawHome();
     pickView();
     shadeMap(currentView());
-    drawFeed();
+    drawCycles(fresh);
+    drawLatest(fresh);
+    drawFeed(fresh);
     drawBoard();
     drawNamed();
     drawDowns();
     drawBatches();
-    tick();
+    liveTick();
   };
 
   // ---------------------------------------------------------------- loading
   const adopt = (snapshot) => {
     if (!snapshot || typeof snapshot !== 'object' || !Date.parse(snapshot.generated)) return;
     if (data && Date.parse(snapshot.generated) <= Date.parse(data.generated)) return;
+    const before = data;
     data = snapshot;
-    draw();
+    draw(before);
   };
-  const latest = () => getJson(`${DATA}scam-radar.json?t=${minute()}`).then(adopt);
+  const latest = () => getJson(`${DATA}scam-radar.json?t=${Date.now()}`).then(adopt);
+  let misses = 0;
   const poll = async () => {
-    const status = await getJson(`${DATA}scam-radar-status.json?t=${minute()}`);
-    if (!status) { await latest(); return; } // an older publish with no status file
+    if (document.hidden) return; // a tab in the background catches up when it is shown again
+    const status = await getJson(`${DATA}scam-radar-status.json?t=${Math.floor(Date.now() / REFRESH_MS)}`);
+    if (!status) { misses += 1; if (misses % 4 === 0) await latest(); return; }
+    misses = 0;
     if (!data || Date.parse(status.generated) > Date.parse(data.generated)) await latest();
   };
   const start = async () => {
     await Promise.all([getJson(LOCAL).then(adopt), latest()]);
-    if (!data) $('#sr-status').textContent = 'The latest scan could not be loaded. This page will try again in a minute.';
+    if (!data) $('#sr-live-detail').textContent = ' The latest scan could not be loaded. This page tries again every 15 seconds.';
   };
 
   // ---------------------------------------------------------------- check a site
@@ -598,11 +759,12 @@
     if (button) runCheck(button.dataset.check, true);
   });
 
-  guessCountry().then((cc) => { home = cc; if (data) draw(); });
+  guessCountry().then((cc) => { home = cc; if (data) draw(null); });
   start();
   setInterval(poll, REFRESH_MS);
-  setInterval(tick, 1000);
-  setInterval(tickTimes, 30000);
+  setInterval(liveTick, 1000);
+  setInterval(tickTimes, 5000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
   const preset = new URLSearchParams(location.search).get('check');
   if (preset) runCheck(preset, true);
 })();
