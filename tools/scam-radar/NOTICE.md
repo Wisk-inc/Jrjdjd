@@ -24,7 +24,7 @@ What was added around it for this site:
   link checker.
 - `../build-scam-map-page.py` builds `/scam-radar/map/` from `scam-finder/viewer/`. The viewer's script and
   stylesheet are copied unedited; `assets/js/scam-map-boot.js` points its two requests at this site.
-- `.github/workflows/scam-radar.yml` runs the scans and publishes after every five cycles. Each scan starts the
-  next one; `scam-radar-keepalive.yml` starts it again if that chain stops.
+- `.github/workflows/scam-radar.yml` scans in one-minute cycles around the clock and publishes after every cycle.
+  Each 55-minute run starts the next; `scam-radar-keepalive.yml` starts it again if that chain stops.
 
 `scam-finder/` itself is unchanged.

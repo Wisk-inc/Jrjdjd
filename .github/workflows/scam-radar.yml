@@ -1,43 +1,46 @@
-# Scam Radar: scan for live scam sites and republish /scam-radar/ by itself.
+# Scam Radar: scan for live scam sites around the clock and publish what is found every minute.
 #
-# A scan: restore Radar's database from the last run, refresh the blocklists and the list of
-# newly registered domains, put new brand look-alikes at the front of the queue, then scan in
-# rounds. Each round is five one-minute scan cycles, and after each round a safe snapshot is
-# exported (see tools/scam-radar/export.mjs for what is published and why) and force-pushed to the
-# scam-radar-data branch, which the page reads. So while a scan is going, the page gets new data
-# every five minutes.
+# A run: restore Radar's database from the last run, refresh the blocklists and the list of newly
+# registered domains, put new brand look-alikes at the front of the queue, then scan in one-minute
+# cycles for 55 minutes. After every cycle a safe snapshot is exported (see
+# tools/scam-radar/export.mjs for what is published and why) and force-pushed to the
+# scam-radar-data branch, which /scam-radar/ and the map read. So the page gets new numbers about
+# once a minute.
 #
-# When it runs: each scan starts the next one as its last step. The next one waits until the last
-# publish is 35 minutes old, then scans, so there is about one scan an hour. GitHub's schedule could
-# not do this: it starts scheduled workflows when it has room and skips many of them. An hourly
-# schedule here started twice in 20 hours, and a ten-minute one not once in 90 minutes.
+# At the end the database is saved and the run starts the next one, which picks up from it about
+# two minutes later. The status file says "finished" for that hand-over, so the page can say so.
+# GitHub's schedule could not keep this going: it starts scheduled workflows when it has room and
+# skips many of them (an hourly schedule here started twice in 20 hours).
 #
 # Only one run goes at a time. A run started while another is going waits for it, and GitHub
-# cancels an older waiting run when a newer one queues. A scan started by hand scans as soon as it
-# can, without the wait.
+# cancels an older waiting run when a newer one queues. A run started by hand scans at once.
 #
-# What stops the chain: cancelling a run by hand, or a scan that stops within ten minutes of
-# starting (so a fault cannot start runs in a fast loop). scam-radar-keepalive.yml then starts it
+# What stops the chain: cancelling a run by hand, or a run that fails within ten minutes of starting
+# to scan (so a fault cannot start runs in a fast loop). scam-radar-keepalive.yml then starts it
 # again, and so does a start by hand from the Actions tab.
 #
 # Cycles must stay at 60 seconds: Radar gives each cycle a time budget of its length minus four
 # seconds, reads certificates only with 20 seconds to spare and starts a visit only with 12.
-# Shorter cycles visit nothing.
+# Shorter cycles visit nothing. A cycle takes 40 to 55 seconds; exporting and publishing takes
+# about eight more, and the loop waits out the rest of the minute when there is any.
 name: Scam Radar
 
 on:
   workflow_dispatch:
     inputs:
-      rounds:
-        description: Rounds to scan (five minutes each)
-        default: '5'
+      minutes:
+        description: Minutes to scan before handing over to a fresh run (5 to 60)
+        default: '55'
       chained:
-        description: "Wait until a scan is due ('yes' is set when a scan starts the next one)"
+        description: "'yes' when the run before started this one"
         default: 'no'
+      rounds:
+        description: Not used any more; older runs still send it when they start the next one
+        default: ''
 
 permissions:
   contents: write   # publish to the scam-radar-data branch
-  actions: write    # start the next scan
+  actions: write    # start the next run
 
 concurrency:
   group: scam-radar
@@ -46,34 +49,12 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    # Up to 35 minutes of waiting, a few minutes of setup, a scan of up to 60, saving the database
-    timeout-minutes: 120
+    timeout-minutes: 90
     env:
       RADAR: node tools/scam-radar/scam-finder/cli.js radar
-      ROUNDS: ${{ inputs.rounds || '5' }}
-      CHAINED: ${{ inputs.chained || 'no' }}
-      MIN_GAP_MINUTES: '35'
+      SCAN_MINUTES: ${{ inputs.minutes || '55' }}
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Wait until a scan is due
-        run: |
-          if [ "$CHAINED" != "yes" ]; then
-            echo "Started by hand: scanning now."
-            exit 0
-          fi
-          last=$(curl -fsS --max-time 20 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/scam-radar-data/scam-radar-status.json?t=$(date +%s)" \
-            | python3 -c "import json, sys; print(json.load(sys.stdin)['generated'])" 2>/dev/null || true)
-          age=999999
-          if [ -n "$last" ]; then age=$(( ( $(date +%s) - $(date -d "$last" +%s) ) / 60 )); fi
-          if [ "$age" -lt "$MIN_GAP_MINUTES" ]; then
-            wait=$(( MIN_GAP_MINUTES - age ))
-            if [ "$wait" -gt "$MIN_GAP_MINUTES" ]; then wait=$MIN_GAP_MINUTES; fi
-            echo "The last scan was published $age minutes ago. Waiting $wait minutes, until the next one is due."
-            sleep $(( wait * 60 ))
-          else
-            echo "The last scan was published $age minutes ago: scanning now."
-          fi
-
       - uses: actions/checkout@v4
         with:
           ref: main
@@ -100,50 +81,79 @@ jobs:
           $RADAR ingest feeds || echo "::warning::blocklist refresh failed; scanning with the last copy"
           $RADAR ingest nrd || echo "::warning::new-domain refresh failed; scanning with the last copy"
 
-      - name: Scan in rounds, publishing after each
+      - name: Scan, publishing after every cycle
         id: scan
-        timeout-minutes: 60
+        timeout-minutes: 75
         run: |
           echo "SCAN_STARTED=$(date +%s)" >> "$GITHUB_ENV"
-          [[ "$ROUNDS" =~ ^[1-9]$ ]] || ROUNDS=5
+          if ! [[ "$SCAN_MINUTES" =~ ^[0-9]+$ ]] || [ "$SCAN_MINUTES" -lt 5 ] || [ "$SCAN_MINUTES" -gt 60 ]; then
+            SCAN_MINUTES=55
+          fi
           out="$RUNNER_TEMP/radar-out"
+          # Read by export.mjs and published, so the page can say what the scan is doing
+          export RADAR_SCAN_STARTED RADAR_CYCLES="$SCAN_MINUTES" RADAR_CYCLE_SECONDS=60 RADAR_RUN="$GITHUB_RUN_NUMBER"
+          RADAR_SCAN_STARTED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          publish() { # $1: scanning or finished, $2: the cycle just done
+            rm -rf "$out" && mkdir -p "$out"
+            if ! RADAR_SCAN_STATE="$1" RADAR_CYCLE="$2" node tools/scam-radar/export.mjs --all "$out"; then
+              echo "::warning::the export after cycle $2 failed"
+              return 0
+            fi
+            bash tools/scam-radar/publish.sh "$out" || echo "::warning::publishing after cycle $2 failed"
+          }
           # Brand look-alikes nobody has listed yet go to the front of the queue
           node tools/scam-radar/prioritize.mjs --limit 300 || echo "::warning::could not prioritise brand look-alikes"
-          for round in $(seq 1 "$ROUNDS"); do
-            echo "::group::Round $round of $ROUNDS"
+          failed=0
+          for cycle in $(seq 1 "$SCAN_MINUTES"); do
+            began=$(date +%s)
+            echo "::group::Cycle $cycle of $SCAN_MINUTES"
             # 300 visits a cycle: a cycle of 150 takes about 30 of its 56 seconds
-            $RADAR run --ticks 5 --seconds 60 --checks 300
-            rm -rf "$out" && mkdir -p "$out"
-            node tools/scam-radar/export.mjs --all "$out"
-            bash tools/scam-radar/publish.sh "$out" || true
+            if $RADAR run --ticks 1 --seconds 60 --checks 300; then
+              failed=0
+            else
+              failed=$((failed + 1))
+              echo "::warning::cycle $cycle stopped with an error"
+              if [ "$failed" -ge 3 ]; then
+                echo "::endgroup::"
+                echo "::error::three cycles in a row stopped with an error"
+                publish finished "$cycle"
+                exit 1
+              fi
+            fi
+            publish scanning "$cycle"
             echo "::endgroup::"
+            left=$(( began + 60 - $(date +%s) ))
+            if [ "$left" -gt 0 ]; then sleep "$left"; fi
           done
+          # Tell the page this run is handing over to the next
+          publish finished "$SCAN_MINUTES"
           $RADAR status
 
       - name: Save the Radar database
-        # Keep what was learned even if a later round failed, but never save a half-built index
+        # Keep what was learned even if a later cycle failed, but never save a half-built index
         if: always() && (steps.scan.outcome == 'success' || steps.scan.outcome == 'failure')
         uses: actions/cache/save@v4
         with:
           path: ~/.scam-finder
           key: scam-radar-db-${{ github.run_id }}
 
-      - name: Start the next scan
-        # Last, after the database is saved, so the next scan starts from it. Not when a run is
+      - name: Start the next run
+        # Last, after the database is saved, so the next run starts from it. Not when a run is
         # cancelled by hand.
         if: ${{ !cancelled() && (steps.scan.outcome == 'success' || steps.scan.outcome == 'failure') }}
+        env:
+          OUTCOME: ${{ steps.scan.outcome }}
         run: |
           minutes=$(( ( $(date +%s) - ${SCAN_STARTED:-$(date +%s)} ) / 60 ))
-          if [ "${{ steps.scan.outcome }}" != "success" ] && [ "$minutes" -lt 10 ]; then
-            echo "::warning::This scan stopped after $minutes minutes, so it does not start the next one. The keep-alive or a start by hand will."
+          if [ "$OUTCOME" != "success" ] && [ "$minutes" -lt 10 ]; then
+            echo "::warning::This run failed after $minutes minutes of scanning, so it does not start the next one. The keep-alive or a start by hand will."
             exit 0
           fi
           queued=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow scam-radar.yml --limit 20 --json databaseId,status \
             --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID and .status != \"completed\" and .status != \"in_progress\")] | length" || echo 0)
           if [ "${queued:-0}" -gt 0 ]; then
-            echo "A scan is already waiting to start. It starts the one after it."
+            echo "A run is already waiting to start. It starts the one after it."
             exit 0
           fi
-          [[ "$ROUNDS" =~ ^[1-9]$ ]] || ROUNDS=5
-          gh workflow run scam-radar.yml --repo "$GITHUB_REPOSITORY" --ref main -f rounds="$ROUNDS" -f chained=yes
-          echo "Started the next scan. It waits until this scan's last publish is $MIN_GAP_MINUTES minutes old."
+          gh workflow run scam-radar.yml --repo "$GITHUB_REPOSITORY" --ref main -f minutes="$SCAN_MINUTES" -f chained=yes
+          echo "Started the next run. It picks up from the database saved above."
