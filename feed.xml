@@ -6,13 +6,34 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Tue, 17 Nov 2026 00:35:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 17 Nov 2026 13:30:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.12: safe start, troubleshooting and fewer stops on the phone</title>
+      <link>https://corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.12</guid>
+      <pubDate>Tue, 17 Nov 2026 13:30:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.12 is out. When Termux closes with "[Process completed (signal 9)]", Android has
+        ended its processes: Android 12 and newer do that once all apps together run more than 32 in the
+        background, and every Android does it when memory runs low. The database on the phone now runs
+        fewer processes and uses less memory, and the new automa keep-alive lifts Android's process limit
+        over Wireless debugging and takes Termux off battery optimisation. After three stops in a row,
+        Automa starts in safe mode, with agents, schedules and plugins off, and says why. automa
+        troubleshoot checks and repairs what it safely can, and a Refresh button loads the board again.
+        <a href="https://corx-labs.com/downloads/Automa-1.9.12.apk">Download the APK</a> (23.9 MB); it
+        installs over 1.9.11 and keeps your data.
+        <a href="https://corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Pluvium-500: the first checkpoint is on Hugging Face</title>

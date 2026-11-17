@@ -33,13 +33,19 @@ ROOT = Path(__file__).resolve().parent.parent
 UA = "corx-labs-site-check/1 (+https://github.com/Wisk-inc/Jrjdjd)"
 DATA = "https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/scam-radar-status.json"
 
+# The newest Automa APK on main, and the older ones whose links should redirect to it
+APKS = sorted((ROOT / "downloads").glob("Automa-*.apk"), key=lambda p: [int(x) for x in p.stem.split("-")[1].split(".")])
+AUTOMA = APKS[-1].stem.split("-", 1)[1]
+OLD_APKS = [line.split()[0] for line in (ROOT / "_redirects").read_text(encoding="utf-8").splitlines()
+            if line.startswith("/downloads/Automa-")]
+
 # Path on the site -> file in this repository, and text the version on main must contain
 PAGES = [
-    ("/", "index.html", ["Automa 1.9.11", "CorxLabs/Pluvium-500"]),
+    ("/", "index.html", [f"Automa {AUTOMA}", "CorxLabs/Pluvium-500"]),
     ("/models/pluvium/", "models/pluvium/index.html", ["CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best"]),
     ("/scam-radar/", "scam-radar/index.html", ["sr-check-input", "scam-finder-core.js"]),
     ("/scam-radar/map/", "scam-radar/map/index.html", ["scam-map-boot.js"]),
-    ("/automa/", "automa/index.html", ["Automa-1.9.11.apk"]),
+    ("/automa/", "automa/index.html", [f"Automa-{AUTOMA}.apk"]),
     ("/nathan/", "nathan/index.html", []),
     ("/developers/", "developers/index.html", []),
 ]
@@ -152,6 +158,10 @@ def main():
         problems.append(f"{SITE}/ did not answer")
         finish(exit_code=1)
     say(f"GET / -> {status}, {len(body):,} bytes, final address {final}")
+    if urlsplit(final).hostname != host:
+        say(f"  {host} redirects to {urlsplit(final).hostname}, but the pages name https://{host}/ as their canonical address")
+        problems.append(f"{host} redirects to {urlsplit(final).hostname}: make {host} the primary domain in the host's settings, "
+                        f"so the canonical addresses, the sitemap and the redirects agree")
     say(f"Host: {guess_host(h)}")
     for name in HOST_HEADERS:
         if name in h:
@@ -200,8 +210,7 @@ def main():
     say()
 
     say("## Automa APK")
-    apks = sorted((ROOT / "downloads").glob("Automa-*.apk"), key=lambda p: [int(x) for x in p.stem.split("-")[1].split(".")])
-    newest = apks[-1]
+    newest = APKS[-1]
     want = hashlib.sha256(newest.read_bytes()).hexdigest()
     status, h, body, final, err = fetch(f"{SITE}/downloads/{newest.name}")
     got = hashlib.sha256(body).hexdigest() if body else ""
@@ -210,14 +219,14 @@ def main():
         f"SHA-256 {'matches main' if ok else 'DIFFERS: ' + got[:16]}")
     if not ok:
         problems.append(f"the live {newest.name} is not the file on main")
-    for old in ("1.9.7", "1.9.8", "1.9.9", "1.9.10"):
-        status, h, body, final, err = fetch(f"{SITE}/downloads/Automa-{old}.apk", follow=False, method="HEAD")
-        where = h.get("location", "")
-        if status in (301, 302, 303, 307, 308):
-            say(f"/downloads/Automa-{old}.apk -> {status} to {where}")
-        else:
-            say(f"/downloads/Automa-{old}.apk -> {err or status} (served, not redirected)" if status == 200 else
-                f"/downloads/Automa-{old}.apk -> {err or status}")
+    for old in OLD_APKS:
+        # Follow the redirects (the www one included) and say where an old link ends up
+        status, h, body, final, err = fetch(SITE + old, method="HEAD")
+        ends = urlsplit(final).path
+        ok = ends == f"/downloads/{newest.name}"
+        say(f"{old} -> {err or status} at {ends}" + ("" if ok else f" (NOT {newest.name})"))
+        if not ok:
+            problems.append(f"{old} does not lead to {newest.name}")
     say()
 
     say("## Redirects")
