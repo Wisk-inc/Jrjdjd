@@ -18,6 +18,7 @@ site cannot be reached at all.
 import hashlib
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -158,10 +159,16 @@ def main():
         problems.append(f"{SITE}/ did not answer")
         finish(exit_code=1)
     say(f"GET / -> {status}, {len(body):,} bytes, final address {final}")
-    if urlsplit(final).hostname != host:
-        say(f"  {host} redirects to {urlsplit(final).hostname}, but the pages name https://{host}/ as their canonical address")
-        problems.append(f"{host} redirects to {urlsplit(final).hostname}: make {host} the primary domain in the host's settings, "
-                        f"so the canonical addresses, the sitemap and the redirects agree")
+    # Where visitors end up must be the address the pages name as theirs
+    canonical = re.search(r'<link rel="canonical" href="([^"]+)"', body.decode("utf-8", "replace"))
+    canon_host = urlsplit(canonical.group(1)).hostname if canonical else None
+    final_host = urlsplit(final).hostname
+    if canon_host and canon_host != final_host:
+        say(f"  visitors end up on {final_host}, but the pages name {canon_host} as their address")
+        problems.append(f"visitors end up on {final_host} but the canonical links say {canon_host}: the host's domain "
+                        f"settings and the site's links disagree")
+    else:
+        say(f"  visitors end up on {final_host}, the address the pages name as theirs")
     say(f"Host: {guess_host(h)}")
     for name in HOST_HEADERS:
         if name in h:

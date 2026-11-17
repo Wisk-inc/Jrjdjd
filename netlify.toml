@@ -7,8 +7,8 @@
   skip_processing = false
 
 [[redirects]]
-  from = "https://www.corx-labs.com/*"
-  to = "https://corx-labs.com/:splat"
+  from = "https://corx-labs.com/*"
+  to = "https://www.corx-labs.com/:splat"
   status = 301
   force = true
 

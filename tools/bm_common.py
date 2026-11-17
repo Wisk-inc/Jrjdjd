@@ -18,7 +18,7 @@ from model_catalog import BENCH_BY_KEY, BENCHMARKS, BY_SLUG, COMPANIES  # noqa: 
 from logos import logo_url  # noqa: E402
 
 ROOT = os.path.dirname(HERE)
-SITE = "https://corx-labs.com"
+SITE = "https://www.corx-labs.com"
 
 NAV = [
     ("/chat/", "Chat"),

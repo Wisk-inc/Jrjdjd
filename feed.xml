@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>CorX Labs — releases and notes</title>
-    <link>https://corx-labs.com/</link>
+    <link>https://www.corx-labs.com/</link>
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
     <lastBuildDate>Tue, 17 Nov 2026 13:30:00 +0000</lastBuildDate>
-    <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
-      <url>https://corx-labs.com/assets/img/logo.png</url>
+      <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
-      <link>https://corx-labs.com/</link>
+      <link>https://www.corx-labs.com/</link>
     </image>
 
     <item>
       <title>Automa 1.9.12: safe start, troubleshooting and fewer stops on the phone</title>
-      <link>https://corx-labs.com/automa/#whats-new</link>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
       <guid isPermaLink="false">corx-labs.com/automa/release/1.9.12</guid>
       <pubDate>Tue, 17 Nov 2026 13:30:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -29,15 +29,15 @@
         over Wireless debugging and takes Termux off battery optimisation. After three stops in a row,
         Automa starts in safe mode, with agents, schedules and plugins off, and says why. automa
         troubleshoot checks and repairs what it safely can, and a Refresh button loads the board again.
-        <a href="https://corx-labs.com/downloads/Automa-1.9.12.apk">Download the APK</a> (23.9 MB); it
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.12.apk">Download the APK</a> (23.9 MB); it
         installs over 1.9.11 and keeps your data.
-        <a href="https://corx-labs.com/automa/#whats-new">Every release</a>.</p>
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Pluvium-500: the first checkpoint is on Hugging Face</title>
-      <link>https://corx-labs.com/models/pluvium/#next</link>
+      <link>https://www.corx-labs.com/models/pluvium/#next</link>
       <guid isPermaLink="false">corx-labs.com/models/pluvium/checkpoint/stage-a</guid>
       <pubDate>Tue, 17 Nov 2026 00:35:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -49,13 +49,13 @@
         forecast times from the held-out year, and this folder keeps the weights with the lowest loss so
         far. It is not the finished model. Training on real GFS runs, calibration and the scores on a
         held-out year come after it, and the results on the Pluvium page still come from pluvium-small.
-        <a href="https://corx-labs.com/models/pluvium/">The Pluvium page</a>.</p>
+        <a href="https://www.corx-labs.com/models/pluvium/">The Pluvium page</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Scam Radar: check any link, a live feed and a map</title>
-      <link>https://corx-labs.com/scam-radar/#check</link>
+      <link>https://www.corx-labs.com/scam-radar/#check</link>
       <guid isPermaLink="false">https://corx-labs.com/scam-radar/#check-a-link</guid>
       <pubDate>Mon, 16 Nov 2026 23:30:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -65,7 +65,7 @@
         scanner's own rules, looks up the scanner's record for the site, and, where the scan server is
         running, visits the page as plain text and reads its code. The page also has a feed of named scam
         sites going live and being taken down, the kinds of scam and the scam kits in use, and the batches
-        of names registered by script. <a href="https://corx-labs.com/scam-radar/map/">A second page</a>
+        of names registered by script. <a href="https://www.corx-labs.com/scam-radar/map/">A second page</a>
         draws the named sites on a globe, grouped into campaigns that show the same lure. In its first day
         the scanner visited 9,713 sites and found 1,894 live and high risk. It has recorded no takedowns
         yet, and found none aimed at Jamaica.</p>
@@ -74,7 +74,7 @@
 
     <item>
       <title>Automa 1.9.11: plain words when the connection drops</title>
-      <link>https://corx-labs.com/automa/#whats-new</link>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
       <guid isPermaLink="false">corx-labs.com/automa/release/1.9.11</guid>
       <pubDate>Mon, 16 Nov 2026 13:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -84,15 +84,15 @@
         the App Studio page an invited collaborator uses, say "Can't reach" in plain words instead of
         "Failed to fetch" when the connection drops. An agent's settings page loads its extra settings by
         itself once Automa answers again. After a reconnect, pages you had already left stop asking the
-        server every 10 seconds. <a href="https://corx-labs.com/downloads/Automa-1.9.11.apk">Download
+        server every 10 seconds. <a href="https://www.corx-labs.com/downloads/Automa-1.9.11.apk">Download
         the APK</a> (23.9 MB); it installs over 1.9.10 and keeps your data.
-        <a href="https://corx-labs.com/automa/#whats-new">Every release</a>.</p>
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Pluvium 0.5.5: three GPU runs, none finished yet</title>
-      <link>https://corx-labs.com/models/pluvium/#next</link>
+      <link>https://www.corx-labs.com/models/pluvium/#next</link>
       <guid isPermaLink="false">corx-labs.com/models/pluvium/release/0.5.5</guid>
       <pubDate>Mon, 16 Nov 2026 11:30:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -105,13 +105,13 @@
         stopped when a data file was missing. The fixes are in: a batch that cannot fit is not tried, a
         stopped run starts again and keeps its log, and every data file is checked before training starts.
         Pluvium-500 is not trained or published yet.
-        <a href="https://corx-labs.com/models/pluvium/">The Pluvium page</a>.</p>
+        <a href="https://www.corx-labs.com/models/pluvium/">The Pluvium page</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Scam Radar: live scam websites, by country</title>
-      <link>https://corx-labs.com/scam-radar/</link>
+      <link>https://www.corx-labs.com/scam-radar/</link>
       <guid isPermaLink="false">https://corx-labs.com/scam-radar/#launch</guid>
       <pubDate>Mon, 16 Nov 2026 01:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -127,7 +127,7 @@
 
     <item>
       <title>Pluvium 0.5: one command to a forecast, and when in the day it rains</title>
-      <link>https://corx-labs.com/models/pluvium/#usage</link>
+      <link>https://www.corx-labs.com/models/pluvium/#usage</link>
       <guid isPermaLink="false">https://corx-labs.com/models/pluvium/#release-0-5</guid>
       <pubDate>Mon, 16 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -139,14 +139,14 @@
         rain is most likely; on Jamaica's wet days that placed the rain 7.8% better than the usual pattern
         alone. Parishes get their own view.</p>
         <p>The full-size network is still not trained: its GPU training only started working in 0.4.3,
-        and the first run stopped after 138 minutes. <a href="https://corx-labs.com/models/pluvium/">The
+        and the first run stopped after 138 minutes. <a href="https://www.corx-labs.com/models/pluvium/">The
         model page</a> has the details.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Pluvium 0.3 — a full year in seven places, and hurricane tracks</title>
-      <link>https://corx-labs.com/models/pluvium/</link>
+      <link>https://www.corx-labs.com/models/pluvium/</link>
       <guid isPermaLink="false">https://corx-labs.com/models/pluvium/#release-0-3-0</guid>
       <pubDate>Sun, 15 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -158,14 +158,14 @@
         terms, and adds Pluvium Cyclone, hurricane tracks from the same six systems.</p>
         <p>The losses are published too: it does not lead at 50 mm, it under-forecast Hurricane Melissa's
         rain over Jamaica, and its hurricane tracks trail the National Hurricane Center's official forecast.
-        It is a research model, not an official forecast. <a href="https://corx-labs.com/models/pluvium/">The
+        It is a research model, not an official forecast. <a href="https://www.corx-labs.com/models/pluvium/">The
         model page</a> has the charts.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Pluvium — rain, hour by hour, for every Caribbean town</title>
-      <link>https://corx-labs.com/models/pluvium/</link>
+      <link>https://www.corx-labs.com/models/pluvium/</link>
       <guid isPermaLink="false">https://corx-labs.com/models/pluvium/#released-2026-11-14</guid>
       <pubDate>Sat, 14 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -180,14 +180,14 @@
         the highest skill of any single system for rain on days 1 and 2 in July and August 2025, and
         lost in May and June 2025, after a wet April it had never trained on. It is a research model,
         not an official forecast. The code is on PyPI as <code>pluvium</code>, under Apache 2.0.
-        <a href="https://corx-labs.com/models/pluvium/">The model page</a> has the results and the
+        <a href="https://www.corx-labs.com/models/pluvium/">The model page</a> has the results and the
         limits.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Automa 1.9.10: starting up and reconnecting</title>
-      <link>https://corx-labs.com/automa/#whats-new</link>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
       <guid isPermaLink="false">corx-labs.com/automa/release/1.9.10</guid>
       <pubDate>Thu, 12 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -196,15 +196,15 @@
         <p>Automa 1.9.10 is out. While Automa is still starting on the phone, the connect screen shows
         which step it is on and how long it has waited. When the connection drops and comes back, the
         board reconnects by itself instead of showing "Failed to fetch", and a dropped connection no
-        longer sends you to sign-in. <a href="https://corx-labs.com/downloads/Automa-1.9.10.apk">Download
+        longer sends you to sign-in. <a href="https://www.corx-labs.com/downloads/Automa-1.9.10.apk">Download
         the APK</a> (23.9 MB); it installs over 1.9.9 and keeps your data.
-        <a href="https://corx-labs.com/automa/#whats-new">Every release</a>.</p>
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Automa 1.9.9 — waits out the slow-down</title>
-      <link>https://corx-labs.com/automa/#whats-new</link>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
       <guid isPermaLink="false">corx-labs.com/automa/release/1.9.9</guid>
       <pubDate>Wed, 11 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -214,15 +214,15 @@
         the free AI service asks Automa to slow down, Automa now waits the minute it asks for and
         carries on, instead of failing the reply. Home no longer shows cards for chats and tasks you
         deleted, and deleting a chat or task cancels the retries still waiting for it.
-        <a href="https://corx-labs.com/downloads/Automa-1.9.9.apk">Download the APK</a> (23.9 MB); it
-        installs over 1.9.8 and keeps your data. <a href="https://corx-labs.com/automa/#whats-new">Every
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.9.apk">Download the APK</a> (23.9 MB); it
+        installs over 1.9.8 and keeps your data. <a href="https://www.corx-labs.com/automa/#whats-new">Every
         release</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Automa 1.9.8 — fixes under the hood</title>
-      <link>https://corx-labs.com/automa/#whats-new</link>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
       <guid isPermaLink="false">corx-labs.com/automa/release/1.9.8</guid>
       <pubDate>Sun, 08 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -232,15 +232,15 @@
         can&rsquo;t be verified, cancelling a queued run no longer stalls the scheduler for 30 seconds,
         and web search falls back to Bing when DuckDuckGo refuses. Free-model agents hand a task back
         for your review after answering, and drop a tool that fails three times in a row.
-        <a href="https://corx-labs.com/downloads/Automa-1.9.8.apk">Download the APK</a> (23.9 MB); it
-        installs over 1.9.7 and keeps your data. <a href="https://corx-labs.com/automa/#whats-new">Every
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.8.apk">Download the APK</a> (23.9 MB); it
+        installs over 1.9.7 and keeps your data. <a href="https://www.corx-labs.com/automa/#whats-new">Every
         release</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Meet Automa: An AI Agents App Made in Jamaica</title>
-      <link>https://corx-labs.com/blog/automa-is-out/</link>
+      <link>https://www.corx-labs.com/blog/automa-is-out/</link>
       <guid isPermaLink="true">https://corx-labs.com/blog/automa-is-out/</guid>
       <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -252,15 +252,15 @@
         no card &mdash; including Moan, a Jamaican model that answers in Patois and cites Jamaican news,
         law and government sources &mdash; or on your own Claude, GPT and Gemini keys. App Studio builds
         apps in 69 languages, and the server can run on the phone itself.
-        <a href="https://corx-labs.com/downloads/Automa-1.9.7.apk">Download the APK</a> (22.9 MB); an
-        APKPure listing is pending review. <a href="https://corx-labs.com/automa/">Every screen in the
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.7.apk">Download the APK</a> (22.9 MB); an
+        APKPure listing is pending review. <a href="https://www.corx-labs.com/automa/">Every screen in the
         app</a>.</p>
       ]]></description>
     </item>
 
     <item>
       <title>Building a Hurricane AI in Jamaica on One GPU</title>
-      <link>https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/</link>
+      <link>https://www.corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/</link>
       <guid isPermaLink="true">https://corx-labs.com/blog/building-a-hurricane-ai-in-jamaica/</guid>
       <pubDate>Sat, 24 Oct 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -275,7 +275,7 @@
 
     <item>
       <title>NatureV1 released — trained, scored and red-teamed</title>
-      <link>https://corx-labs.com/models/naturev1/</link>
+      <link>https://www.corx-labs.com/models/naturev1/</link>
       <guid isPermaLink="false">https://corx-labs.com/models/naturev1/#released-2026-10-17</guid>
       <pubDate>Sat, 17 Oct 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -298,7 +298,7 @@
 
     <item>
       <title>NatureV1 — a weather and hurricane model, in training</title>
-      <link>https://corx-labs.com/models/naturev1/</link>
+      <link>https://www.corx-labs.com/models/naturev1/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/naturev1/</guid>
       <pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -318,7 +318,7 @@
 
     <item>
       <title>Automa — run your AI company from your phone</title>
-      <link>https://corx-labs.com/automa/</link>
+      <link>https://www.corx-labs.com/automa/</link>
       <guid isPermaLink="true">https://corx-labs.com/automa/</guid>
       <pubDate>Mon, 28 Sep 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -333,7 +333,7 @@
 
     <item>
       <title>HELIX — linear scaling with exact long-range recall</title>
-      <link>https://corx-labs.com/models/helix/</link>
+      <link>https://www.corx-labs.com/models/helix/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/helix/</guid>
       <pubDate>Mon, 14 Sep 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -349,7 +349,7 @@
 
     <item>
       <title>CorX3.8-27B — Jamaica's first large open-weight LLM</title>
-      <link>https://corx-labs.com/models/corx3-8/</link>
+      <link>https://www.corx-labs.com/models/corx3-8/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/corx3-8/</guid>
       <pubDate>Tue, 19 Aug 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -368,7 +368,7 @@
 
     <item>
       <title>TriStream-SVS — singing voice synthesis, factored by design</title>
-      <link>https://corx-labs.com/models/tristream-svs/</link>
+      <link>https://www.corx-labs.com/models/tristream-svs/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/tristream-svs/</guid>
       <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -387,7 +387,7 @@
 
     <item>
       <title>3 Billion Tokens on One GPU: How CorX1.5 Was Trained</title>
-      <link>https://corx-labs.com/blog/3-billion-tokens-one-gpu/</link>
+      <link>https://www.corx-labs.com/blog/3-billion-tokens-one-gpu/</link>
       <guid isPermaLink="true">https://corx-labs.com/blog/3-billion-tokens-one-gpu/</guid>
       <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
@@ -402,7 +402,7 @@
 
     <item>
       <title>Announcement: CorX Labs releases CorX1.5</title>
-      <link>https://corx-labs.com/#announcement</link>
+      <link>https://www.corx-labs.com/#announcement</link>
       <guid isPermaLink="false">https://corx-labs.com/#announcement-2026-08-01</guid>
       <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
       <dc:creator>CorX Labs</dc:creator>
@@ -416,7 +416,7 @@
 
     <item>
       <title>CorX1.5 — a 158M parameter language model built from scratch</title>
-      <link>https://corx-labs.com/models/corx1-5/</link>
+      <link>https://www.corx-labs.com/models/corx1-5/</link>
       <guid isPermaLink="true">https://corx-labs.com/models/corx1-5/</guid>
       <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
       <dc:creator>Nathan Lyttle</dc:creator>
