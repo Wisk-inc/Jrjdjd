@@ -322,6 +322,11 @@ def deployments():
                     continue
                 seen.add(st.get("context"))
                 say(f"  status {st.get('context')}: {st.get('state')}, {st.get('description')} ({st.get('created_at')})")
+                vercel = "vercel" in str(st.get("context", "")).lower()
+                if vercel and label == "scam-radar-data head":
+                    problems.append(f"Vercel tries to deploy the scam-radar-data branch ({st.get('description')})")
+                elif vercel and sha == commits[0][0] and st.get("state") in ("failure", "error"):
+                    problems.append(f"Vercel did not deploy main's latest commit {sha[:10]}: {st.get('description')}")
             for run in github(f"commits/{sha}/check-runs?per_page=20").get("check_runs", []):
                 out = run.get("output") or {}
                 text = " ".join(filter(None, [out.get("title"), (out.get("summary") or "")[:300]]))
