@@ -1,6 +1,6 @@
-# Keeps the Scam Radar scans going. Each scan starts the next one (see scam-radar.yml), so while
+# Keeps the Scam Radar scans going. Each run starts the next one (see scam-radar.yml), so while
 # they run this has nothing to do and ends in seconds. If that chain stops (a run was cancelled by
-# hand, or a scan stopped early), this starts a scan that begins as soon as one is due.
+# hand, or a run failed early), this starts a new run, which scans at once.
 #
 # GitHub starts scheduled workflows when it has room and skips many of them, so this asks every
 # ten minutes and may still take a while to notice. Starting "Scam Radar" by hand from the Actions
@@ -31,4 +31,4 @@ jobs:
             exit 0
           fi
           gh workflow run scam-radar.yml --repo "$GITHUB_REPOSITORY" --ref main -f chained=yes
-          echo "No scan was running or waiting, so one was started. It scans once the last scan is 35 minutes old."
+          echo "No scan was running or waiting, so one was started."

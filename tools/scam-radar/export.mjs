@@ -118,6 +118,46 @@ try {
   const nowSec = Math.floor(Date.now() / 1000);
   const lastTick = store.getMeta('lastTick'); // the last cycle's report: { at, checks, ... }
 
+  // The last four hours, one entry per scan cycle. Radar keeps only the last cycle's report, so the
+  // history is kept in a file next to the database (the workflow caches that folder between runs).
+  const historyFile = path.join(path.dirname(dbFile), 'radar-cycles.json');
+  let cycles = [];
+  try {
+    cycles = JSON.parse(fs.readFileSync(historyFile, 'utf8'));
+    if (!Array.isArray(cycles)) cycles = [];
+  } catch {
+    cycles = [];
+  }
+  if (typeof lastTick?.at === 'string' && lastTick.checks && !cycles.some((c) => c.at === lastTick.at)) {
+    const startSec = Math.floor(Date.parse(lastTick.at) / 1000);
+    const endSec = startSec + Math.ceil(lastTick.seconds || 60);
+    const firstVisits = store.prepare("SELECT count(*) AS n FROM events WHERE type = 'first-visit' AND at >= ? AND at <= ?")
+      .get(startSec, endSec).n;
+    cycles.push({
+      at: lastTick.at,
+      seconds: lastTick.seconds || null,
+      visited: lastTick.checks.checked || 0,
+      up: lastTick.checks.live || 0,
+      down: lastTick.checks.down || 0,
+      firstVisits,
+      takedowns: lastTick.checks.takedowns || 0,
+      events: lastTick.checks.events || 0,
+      newNames: lastTick.certificates?.newDomains || 0,
+    });
+    cycles = cycles.sort((a, b) => Date.parse(a.at) - Date.parse(b.at)).slice(-240);
+    fs.writeFileSync(historyFile, JSON.stringify(cycles));
+  }
+  // What the scan is doing, as the workflow tells it (absent when the export is run by hand)
+  const env = process.env;
+  const scan = env.RADAR_SCAN_STATE ? {
+    state: env.RADAR_SCAN_STATE === 'finished' ? 'finished' : 'scanning',
+    cycle: Number(env.RADAR_CYCLE) || null,
+    cycles: Number(env.RADAR_CYCLES) || null,
+    cycleSeconds: Number(env.RADAR_CYCLE_SECONDS) || 60,
+    startedAt: /^\d{4}-\d\d-\d\dT[\d:]+Z$/.test(env.RADAR_SCAN_STARTED || '') ? env.RADAR_SCAN_STARTED : null,
+    run: Number(env.RADAR_RUN) || null,
+  } : null;
+
   const up = store.listSites({ state: 'live', minRisk: COUNT_MIN_RISK, limit: 200000 }).filter((s) => s.checks > 0);
   const live = up.filter((s) => !hostNotice(s));
   const targets = tally(live.flatMap(targetsOf));
@@ -227,6 +267,7 @@ try {
     generated: new Date().toISOString(),
     lastScan: typeof lastTick?.at === 'string' ? lastTick.at : null,
     scanCycles: Number(store.getMeta('ticks', 0)) || 0,
+    scan,
     totals: {
       domainsIndexed: stats.domains || 0,
       newlyRegistered: stats.registered || 0,
@@ -252,8 +293,12 @@ try {
       down: lastTick.checks.down || 0,
       newFromCertificates: lastTick.certificates?.newDomains || 0,
       addedToWatchlist: lastTick.promoted || 0,
+      events: lastTick.checks.events || 0,
+      takedowns: lastTick.checks.takedowns || 0,
       seconds: lastTick.seconds || null,
+      at: typeof lastTick.at === 'string' ? lastTick.at : null,
     } : null,
+    recentCycles: cycles.slice(-120),
     states: (view.byState || []).map((row) => ({ state: clean(row.key, 20), sites: row.sites })),
     targets,
     hosts,
@@ -276,7 +321,8 @@ try {
 
   if (allDir) {
     writeJson(path.join(allDir, 'scam-radar-status.json'), {
-      generated: snapshot.generated, lastScan: snapshot.lastScan, scanCycles: snapshot.scanCycles, totals: snapshot.totals });
+      generated: snapshot.generated, lastScan: snapshot.lastScan, scanCycles: snapshot.scanCycles, scan: snapshot.scan,
+      totals: snapshot.totals, lastCycle: snapshot.lastCycle });
 
     // ---- Lookup: one record per visited site with something to say, in 256 files by hash
     const worth = store.listSites({ minRisk: LOOKUP_MIN_RISK, limit: 1000000 }).filter((s) => s.checks > 0);
