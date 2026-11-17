@@ -9,6 +9,10 @@ Every claim comes from the committed Pluvium docs (README, ARCHITECTURE,
 OPERATIONAL_BENCHMARK, BENCHMARK, FAILURE_MODES at commit 272a0c3) except the
 six-region note, which is labelled as early and unpublished. The scorecard (charts and
 comparison table) comes from tools/pluvium_scorecard.py.
+
+What the folder checkpoint/stage_a/best holds comes from pluvium 0.5.5 itself: pluvium/program.py
+(stage A, mirrored under "checkpoint/stage_a") and pluvium/train.py (Trainer._eval_and_keep, every
+30 minutes on 32 held-out forecast times, model.pt and pluvium.json, no calibrator).
 """
 import html
 import json
@@ -24,9 +28,11 @@ OUT = ROOT / "models/pluvium/index.html"
 
 URL = "https://corx-labs.com/models/pluvium/"
 PYPI = "https://pypi.org/project/pluvium/"
+HF_REPO = "https://huggingface.co/CorxLabs/Pluvium-500"      # Pluvium-500's repository on the Hugging Face Hub
+HF_CKPT = HF_REPO + "/tree/main/checkpoint/stage_a/best"     # its stage A checkpoint
 OG = "https://corx-labs.com/assets/img/og-pluvium.jpg"
 DATE = "2026-11-14"        # first published
-MODIFIED = "2026-11-16"    # Pluvium 0.5.5
+MODIFIED = "2026-11-17"    # Pluvium-500 stage A checkpoint linked
 ODPEM = '<a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>'
 EXT = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>')
@@ -117,8 +123,10 @@ FAQ = [
     ("Is Pluvium free and open source?",
      "Yes. Version 0.5.5 is released under the Apache-2.0 licence, which allows commercial use, and installs "
      "with <code>pip install pluvium</code>. Pluvium Blend is trained for your own country on a CPU, and "
-     "Pluvium Cyclone needs nothing trained. The weights of the full-size network, Pluvium-500, have not been "
-     "published yet. The data it learns from has its own terms, credited on this page."),
+     "Pluvium Cyclone needs nothing trained. The full-size network, Pluvium-500, has a first checkpoint on "
+     "<a href=\"" + HF_CKPT + "\" rel=\"noopener\" target=\"_blank\">Hugging Face</a>, from stage A of its "
+     "training. It is not calibrated, and this page has no scores from it yet. The data it learns from has its "
+     "own terms, credited on this page."),
     ("Who built Pluvium?",
      "Pluvium was built by <a href=\"/nathan/\">Nathan Lyttle</a>, the founder of CorX Labs and a solo "
      "developer from Jamaica, who also built NatureV1 and its iHELIX engine."),
@@ -197,7 +205,7 @@ graph = [
             "Pluvium Blend learns online after every verified day, hands record storms back in part to the raw systems where that helped, and labels alert tiers and return periods",
             "Pluvium Cyclone: tropical cyclone tracks to five days in the North Atlantic and eastern North Pacific, with a two-in-three circle and the chance of the centre passing within 150 km of each place",
         ],
-        "sameAs": [PYPI],
+        "sameAs": [PYPI, HF_REPO],
         "about": [
             {"@type": "Thing", "name": "Weather forecasting",
              "sameAs": "https://en.wikipedia.org/wiki/Weather_forecasting"},
@@ -292,7 +300,7 @@ HEAD = """<!DOCTYPE html>
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Pluvium — rain, hour by hour, town by town. An open-source rain model made in Jamaica">
 <meta property="article:published_time" content="2026-11-14T00:00:00Z">
-<meta property="article:modified_time" content="2026-11-15T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-17T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="Pluvium — hour-by-hour rain forecasts for every Caribbean town">
@@ -466,6 +474,10 @@ MAIN = """<main id="main">
     <div class="btn-row mt-m">
       <a class="btn btn-primary" href="https://pypi.org/project/pluvium/" rel="noopener" target="_blank">
         View on PyPI
+        @@EXT@@
+      </a>
+      <a class="btn btn-ghost" href="@@HF_CKPT@@" rel="noopener" target="_blank">
+        Pluvium-500 checkpoint
         @@EXT@@
       </a>
       <a class="btn btn-ghost" href="#results">See the results</a>
@@ -929,12 +941,16 @@ pluvium cyclone --root ~/storms --time 2025-10-25T22   # as it would have been i
             wins heavy rain at short range.</li>
           <li><strong>Train the real network.</strong> The network results come from pluvium-small, 0.9M
             parameters trained for about two hours on a CPU. Pluvium-500 is 60 times larger and designed for a
-            day on one GPU. Three GPU runs have been tried and none has finished. The first stopped after 138
+            day on one GPU. The first three GPU runs did not finish. The first stopped after 138
             minutes. The second stopped right after it measured one forecast at 38.6&nbsp;GB on the 96&nbsp;GB
             card. The third trained on that card for the first time, then stopped when a data file was missing.
             Versions 0.5.4 and 0.5.5 fix what stopped them: a batch that cannot fit is not tried, a stopped run
             starts again and keeps the last 400 lines of its log, and every data file is checked before training
-            starts. It is not trained or published yet.</li>
+            starts. The first weights are now on Hugging Face: the
+            <a href="@@HF_CKPT@@" rel="noopener" target="_blank">stage A checkpoint</a> with the lowest loss
+            on held-out forecast times so far. Stage A is one step of the program. Training on real GFS runs
+            (stage B), calibration and the scores on a held-out year come after it, so this page has no
+            Pluvium-500 result yet.</li>
           <li><strong>A fresh year.</strong> Version 0.3 was scored on the year its weak spots were found on.</li>
         </ol>
         <p>Four short technical papers and a list of the ideas that were built, tested and dropped are published
@@ -1028,8 +1044,14 @@ print(brief(got["result"], got["names"], got["population"]))</code></pre>
       </div>
 
       <div class="callout mt-m" data-reveal>
-        <p><strong>The weights of Pluvium-500, the full-size model, are not published yet.</strong> The
-          results on this page come from pluvium-small. To train your own, <code>pluvium program</code> runs
+        <p><strong>A first checkpoint of Pluvium-500, the full-size model, is on Hugging Face.</strong>
+          <a href="@@HF_CKPT@@" rel="noopener" target="_blank">Open the checkpoint</a>
+          (<code>CorxLabs/Pluvium-500</code>, folder <code>checkpoint/stage_a/best</code>).
+          Stage A is the training on reanalysis. Every 30 minutes the
+          trainer scores the network on 32 forecast times from the held-out year, and this folder keeps the
+          weights with the lowest loss so far. They are not the finished model. They are not calibrated, and
+          the results on this page still come from pluvium-small.</p>
+        <p>To train your own, <code>pluvium program</code> runs
           the whole pipeline on one GPU (geography and towns, ERA5, CMORPH and airport reports,
           climatology, two training stages, calibration and scoring on a held-out year, publishing to the
           Hugging Face Hub, and the live forecast) and resumes where it stopped.</p>
@@ -1120,8 +1142,8 @@ print(brief(got["result"], got["names"], got["population"]))</code></pre>
             The daily table now shows when the raw systems agree on 50&nbsp;mm; read it.</li>
           <li><strong>The truth is imperfect.</strong> Satellite rain at 8&nbsp;km and airport reports. Neither sees
             every shower, the satellite under-reports mountain rain, and it sees winter snow poorly.</li>
-          <li><strong>A small network.</strong> Every network result comes from pluvium-small. The weights of
-            Pluvium-500 are not yet published.</li>
+          <li><strong>A small network.</strong> Every network result comes from pluvium-small. Pluvium-500
+            has a stage A checkpoint on Hugging Face and no scores on this page.</li>
           <li><strong>Hurricane tracks only.</strong> Pluvium Cyclone forecasts where a storm goes, not how strong
             it gets, and it trails the National Hurricane Center&rsquo;s official forecast.</li>
           <li><strong>Flood risk is a rule.</strong> Its thresholds have not been verified against flood reports,
@@ -1193,6 +1215,7 @@ page = (HEAD.replace("@@LD@@", ld)
         + masthead + "\n\n"
         + MAIN.replace("@@DIAGRAM@@", DIAGRAM).replace("@@SCORECARD@@", sc.scorecard()).replace("@@FULLYEAR@@", sc.full_year()).replace("@@MELISSA@@", sc.melissa_chart()).replace("@@CYCLONE@@", sc.cyclone_table()).replace("@@MAYJUN@@", sc.mayjun_chart()).replace("@@FAQ@@", faq_html)
               .replace("@@EXT@@", EXT).replace("@@ODPEM@@", ODPEM).replace("@@ALSO@@", also)
+              .replace("@@HF_CKPT@@", HF_CKPT)
         + footer + "\n\n"
         + '<script src="/assets/js/main.js" defer></script>\n</body>\n</html>\n')
 assert "@@" not in page, re.findall(r"@@\w+@@", page)
