@@ -5608,8 +5608,7 @@ var init_api_core = __esm({
 });
 
 // tools/scam-radar/api-netlify.cjs
-var { handle: handle2, installNetworkGuard: installNetworkGuard2 } = (init_api_core(), __toCommonJS(api_core_exports));
-installNetworkGuard2();
+var { handle: handle2 } = (init_api_core(), __toCommonJS(api_core_exports));
 exports.handler = async (event) => {
   const headers = event.headers || {};
   const out = await handle2({

@@ -5608,8 +5608,7 @@ var init_api_core = __esm({
 });
 
 // tools/scam-radar/api-vercel.cjs
-var { handle: handle2, installNetworkGuard: installNetworkGuard2 } = (init_api_core(), __toCommonJS(api_core_exports));
-installNetworkGuard2();
+var { handle: handle2 } = (init_api_core(), __toCommonJS(api_core_exports));
 module.exports = async (req, res) => {
   const url = new URL(req.url || "/", "https://corx-labs.com");
   const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
