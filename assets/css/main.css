@@ -240,6 +240,7 @@ p { text-wrap: pretty; }
   text-decoration-color: var(--line-strong);
   text-underline-offset: 3px;
   transition: text-decoration-color var(--fast) var(--ease);
+  overflow-wrap: anywhere;   /* a long address as link text wraps on a phone, it is not cut off */
 }
 .prose a:hover { text-decoration-color: currentColor; }
 
@@ -1012,6 +1013,13 @@ blockquote.pull cite {
 .callout p { color: var(--ink); font-size: .97rem; }
 .callout p + p { margin-top: .8em; }
 .callout strong { font-weight: 600; }
+/* A link in a callout looks like one (outside .prose links have no underline by default) */
+.callout a:not(.btn) {
+  color: var(--ink-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
 
 figure { margin: 28px 0; }
 figcaption {

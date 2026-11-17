@@ -121,6 +121,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         "https://huggingface.co/Sigmandndnns/CorX1.5-160M",
         "https://huggingface.co/Sigmandndnns/TriStream-SVS-300M",
         "https://huggingface.co/Sigmandndnns/NatureV1-500",
+        "https://huggingface.co/CorxLabs/Pluvium-500",
         "https://pypi.org/project/helix-lm/",
         "https://pypi.org/project/naturev1/",
         "https://pypi.org/project/ihelix/",
@@ -168,7 +169,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
       "primaryImageOfPage": { "@id": "https://corx-labs.com/#logo" },
       "inLanguage": "en",
       "datePublished": "2026-08-01",
-      "dateModified": "2026-11-15",
+      "dateModified": "2026-11-17",
       "speakable": {
         "@type": "SpeakableSpecification",
         "cssSelector": [".answer-box", ".fact-list", "h1"]
@@ -353,7 +354,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
           "name": "Is there an open-source AI model made in Jamaica?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes: six of them, all built in Jamaica by CorX Labs under the Apache 2.0 licence. CorX3.8-27B, CorX1.5, TriStream-SVS and NatureV1, a weather and hurricane model, are released with trained weights on Hugging Face under the account Sigmandndnns, and NatureV1’s code is also on PyPI as naturev1. HELIX is published as the helix-lm Python package, with no trained checkpoints, and Pluvium, a rain-forecasting model for every Caribbean town, as the pluvium package, with its full-size weights still to be published."
+            "text": "Yes: six of them, all built in Jamaica by CorX Labs under the Apache 2.0 licence. CorX3.8-27B, CorX1.5, TriStream-SVS and NatureV1, a weather and hurricane model, are released with trained weights on Hugging Face under the account Sigmandndnns, and NatureV1’s code is also on PyPI as naturev1. HELIX is published as the helix-lm Python package, with no trained checkpoints, and Pluvium, a rain-forecasting model for every Caribbean town, as the pluvium package. Pluvium-500, its full-size network, has a first training checkpoint on Hugging Face under CorxLabs, and the finished model is still to come."
           }
         },
         {
@@ -512,8 +513,9 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
 
           <p>The fifth, <strong>HELIX</strong>, is a linear-scaling sequence architecture published as
             code. The sixth, <strong><a href="/models/pluvium/">Pluvium</a></strong>, forecasts rain hour
-            by hour for every Caribbean town; its code is out, and its full-size weights are still to
-            come. All of it, Automa included, is the work of a single developer.</p>
+            by hour for every Caribbean town; its code is out, and its full-size network has a first
+            training checkpoint on Hugging Face, with the finished model still to come. All of it, Automa
+            included, is the work of a single developer.</p>
 
           <h3>Automa, an AI company in your pocket</h3>
 
@@ -623,7 +625,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
             best skill of every ECMWF and NOAA system for rain on days 1 to 7. Its misses are published beside
             that: it does not lead at 50&nbsp;mm, it under-forecast Hurricane Melissa&rsquo;s rain over Jamaica, and
             its hurricane tracks trail the National Hurricane Center&rsquo;s official forecast. Its code is out as
-            the <code>pluvium</code> package, and the full-size network&rsquo;s weights are still to come. It is a
+            the <code>pluvium</code> package. The full-size network has a
+            <a href="https://huggingface.co/CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best" rel="noopener" target="_blank">first training checkpoint on Hugging Face</a>, and the finished model is still to come. It is a
             research model, not an official forecast.</p>
 
           <blockquote>
@@ -649,7 +652,8 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
               (weights, results and evaluation scripts) and
               <a href="https://pypi.org/project/naturev1/" rel="noopener" target="_blank">pypi.org/project/naturev1</a>.</li>
             <li><strong>Pluvium</strong>: <a href="https://pypi.org/project/pluvium/" rel="noopener" target="_blank">pypi.org/project/pluvium</a>
-              (code; the full-size model&rsquo;s weights are not yet published).</li>
+              (code) and <a href="https://huggingface.co/CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best" rel="noopener" target="_blank">huggingface.co/CorxLabs/<wbr>Pluvium-500</a>
+              (a stage A training checkpoint of the full-size model; the finished weights are not yet published).</li>
             <li><strong>Automa</strong>: Android app, version 1.9.11:
               <a href="/downloads/Automa-1.9.11.apk" download="Automa-1.9.11.apk" type="application/vnd.android.package-archive">download the signed APK</a> (23.9 MB). Its APKPure listing is pending review.
               <a href="/automa/">Every screen in the app</a>.</li>
@@ -1149,7 +1153,7 @@ html{background:#f4f2ec}@media(prefers-color-scheme:dark){html{background:#14100
         <details>
           <summary>Is there an open-source AI model made in Jamaica?<span class="plus" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-          <div class="faq-body"><p>Yes: six of them, all built in Jamaica by CorX Labs under the Apache 2.0 licence. CorX3.8-27B, CorX1.5, TriStream-SVS and <a href="/models/naturev1/">NatureV1</a>, a weather and hurricane model, are released with trained weights on Hugging Face under the account <a href="https://huggingface.co/Sigmandndnns" rel="noopener" target="_blank">Sigmandndnns</a>, and NatureV1&rsquo;s code is also on PyPI as <code>naturev1</code>. <a href="/models/helix/">HELIX</a> is published as the <code>helix-lm</code> Python package, with no trained checkpoints, and <a href="/models/pluvium/">Pluvium</a>, a rain-forecasting model for every Caribbean town, as the <code>pluvium</code> package, with its full-size weights still to be published.</p></div>
+          <div class="faq-body"><p>Yes: six of them, all built in Jamaica by CorX Labs under the Apache 2.0 licence. CorX3.8-27B, CorX1.5, TriStream-SVS and <a href="/models/naturev1/">NatureV1</a>, a weather and hurricane model, are released with trained weights on Hugging Face under the account <a href="https://huggingface.co/Sigmandndnns" rel="noopener" target="_blank">Sigmandndnns</a>, and NatureV1&rsquo;s code is also on PyPI as <code>naturev1</code>. <a href="/models/helix/">HELIX</a> is published as the <code>helix-lm</code> Python package, with no trained checkpoints, and <a href="/models/pluvium/">Pluvium</a>, a rain-forecasting model for every Caribbean town, as the <code>pluvium</code> package. Pluvium-500, its full-size network, has a first training checkpoint on <a href="https://huggingface.co/CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best" rel="noopener" target="_blank">Hugging Face</a> under CorxLabs, and the finished model is still to come.</p></div>
         </details>
 
         <details>

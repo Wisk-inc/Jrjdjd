@@ -6,13 +6,31 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Mon, 16 Nov 2026 23:30:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 17 Nov 2026 00:35:00 +0000</lastBuildDate>
     <atom:link href="https://corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Pluvium-500: the first checkpoint is on Hugging Face</title>
+      <link>https://corx-labs.com/models/pluvium/#next</link>
+      <guid isPermaLink="false">corx-labs.com/models/pluvium/checkpoint/stage-a</guid>
+      <pubDate>Tue, 17 Nov 2026 00:35:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>The first weights of Pluvium-500, the full-size rain network, are on Hugging Face:
+        <a href="https://huggingface.co/CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best">CorxLabs/Pluvium-500, folder checkpoint/stage_a/best</a>.
+        Stage A is the training on reanalysis. Every 30 minutes the trainer scores the network on 32
+        forecast times from the held-out year, and this folder keeps the weights with the lowest loss so
+        far. It is not the finished model. Training on real GFS runs, calibration and the scores on a
+        held-out year come after it, and the results on the Pluvium page still come from pluvium-small.
+        <a href="https://corx-labs.com/models/pluvium/">The Pluvium page</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Scam Radar: check any link, a live feed and a map</title>
