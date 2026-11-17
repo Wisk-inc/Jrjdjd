@@ -256,6 +256,20 @@ def main():
         say(f"{path}: {err or status}, {text}")
     say()
 
+    say("## Scam Radar status function (the page reads data at the branch's current commit through it)")
+    status, h, body, final, err = fetch(SITE + "/api/scam-radar-status")
+    try:
+        answer = json.loads(body)
+        made = datetime.fromisoformat(answer["generated"].replace("Z", "+00:00"))
+        age = (datetime.now(timezone.utc) - made).total_seconds()
+        scan = answer.get("scan") or {}
+        say(f"/api/scam-radar-status: {status}, commit {answer['commit'][:10]}, published {age:.0f} s ago, "
+            f"scan {scan.get('state')} cycle {scan.get('cycle')} of {scan.get('cycles')}")
+    except Exception:
+        say(f"/api/scam-radar-status: {err or status}, {body[:120]!r}")
+        problems.append("the Scam Radar status function did not answer; the page falls back to data that can be minutes old")
+    say()
+
     say("## Scam Radar data")
     status, h, body, final, err = fetch(f"{DATA}?t={int(time.time())}")
     try:

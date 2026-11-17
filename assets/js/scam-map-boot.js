@@ -1,21 +1,27 @@
 /* Scam Map: what this site changes about Scam Finder's viewer, without editing the viewer.
    It runs before scam-map.js and stands between the viewer and the network:
    - the viewer asks /api/scam-radar for the live map; here that is the map Scam Radar publishes
-     on the scam-radar-data branch, so it works on any host;
+     on the scam-radar-data branch, read at the branch's current commit, so it works on any host;
    - the viewer asks /api/scam-finder to trace a link; here the request asks for the related
      sites too, and a host with no API gets a plain answer instead of a parse error;
    - the live map opens by itself when the page loads, unless a link was passed in. */
 (() => {
   'use strict';
-  const RADAR_MAP = 'https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/radar-map.json';
+  const RAW = 'https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/';
   const realFetch = window.fetch.bind(window);
   const answer = (body) => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+  // The map of the data branch's current commit (see api/scam-radar-status.js); by branch name it can
+  // be a few minutes old. The viewer asks for it every minute.
+  const mapUrl = async () => {
+    const status = await realFetch('/api/scam-radar-status', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    return status && /^[0-9a-f]{40}$/.test(status.commit || '') ? `${RAW}${status.commit}/radar-map.json`
+      : `${RAW}scam-radar-data/radar-map.json?t=${Math.floor(Date.now() / 60000)}`;
+  };
 
   window.fetch = async (input, init) => {
     const url = typeof input === 'string' ? input : (input && input.url) || '';
-    if (url.startsWith('/api/scam-radar')) {
-      const stamp = Math.floor(Date.now() / 60000); // the published map changes about once a minute; the viewer asks every minute
-      const response = await realFetch(`${RADAR_MAP}?t=${stamp}`, { cache: 'no-cache' }).catch(() => null);
+    if (url === '/api/scam-radar' || url.startsWith('/api/scam-radar?')) {
+      const response = await realFetch(await mapUrl(), { cache: 'no-cache' }).catch(() => null);
       return response && response.ok ? response : answer({ error: 'the published map could not be reached. Try again in a minute' });
     }
     if (url.startsWith('/api/scam-finder?url=')) {

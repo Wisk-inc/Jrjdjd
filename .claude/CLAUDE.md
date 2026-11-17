@@ -36,6 +36,8 @@ Run `python3 tools/style-check.py` before committing; it lists what to fix.
   every cycle; each 55-minute run starts the next, and `scam-radar-keepalive.yml` restarts the chain if it stops.
   GitHub's own schedule skips most starts, so it is only the backstop. The status file says whether a scan is
   running (`scan.state`), and the snapshot keeps the last cycles (`recentCycles`) for the page's live chart.
+  raw.githubusercontent.com can serve a branch's old files for minutes after a push, so the page and the map
+  ask `api/scam-radar-status.js` for the branch's current commit and read files at that commit.
 - `.github/workflows/site-check.yml` (manual) checks the live site from a GitHub runner: host, which commit
   each live file matches, the APK, redirects, CSP, scan API, Radar data age, and the pages in a real browser.
   This sandbox cannot reach the site; run that workflow and read its log instead.

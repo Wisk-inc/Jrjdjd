@@ -78,7 +78,8 @@ const text = (page, selector) => page.locator(selector).first().textContent({ ti
 
   await visit(browser, '/scam-radar/', 390, async (page, raw) => {
     console.log(`  data age on screen: ${await text(page, '#sr-age')}`);
-    console.log(`  status line: ${await text(page, '#sr-status')}`);
+    console.log(`  console: ${await text(page, '#sr-live-state')}: ${await text(page, '#sr-live-detail')}`);
+    console.log(`  chart: ${await page.locator('#sr-cycles-chart .sr-col:not(.is-empty)').count()} cycles in the last hour; ${await text(page, '#sr-cycle-now')}`);
     console.log(`  fetched from the scam-radar-data branch: ${raw.length ? raw.join(', ') : 'NOTHING'}`);
     if (!raw.some((r) => r.startsWith('200'))) problems.push('/scam-radar/ did not load fresh data from the scam-radar-data branch');
     const tiles = await page.$$eval('dd[data-k]', (els) => els.map((el) => `${el.dataset.k}=${el.textContent.trim()}`));
