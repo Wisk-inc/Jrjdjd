@@ -20,6 +20,27 @@ and direct; the site should read the same way.
 
 Run `python3 tools/style-check.py` before committing; it lists what to fix.
 
+## Automa releases
+
+A new Automa APK goes on the site like this; the last "Automa 1.9.x" commit is the template. An hourly scheduled
+check runs these steps when one appears.
+
+1. The APK is in Wisk-inc/paperclip, branch `claude/automa-android-apk-uiimmy`, at
+   `releases/android/Automa-<version>.apk`, from a commit named "Release Automa <version> (build <n>)". The notes
+   come from its entry in `ui/src/lib/release-history.ts`, its row in `AUTOMA.md` and that commit's message.
+2. `python3 tools/automa-apk.py check <new.apk>` must say OK: same package, higher versionCode, same signing
+   certificate. If it does not, publish nothing and tell Nathan why.
+3. `git mv downloads/Automa-<old>.apk downloads/Automa-<new>.apk`, copy the new APK over it, then run
+   `python3 tools/automa-apk.py redirects <new>` and `python3 tools/automa-apk.py card <new>` (the old card stays).
+4. The version and APK links on `/automa/` (not inside "What's new"), `/`, `/models/`, `/nathan/`, `/blog/`,
+   `/blog/automa-is-out/`, `llms.txt` and `llms-full.txt`. Release dates are the release's; page dates
+   (`dateModified`, `article:modified_time`, sitemap `lastmod`) are the day of the edit.
+5. On `/automa/`: a notes paragraph and a history row at the top of "What's new" (house style, numbers from the
+   docs, limits next to wins), the version count card (count the versions in release-history.ts), and the
+   free-models table and FAQ if models changed. In `feed.xml`, a new item and `lastBuildDate`.
+6. Style check, the pages in a browser, one commit on the session branch, `merge --no-ff` into main, one push
+   (Vercel's daily limit), then the site-check workflow: the live APK's SHA-256 must match main.
+
 ## Release workflow
 
 - Work on the session's `claude/...` branch, then merge into `main` with `git merge --no-ff` and push.
