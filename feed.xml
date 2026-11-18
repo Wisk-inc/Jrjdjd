@@ -6,13 +6,33 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Wed, 18 Nov 2026 00:30:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 18 Nov 2026 20:15:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.14: Automa in your language</title>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.14</guid>
+      <pubDate>Wed, 18 Nov 2026 20:15:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.14 is out, in your language. Account, Language offers Auto and 40 languages: Auto follows
+        your phone or browser, and dates, numbers and times follow your language and country. The main screens
+        are built in for every language, and the rest of the board is translated by Automa's free models and kept
+        on your server; only Automa's own wording is sent, never your chats, tasks, names or files. Arabic,
+        Persian, Hebrew and Urdu read right to left. Agents write to you in your language, and Moan keeps Patois
+        for English. The connect screen and, on Android 13 and newer, the app's own notices follow the choice too.
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.14.apk">Download the APK</a> (25.1 MB); it
+        installs over 1.9.13 and keeps your data.
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.13: model lists that keep themselves current, and security fixes</title>
