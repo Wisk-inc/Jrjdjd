@@ -6,13 +6,34 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Tue, 17 Nov 2026 13:30:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 18 Nov 2026 00:30:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.13: model lists that keep themselves current, and security fixes</title>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.13</guid>
+      <pubDate>Wed, 18 Nov 2026 00:30:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.13 is out. Model lists now keep themselves current: an agent's model choice, App
+        Studio, the Terminals menus and the chat's Newest models follow a public catalog of the major makers'
+        models, newest first, with Claude Fable 5.2, Gemini 4 Carbon and Hydrogen and Qwen 4 Max added. Three
+        new free models: Ling 3.2 Flash, ERNIE 5.5 Flash Preview and Particle 1. The free models' key is
+        stored scrambled, the phone's database password and app key are locked to Termux on every install,
+        sign-in tries are counted per real caller, and other sites can no longer frame the board. On the
+        phone, PostgreSQL 18 runs 4 helper processes instead of 7.
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.13.apk">Download the APK</a> (23.9 MB); it
+        installs over 1.9.12 and keeps your data.
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.12: safe start, troubleshooting and fewer stops on the phone</title>
