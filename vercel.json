@@ -14,32 +14,37 @@
   "redirects": [
     {
       "source": "/downloads/Automa-1.9.7.apk",
-      "destination": "/downloads/Automa-1.9.13.apk",
+      "destination": "/downloads/Automa-1.9.14.apk",
       "permanent": false
     },
     {
       "source": "/downloads/Automa-1.9.8.apk",
-      "destination": "/downloads/Automa-1.9.13.apk",
+      "destination": "/downloads/Automa-1.9.14.apk",
       "permanent": false
     },
     {
       "source": "/downloads/Automa-1.9.9.apk",
-      "destination": "/downloads/Automa-1.9.13.apk",
+      "destination": "/downloads/Automa-1.9.14.apk",
       "permanent": false
     },
     {
       "source": "/downloads/Automa-1.9.10.apk",
-      "destination": "/downloads/Automa-1.9.13.apk",
+      "destination": "/downloads/Automa-1.9.14.apk",
       "permanent": false
     },
     {
       "source": "/downloads/Automa-1.9.11.apk",
-      "destination": "/downloads/Automa-1.9.13.apk",
+      "destination": "/downloads/Automa-1.9.14.apk",
       "permanent": false
     },
     {
       "source": "/downloads/Automa-1.9.12.apk",
-      "destination": "/downloads/Automa-1.9.13.apk",
+      "destination": "/downloads/Automa-1.9.14.apk",
+      "permanent": false
+    },
+    {
+      "source": "/downloads/Automa-1.9.13.apk",
+      "destination": "/downloads/Automa-1.9.14.apk",
       "permanent": false
     },
     {
