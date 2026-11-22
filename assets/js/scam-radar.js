@@ -1,7 +1,7 @@
 /* Scam Radar: draws what the scanner publishes, and checks a single site on request.
    - Data: the newest of the published snapshot (scam-radar-data branch) and the copy on this site.
      Whichever answers first is drawn at once. A tiny status file is polled every 15 seconds after that,
-     and when a new snapshot lands (about once a minute while the scanner runs) what changed is shown:
+     and when a new snapshot lands (every minute or two while the scanner runs) what changed is shown:
      numbers roll to their new values, new cycles join the chart and new events are marked.
    - The console says what the scanner is doing from what it published: scanning, moving to a fresh
      run, waiting or paused. Nothing on the page moves unless the data did.
@@ -422,7 +422,8 @@
     $('#sr-states').textContent = states.length ? `Of ${num(now.visited)} sites visited so far: ${states.join(', ')}.` : '';
   };
 
-  // One bar per minute: sites visited in that minute's cycle, the ones found up in the darker part
+  // One bar per minute: sites visited in the cycle that ended in that minute, the ones found up in the
+  // darker part. A cycle takes a minute or two, so some minutes have none.
   const drawCycles = (before) => {
     const chart = $('#sr-cycles-chart');
     if (!chart) return;
@@ -494,7 +495,8 @@
     if (live.mode === 'scanning') {
       const due = live.every - live.age;
       state = 'Scanning now';
-      detail = `${live.scan.cycle && live.scan.cycles ? `Cycle ${num(live.scan.cycle)} of ${num(live.scan.cycles)} in this run. ` : ''}` +
+      // Runs stop by the clock, so new data names no cycle count; older data did ("of 55")
+      detail = `${live.scan.cycle ? `Cycle ${num(live.scan.cycle)}${live.scan.cycles ? ` of ${num(live.scan.cycles)}` : ''} in this run. ` : ''}` +
         `${due >= 1 ? `Next update in ${span(due)}.` : 'Next update any moment.'}`;
     } else if (live.mode === 'handover') {
       const due = HANDOVER_S - live.age;

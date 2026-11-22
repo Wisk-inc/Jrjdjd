@@ -1,11 +1,11 @@
-# Scam Radar: scan for live scam sites around the clock and publish what is found every minute.
+# Scam Radar: scan for live scam sites around the clock and publish what is found after every cycle.
 #
 # A run: restore Radar's database from the last run, refresh the blocklists and the list of newly
-# registered domains, put new brand look-alikes at the front of the queue, then scan in one-minute
-# cycles for 55 minutes. After every cycle a safe snapshot is exported (see
+# registered domains, put new brand look-alikes at the front of the queue, then scan in cycles until
+# 55 minutes have passed. After every cycle a safe snapshot is exported (see
 # tools/scam-radar/export.mjs for what is published and why) and force-pushed to the
-# scam-radar-data branch, which /scam-radar/ and the map read. So the page gets new numbers about
-# once a minute.
+# scam-radar-data branch, which /scam-radar/ and the map read. So the page gets new numbers every
+# minute or two.
 #
 # At the end the database is saved and the run starts the next one, which picks up from it about
 # two minutes later. The status file says "finished" for that hand-over, so the page can say so.
@@ -19,10 +19,11 @@
 # to scan (so a fault cannot start runs in a fast loop). scam-radar-keepalive.yml then starts it
 # again, and so does a start by hand from the Actions tab.
 #
-# Cycles must stay at 60 seconds: Radar gives each cycle a time budget of its length minus four
+# Radar's part of a cycle must stay at 60 seconds: it gets a time budget of that minus four
 # seconds, reads certificates only with 20 seconds to spare and starts a visit only with 12.
-# Shorter cycles visit nothing. A cycle takes 40 to 55 seconds; exporting and publishing takes
-# about eight more, and the loop waits out the rest of the minute when there is any.
+# Shorter ones visit nothing. Radar's part takes 40 to 55 seconds. Exporting and publishing took
+# about eight more at first and about 55 in November 2026, as the data grew, so a cycle is now
+# about 100 seconds. When a cycle is shorter than a minute, the loop waits out the rest of it.
 name: Scam Radar
 
 on:
@@ -89,9 +90,14 @@ jobs:
           if ! [[ "$SCAN_MINUTES" =~ ^[0-9]+$ ]] || [ "$SCAN_MINUTES" -lt 5 ] || [ "$SCAN_MINUTES" -gt 60 ]; then
             SCAN_MINUTES=55
           fi
+          # Cycles start until SCAN_MINUTES have passed, and the one running then finishes. A cycle is 300
+          # visits, then the export and the publish, which takes longer as the data grows: about 100 s in
+          # November 2026. Counting 55 cycles instead ran every run into the 75-minute timeout below.
+          deadline=$(( $(date +%s) + SCAN_MINUTES * 60 ))
           out="$RUNNER_TEMP/radar-out"
-          # Read by export.mjs and published, so the page can say what the scan is doing
-          export RADAR_SCAN_STARTED RADAR_CYCLES="$SCAN_MINUTES" RADAR_CYCLE_SECONDS=60 RADAR_RUN="$GITHUB_RUN_NUMBER"
+          # Read by export.mjs and published, so the page can say what the scan is doing. The cycle length
+          # is the last cycle's, so the page can say when the next update is due.
+          export RADAR_SCAN_STARTED RADAR_CYCLE_SECONDS=60 RADAR_RUN="$GITHUB_RUN_NUMBER"
           RADAR_SCAN_STARTED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           publish() { # $1: scanning or finished, $2: the cycle just done
             rm -rf "$out" && mkdir -p "$out"
@@ -109,9 +115,11 @@ jobs:
           hunt_log="$RUNNER_TEMP/jamaica-hunt.log"
           node tools/scam-radar/hunt-jamaica.mjs --hunt "$leads" --minutes 8 > "$hunt_log" 2>&1 &
           failed=0
-          for cycle in $(seq 1 "$SCAN_MINUTES"); do
+          cycle=0
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            cycle=$((cycle + 1))
             began=$(date +%s)
-            echo "::group::Cycle $cycle of $SCAN_MINUTES"
+            echo "::group::Cycle $cycle"
             # 300 visits a cycle: a cycle of 150 takes about 30 of its 56 seconds
             if $RADAR run --ticks 1 --seconds 60 --checks 300; then
               failed=0
@@ -134,9 +142,10 @@ jobs:
             echo "::endgroup::"
             left=$(( began + 60 - $(date +%s) ))
             if [ "$left" -gt 0 ]; then sleep "$left"; fi
+            RADAR_CYCLE_SECONDS=$(( $(date +%s) - began ))
           done
           # Tell the page this run is handing over to the next
-          publish finished "$SCAN_MINUTES"
+          publish finished "$cycle"
           $RADAR status
 
       - name: Save the Radar database

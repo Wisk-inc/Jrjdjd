@@ -4,7 +4,7 @@
 The page ships with real numbers already in it: this script fills them in from
 assets/data/scam-radar.json, a copy of the scanner's latest snapshot. assets/js/scam-radar.js then
 redraws everything from the newest snapshot on the scam-radar-data branch, which the scan workflow
-(.github/workflows/scam-radar.yml) republishes after every one-minute scan cycle, around the clock.
+(.github/workflows/scam-radar.yml) republishes after every scan cycle (a minute or two), around the clock.
 
 Refresh the copy before building, so the built page starts close to the truth:
     curl -s https://raw.githubusercontent.com/Wisk-inc/Jrjdjd/scam-radar-data/scam-radar.json -o assets/data/scam-radar.json
@@ -291,12 +291,13 @@ FAQ = [
      "StopForumSpam, and a phone number gets its country and any regulator warning about its area code. You are "
      "never sent to the site."),
     ("How often does it update?",
-     "About once a minute. The scanner runs around the clock in one-minute cycles and publishes what it has "
-     "found after every cycle, and this page checks for new data every 15 seconds and shows what changed. Once "
+     "Every minute or two. The scanner runs around the clock in cycles of up to 300 site visits and publishes "
+     "what it has found after every cycle, and this page checks for new data every 15 seconds and shows what "
+     "changed. Once "
      "an hour the scan moves to a fresh GitHub runner, which takes about two minutes, and the page says so "
      "while it happens. It runs on GitHub&rsquo;s servers, so if it stops, the page says how old its numbers "
      "are. No scanner visits millions of sites a second: this one scores 18 million names from their spelling "
-     "in seconds, then visits up to 300 of the most suspicious a minute."),
+     "in seconds, then visits up to 300 of the most suspicious in each cycle."),
     ("How does it know my country?",
      "From your device&rsquo;s time zone, worked out in your browser. Nothing about you is sent anywhere, and "
      "you can pick another country from the list; the choice is remembered on this device only."),
@@ -432,7 +433,7 @@ page = f"""<!DOCTYPE html>
       <span class="tag tag-live" id="sr-live-tag"><i class="dot" aria-hidden="true"></i> <span id="sr-age">Scan of {SHORT_WHEN}</span></span>
       <span class="tag">Scam &amp; phishing sites</span>
       <span class="tag">Every country</span>
-      <span class="tag">New data every minute</span>
+      <span class="tag">New data every minute or two</span>
     </div>
     <h1>Scam Radar</h1>
     <p class="lede">Scam websites going up right now, where they are hosted and which countries they aim at. A
@@ -675,8 +676,8 @@ page = f"""<!DOCTYPE html>
         <li><div><h3>Watched until they go</h3><p>Live high-risk sites are revisited every half hour to two hours.
           When one stops answering twice in a row, the takedown is recorded with when and why: gone from DNS,
           suspended by the registrar, or flagged by its host.</p></div></li>
-        <li><div><h3>Published every minute</h3><p>The scanner runs around the clock in one-minute cycles, up to
-          300 site visits each, and publishes what it has found after every cycle. This page checks for new data
+        <li><div><h3>Published after every cycle</h3><p>The scanner runs around the clock in cycles of a minute or
+          two, up to 300 site visits each, and publishes what it has found after every cycle. This page checks for new data
           every 15 seconds and shows what changed. Nobody edits the list by hand.</p></div></li>
       </ol>
       <div class="callout mt-m">

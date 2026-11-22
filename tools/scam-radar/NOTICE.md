@@ -32,7 +32,8 @@ What was added around it for this site:
 - `/api/scam-radar-status.js` (Vercel edge function) says which commit the `scam-radar-data` branch points to now
   and returns that commit's status file. Read by branch name, raw.githubusercontent.com can lag a push by
   minutes; the page and the map read files at that commit instead.
-- `.github/workflows/scam-radar.yml` scans in one-minute cycles around the clock and publishes after every cycle.
-  Each 55-minute run starts the next; `scam-radar-keepalive.yml` starts it again if that chain stops.
+- `.github/workflows/scam-radar.yml` scans in cycles of a minute or two around the clock and publishes after every
+  cycle. Each run stops starting cycles after 55 minutes and starts the next; `scam-radar-keepalive.yml` starts it
+  again if that chain stops.
 
 `scam-finder/` itself is unchanged.
