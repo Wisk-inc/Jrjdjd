@@ -4,6 +4,7 @@
   python3 tools/automa-apk.py check NEW.apk       what the APK is, and whether it can replace the one on the site
   python3 tools/automa-apk.py card VERSION        assets/img/og-automa-<version>.jpg from the current card
   python3 tools/automa-apk.py redirects VERSION   every older APK link to /downloads/Automa-<version>.apk
+  python3 tools/automa-apk.py pages               the pages agree with the APK in downloads/
 
 The APK comes from Wisk-inc/paperclip, branch claude/automa-android-apk-uiimmy, releases/android/. The steps
 for a release are in .claude/CLAUDE.md ("Automa releases").
@@ -17,6 +18,10 @@ The old card stays: links shared earlier still show it. Needs Pillow.
 
 redirects points every /downloads/Automa-*.apk redirect in vercel.json and _redirects at the new version and
 adds one for the version being replaced. Run it after the APK in downloads/ is renamed to the new version.
+
+pages checks what the pages say about the APK in downloads/: the SHA-256, version code and size on /automa/
+(the SHA-256 there was 1.9.9's for five releases before anyone noticed), and that no page in "Automa releases"
+step 4 links to an older APK. It exits 0 only when they all agree.
 """
 import hashlib
 import re
@@ -148,6 +153,8 @@ def check(new_path):
         return 1
     print(f"OK: {new['versionName']} (versionCode {new['versionCode']}) can replace {old['versionName']}, "
           f"same certificate, so it installs over it.")
+    print(f"On /automa/ it is version code {new['versionCode']}, {new['size'] / 1e6:.1f} MB and SHA-256 {new['sha256']}. "
+          f"After the edits, python3 tools/automa-apk.py pages must say OK.")
     return 0
 
 
@@ -237,7 +244,40 @@ def redirects(version):
     return 0
 
 
+PAGES = ("automa/index.html", "index.html", "models/index.html", "nathan/index.html", "blog/index.html",
+         "blog/automa-is-out/index.html", "llms.txt", "llms-full.txt")
+
+
+def pages():
+    apk = current_apk()
+    version = apk.stem.split("-", 1)[1]
+    info = describe(apk)
+    size = f"{info['size'] / 1e6:.1f} MB"
+    problems = []
+    page = (ROOT / "automa/index.html").read_text(encoding="utf-8")
+    shown = re.findall(r"SHA-256\s*<code>([0-9a-f]{64})</code>", page)
+    if shown != [info["sha256"]]:
+        problems.append(f"/automa/ shows SHA-256 {', '.join(shown) or 'nothing'}; {apk.name}'s is {info['sha256']}")
+    codes = re.findall(r"version code (\d+)", page)
+    if codes != [str(info["versionCode"])]:
+        problems.append(f"/automa/ shows version code {', '.join(codes) or 'nothing'}; {apk.name}'s is {info['versionCode']}")
+    if f'"fileSize": "{size}"' not in page:
+        problems.append(f"/automa/'s fileSize is not {size}")
+    for rel in PAGES:
+        older = sorted(set(re.findall(r"downloads/Automa-([\d.]+)\.apk", (ROOT / rel).read_text(encoding="utf-8"))) - {version})
+        if older:
+            problems.append(f"{rel} links to the APK of {', '.join(older)}")
+    if problems:
+        print("The pages do not agree with " + apk.name + ":\n- " + "\n- ".join(problems))
+        return 1
+    print(f"OK: the pages link only to {apk.name}, and /automa/ shows its SHA-256, version code {info['versionCode']} and {size}.")
+    return 0
+
+
 if __name__ == "__main__":
-    if len(sys.argv) != 3 or sys.argv[1] not in ("check", "card", "redirects"):
+    commands = {"check": check, "card": card, "redirects": redirects}
+    if len(sys.argv) == 2 and sys.argv[1] == "pages":
+        sys.exit(pages())
+    if len(sys.argv) != 3 or sys.argv[1] not in commands:
         sys.exit(__doc__)
-    sys.exit({"check": check, "card": card, "redirects": redirects}[sys.argv[1]](sys.argv[2]))
+    sys.exit(commands[sys.argv[1]](sys.argv[2]))
