@@ -278,8 +278,11 @@ def main():
         made = datetime.fromisoformat(answer["generated"].replace("Z", "+00:00"))
         age = (datetime.now(timezone.utc) - made).total_seconds()
         scan = answer.get("scan") or {}
+        # Runs stop by the clock now, so the status names the cycle and its length, not a count
+        cycle = f"cycle {scan.get('cycle')}" + (f" of {scan['cycles']}" if scan.get("cycles") else "")
+        length = f", cycles of {scan['cycleSeconds']} s" if scan.get("cycleSeconds") else ""
         say(f"/api/scam-radar-status: {status}, commit {answer['commit'][:10]}, published {age:.0f} s ago, "
-            f"scan {scan.get('state')} cycle {scan.get('cycle')} of {scan.get('cycles')}")
+            f"scan {scan.get('state')} {cycle}{length}")
     except Exception:
         say(f"/api/scam-radar-status: {err or status}, {body[:120]!r}")
         problems.append("the Scam Radar status function did not answer; the page falls back to data that can be minutes old")
