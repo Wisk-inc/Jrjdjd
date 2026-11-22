@@ -200,6 +200,7 @@
         "Projects, goals, routines, pipelines, cases and workspaces",
         "App Studio: build, run, preview and share apps in 69 languages with an AI pair or AI team",
         "Coding terminals on the device: Claude Code, Codex, Gemini CLI and OpenCode",
+        "IMY: code in a syntax you make up, checked, turned into one of 48 languages as you type, and run",
         "App Inspector: decode an Android app, read it as Java, and rebuild a signed APK",
         "Costs by agent, task and month, hard budget stops and free-model usage limits",
         "Run the Automa server on the phone itself in Termux, with hourly backups"
@@ -350,6 +351,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Yes, with Automa’s Terminals: Claude Code, Codex, Gemini CLI and OpenCode run in their full terminal UI on a Debian layer the app sets up for you, with Automa running on the phone in Termux. On a phone, Claude agents answer through the Anthropic API with Claude Code’s own tools."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is IMY in Automa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "IMY (Imagenery) is a strict compiler in Automa’s Terminals. You write code in a syntax you make up, under a first line that says what it builds, and IMY checks it, turns it into one of 48 languages as you type in its console, and runs it, on Automa’s free models with no key. It refuses an English request in place of code. IMY is open source under the MIT licence; on a computer with Python 3.11 or newer it installs with pip from its source, as it is not on PyPI yet."
           }
         },
         {
@@ -1178,7 +1187,8 @@
         <p><strong>Terminals</strong> give you a real coding terminal on the device: Claude Code, Codex,
           Gemini CLI, OpenCode and others in their full terminal UI, on a Debian layer the page sets up for
           you. Wire a terminal to an agent so it works with that agent&rsquo;s key, pick a model per tool,
-          or open the <strong>free models chat</strong> with nothing to install.</p>
+          or open the <strong>free models chat</strong> with nothing to install. <a href="#imy">IMY</a> is
+          there too, for code in a syntax you make up.</p>
         <p><strong>App Inspector</strong> takes an app on your phone, or any APK, apart: it decodes the
           manifest, resources and code, shows the code as Java, lets you search, edit and ask Claude to
           explain any file, and rebuilds a signed APK to your Downloads. It is for apps you made or are
@@ -1187,6 +1197,97 @@
             <div class="shot-row mt-m" data-reveal role="group" aria-label="Terminals and App Inspector">
         <figure class="shot"><img src="/assets/img/automa/37-terminals.webp" width="200" height="444" loading="lazy" decoding="async" alt="Terminals screen with a free models chat, Claude Code ready, Codex and Gemini CLI"><figcaption><strong>Terminals</strong>Claude Code, Codex and Gemini CLI on the device.</figcaption></figure>
         <figure class="shot"><img src="/assets/img/automa/38-app-inspector.webp" width="200" height="444" loading="lazy" decoding="async" alt="App Inspector with an APK button and the list of apps on the phone"><figcaption><strong>App Inspector</strong>Decode an app, read it as Java, rebuild it.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMY -->
+  <section class="section-tight" id="imy" aria-labelledby="imy-title">
+    <div class="shell">
+      <h2 id="imy-title">IMY: code in a syntax you make up</h2>
+      <div class="prose mt-s">
+        <p><strong>IMY</strong> (Imagenery) is a strict compiler for code you write your own way. The first line
+          says what the program builds, in a header such as <code># ("adds two numbers and shows the sum")</code>.
+          Under it you code every step, in words and symbols you choose. IMY checks the code against hard rules,
+          has an AI model turn it into a real programming language in the background, checks what comes back and
+          runs it. It never edits your file and never adds behaviour you did not write. It is in Automa&rsquo;s
+          Terminals from 1.9.15.</p>
+        <p>In this program <code>&lt;-</code> assigns, <code>say &gt;&gt;</code> prints and a block runs from
+          <code>::</code> to <code>:: end</code>, because the program uses them that way:</p>
+      </div>
+      <pre class="mt-s"><code># ("rocket countdown: counts from 5 down to 1, one number per line, then prints Liftoff")
+count &lt;- 5
+loop while count &gt; 0 ::
+  say &gt;&gt; count
+  count &lt;- count - 1
+:: end
+say &gt;&gt; "Liftoff!"</code></pre>
+      <pre class="mt-s"><code>$ imy run countdown.imy
+memory: saved &lt;-, say &gt;&gt;
+▶ countdown.imy (python, nvidia/nemotron-3-ultra-550b-a55b:free, 17 s)
+5
+4
+3
+2
+1
+Liftoff!</code></pre>
+      <ul class="fact-list mt-m" data-reveal>
+        <li><strong>48 languages.</strong> Your code can become Python, JavaScript, Ruby, Rust, C, Go, assembly
+          and 41 more. IMY builds and runs 42 of them when the language&rsquo;s own tool is installed, makes web
+          pages from HTML and CSS, and converts the other four without running them.</li>
+        <li><strong>Converted as you type.</strong> In the console each line is checked the moment you enter it,
+          and the converted code appears above the line you are typing. It is on with Automa&rsquo;s free models
+          and off with a key of your own, where every line would be a paid request.</li>
+        <li><strong>Strict.</strong> An English request in place of code, a second <code>.auto</code> shortcut,
+          a switch for a feature the code never builds, or a name used before the line that defines it stops the
+          run before any model is asked, and the message names the lines. A line whose meaning is still unclear
+          stops it as well: IMY does not guess.</li>
+        <li><strong>Code you already have.</strong> <code>:import</code> takes in a project, so your IMY code can
+          use its functions and variables by name, in whatever language it becomes. Python files are read on the
+          device; other languages are read by the model, with every answer checked against the file. None of the
+          project&rsquo;s code is run. It reads 25 files unless you ask for more and leaves out files over
+          40&nbsp;KB.</li>
+        <li><strong>A program that does not build</strong> goes back to the model with the build tool&rsquo;s own
+          words, and the corrected version is checked and built before anything runs.</li>
+      </ul>
+      <div class="prose mt-m">
+        <p>An English request in place of code, refused before any model is asked:</p>
+      </div>
+      <pre class="mt-s" style="white-space:pre-wrap"><code>$ imy run bad_prompt.imy
+✗ 1 error in bad_prompt.imy; nothing was run.
+
+SyntaxError [PromptingDetected] line 2
+  this line reads like a request to an assistant: "please make me a nice to-do list app with a dark theme". The body must be code (assignments, calls, operators, blocks); say what you are building in the # ("...") header and code every step yourself
+    1 │ # ("to-do list for my week that adds tasks and prints them")
+  ❱ 2 │ please make me a nice to-do list app with a dark theme</code></pre>
+      <div class="prose mt-m">
+        <h3>In Automa</h3>
+        <p>Open <strong>Terminals</strong> and tap <strong>IMY</strong>. The first tap installs it, inside the
+          Linux layer on a phone; the next opens its console. <code>:header</code> writes the first line from
+          plain words, and <code>:example</code> loads one of nine ready programs. IMY runs on Automa&rsquo;s free
+          models with no key: the tile has a menu for the model and one for the language your code becomes, and
+          the model you pick is the one used. A model that is not being served says so instead of quietly using
+          another. When a new Automa brings a newer IMY, the tile says Tap to update.</p>
+        <h3>On a computer</h3>
+        <p>IMY is open source under the MIT licence and runs wherever Python 3.11 or newer does: Linux, macOS,
+          Windows and Termux. Its package is <code>imagenery</code> and its command <code>imy</code>. The package
+          is not on PyPI yet, so for now install it from its source with pip:</p>
+      </div>
+      <pre class="mt-s" style="white-space:pre-wrap;overflow-wrap:anywhere"><code>pip install "git+https://github.com/Wisk-inc/paperclip@claude/automa-android-apk-uiimmy#subdirectory=imy-engine"
+imy init</code></pre>
+      <div class="prose mt-s">
+        <p><code>imy init</code> picks who compiles: a key from Anthropic, OpenAI or Google, or a model on your
+          own machine through Ollama, which costs nothing. <a href="https://github.com/Wisk-inc/paperclip/tree/claude/automa-android-apk-uiimmy/imy-engine" rel="noopener" target="_blank">IMY&rsquo;s
+          source and guide</a> and <a href="https://github.com/Wisk-inc/paperclip/blob/claude/automa-android-apk-uiimmy/imy-engine/examples/README.md" rel="noopener" target="_blank">real sessions with their
+          output</a> are on GitHub.</p>
+      </div>
+      <div class="callout mt-m">
+        <p><strong>What it can&rsquo;t do.</strong> IMY needs a model to convert: Automa&rsquo;s free models, your
+          own key or a local server. Free models differ from day to day in speed and in what they accept, and IMY
+          never swaps in another, so a busy or closed model means waiting or picking another. In IMY&rsquo;s own
+          sessions a first compile took 17 seconds to a minute; a second run of the same code comes from the cache
+          at once. A compiled program runs with your own permissions, like any script you start:
+          <code>imy run --show-code</code> shows the code first.</p>
       </div>
     </div>
   </section>
@@ -1727,6 +1828,10 @@
         <details>
           <summary>Can I run Claude Code on an Android phone?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
           <div class="faq-body"><p>Yes, with Automa&rsquo;s Terminals: Claude Code, Codex, Gemini CLI and OpenCode run in their full terminal UI on a Debian layer the app sets up for you, with Automa running on the phone in Termux. On a phone, Claude agents answer through the Anthropic API with Claude Code&rsquo;s own tools.</p></div>
+        </details>
+        <details>
+          <summary>What is IMY in Automa?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+          <div class="faq-body"><p>IMY (Imagenery) is a strict compiler in Automa&rsquo;s Terminals. You write code in a syntax you make up, under a first line that says what it builds, and IMY checks it, turns it into one of 48 languages as you type in its console, and runs it, on Automa&rsquo;s free models with no key. It refuses an English request in place of code. IMY is open source under the MIT licence; on a computer with Python 3.11 or newer it installs with pip from its source, as it is not on PyPI yet.</p></div>
         </details>
         <details>
           <summary>Do I need an API key or a credit card?<span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>

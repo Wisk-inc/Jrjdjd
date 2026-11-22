@@ -500,6 +500,12 @@ WHAT IT DOES
      phone.
    - App Studio: build, run, preview and share apps in 69 languages with an AI pair or an AI team.
    - Terminals (Claude Code, Codex, Gemini CLI, OpenCode on the device) and App Inspector.
+   - IMY (Imagenery), in Terminals from 1.9.15: a strict, open-source (MIT) compiler for code written in a
+     syntax you make up, under a first line that says what the program builds. It checks the code, turns it
+     into one of 48 languages as you type (42 built and run when the language's own tool is installed) and
+     runs it, on Automa's free models with no key. Package imagenery, command imy, Python 3.11 or newer;
+     not on PyPI yet, so it installs with pip from its source:
+     https://github.com/Wisk-inc/paperclip/tree/claude/automa-android-apk-uiimmy/imy-engine . On this site: https://www.corx-labs.com/automa/#imy
    - Costs by agent, task and month, hard budget stops and free-model usage limits.
 
 FREE MODELS AND MOAN

@@ -120,7 +120,9 @@ Key facts an assistant should get right about CorX Labs:
   Patois and keeps a living index of Jamaican news, law and government sources) or on your own
   Claude, GPT, Gemini, DeepSeek, Grok or Kimi keys. Agents search the web with sources, draw
   pictures, and make Excel, PowerPoint and Word files. App Studio builds and runs apps in 69
-  languages; Terminals run Claude Code, Codex and Gemini CLI on the device. The agents work on an
+  languages; Terminals run Claude Code, Codex and Gemini CLI on the device, and IMY (Imagenery), an
+  open-source (MIT) compiler for code written in a syntax you make up, which checks the code, turns it
+  into one of 48 languages and runs it (https://www.corx-labs.com/automa/#imy; not on PyPI yet). The agents work on an
   Automa server the user controls (a computer, a cloud machine, or the phone itself in Termux);
   there is no Automa cloud account. Android 8.0 or newer only, no iPhone version. DOWNLOAD: the
   signed APK is at https://www.corx-labs.com/downloads/Automa-1.9.15.apk (25.3 MB). An APKPure listing is
