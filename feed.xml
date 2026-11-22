@@ -6,13 +6,32 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sun, 22 Nov 2026 21:15:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Nov 2026 23:00:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.18: updates on a phone that is nearly full</title>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.18</guid>
+      <pubDate>Sun, 22 Nov 2026 23:00:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.18 is out. automa update now checks the storage before it starts, clears what is safe to
+        clear (leftovers of an earlier update, unfinished downloads, Termux's package files, npm's download cache)
+        and, when there is still too little room, says how much is free and how much it needs before anything
+        changes. Running out of storage is no longer reported as a dropped connection, and an update tried several
+        times keeps one copy of the database. Nothing else changes in the app.
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.18.apk">Download the APK</a> (24.9 MB); it
+        installs over 1.9.17 and keeps your data.
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.17: App Studio reads like a code editor, and App Inspector gets a chat</title>
