@@ -7,7 +7,8 @@ checkout of main with its history (fetch-depth 0). It changes nothing and report
 - which host answers, from the response headers, and the DNS records;
 - for each file checked, whether the live copy is the one on main, and if not, which commit of this
   repository it matches (by git blob hash), so the deployed version is known;
-- the Automa APK's size and SHA-256 against the copy on main, and the redirects from old versions;
+- the Automa APK's size and SHA-256 against the copy on main, the SHA-256 /automa/ prints, and the redirects
+  from old versions;
 - the www redirect, the Content-Security-Policy (the Scam Radar page needs raw.githubusercontent.com in
   connect-src to load fresh data) and whether the scan API answers;
 - how old the published Scam Radar data is.
@@ -229,6 +230,14 @@ def main():
         f"SHA-256 {'matches main' if ok else 'DIFFERS: ' + got[:16]}")
     if not ok:
         problems.append(f"the live {newest.name} is not the file on main")
+    # The SHA-256 printed under the download button on /automa/ must be this APK's
+    status, h, page, final, err = fetch(f"{SITE}/automa/")
+    shown = [m.decode() for m in re.findall(rb"SHA-256\s*<code>([0-9a-f]{64})</code>", page)]
+    ok = shown == [want]
+    say(f"/automa/ shows SHA-256 {shown[0][:16] if shown else err or status}"
+        + (" (the APK's)" if ok else f" (NOT the APK's {want[:16]})"))
+    if not ok:
+        problems.append(f"/automa/ does not show {newest.name}'s SHA-256")
     for old in OLD_APKS:
         # Follow the redirects (the www one included) and say where an old link ends up
         status, h, body, final, err = fetch(SITE + old, method="HEAD")

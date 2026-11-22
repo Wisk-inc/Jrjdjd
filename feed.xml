@@ -6,13 +6,34 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Wed, 18 Nov 2026 20:15:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Nov 2026 07:15:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.15: IMY comes to Terminals</title>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.15</guid>
+      <pubDate>Sun, 22 Nov 2026 07:15:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.15 is out. IMY comes to Terminals: write code your own way under a first line that says
+        what you are building, and IMY checks it, turns it into another programming language as you type and runs
+        it, without changing your file. A menu on the IMY tile picks the language: Python, JavaScript, Ruby, Rust,
+        C, Go, Assembly and thirteen more. IMY knows 48 languages and builds and runs 42 of them when the
+        language's own tool is installed. It works with Automa's free models with no key, or with your own
+        Anthropic, OpenAI or Gemini key. A Check button asks every free model for one word and marks the ones
+        closed at their provider, and there is one more free model, LFM3 1.7B.
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.15.apk">Download the APK</a> (25.3 MB); it
+        installs over 1.9.14 and keeps your data.
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.14: Automa in your language</title>
