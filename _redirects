@@ -73,14 +73,15 @@ https://corx-labs.com/*    https://www.corx-labs.com/:splat    301!
 /api/scam-finder     /.netlify/functions/scam-finder   200
 
 # Links to an older Automa APK get the current one.
-/downloads/Automa-1.9.7.apk  /downloads/Automa-1.9.15.apk  302!
-/downloads/Automa-1.9.8.apk  /downloads/Automa-1.9.15.apk  302!
-/downloads/Automa-1.9.9.apk  /downloads/Automa-1.9.15.apk  302!
-/downloads/Automa-1.9.10.apk  /downloads/Automa-1.9.15.apk  302!
-/downloads/Automa-1.9.11.apk  /downloads/Automa-1.9.15.apk  302!
-/downloads/Automa-1.9.12.apk  /downloads/Automa-1.9.15.apk  302!
-/downloads/Automa-1.9.13.apk  /downloads/Automa-1.9.15.apk  302!
-/downloads/Automa-1.9.14.apk  /downloads/Automa-1.9.15.apk  302!
+/downloads/Automa-1.9.7.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.8.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.9.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.10.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.11.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.12.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.13.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.14.apk  /downloads/Automa-1.9.16.apk  302!
+/downloads/Automa-1.9.15.apk  /downloads/Automa-1.9.16.apk  302!
 
 /*                   /404.html              404
 

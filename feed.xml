@@ -6,13 +6,33 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sun, 22 Nov 2026 07:15:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Nov 2026 14:45:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.16: IMY's console reads like the file you are writing</title>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.16</guid>
+      <pubDate>Sun, 22 Nov 2026 14:45:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.16 is out. IMY's console now reads like the file you are writing: one line names the
+        program file your code becomes, each line stands behind its number, and the code it became appears under
+        it with its own number. :run prints what your program prints and nothing else. Pasted lines are numbered
+        one by one, :: end is code, and a result no longer lands in the line you are typing. Nothing else changes
+        in the app. Open Terminals and tap IMY: the tile says Tap to update.
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.16.apk">Download the APK</a> (25.3 MB); it
+        installs over 1.9.15 and keeps your data. More about IMY:
+        <a href="https://www.corx-labs.com/automa/#imy">its section</a>.
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.15: IMY comes to Terminals</title>
