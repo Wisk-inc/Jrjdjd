@@ -6,13 +6,33 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sun, 22 Nov 2026 14:45:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Nov 2026 21:15:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.17: App Studio reads like a code editor, and App Inspector gets a chat</title>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.17</guid>
+      <pubDate>Sun, 22 Nov 2026 21:15:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.17 is out. App Studio reads like a code editor: open files are tabs, a line under the
+        editor shows the line and column, the language and whether the file is saved, and on a phone a row of
+        keys adds the symbols the keyboard hides. When a free model is busy or at its limit, the reply offers
+        Try again and Ask another model; one tap switches to a model that is answering and sends your message
+        again. App Inspector has a chat of its own, on the free models with no key or on Claude with your own
+        key, and Decode again repairs a project opened before. 50 fixes, and IMY 1.1.2 in Terminals.
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.17.apk">Download the APK</a> (24.9 MB); it
+        installs over 1.9.16 and keeps your data.
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.16: IMY's console reads like the file you are writing</title>
