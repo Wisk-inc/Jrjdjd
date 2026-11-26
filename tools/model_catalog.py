@@ -165,12 +165,36 @@ MODELS = [
     # description says so. OpenAI bills prompts above 272K input tokens at a
     # higher rate on every 1.05M-window model here; the prices below are the
     # base tier.
+    M("gpt-6-2-astra", "GPT-6.2 Astra", "openai", rel="2026-11", ctx=1050000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=8.0, pout=40.0, pcache=0.40, reason=True, tools=True, cut="2026-05",
+      api_id="gpt-6.2-astra",
+      desc="OpenAI's flagship since 17 November 2026, at 20% less per token than GPT-6 Astra. "
+           "OpenAI led its launch on Terminal-Bench-Science 0.1 and FrontierCode 2.0, which this "
+           "index does not track. The GPQA Diamond figure is from its system card, without tools.",
+      b={"gpqa": 97.0}, verified="2026-11"),
+    M("gpt-6-2-sol", "GPT-6.2 Sol", "openai", rel="2026-11", ctx=1050000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=2.0, pout=10.0, pcache=0.10, reason=True, tools=True, cut="2026-06",
+      api_id="gpt-6.2-sol",
+      desc="The faster, cheaper GPT-6.2, at GPT-6.1 Sol's prices. OpenAI says it comes within "
+           "half a point of GPT-6.2 Astra on FrontierCode 2.0 at about a fifth of the cost. The "
+           "GPQA Diamond figure is from its system card, without tools.",
+      b={"gpqa": 96.0}, verified="2026-11"),
+    M("gpt-6-1-terra", "GPT-6.1 Terra", "openai", rel="2026-10", ctx=1050000, out=128000,
+      inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=1.0, pout=5.0, pcache=0.05, reason=True, tools=True, cut="2026-06",
+      api_id="gpt-6.1-terra",
+      desc="OpenAI's fast model for computer use and visual reasoning, released 26 October 2026. "
+           "Its Terminal-Bench 4.0 score is at maximum reasoning effort. GPT-5.6 Terra scored "
+           "21.5% on the same test.",
+      b={"tbench": 50.3}, verified="2026-11"),
     M("gpt-6-astra", "GPT-6 Astra", "openai", rel="2026-09", ctx=1050000, out=128000,
       inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=10.0, pout=50.0, pcache=1.0, reason=True, tools=True, cut="2026-04",
       api_id="gpt-6-astra",
-      desc="OpenAI's flagship, and the model it still calls its best across the board after "
-           "the GPT-6 Sol and Luna releases that followed. OpenAI led its launch on Terminal-Bench "
+      desc="OpenAI's flagship until GPT-6.2 Astra arrived on 17 November 2026 at 20% less per "
+           "token. OpenAI led its launch on Terminal-Bench "
            "4.0, GPQA Diamond and its own DeepSWE v1.1 rather than on SWE-bench.",
       b={"gpqa": 96.0, "tbench": 57.9},
       verified="2026-10"),
@@ -193,15 +217,16 @@ MODELS = [
       pin=4.0, pout=20.0, pcache=0.40, reason=True, tools=True, api_id="gpt-5.6-sol",
       desc="The largest of the three GPT-5.6 models, which OpenAI said set a new state of the art "
            "on Terminal-Bench 2.1 at launch. It launched at $5 / $30; the $4 / $20 shown is a "
-           "promotion OpenAI says runs at least until 21 November 2026.",
+           "promotion that OpenAI's pricing page says runs until 30 November 2026.",
       b={"gpqa": 94.6, "swe_pro": 64.6, "tbench21": 88.8, "tbench": 37.3},
       verified="2026-10"),
     M("gpt-5-6-terra", "GPT-5.6 Terra", "openai", rel="2026-07",
       inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=2.0, pout=12.0, pcache=0.20, reason=True, tools=True, api_id="gpt-5.6-terra",
       desc="The middle GPT-5.6 model, within 1.5 points of Sol on SWE-bench Pro and "
-           "Terminal-Bench 2.1. It launched at $2.50 / $15 and was cut by 20% on 30 July 2026.",
-      b={"gpqa": 92.9, "swe_pro": 63.4, "tbench21": 87.4},
+           "Terminal-Bench 2.1. It launched at $2.50 / $15 and was cut by 20% on 30 July 2026. "
+           "Its Terminal-Bench 4.0 figure is from OpenAI's GPT-6.1 Terra launch.",
+      b={"gpqa": 92.9, "swe_pro": 63.4, "tbench21": 87.4, "tbench": 21.5},
       verified="2026-10"),
     M("gpt-5-6-luna", "GPT-5.6 Luna", "openai", rel="2026-07",
       inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
@@ -425,10 +450,40 @@ MODELS = [
     # launch posts and Gemini API docs. Google iterated Flash monthly through
     # 2026; 3.6 and 3.7 Flash are left out because each was superseded within
     # weeks and published nothing the rows either side do not already cover.
+    M("gemini-4-neon", "Gemini 4 Neon", "google", rel="2026-11", ctx=1048576, out=65536,
+      inp=["text", "image", "audio", "video"], outp=["text"], lic="Proprietary", open=False,
+      pin=3.0, pout=15.0, pcache=0.15, reason=True, tools=True, api_id="gemini-4-neon",
+      desc="Google's model for coding and multi-step reasoning at low latency, released 18 "
+           "November 2026, with thinking up to an xhigh level. Google says a task costs 32% less "
+           "than on Gemini 4 Carbon. It published no score on the benchmarks tracked here.",
+      b={}, verified="2026-11"),
+    M("gemini-4-carbon", "Gemini 4 Carbon", "google", rel="2026-11", ctx=1048576, out=65536,
+      inp=["text", "image", "audio", "video"], outp=["text"], lic="Proprietary", open=False,
+      pin=2.0, pout=10.0, pcache=0.10, tools=True, cut="2026-03", api_id="gemini-4-carbon",
+      desc="Google's strongest model, for hard multi-step debugging and open-ended research, "
+           "available to developers from 10 November 2026. The $2 / $10 shown is an introductory "
+           "price that becomes $4 / $20 on 1 December 2026. Google led on CursorBench 4.0, WANDR "
+           "and AutomationBench, which this index does not track.",
+      b={}, verified="2026-11"),
+    M("gemini-4-argon", "Gemini 4 Argon", "google", rel="2026-10", ctx=1048576, out=65536,
+      inp=["text", "image", "audio", "video"], outp=["text"], lic="Proprietary", open=False,
+      pin=2.0, pout=10.0, pcache=0.10, reason=True, tools=True, api_id="gemini-4-argon",
+      desc="The first Gemini 4, released 13 October 2026, and the one Google recommends for most "
+           "software engineering and knowledge work. One answer can run to the whole 1M-token "
+           "window, in streamed calls of up to 65,536 tokens. The $2 / $10 shown is introductory "
+           "and becomes $4 / $20 on 1 December 2026.",
+      b={}, verified="2026-11"),
+    M("gemini-4-hydrogen", "Gemini 4 Hydrogen", "google", rel="2026-11", ctx=1048576, out=65536,
+      inp=["text", "image", "audio", "video"], outp=["text"], lic="Proprietary", open=False,
+      pin=1.50, pout=7.50, tools=True, cut="2026-03", api_id="gemini-4-hydrogen",
+      desc="The fast Gemini 4, for everyday coding and agent work, released 12 November 2026 at "
+           "one price across its whole 1M-token window. Google published no score on the "
+           "benchmarks tracked here.",
+      b={}, verified="2026-11"),
     M("gemini-3-8-flash", "Gemini 3.8 Flash", "google", rel="2026-09", ctx=1048576,
       out=65536, inp=["text", "image", "audio", "video"], outp=["text"], lic="Proprietary",
       open=False, pin=0.75, pout=3.75, reason=True, tools=True, api_id="gemini-3.8-flash",
-      desc="Google's newest workhorse model, built on 3.7 Flash, with low, medium and high "
+      desc="Google's Flash model from September 2026, built on 3.7 Flash, with low, medium and high "
            "thinking levels. The $0.75 / $3.75 shown is an introductory price that Google says "
            "becomes $1.50 / $7.50 on 1 January 2027. Google's card gives no GPQA Diamond figure; "
            "the one here is from OpenAI's GPT-6 Astra launch table.",
@@ -695,6 +750,15 @@ MODELS = [
       verified="2026-08"),
 
     # ----------------------------------------------------------- Alibaba Qwen
+    M("qwen4-max", "Qwen4-Max", "alibaba", rel="2026-11", arch="MoE", params="2.4T",
+      active="71B", ctx=1000000, out=262144, inp=["text", "image"], outp=["text"],
+      lic="Proprietary", open=False, pin=1.5, pout=4.5, reason=True, tools=True,
+      api_id="qwen4-max",
+      desc="Alibaba's new flagship, released 16 November 2026, with native vision and 71B active "
+           "parameters against Qwen3.8-Max's 95B. Output runs to 262,144 tokens with thinking and "
+           "131,072 without. The weights are not published; Alibaba says smaller open-weight "
+           "Qwen4 models will follow. Price is the international rate.",
+      b={}, verified="2026-11"),
     M("qwen3-8-max", "Qwen3.8-Max", "alibaba", rel="2026-08", arch="MoE", params="2.4T",
       active="95B", ctx=1000000, out=131072, outp=["text"],
       lic="Qwen3.8-Max License", open=True, pin=2.0, pout=6.0, tools=True,
@@ -974,6 +1038,12 @@ MODELS = [
       verified="2026-08"),
 
     # --------------------------------------------------------------- MiniMax
+    M("minimax-m3-1-flash", "MiniMax-M3.1-Flash", "minimax", rel="2026-10", ctx=1000000,
+      outp=["text"], open=False, pin=0.15, pout=0.60, pcache=0.015, reason=True, tools=True,
+      desc="MiniMax's fast model for agents, coding and computer use, released 19 October 2026. "
+           "Reasoning is always on, from low to max effort. MiniMax says the weights will be "
+           "released later. It reports 73.7% on DeepSWE v1.1, which this index does not track.",
+      b={}, verified="2026-11"),
     M("minimax-m3", "MiniMax-M3", "minimax", rel="2026-06", arch="MoE", params="428B",
       active="23B", ctx=1000000, inp=["text", "image"], outp=["text"],
       lic="MiniMax Community License", open=True, pin=0.30, pout=1.20, tools=True,
@@ -1094,6 +1164,13 @@ MODELS = [
       verified="2026-08"),
 
     # ----------------------------------------------------------------- Baidu
+    M("ernie-5-5-flash-preview", "ERNIE 5.5 Flash Preview", "baidu", rel="2026-11", arch="MoE",
+      params="280B", active="14B", outp=["text"], open=False, tools=True,
+      desc="The first post-trained model on ERNIE 5.5 Flash Base, which Baidu open-sourced on 5 "
+           "November 2026, for coding, agent work and 3D modelling. It has been on Baidu's "
+           "Qianfan API since 11 November. Baidu planned to publish its weights under Apache 2.0 "
+           "on 25 November.",
+      b={}, verified="2026-11"),
     M("ernie-4-5-300b", "ERNIE 4.5 300B-A47B", "baidu", rel="2025-06", arch="MoE",
       params="300B", active="47B", ctx=131072, out=8192, inp=["text", "image"], outp=["text"],
       lic="Apache 2.0", open=True, hosted_price=True, pin=0.28, pout=1.10,
@@ -1179,11 +1256,30 @@ MODELS = [
     # ------------------------------------------------- Anthropic Claude 5 line
     #
     # Specifications and pricing from Anthropic's own model pages on
-    # platform.claude.com, September 2026; the 5.5 releases added October 2026.
+    # platform.claude.com, September 2026; the 5.5 releases added October 2026, Fable 5.2 and
+    # Mythos 5.2 in November 2026.
     # Every current Claude model takes text and images and returns text, and
     # every one supports tool use. Cache-read prices are the published
     # per-model figures, not the 10% rule of thumb — Fable 5.1 and Mythos 5.1
     # read at 2.5% of input instead.
+    M("claude-fable-5-2", "Claude Fable 5.2", "anthropic", rel="2026-11", ctx=1000000,
+      out=128000, inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=8.0, pout=40.0, pcache=0.20, reason=True, tools=True, cut="2026-06",
+      api_id="claude-fable-5-2",
+      desc="Anthropic's model for demanding reasoning and long-horizon agentic work, released 9 "
+           "November 2026 at a fifth less per token than Fable 5.1, with output up to 30% faster. "
+           "Anthropic led its launch on FrontierSWE v2 (69.9%) and FrontierCode 2.0 (49.1% at "
+           "xhigh effort), which this index does not track.",
+      b={}, verified="2026-11"),
+    M("claude-mythos-5-2", "Claude Mythos 5.2", "anthropic", rel="2026-11", ctx=1000000,
+      out=128000, inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
+      pin=8.0, pout=40.0, pcache=0.20, reason=True, tools=True, cut="2026-06",
+      api_id="claude-mythos-5-2", access="Verified organizations only",
+      desc="Claude Fable 5.2's capabilities, specifications and pricing, for organizations "
+           "verified through Anthropic's programmes, such as its Cyber Verification Program. "
+           "Anthropic's cybersecurity results for this release are Mythos 5.2's: 76.3% on "
+           "CyScenarioBench and 89.6% on CVE Rediscovery.",
+      b={}, verified="2026-11"),
     M("claude-opus-5-5", "Claude Opus 5.5", "anthropic", rel="2026-09", ctx=1000000,
       out=128000, inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=4.0, pout=20.0, pcache=0.20, reason=True, tools=True, cut="2026-06",
@@ -1194,7 +1290,7 @@ MODELS = [
       b={"tbench": 66.4}, verified="2026-10"),
     M("claude-sonnet-5-5", "Claude Sonnet 5.5", "anthropic", rel="2026-09", ctx=1000000,
       out=128000, inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
-      pin=2.0, pout=10.0, pcache=0.20, reason=True, tools=True, cut="2026-06",
+      pin=2.0, pout=10.0, pcache=0.10, reason=True, tools=True, cut="2026-06",
       api_id="claude-sonnet-5-5",
       desc="The current Sonnet, at the same price as Sonnet 5. Anthropic reports 70.6% on "
            "Terminal-Bench 4.0, up from 10.3% for Sonnet 5. Thinking cannot be switched off "
@@ -1202,7 +1298,8 @@ MODELS = [
       b={"tbench": 70.6}, verified="2026-10"),
     M("claude-haiku-5-5", "Claude Haiku 5.5", "anthropic", rel="2026-10", ctx=1000000,
       out=128000, inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
-      pin=0.10, pout=0.50, reason=True, tools=True, cut="2026-06", api_id="claude-haiku-5-5",
+      pin=0.10, pout=0.50, pcache=0.01, reason=True, tools=True, cut="2026-06",
+      api_id="claude-haiku-5-5",
       desc="The current Haiku, for classification, routing, extraction and sub-agent work. The "
            "price shown applies to prompts of 100K tokens or fewer; above that it is $0.50 / "
            "$2.50. Haiku 4.5 scored 0% on Terminal-Bench 4.0.",
@@ -1230,8 +1327,8 @@ MODELS = [
       inp=["text", "image"], outp=["text"], lic="Proprietary", open=False,
       pin=10.0, pout=50.0, pcache=0.25, reason=True, tools=True, cut="2026-06",
       api_id="claude-fable-5-1",
-      desc="Anthropic's model for demanding reasoning and long-horizon agentic work — the one "
-           "to reach for when Opus 5 at high effort still falls short. Thinking is always on "
+      desc="Anthropic's model for demanding reasoning and long-horizon agentic work until Fable "
+           "5.2 succeeded it on 9 November 2026 at a fifth less per token. Thinking is always on "
            "and its raw chain of thought is never returned. Cache reads cost a quarter of what "
            "Fable 5 charged.",
       b={"swe_pro": 81.2, "tbench": 55.8}, verified="2026-09"),
@@ -1722,6 +1819,22 @@ COMPARISONS = [
     ("grok-4-7", "grok-4"),
     ("glm-5", "glm-4-6"),
     ("glm-5", "glm-5-3"),
+    # Added November 2026: each new release against its predecessor and its nearest rival.
+    ("claude-fable-5-2", "claude-fable-5-1"),
+    ("claude-fable-5-2", "gpt-6-2-astra"),
+    ("claude-fable-5-2", "gemini-4-carbon"),
+    ("claude-fable-5-2", "claude-opus-5-5"),
+    ("claude-mythos-5-2", "claude-fable-5-2"),
+    ("gpt-6-2-astra", "gpt-6-astra"),
+    ("gpt-6-2-astra", "gemini-4-carbon"),
+    ("gpt-6-2-sol", "gpt-6-1-sol"),
+    ("gpt-6-2-sol", "claude-sonnet-5-5"),
+    ("gpt-6-1-terra", "gpt-5-6-terra"),
+    ("gemini-4-carbon", "gemini-4-argon"),
+    ("gemini-4-neon", "gemini-4-carbon"),
+    ("gemini-4-hydrogen", "gemini-3-8-flash"),
+    ("qwen4-max", "qwen3-8-max"),
+    ("minimax-m3-1-flash", "minimax-m3"),
 ]
 
 

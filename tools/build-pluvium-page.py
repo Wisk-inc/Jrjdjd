@@ -32,7 +32,7 @@ HF_REPO = "https://huggingface.co/CorxLabs/Pluvium-500"      # Pluvium-500's rep
 HF_CKPT = HF_REPO + "/tree/main/checkpoint/stage_a/best"     # its stage A checkpoint
 OG = "https://www.corx-labs.com/assets/img/og-pluvium.jpg"
 DATE = "2026-11-14"        # first published
-MODIFIED = "2026-11-17"    # Pluvium-500 stage A checkpoint linked
+MODIFIED = "2026-11-26"    # pluvium 0.5.7: the fourth GPU run
 ODPEM = '<a href="https://www.odpem.org.jm/" rel="noopener nofollow" target="_blank">ODPEM</a>'
 EXT = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>')
@@ -121,7 +121,7 @@ FAQ = [
      "6,075 points, about 11&nbsp;km apart over land, with physics such as mountain rain and sea-breeze "
      "convergence built in, to forecast the rain at each town hour by hour."),
     ("Is Pluvium free and open source?",
-     "Yes. Version 0.5.5 is released under the Apache-2.0 licence, which allows commercial use, and installs "
+     "Yes. Version 0.5.7 is released under the Apache-2.0 licence, which allows commercial use, and installs "
      "with <code>pip install pluvium</code>. Pluvium Blend is trained for your own country on a CPU, and "
      "Pluvium Cyclone needs nothing trained. The full-size network, Pluvium-500, has a first checkpoint on "
      "<a href=\"" + HF_CKPT + "\" rel=\"noopener\" target=\"_blank\">Hugging Face</a>, from stage A of its "
@@ -165,14 +165,14 @@ graph = [
         "applicationCategory": "DeveloperApplication",
         "applicationSubCategory": "Rain forecasting model",
         "operatingSystem": "OS Independent",
-        "softwareVersion": "0.5.5",
+        "softwareVersion": "0.5.7",
         "programmingLanguage": "Python",
         "runtimePlatform": "PyTorch",
         "codeRepository": PYPI,
         "downloadUrl": PYPI,
         "installUrl": PYPI,
         "softwareRequirements": "Python >= 3.10, PyTorch >= 2.5",
-        "releaseNotes": "https://pypi.org/project/pluvium/0.5.5/",
+        "releaseNotes": "https://pypi.org/project/pluvium/0.5.7/",
         "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD",
                    "availability": "https://schema.org/InStock"},
@@ -483,7 +483,7 @@ MAIN = """<main id="main">
       <a class="btn btn-ghost" href="#results">See the results</a>
     </div>
     <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
-      Package: <code>pluvium</code> 0.5.5 &middot; Python &ge; 3.10 &middot; Engine: NatureV1 / iHELIX &middot;
+      Package: <code>pluvium</code> 0.5.7 &middot; Python &ge; 3.10 &middot; Engine: NatureV1 / iHELIX &middot;
       Developer: Nathan &middot; Origin: Jamaica
     </p>
   </div>
@@ -528,7 +528,7 @@ MAIN = """<main id="main">
         <div><dt>Full size</dt><dd>Pluvium-500, 57.9M params</dd></div>
         <div><dt>Covers</dt><dd>Any country, 60&deg;&nbsp;S&ndash;60&deg;&nbsp;N</dd></div>
         <div><dt>Bulletins</dt><dd>English, Spanish, French, Patois</dd></div>
-        <div><dt>Package</dt><dd>pluvium 0.5.5</dd></div>
+        <div><dt>Package</dt><dd>pluvium 0.5.7</dd></div>
         <div><dt>Licence</dt><dd>Apache-2.0</dd></div>
       </dl>
     </div>
@@ -941,12 +941,16 @@ pluvium cyclone --root ~/storms --time 2025-10-25T22   # as it would have been i
             wins heavy rain at short range.</li>
           <li><strong>Train the real network.</strong> The network results come from pluvium-small, 0.9M
             parameters trained for about two hours on a CPU. Pluvium-500 is 60 times larger and designed for a
-            day on one GPU. The first three GPU runs did not finish. The first stopped after 138
+            day on one GPU. The first four GPU runs did not finish. The first stopped after 138
             minutes. The second stopped right after it measured one forecast at 38.6&nbsp;GB on the 96&nbsp;GB
             card. The third trained on that card for the first time, then stopped when a data file was missing.
-            Versions 0.5.4 and 0.5.5 fix what stopped them: a batch that cannot fit is not tried, a stopped run
-            starts again and keeps the last 400 lines of its log, and every data file is checked before training
-            starts. The first weights are now on Hugging Face: the
+            The fourth trained for 11.6 hours, to step 8,625, with a best held-out loss of 0.734. It was planned
+            for 24 hours and a molab notebook shuts down after 12, so it stopped while still training, before it
+            was scored, and the restarts failed on a device error. Versions 0.5.4 to 0.5.7 fix what stopped them:
+            a batch that cannot fit is not tried, a stopped run starts again and keeps the last 400 lines of its
+            log, every data file is checked before training starts, a run on molab ends half an hour before the
+            12 hours with 1.5 hours kept for scoring and publishing, and each held-out forecast is scored at
+            2,000 cells so scoring ends in time. The first weights are now on Hugging Face: the
             <a href="@@HF_CKPT@@" rel="noopener" target="_blank">stage A checkpoint</a> with the lowest loss
             on held-out forecast times so far. Stage A is one step of the program. Training on real GFS runs
             (stage B), calibration and the scores on a held-out year come after it, so this page has no
@@ -1194,7 +1198,7 @@ print(brief(got["result"], got["names"], got["population"]))</code></pre>
       <div class="cta-band" data-reveal>
         <p class="eyebrow is-plain" style="justify-content:center">New</p>
         <h2 class="mt-s">Open code, published results, including what it got wrong.</h2>
-        <p>Pluvium 0.5.5 is on PyPI under Apache-2.0, and every result on this page is reported in full, the full year, the hurricane tracks, Hurricane Melissa and both of the network&rsquo;s first tests.</p>
+        <p>Pluvium 0.5.7 is on PyPI under Apache-2.0, and every result on this page is reported in full, the full year, the hurricane tracks, Hurricane Melissa and both of the network&rsquo;s first tests.</p>
         <div class="btn-row">
           <a class="btn btn-primary" href="https://pypi.org/project/pluvium/" rel="noopener" target="_blank">
             View on PyPI
