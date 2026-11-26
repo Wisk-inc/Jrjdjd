@@ -41,7 +41,7 @@ from bm_common import (  # noqa: E402
 from model_catalog import COMPARISONS, MODELS, validate  # noqa: E402
 
 OUT = os.path.join(ROOT, "benchmarks")
-UPDATED = "2026-11-04"
+UPDATED = "2026-11-26"
 
 
 # ===========================================================================

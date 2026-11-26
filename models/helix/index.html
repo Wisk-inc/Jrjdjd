@@ -26,7 +26,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="HELIX — linear scaling, exact recall">
-<meta property="article:modified_time" content="2026-11-16T00:00:00Z">
+<meta property="article:modified_time" content="2026-11-26T00:00:00Z">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@corxlabs">
 <meta name="twitter:title" content="HELIX — Linear-Scaling Sequence Architecture With Exact Long-Range Recall">
@@ -58,7 +58,7 @@
       "applicationCategory": "DeveloperApplication",
       "applicationSubCategory": "Sequence architecture",
       "operatingSystem": "OS Independent",
-      "softwareVersion": "2.3.1",
+      "softwareVersion": "2.5.0",
       "programmingLanguage": "Python",
       "runtimePlatform": "PyTorch",
       "codeRepository": "https://pypi.org/project/helix-lm/",
@@ -67,7 +67,7 @@
       "softwareRequirements": "Python >= 3.10, PyTorch",
       "isAccessibleForFree": true,
       "datePublished": "2026-09-14",
-      "dateModified": "2026-11-16",
+      "dateModified": "2026-11-26",
       "inLanguage": "en",
       "license": "https://www.apache.org/licenses/LICENSE-2.0",
       "author": { "@type": "Person", "@id": "https://www.corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://www.corx-labs.com/nathan/" },
@@ -100,7 +100,7 @@
       "isPartOf": { "@id": "https://www.corx-labs.com/#website" },
       "mainEntity": { "@id": "https://www.corx-labs.com/models/helix/#architecture" },
       "inLanguage": "en",
-      "dateModified": "2026-11-16",
+      "dateModified": "2026-11-26",
       "breadcrumb": { "@id": "https://www.corx-labs.com/models/helix/#breadcrumb" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".answer-box"] }
     },
@@ -134,7 +134,7 @@
       "author": { "@type": "Person", "@id": "https://www.corx-labs.com/#nathan", "name": "Nathan Lyttle", "url": "https://www.corx-labs.com/nathan/" },
       "publisher": { "@id": "https://www.corx-labs.com/#organization" },
       "datePublished": "2026-09-14",
-      "dateModified": "2026-11-16",
+      "dateModified": "2026-11-26",
       "inLanguage": "en",
       "isPartOf": { "@id": "https://www.corx-labs.com/models/helix/#webpage" },
       "proficiencyLevel": "Expert"
@@ -149,23 +149,23 @@
           "name": "What is HELIX?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "HELIX, Hierarchical Episodic Linear IndeX, is a sequence architecture that scales linearly in context length while keeping the exact long-range recall that attention is good at. Every block braids three mixers over the same residual stream: a local strand reading a fixed window exactly, a recurrent strand compressing the whole past into a matrix-valued delta-rule state, and an index strand retrieving a handful of memory blocks from anywhere in the past. It is published as the helix-lm package under Apache-2.0 and was built by Nathan at CorX Labs in Jamaica."
+            "text": "Hierarchical Episodic Linear IndeX, a sequence architecture that scales linearly in context length while keeping the exact long-range recall that attention is good at. Every block braids three mixers over the same residual stream: a local strand reading a fixed window exactly, a recurrent strand compressing the whole past into a matrix-valued delta-rule state, and an index strand retrieving a handful of memory blocks from anywhere in the past. Published as helix-lm under Apache-2.0."
           }
         },
         {
           "@type": "Question",
-          "name": "Why can't a linear-time model just compress the past?",
+          "name": "Why can’t a linear-time model just compress the past?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Because of a counting argument, not an engineering gap. A fixed state of S bits cannot distinguish more than 2^S different histories, so a model that squeezes everything into a fixed-size state eventually cannot quote back a name it saw once. HELIX does not try to compress its way around this. It separates memory capacity from memory bandwidth: storage grows linearly and stays append-only, while what any single token touches stays bounded."
+            "text": "A counting argument stops it. A fixed state of S bits cannot tell apart more than 2S different histories, so a model that squeezes everything into a fixed-size state eventually cannot quote back a name it saw once. That is not an engineering gap that a better compressor closes. HELIX separates capacity from bandwidth instead: storage grows linearly and stays append-only, while what any single token touches stays bounded."
           }
         },
         {
           "@type": "Question",
-          "name": "What exactly is O(1) in HELIX, and what isn't?",
+          "name": "What exactly is O(1) in HELIX, and what isn’t?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Hot state is what a decoding step must keep live: for HELIX that is a window-sized ring buffer, one delta-rule matrix and two convolution states per head, all fixed-size regardless of context length. The key/value history and landmark tree grow with N but are append-only, never rewritten, and can sit in cold memory. A step reads only O(index_topk x block_size + index_branching x log N) of that. It is explicitly not O(1) total memory, which is impossible for anything that can quote an exact name from a million tokens back."
+            "text": "The hot state is O(1): a window-sized ring buffer, one delta-rule matrix and two convolution states per head, all fixed-size whatever the context length. The key/value history and landmark tree are O(N), but append-only, never rewritten, and able to live in cold memory. A step reads only O(index_topk × block_size + branching × log N) of it. Total memory is explicitly not O(1), which would be impossible for anything that can quote an exact name from a million tokens back."
           }
         },
         {
@@ -173,7 +173,7 @@
           "name": "How does the HELIX index stay causal if summaries are shared?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Two rules. A node is eligible for query block J only if the entire span it summarises ends at or before J, so a summary is never consulted by a query it partly describes, which also means a landmark is computed once and reused by every later query. And routing for block J comes from the hidden state at the end of block J-1, which is strictly past for every token in block J, so one gather serves the whole block. Anything routing could not anticipate within that block is covered exactly by the local strand."
+            "text": "A node is eligible for query block J only if the entire span it summarises ends at or before J, so a summary is never consulted by a query it partly describes, which is also what lets a landmark be computed once and reused by every later query. Routing for block J comes from the hidden state at the end of block J − 1, strictly past for every token in the block, so a single gather serves all block_size queries. Whatever routing could not anticipate inside that block is covered exactly by the local strand."
           }
         },
         {
@@ -181,7 +181,7 @@
           "name": "Has HELIX been trained on real text?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. There are no trained checkpoints and nobody has trained HELIX on real language data. Everything published about it concerns complexity, causality and recall mechanics, properties provable on an untrained model or measurable on a synthetic probe, not perplexity or language quality. It is an architecture proposal with a working, tested reference implementation, not a better model."
+            "text": "No. There are no trained checkpoints and no language-quality numbers of any kind. The published results cover complexity, causality and recall mechanics only. Whether HELIX is actually better than the alternatives is an open question that needs real training runs on real hardware to answer."
           }
         },
         {
@@ -189,7 +189,7 @@
           "name": "Is HELIX faster than attention?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "On the published measurements, HELIX forms a constant 8,192 attention pairs per token at every context length, fitting N^1.00, while full attention fits N^2.00. At 32,768 tokens that is 32 times fewer pairs and 1.6 times faster wall-clock, and that comparison runs unfused reference PyTorch against a fused SDPA kernel, so the constant factor is working against HELIX, not for it. At 4,096 tokens full attention is still the faster of the two."
+            "text": "At long context, on the measurements published: 32× fewer attention pairs and 1.6× faster wall-clock at 32k tokens, with HELIX running unfused reference PyTorch against a fused SDPA kernel. At 4k tokens attention is still faster. The scaling is the claim; the constant factor is not, and a fused kernel for the gathered attention does not exist yet."
           }
         },
         {
@@ -197,7 +197,7 @@
           "name": "Does the index strand actually earn its place?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "That is the one result the recall experiment establishes. On multi-query associative recall with bindings placed well outside the local window, HELIX scores 30.8 percent against 6.0 percent for the same model with the index strand removed, a gap of roughly 21 standard errors, with chance at 6.2 percent. Without the index the model sits at chance, because its window cannot see the bindings and its recurrent state cannot hold them. Against full attention at 32.0 percent, HELIX is a tie rather than a win: 1.2 points with a 1.7-point standard error."
+            "text": "That is the one thing the recall experiment does establish. With the index: 30.8%. Same model with the index strand stripped out: 6.0%, against a chance floor of 6.2%: indistinguishable from guessing. The gap is roughly 21 standard errors. Against full attention at 32.0% it is a tie, not a win."
           }
         },
         {
@@ -299,7 +299,7 @@
       <a class="btn btn-ghost" href="#architecture">Jump to the architecture</a>
     </div>
     <p class="mt-s" style="font-size:.82rem;color:var(--faint)">
-      Package: <code>helix-lm</code> 2.3.1 &middot; Python &ge; 3.10 &middot; Developer: Nathan &middot; Origin: Jamaica
+      Package: <code>helix-lm</code> 2.5.0 &middot; Python &ge; 3.10 &middot; Developer: Nathan &middot; Origin: Jamaica
     </p>
   </div>
 
@@ -332,7 +332,7 @@
       </div>
 
       <dl class="spec-list mt-m" data-reveal>
-        <div><dt>Package</dt><dd><code>helix-lm</code> 2.3.1</dd></div>
+        <div><dt>Package</dt><dd><code>helix-lm</code> 2.5.0</dd></div>
         <div><dt>Mixers per block</dt><dd>3 (local, recurrent, index)</dd></div>
         <div><dt>Attention pairs</dt><dd>N<sup>1.00</sup> measured</dd></div>
         <div><dt>Hot decode state</dt><dd>O(1)</dd></div>
@@ -846,8 +846,8 @@
     <div class="shell">
       <h2>6. New in helix-lm 2</h2>
       <div class="prose">
-        <p>The package went from 0.1 to 2.3 in October. The HELIX block and everything measured above are
-          unchanged. Around them:</p>
+        <p>The package went from 0.1 to 2.3 in October and to 2.5 in November. The HELIX block and everything
+          measured above are unchanged. Around them:</p>
         <ul>
           <li><strong>ANANSI (2.0).</strong> The HELIX strands in a new body: four residual streams, a looped
             reasoning core that can think for longer at inference, gated attention, a hashed n-gram memory and an
@@ -858,6 +858,21 @@
           <li><strong>TriStream-2 and a music stack (2.1 to 2.3).</strong> A 764.5M-parameter singing model on the
             ANANSI trunk, the successor to <a href="/models/tristream-svs/">TriStream-SVS</a>, with song analysis,
             a vocal planner, source separation and voice conversion around it.</li>
+          <li><strong>A benchmark for TriStream-2 (2.4).</strong> <code>helix tristream bench</code> scores
+            resynthesis, voice conversion, singing from written notes and pitch control, with 95% intervals and a
+            paired test against the last run. Training runs it after every eval and puts the results on the Hub.
+            The package has scores for the baselines only, from a CPU and six synthetic items. A harmonic-noise
+            vocoder kept 92.4% of its sung frames within 50 cents of the written note and shifted pitch to within
+            1.78 cents of the shift asked for. Its copy of a voice was 3.70&nbsp;dB MCD from the original, where
+            Griffin-Lim&rsquo;s was 0.50&nbsp;dB. TriStream-2&rsquo;s own scores are to come from its GPU run.</li>
+          <li><strong>Pinxit, a painter (2.5).</strong> It paints a photo stroke by stroke on the HELIX trunk, with
+            SigLIP 2 as its eye. It finds the subject, mixes a palette and lays strokes from broad to fine, each
+            with a brush, two pigment mixes, a pressure and a speed. A painting is its list of strokes, so it can
+            be rendered at any size, replayed, saved and changed later, with an exact undo. Give it a painting, or
+            the name of one of 14 famous ones, and it paints in that style. Today written rules stand in for
+            trained weights, on a CPU, about a minute a photo. No GPU run has been made, and painting from words
+            does not work well enough to use: asked for a small red sailing boat, it made a scatter of pale marks
+            and a red smear.</li>
           <li><strong>CorX5.5, a plan.</strong> A written programme to train a 34B coding agent from scratch on
             8 &times; B300 GPUs, with its arithmetic, data mix and safeguards.</li>
         </ul>
@@ -866,7 +881,9 @@
       </div>
       <pre class="mt-s"><code>pip install "helix-lm[all]"
 helix anansi sizes && helix anansi demo
-helix size 34b</code></pre>
+helix size 34b
+helix tristream bench run --suite quick
+helix paint make photo.jpg --style "the starry night" --out painting.png</code></pre>
     </div>
   </section>
 

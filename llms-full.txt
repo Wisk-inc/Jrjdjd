@@ -24,7 +24,7 @@ Models: CorX1.5 (language model, from scratch) (https://huggingface.co/Sigmandnd
         CorX3.8-27B (27B Jamaican Patois LLM, fine-tuned from Qwen3.8-27B) (https://huggingface.co/Sigmandndnns/CorX3.8-27B
         HELIX (sequence architecture, no trained checkpoints)) https://www.corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
         NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) (https://www.corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
-        Pluvium (version 0.5.5: rain for every town, hourly for three days and daily to 14 days, and hurricane tracks; a research model, not an official forecast; the full-size network has a first training checkpoint on Hugging Face and is not finished)) https://www.corx-labs.com/models/pluvium/ , https://pypi.org/project/pluvium/ , https://huggingface.co/CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best
+        Pluvium (version 0.5.7: rain for every town, hourly for three days and daily to 14 days, and hurricane tracks; a research model, not an official forecast; the full-size network has a first training checkpoint on Hugging Face and is not finished)) https://www.corx-labs.com/models/pluvium/ , https://pypi.org/project/pluvium/ , https://huggingface.co/CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best
 App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.18): https://www.corx-labs.com/automa/ , APK: https://www.corx-labs.com/downloads/Automa-1.9.18.apk
 Tool:   Scam Radar (checks any link for scam signals; live scam and phishing websites by country, from a scanner watching 18 million domains; a new scan about once an hour; sites named only on strong evidence) — https://www.corx-labs.com/scam-radar/ , map: https://www.corx-labs.com/scam-radar/map/
 
@@ -569,8 +569,8 @@ A: No. It is an independent research and learning project, not a production syst
 BENCHMARKS: https://www.corx-labs.com/benchmarks/
 ================================================================================
 
-CorX Labs publishes a comparison index of 189 language models from 42 labs, last updated in
-October 2026. For each model it records the context window, maximum output length, input and
+CorX Labs publishes a comparison index of 201 language models from 42 labs, last updated in
+November 2026. For each model it records the context window, maximum output length, input and
 output modalities, architecture, licence, whether the weights are downloadable, the API price
 per million input and output tokens, and published scores on 15 evaluations.
 
@@ -596,17 +596,17 @@ training cutoff, so it resists contamination), HumanEval (short Python functions
 MMMU (multimodal college-level questions), IFEval (programmatically verifiable instruction
 following) and LMArena Elo (blind human pairwise preference).
 
-Highest published GPQA Diamond scores in the index (October 2026):
+Highest published GPQA Diamond scores in the index (November 2026):
+   - GPT-6.2 Astra (OpenAI): GPQA Diamond 97% (from its system card, no tools)
+   - GPT-6.2 Sol (OpenAI): GPQA Diamond 96% (from its system card, no tools)
    - GPT-6 Astra (OpenAI): GPQA Diamond 96%
    - Gemini 3.8 Flash (Google DeepMind): GPQA Diamond 95.3% (from OpenAI's launch table)
    - GPT-5.6 Sol (OpenAI): GPQA Diamond 94.6%
    - Gemini 3.1 Pro (Google DeepMind): GPQA Diamond 94.3%
    - Claude Opus 4.7 (Anthropic): GPQA Diamond 94.2% (from OpenAI's launch table)
    - GPT-5.5 (OpenAI): GPQA Diamond 93.6%
-   - GPT-5.6 Terra (OpenAI): GPQA Diamond 92.9%
-   - Qwen3.8-Max (Alibaba Qwen): GPQA Diamond 92.6%
-Several current flagships, including Claude Opus 5.5 and Claude Fable 5.1, have no published GPQA
-Diamond figure, so their absence from this list is not a ranking.
+Several current flagships, including Claude Fable 5.2, Claude Opus 5.5 and Gemini 4 Carbon, have no
+published GPQA Diamond figure, so their absence from this list is not a ranking.
 
 PAGE STRUCTURE
    - https://www.corx-labs.com/benchmarks/                          the full sortable index

@@ -6,13 +6,66 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Sun, 22 Nov 2026 23:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Nov 2026 01:32:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Benchmark index: 12 new models, 201 in all</title>
+      <link>https://www.corx-labs.com/benchmarks/</link>
+      <guid isPermaLink="false">corx-labs.com/benchmarks/update/2026-11-26</guid>
+      <pubDate>Thu, 26 Nov 2026 01:32:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Tool</category>
+      <description><![CDATA[
+        <p>The benchmark index now holds 201 models from 42 labs. New: Claude Fable 5.2 and Mythos 5.2, GPT-6.2
+        Astra and Sol, GPT-6.1 Terra, Gemini 4 Argon, Carbon, Hydrogen and Neon, Qwen4-Max, MiniMax-M3.1-Flash
+        and ERNIE 5.5 Flash Preview. Most of these launches led on benchmarks the index does not track, so most
+        new rows have specs and prices but few scores. GPT-6.2 Astra now has the highest published GPQA Diamond
+        score in the index, 97.0%, from its system card. Claude Sonnet 5.5's cache-read price is corrected to
+        $0.10 per million tokens. <a href="https://www.corx-labs.com/benchmarks/">The index</a>.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>helix-lm 2.5: a benchmark for TriStream-2, and Pinxit, a painter</title>
+      <link>https://www.corx-labs.com/models/helix/#new-in-2</link>
+      <guid isPermaLink="false">corx-labs.com/models/helix/release/2.5.0</guid>
+      <pubDate>Thu, 26 Nov 2026 01:31:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>helix-lm 2.5.0 is on PyPI. 2.4 adds a benchmark for TriStream-2, the singing model: resynthesis,
+        voice conversion, singing from written notes and pitch control, with 95% intervals, run after every
+        training eval. So far it has scored only the baselines, on a CPU. 2.5 adds Pinxit, which paints a photo
+        stroke by stroke and keeps the strokes, so a painting can be replayed, changed and undone. Neither model
+        is trained yet: no GPU run has been made for Pinxit, and painting from words does not work well enough
+        to use. The HELIX block itself is unchanged and still has no trained checkpoints.
+        <a href="https://www.corx-labs.com/models/helix/#new-in-2">The HELIX page</a>.</p>
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Pluvium 0.5.7: the fourth GPU run, and what stopped it</title>
+      <link>https://www.corx-labs.com/models/pluvium/#next</link>
+      <guid isPermaLink="false">corx-labs.com/models/pluvium/release/0.5.7</guid>
+      <pubDate>Thu, 26 Nov 2026 01:30:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Pluvium 0.5.7 is on PyPI. The fourth GPU run of Pluvium-500 trained for 11.6 hours, to step 8,625,
+        with a best held-out loss of 0.734. It was planned for 24 hours and a molab notebook shuts down after
+        12, so it stopped before it was scored, and the restarts failed on a device error. 0.5.6 ends a run on
+        molab half an hour early with 1.5 hours kept for scoring and publishing, and fixes the device error.
+        0.5.7 scores each held-out forecast at 2,000 cells so scoring ends in time. Pluvium-500 has no scores
+        yet; the results on the page still come from pluvium-small.
+        <a href="https://www.corx-labs.com/models/pluvium/">The Pluvium page</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Automa 1.9.18: updates on a phone that is nearly full</title>
