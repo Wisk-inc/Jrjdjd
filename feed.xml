@@ -6,13 +6,32 @@
     <description>Model releases and technical write-ups from CorX Labs, an independent AI research lab in Jamaica.</description>
     <language>en</language>
     <copyright>CorX Labs</copyright>
-    <lastBuildDate>Thu, 26 Nov 2026 01:32:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Nov 2026 23:15:00 +0000</lastBuildDate>
     <atom:link href="https://www.corx-labs.com/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://www.corx-labs.com/assets/img/logo.png</url>
       <title>CorX Labs — model releases</title>
       <link>https://www.corx-labs.com/</link>
     </image>
+
+    <item>
+      <title>Automa 1.9.19: updates apply their database changes by themselves, and a new signing key</title>
+      <link>https://www.corx-labs.com/automa/#whats-new</link>
+      <guid isPermaLink="false">corx-labs.com/automa/release/1.9.19</guid>
+      <pubDate>Thu, 26 Nov 2026 23:15:00 +0000</pubDate>
+      <dc:creator>Nathan Lyttle</dc:creator>
+      <category>Release</category>
+      <description><![CDATA[
+        <p>Automa 1.9.19 is out. The first start after an update no longer stops at a database question nobody
+        sees: Automa now applies a new version's database changes as it starts, and the updater copies the
+        database before every update. The installer asks for Node.js 24.11 or newer, and a start in Termux no
+        longer opens the phone's browser. This release is signed with a new key, because the old one is no
+        longer available, so it does not install over 1.9.18 or older: uninstall the old app once, then
+        install it. Your board stays in Termux.
+        <a href="https://www.corx-labs.com/downloads/Automa-1.9.19.apk">Download the APK</a> (24.9 MB).
+        <a href="https://www.corx-labs.com/automa/#whats-new">Every release</a>.</p>
+      ]]></description>
+    </item>
 
     <item>
       <title>Benchmark index: 12 new models, 201 in all</title>
