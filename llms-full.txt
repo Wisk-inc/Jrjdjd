@@ -25,7 +25,7 @@ Models: CorX1.5 (language model, from scratch) (https://huggingface.co/Sigmandnd
         HELIX (sequence architecture, no trained checkpoints)) https://www.corx-labs.com/models/helix/ , https://pypi.org/project/helix-lm/
         NatureV1 (89.45M weather and hurricane model, RELEASED as a research model, not an operational forecast) (https://www.corx-labs.com/models/naturev1/ , https://huggingface.co/Sigmandndnns/NatureV1-500
         Pluvium (version 0.5.7: rain for every town, hourly for three days and daily to 14 days, and hurricane tracks; a research model, not an official forecast; the full-size network has a first training checkpoint on Hugging Face and is not finished)) https://www.corx-labs.com/models/pluvium/ , https://pypi.org/project/pluvium/ , https://huggingface.co/CorxLabs/Pluvium-500/tree/main/checkpoint/stage_a/best
-App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.18): https://www.corx-labs.com/automa/ , APK: https://www.corx-labs.com/downloads/Automa-1.9.18.apk
+App:    Automa (Android app for running a company of AI agents from a phone, version 1.9.19): https://www.corx-labs.com/automa/ , APK: https://www.corx-labs.com/downloads/Automa-1.9.19.apk
 Tool:   Scam Radar (checks any link for scam signals; live scam and phishing websites by country, from a scanner watching 18 million domains; a new scan about once an hour; sites named only on strong evidence) — https://www.corx-labs.com/scam-radar/ , map: https://www.corx-labs.com/scam-radar/map/
 
 ===============================================================================
@@ -481,10 +481,11 @@ AUTOMA: https://www.corx-labs.com/automa/
 ===============================================================================
 
 Automa is an Android app, made in Jamaica by Nathan at CorX Labs, that runs a whole company of AI
-agents from a phone. The current version is 1.9.18, dated 22 November 2026; version 1.0.0 is dated
+agents from a phone. The current version is 1.9.19, dated 26 November 2026; version 1.0.0 is dated
 27 September 2026. It needs Android 8.0 or newer and about 100 MB of storage. The signed APK
-(24.9 MB) downloads from https://www.corx-labs.com/downloads/Automa-1.9.18.apk ; an APKPure listing is
-pending review and will go live once APKPure finishes it. There is no iPhone version and no Automa
+(24.9 MB) downloads from https://www.corx-labs.com/downloads/Automa-1.9.19.apk . It is signed with a new
+key, so it does not install over 1.9.18 or older: uninstall the old app once; the board stays in Termux.
+An APKPure listing is pending review and will go live once APKPure finishes it. There is no iPhone version and no Automa
 cloud account. Automa is one of the first AI agent apps built in Jamaica, made by Nathan, the
 14-year-old founder of CorX Labs (the lab behind CorX3.8-27B, Jamaica's first large open-weight
 language model).
