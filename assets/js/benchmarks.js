@@ -196,7 +196,7 @@
         }).join('');
       }
       if (trayGo) {
-        trayGo.href = '/benchmarks/compare/?m=' + picked.join(',');
+        trayGo.href = '/benchmarks/compare/#m=' + picked.join(',');
         trayGo.setAttribute('aria-disabled', picked.length < 2 ? 'true' : 'false');
         trayGo.style.opacity = picked.length < 2 ? '.5' : '';
         trayGo.style.pointerEvents = picked.length < 2 ? 'none' : '';
@@ -260,13 +260,16 @@
       return null;
     }
 
+    // The models are in the fragment (#m=a,b), which search engines leave out of a page's address, so a
+    // comparison is never a separate URL for them to queue. ?m=a,b still works for links shared before.
     function readUrl() {
-      var m = new URLSearchParams(location.search).get('m');
+      var h = /(?:^#|&)m=([^&]*)/.exec(location.hash);
+      var m = h ? decodeURIComponent(h[1]) : new URLSearchParams(location.search).get('m');
       return m ? m.split(',').map(function (s) { return s.trim(); }).filter(Boolean).slice(0, MAX_COMPARE) : [];
     }
 
     function writeUrl() {
-      var url = location.pathname + (chosen.length ? '?m=' + chosen.join(',') : '');
+      var url = location.pathname + (chosen.length ? '#m=' + chosen.join(',') : '');
       history.replaceState(null, '', url);
     }
 
@@ -706,6 +709,13 @@
         chosen = readUrl().filter(bySlug);
         addBtn.disabled = chosen.length >= MAX_COMPARE;
         render();
+        window.addEventListener('hashchange', function () {
+          var next = readUrl().filter(bySlug);
+          if (next.join(',') === chosen.join(',')) return;
+          chosen = next;
+          addBtn.disabled = chosen.length >= MAX_COMPARE;
+          render();
+        });
       })
       .catch(function () {
         root.innerHTML = '<div class="bm-empty"><strong>The catalogue did not load</strong>'

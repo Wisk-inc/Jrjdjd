@@ -1,0 +1,1674 @@
+{
+ "/benchmarks/": {
+  "date": "2026-11-26",
+  "hash": "bc5746e7b121912d"
+ },
+ "/benchmarks/companies/01ai/": {
+  "date": "2026-11-26",
+  "hash": "5f862edc36376975"
+ },
+ "/benchmarks/companies/ai21/": {
+  "date": "2026-11-26",
+  "hash": "9260baebe3e9e6cd"
+ },
+ "/benchmarks/companies/alibaba/": {
+  "date": "2026-11-26",
+  "hash": "c6915e137f5f19b2"
+ },
+ "/benchmarks/companies/allenai/": {
+  "date": "2026-11-26",
+  "hash": "daacc523e1648909"
+ },
+ "/benchmarks/companies/amazon/": {
+  "date": "2026-11-26",
+  "hash": "59134e4816262e4c"
+ },
+ "/benchmarks/companies/anthropic/": {
+  "date": "2026-11-26",
+  "hash": "43f2e998afd3f607"
+ },
+ "/benchmarks/companies/apple/": {
+  "date": "2026-11-26",
+  "hash": "f00afe321abc9d4d"
+ },
+ "/benchmarks/companies/baidu/": {
+  "date": "2026-11-26",
+  "hash": "7f93e7fe6ba6ea3b"
+ },
+ "/benchmarks/companies/bytedance/": {
+  "date": "2026-11-26",
+  "hash": "239273274d9a1710"
+ },
+ "/benchmarks/companies/cohere/": {
+  "date": "2026-11-26",
+  "hash": "3b9433a48d4873e8"
+ },
+ "/benchmarks/companies/corx/": {
+  "date": "2026-11-26",
+  "hash": "ddb3d5a16d29f43d"
+ },
+ "/benchmarks/companies/databricks/": {
+  "date": "2026-11-26",
+  "hash": "ccb6607a7c32ca3a"
+ },
+ "/benchmarks/companies/deepseek/": {
+  "date": "2026-11-26",
+  "hash": "f4d69b62e051672d"
+ },
+ "/benchmarks/companies/google/": {
+  "date": "2026-11-26",
+  "hash": "121e6c4047fa127b"
+ },
+ "/benchmarks/companies/ibm/": {
+  "date": "2026-11-26",
+  "hash": "2db2bccdbd03755a"
+ },
+ "/benchmarks/companies/inception/": {
+  "date": "2026-11-26",
+  "hash": "5e45ceabf66df581"
+ },
+ "/benchmarks/companies/inclusion/": {
+  "date": "2026-11-26",
+  "hash": "8067b2175c209bf2"
+ },
+ "/benchmarks/companies/lgai/": {
+  "date": "2026-11-26",
+  "hash": "52c8dd99ac16144d"
+ },
+ "/benchmarks/companies/liquid/": {
+  "date": "2026-11-26",
+  "hash": "db8f30acdfbaf587"
+ },
+ "/benchmarks/companies/meta/": {
+  "date": "2026-11-26",
+  "hash": "1169a3cee1e26771"
+ },
+ "/benchmarks/companies/microsoft/": {
+  "date": "2026-11-26",
+  "hash": "21eea9073090d9d9"
+ },
+ "/benchmarks/companies/minimax/": {
+  "date": "2026-11-26",
+  "hash": "47311b7a5f0c1d92"
+ },
+ "/benchmarks/companies/mistral/": {
+  "date": "2026-11-26",
+  "hash": "e4a42427d200d982"
+ },
+ "/benchmarks/companies/moonshot/": {
+  "date": "2026-11-26",
+  "hash": "19c4122761479faa"
+ },
+ "/benchmarks/companies/naver/": {
+  "date": "2026-11-26",
+  "hash": "a403d9293a87f8e9"
+ },
+ "/benchmarks/companies/nous/": {
+  "date": "2026-11-26",
+  "hash": "38bd8f239308134d"
+ },
+ "/benchmarks/companies/nvidia/": {
+  "date": "2026-11-26",
+  "hash": "02cddcab9e9d5ce1"
+ },
+ "/benchmarks/companies/openai/": {
+  "date": "2026-11-26",
+  "hash": "62905fd992eb1b36"
+ },
+ "/benchmarks/companies/openbmb/": {
+  "date": "2026-11-26",
+  "hash": "2520dc904d7d57b9"
+ },
+ "/benchmarks/companies/perplexity/": {
+  "date": "2026-11-26",
+  "hash": "22e4f54e52834ea0"
+ },
+ "/benchmarks/companies/rednote/": {
+  "date": "2026-11-26",
+  "hash": "6d86d3602d1012dc"
+ },
+ "/benchmarks/companies/reka/": {
+  "date": "2026-11-26",
+  "hash": "6725298e09b67426"
+ },
+ "/benchmarks/companies/salesforce/": {
+  "date": "2026-11-26",
+  "hash": "8b40709311ca0ed7"
+ },
+ "/benchmarks/companies/sarvam/": {
+  "date": "2026-11-26",
+  "hash": "275294facdb8cd9c"
+ },
+ "/benchmarks/companies/snowflake/": {
+  "date": "2026-11-26",
+  "hash": "38f51584b9aabdbb"
+ },
+ "/benchmarks/companies/stepfun/": {
+  "date": "2026-11-26",
+  "hash": "ca25273597d9bebe"
+ },
+ "/benchmarks/companies/tencent/": {
+  "date": "2026-11-26",
+  "hash": "3ced4d7d2936c138"
+ },
+ "/benchmarks/companies/tii/": {
+  "date": "2026-11-26",
+  "hash": "29fcf3135ea7942c"
+ },
+ "/benchmarks/companies/upstage/": {
+  "date": "2026-11-26",
+  "hash": "6e61244cdbd00b70"
+ },
+ "/benchmarks/companies/writer/": {
+  "date": "2026-11-26",
+  "hash": "acafd1cd52d0b57d"
+ },
+ "/benchmarks/companies/xai/": {
+  "date": "2026-11-26",
+  "hash": "ebfa4606ff042133"
+ },
+ "/benchmarks/companies/zai/": {
+  "date": "2026-11-26",
+  "hash": "181ef60487c528d0"
+ },
+ "/benchmarks/compare/": {
+  "date": "2026-11-26",
+  "hash": "437b6457eea5ad71"
+ },
+ "/benchmarks/compare/claude-3-7-sonnet-vs-claude-sonnet-4-5/": {
+  "date": "2026-11-16",
+  "hash": "ffe09ac3d9da0ac1"
+ },
+ "/benchmarks/compare/claude-fable-5-1-vs-claude-fable-5/": {
+  "date": "2026-11-16",
+  "hash": "9be04d55b0727b20"
+ },
+ "/benchmarks/compare/claude-fable-5-1-vs-claude-opus-5/": {
+  "date": "2026-11-16",
+  "hash": "2268bc03e4908391"
+ },
+ "/benchmarks/compare/claude-fable-5-1-vs-gemini-3-pro/": {
+  "date": "2026-11-16",
+  "hash": "62073ded8ea56530"
+ },
+ "/benchmarks/compare/claude-fable-5-2-vs-claude-fable-5-1/": {
+  "date": "2026-11-26",
+  "hash": "d1bfee7ceae936f6"
+ },
+ "/benchmarks/compare/claude-fable-5-2-vs-claude-opus-5-5/": {
+  "date": "2026-11-26",
+  "hash": "d5d1a2ff655cb02a"
+ },
+ "/benchmarks/compare/claude-fable-5-2-vs-gemini-4-carbon/": {
+  "date": "2026-11-26",
+  "hash": "f0973cf1f1fb68a4"
+ },
+ "/benchmarks/compare/claude-fable-5-2-vs-gpt-6-2-astra/": {
+  "date": "2026-11-26",
+  "hash": "be7d307a8f61ae18"
+ },
+ "/benchmarks/compare/claude-fable-5-vs-claude-fable-5-1/": {
+  "date": "2026-11-16",
+  "hash": "c53ff446f18458c7"
+ },
+ "/benchmarks/compare/claude-haiku-4-5-vs-gemini-2-5-flash/": {
+  "date": "2026-11-16",
+  "hash": "1bdb4ae5a4f0acad"
+ },
+ "/benchmarks/compare/claude-haiku-5-5-vs-claude-haiku-4-5/": {
+  "date": "2026-11-26",
+  "hash": "53420cf0b5f0f46b"
+ },
+ "/benchmarks/compare/claude-mythos-5-1-vs-claude-fable-5-1/": {
+  "date": "2026-11-16",
+  "hash": "94885c20e58f7dc8"
+ },
+ "/benchmarks/compare/claude-mythos-5-1-vs-claude-mythos-5/": {
+  "date": "2026-11-16",
+  "hash": "56e113d884d69ca0"
+ },
+ "/benchmarks/compare/claude-mythos-5-2-vs-claude-fable-5-2/": {
+  "date": "2026-11-26",
+  "hash": "07b5ee0ff3c31911"
+ },
+ "/benchmarks/compare/claude-mythos-5-vs-claude-fable-5/": {
+  "date": "2026-11-16",
+  "hash": "661a87523a1cd417"
+ },
+ "/benchmarks/compare/claude-mythos-5-vs-claude-mythos-5-1/": {
+  "date": "2026-11-16",
+  "hash": "b91b53143a389a20"
+ },
+ "/benchmarks/compare/claude-mythos-5-vs-claude-opus-5/": {
+  "date": "2026-11-16",
+  "hash": "515f52b5350473aa"
+ },
+ "/benchmarks/compare/claude-opus-4-5-vs-gemini-3-pro/": {
+  "date": "2026-11-16",
+  "hash": "a840de0c2c4efdb1"
+ },
+ "/benchmarks/compare/claude-opus-4-6-vs-claude-opus-4-5/": {
+  "date": "2026-11-16",
+  "hash": "53baef16eab49d0b"
+ },
+ "/benchmarks/compare/claude-opus-4-6-vs-gemini-3-1-pro/": {
+  "date": "2026-11-16",
+  "hash": "11452ae5d733cfda"
+ },
+ "/benchmarks/compare/claude-opus-4-7-vs-claude-opus-4-6/": {
+  "date": "2026-11-16",
+  "hash": "3cecb0ff3f65fb78"
+ },
+ "/benchmarks/compare/claude-opus-4-8-vs-claude-opus-4-7/": {
+  "date": "2026-11-16",
+  "hash": "dd1157927d696f9e"
+ },
+ "/benchmarks/compare/claude-opus-4-8-vs-claude-opus-5/": {
+  "date": "2026-11-16",
+  "hash": "454b3a9a89da95a9"
+ },
+ "/benchmarks/compare/claude-opus-5-5-vs-claude-fable-5-1/": {
+  "date": "2026-11-26",
+  "hash": "fa6098049b908190"
+ },
+ "/benchmarks/compare/claude-opus-5-5-vs-claude-opus-5/": {
+  "date": "2026-11-26",
+  "hash": "c21fd46156cefd67"
+ },
+ "/benchmarks/compare/claude-opus-5-5-vs-claude-sonnet-5-5/": {
+  "date": "2026-11-26",
+  "hash": "786c487c06b9c734"
+ },
+ "/benchmarks/compare/claude-opus-5-vs-claude-opus-4-5/": {
+  "date": "2026-11-16",
+  "hash": "fa44f8d15b7d3ce2"
+ },
+ "/benchmarks/compare/claude-opus-5-vs-gemini-3-pro/": {
+  "date": "2026-11-16",
+  "hash": "14bcb11c50586e76"
+ },
+ "/benchmarks/compare/claude-opus-5-vs-gpt-5/": {
+  "date": "2026-11-16",
+  "hash": "3f71d0f7b9d57790"
+ },
+ "/benchmarks/compare/claude-sonnet-4-5-vs-claude-haiku-4-5/": {
+  "date": "2026-11-16",
+  "hash": "e64255f34fdc103d"
+ },
+ "/benchmarks/compare/claude-sonnet-4-5-vs-claude-opus-4-5/": {
+  "date": "2026-11-16",
+  "hash": "0b5d102ef9d2314d"
+ },
+ "/benchmarks/compare/claude-sonnet-4-5-vs-gemini-2-5-pro/": {
+  "date": "2026-11-16",
+  "hash": "88bfbd9c22097abd"
+ },
+ "/benchmarks/compare/claude-sonnet-4-5-vs-gpt-5/": {
+  "date": "2026-11-16",
+  "hash": "7122b4382f54766c"
+ },
+ "/benchmarks/compare/claude-sonnet-4-6-vs-claude-sonnet-4-5/": {
+  "date": "2026-11-16",
+  "hash": "e23495f165d3c090"
+ },
+ "/benchmarks/compare/claude-sonnet-5-5-vs-claude-sonnet-5/": {
+  "date": "2026-11-26",
+  "hash": "5a09e3b4e3c60a48"
+ },
+ "/benchmarks/compare/claude-sonnet-5-vs-claude-sonnet-4-5/": {
+  "date": "2026-11-16",
+  "hash": "e2806385743b63ae"
+ },
+ "/benchmarks/compare/claude-sonnet-5-vs-gpt-5-mini/": {
+  "date": "2026-11-16",
+  "hash": "90521778f7f3206d"
+ },
+ "/benchmarks/compare/command-a-vs-llama-3-3-70b/": {
+  "date": "2026-11-16",
+  "hash": "f570bfb7321f40bf"
+ },
+ "/benchmarks/compare/corx1-5-vs-gemma-3-4b/": {
+  "date": "2026-11-16",
+  "hash": "41486ff6c3b0457e"
+ },
+ "/benchmarks/compare/corx1-5-vs-llama-3-2-1b/": {
+  "date": "2026-11-16",
+  "hash": "d3805771a1cfd925"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-corx1-5/": {
+  "date": "2026-11-16",
+  "hash": "c4c0c31b88220055"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-gemma-3-27b/": {
+  "date": "2026-11-16",
+  "hash": "4cf9fed4b1f80770"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-gpt-oss-20b/": {
+  "date": "2026-11-16",
+  "hash": "f118321a2ee3d78e"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-llama-3-3-70b/": {
+  "date": "2026-11-16",
+  "hash": "c2e05682f49745b0"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-mistral-small-3-2/": {
+  "date": "2026-11-16",
+  "hash": "59c8b25b17c862f2"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-qwen2-5-32b/": {
+  "date": "2026-11-16",
+  "hash": "1594420718439042"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-qwen3-32b/": {
+  "date": "2026-11-16",
+  "hash": "788c1111869bed38"
+ },
+ "/benchmarks/compare/corx3-8-27b-vs-qwen3-8-27b/": {
+  "date": "2026-11-16",
+  "hash": "7fbd8a8ae331d86b"
+ },
+ "/benchmarks/compare/deepseek-r1-distill-32b-vs-qwq-32b/": {
+  "date": "2026-11-16",
+  "hash": "6492dd6bf3e22d72"
+ },
+ "/benchmarks/compare/deepseek-r1-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "d428819fade01bd3"
+ },
+ "/benchmarks/compare/deepseek-r1-vs-gpt-5/": {
+  "date": "2026-11-16",
+  "hash": "a165456f65a13540"
+ },
+ "/benchmarks/compare/deepseek-v3-2-vs-claude-sonnet-4-5/": {
+  "date": "2026-11-16",
+  "hash": "13dc98f56d767667"
+ },
+ "/benchmarks/compare/deepseek-v3-2-vs-gpt-5/": {
+  "date": "2026-11-16",
+  "hash": "a60b502f9225e75c"
+ },
+ "/benchmarks/compare/deepseek-v4-1-flash-vs-deepseek-v4-pro/": {
+  "date": "2026-11-16",
+  "hash": "44bfa14d21b73b67"
+ },
+ "/benchmarks/compare/deepseek-v4-1-flash-vs-qwen3-8-max/": {
+  "date": "2026-11-26",
+  "hash": "a0045d8b276521d5"
+ },
+ "/benchmarks/compare/deepseek-v4-pro-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "4a89753941bbd1e6"
+ },
+ "/benchmarks/compare/exaone-4-32b-vs-qwen3-32b/": {
+  "date": "2026-11-16",
+  "hash": "635b11ee7fc72985"
+ },
+ "/benchmarks/compare/falcon-h1-34b-vs-qwen3-32b/": {
+  "date": "2026-11-16",
+  "hash": "4e56e1b112abed3b"
+ },
+ "/benchmarks/compare/gemini-1-5-pro-vs-gemini-2-5-pro/": {
+  "date": "2026-11-16",
+  "hash": "4b53f2c7860ce699"
+ },
+ "/benchmarks/compare/gemini-2-5-flash-vs-gpt-5-mini/": {
+  "date": "2026-11-16",
+  "hash": "0c5465f72c4c5eaa"
+ },
+ "/benchmarks/compare/gemini-2-5-pro-vs-gemini-3-pro/": {
+  "date": "2026-11-16",
+  "hash": "57a733d50745c8da"
+ },
+ "/benchmarks/compare/gemini-3-1-pro-vs-gemini-3-pro/": {
+  "date": "2026-11-16",
+  "hash": "4bb9bf2402527216"
+ },
+ "/benchmarks/compare/gemini-3-8-flash-vs-deepseek-v4-1-flash/": {
+  "date": "2026-11-26",
+  "hash": "bd7459bfb5e68144"
+ },
+ "/benchmarks/compare/gemini-3-8-flash-vs-gemini-3-5-flash/": {
+  "date": "2026-11-26",
+  "hash": "6202c578df539708"
+ },
+ "/benchmarks/compare/gemini-3-flash-vs-gemini-2-5-flash/": {
+  "date": "2026-11-16",
+  "hash": "da97a13d0a4c4538"
+ },
+ "/benchmarks/compare/gemini-4-carbon-vs-gemini-4-argon/": {
+  "date": "2026-11-26",
+  "hash": "c5c45d43c68fa7ca"
+ },
+ "/benchmarks/compare/gemini-4-hydrogen-vs-gemini-3-8-flash/": {
+  "date": "2026-11-26",
+  "hash": "d42db15c82893aca"
+ },
+ "/benchmarks/compare/gemini-4-neon-vs-gemini-4-carbon/": {
+  "date": "2026-11-26",
+  "hash": "cbc1b440694fbab6"
+ },
+ "/benchmarks/compare/gemma-2-27b-vs-gemma-3-27b/": {
+  "date": "2026-11-16",
+  "hash": "970b6f0f4a6bab44"
+ },
+ "/benchmarks/compare/gemma-3-27b-vs-llama-3-3-70b/": {
+  "date": "2026-11-16",
+  "hash": "c1da6bbc1a80dc2b"
+ },
+ "/benchmarks/compare/gemma-3-27b-vs-qwen3-32b/": {
+  "date": "2026-11-16",
+  "hash": "2c0294dffb80a9c4"
+ },
+ "/benchmarks/compare/glm-4-6-vs-claude-sonnet-4-5/": {
+  "date": "2026-11-16",
+  "hash": "7c7f6941efbcdf72"
+ },
+ "/benchmarks/compare/glm-4-6-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "e7e21f01b47fabc6"
+ },
+ "/benchmarks/compare/glm-5-3-vs-claude-opus-5/": {
+  "date": "2026-11-16",
+  "hash": "e63665c2754c3cd1"
+ },
+ "/benchmarks/compare/glm-5-3-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "405fddaa4493a05f"
+ },
+ "/benchmarks/compare/glm-5-3-vs-glm-4-6/": {
+  "date": "2026-11-16",
+  "hash": "cbb94d2eddabd4dc"
+ },
+ "/benchmarks/compare/glm-5-3-vs-kimi-k3/": {
+  "date": "2026-11-16",
+  "hash": "68d228929f6f9df8"
+ },
+ "/benchmarks/compare/glm-5-vs-glm-4-6/": {
+  "date": "2026-11-16",
+  "hash": "70e2dbcd977b26c8"
+ },
+ "/benchmarks/compare/glm-5-vs-glm-5-3/": {
+  "date": "2026-11-16",
+  "hash": "a99722dea770d89e"
+ },
+ "/benchmarks/compare/gpt-4-1-vs-gemini-2-5-pro/": {
+  "date": "2026-11-16",
+  "hash": "bcbff13fdecac3d8"
+ },
+ "/benchmarks/compare/gpt-4-turbo-vs-gpt-4o/": {
+  "date": "2026-11-16",
+  "hash": "977d779484270e81"
+ },
+ "/benchmarks/compare/gpt-4o-mini-vs-gemini-2-0-flash/": {
+  "date": "2026-11-16",
+  "hash": "ca9ed1dcc9070865"
+ },
+ "/benchmarks/compare/gpt-4o-vs-claude-3-5-sonnet/": {
+  "date": "2026-11-16",
+  "hash": "3f8f2c2e3c4eb4a2"
+ },
+ "/benchmarks/compare/gpt-4o-vs-gpt-4-1/": {
+  "date": "2026-11-16",
+  "hash": "d130207bc55606e1"
+ },
+ "/benchmarks/compare/gpt-5-2-vs-claude-opus-4-5/": {
+  "date": "2026-11-16",
+  "hash": "e5c67cc205f74c31"
+ },
+ "/benchmarks/compare/gpt-5-2-vs-gpt-5/": {
+  "date": "2026-11-16",
+  "hash": "5452f0952da11ae9"
+ },
+ "/benchmarks/compare/gpt-5-5-vs-claude-opus-4-7/": {
+  "date": "2026-11-16",
+  "hash": "28f5b9b961138daf"
+ },
+ "/benchmarks/compare/gpt-5-5-vs-gemini-3-1-pro/": {
+  "date": "2026-11-16",
+  "hash": "325d199ba7494a9e"
+ },
+ "/benchmarks/compare/gpt-5-6-luna-vs-gemini-3-5-flash/": {
+  "date": "2026-11-16",
+  "hash": "39f5f1dd5487de78"
+ },
+ "/benchmarks/compare/gpt-5-6-sol-vs-claude-opus-5/": {
+  "date": "2026-11-16",
+  "hash": "b0351f77eeb8b539"
+ },
+ "/benchmarks/compare/gpt-5-6-sol-vs-gpt-5-6-terra/": {
+  "date": "2026-11-26",
+  "hash": "4f883a76188b2fa1"
+ },
+ "/benchmarks/compare/gpt-5-mini-vs-claude-haiku-4-5/": {
+  "date": "2026-11-16",
+  "hash": "3ccd2e9a1507dfbe"
+ },
+ "/benchmarks/compare/gpt-5-vs-claude-opus-4-5/": {
+  "date": "2026-11-16",
+  "hash": "3c888e8323e9d6f7"
+ },
+ "/benchmarks/compare/gpt-5-vs-gemini-3-pro/": {
+  "date": "2026-11-16",
+  "hash": "84e709425bbcf7c3"
+ },
+ "/benchmarks/compare/gpt-5-vs-gpt-5-mini/": {
+  "date": "2026-11-16",
+  "hash": "6627c8c749680497"
+ },
+ "/benchmarks/compare/gpt-6-1-sol-vs-claude-sonnet-5-5/": {
+  "date": "2026-11-26",
+  "hash": "385b588c6f29af51"
+ },
+ "/benchmarks/compare/gpt-6-1-sol-vs-grok-4-7/": {
+  "date": "2026-11-26",
+  "hash": "616099c047deaa0f"
+ },
+ "/benchmarks/compare/gpt-6-1-terra-vs-gpt-5-6-terra/": {
+  "date": "2026-11-26",
+  "hash": "920757eeeded18ed"
+ },
+ "/benchmarks/compare/gpt-6-2-astra-vs-gemini-4-carbon/": {
+  "date": "2026-11-26",
+  "hash": "fcabff38dade08d1"
+ },
+ "/benchmarks/compare/gpt-6-2-astra-vs-gpt-6-astra/": {
+  "date": "2026-11-26",
+  "hash": "914e992d7525ac8c"
+ },
+ "/benchmarks/compare/gpt-6-2-sol-vs-claude-sonnet-5-5/": {
+  "date": "2026-11-26",
+  "hash": "f0a42588c504094e"
+ },
+ "/benchmarks/compare/gpt-6-2-sol-vs-gpt-6-1-sol/": {
+  "date": "2026-11-26",
+  "hash": "0ca0c55afab98ef7"
+ },
+ "/benchmarks/compare/gpt-6-astra-vs-claude-fable-5-1/": {
+  "date": "2026-11-26",
+  "hash": "7ca854af2498b75c"
+ },
+ "/benchmarks/compare/gpt-6-astra-vs-claude-opus-5-5/": {
+  "date": "2026-11-26",
+  "hash": "f5231b1e265ef902"
+ },
+ "/benchmarks/compare/gpt-6-astra-vs-gemini-3-8-flash/": {
+  "date": "2026-11-26",
+  "hash": "67437f5ef3f6a294"
+ },
+ "/benchmarks/compare/gpt-6-astra-vs-gpt-5-6-sol/": {
+  "date": "2026-11-26",
+  "hash": "638685e9960dc526"
+ },
+ "/benchmarks/compare/gpt-6-luna-vs-claude-haiku-5-5/": {
+  "date": "2026-11-26",
+  "hash": "c056a5d8ee78ee90"
+ },
+ "/benchmarks/compare/gpt-oss-120b-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "e474d8a90efcc2da"
+ },
+ "/benchmarks/compare/gpt-oss-120b-vs-qwen3-235b-a22b/": {
+  "date": "2026-11-16",
+  "hash": "49337d3e0dfd56e6"
+ },
+ "/benchmarks/compare/gpt-oss-20b-vs-qwen3-30b-a3b/": {
+  "date": "2026-11-16",
+  "hash": "0c202f7be0ff6fe5"
+ },
+ "/benchmarks/compare/grok-4-7-vs-grok-4/": {
+  "date": "2026-11-16",
+  "hash": "a7f0f343f2c42401"
+ },
+ "/benchmarks/compare/grok-4-fast-vs-gemini-2-5-flash/": {
+  "date": "2026-11-16",
+  "hash": "ff9af354f1eca231"
+ },
+ "/benchmarks/compare/grok-4-vs-claude-opus-4-5/": {
+  "date": "2026-11-16",
+  "hash": "bbed16249704ccc8"
+ },
+ "/benchmarks/compare/grok-4-vs-gpt-5/": {
+  "date": "2026-11-16",
+  "hash": "96c1afea8fb6cf97"
+ },
+ "/benchmarks/compare/grok-code-fast-1-vs-qwen3-coder-480b/": {
+  "date": "2026-11-16",
+  "hash": "a1b55727fff60500"
+ },
+ "/benchmarks/compare/kimi-k2-6-vs-kimi-k2-thinking/": {
+  "date": "2026-11-16",
+  "hash": "4da4f95226e1782c"
+ },
+ "/benchmarks/compare/kimi-k2-6-vs-kimi-k3/": {
+  "date": "2026-11-16",
+  "hash": "85b406e963a8e444"
+ },
+ "/benchmarks/compare/kimi-k2-thinking-vs-claude-opus-4-5/": {
+  "date": "2026-11-16",
+  "hash": "bff65fdb6cd99dd8"
+ },
+ "/benchmarks/compare/kimi-k2-thinking-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "6cbb384853d6cb60"
+ },
+ "/benchmarks/compare/kimi-k2-vs-kimi-k2-thinking/": {
+  "date": "2026-11-16",
+  "hash": "821b7ac6e427b18f"
+ },
+ "/benchmarks/compare/kimi-k3-vs-claude-opus-5/": {
+  "date": "2026-11-16",
+  "hash": "69855523542ca99d"
+ },
+ "/benchmarks/compare/kimi-k3-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "1ae75fed176282d1"
+ },
+ "/benchmarks/compare/kimi-k3-vs-glm-5-3/": {
+  "date": "2026-11-16",
+  "hash": "3a9a2f11364dac49"
+ },
+ "/benchmarks/compare/kimi-k3-vs-kimi-k2-thinking/": {
+  "date": "2026-11-16",
+  "hash": "346880e661fea0d9"
+ },
+ "/benchmarks/compare/llama-3-1-70b-vs-llama-3-3-70b/": {
+  "date": "2026-11-16",
+  "hash": "a99d1227e2f3c619"
+ },
+ "/benchmarks/compare/llama-3-3-70b-vs-qwen2-5-72b/": {
+  "date": "2026-11-16",
+  "hash": "2dc81f76dd6990df"
+ },
+ "/benchmarks/compare/llama-4-maverick-vs-deepseek-v3/": {
+  "date": "2026-11-16",
+  "hash": "aec156497ceb5ac7"
+ },
+ "/benchmarks/compare/llama-4-maverick-vs-qwen3-235b-a22b/": {
+  "date": "2026-11-16",
+  "hash": "a3176836d1ef99ca"
+ },
+ "/benchmarks/compare/minimax-m2-5-vs-minimax-m2/": {
+  "date": "2026-11-16",
+  "hash": "0f23cb5e6898b999"
+ },
+ "/benchmarks/compare/minimax-m2-vs-glm-4-6/": {
+  "date": "2026-11-16",
+  "hash": "a7b15a7db1c9ba58"
+ },
+ "/benchmarks/compare/minimax-m3-1-flash-vs-minimax-m3/": {
+  "date": "2026-11-26",
+  "hash": "ef61123f241a70e1"
+ },
+ "/benchmarks/compare/minimax-m3-vs-minimax-m2/": {
+  "date": "2026-11-26",
+  "hash": "a862ca352b99e46f"
+ },
+ "/benchmarks/compare/mistral-7b-vs-qwen2-5-7b/": {
+  "date": "2026-11-16",
+  "hash": "cb59339e9714c1ef"
+ },
+ "/benchmarks/compare/mistral-large-4-vs-deepseek-v4-pro/": {
+  "date": "2026-11-16",
+  "hash": "4bdeb96e41506b9b"
+ },
+ "/benchmarks/compare/mistral-large-4-vs-kimi-k3/": {
+  "date": "2026-11-16",
+  "hash": "daa5c950a375657b"
+ },
+ "/benchmarks/compare/mistral-medium-3-vs-gpt-4-1-mini/": {
+  "date": "2026-11-16",
+  "hash": "75220099a7bd9977"
+ },
+ "/benchmarks/compare/mistral-nemo-vs-llama-3-1-8b/": {
+  "date": "2026-11-16",
+  "hash": "b54c1b510bb75c07"
+ },
+ "/benchmarks/compare/mistral-small-3-2-vs-gemma-3-27b/": {
+  "date": "2026-11-16",
+  "hash": "84f5c65672ea54cb"
+ },
+ "/benchmarks/compare/nemotron-nano-9b-vs-qwen3-8b/": {
+  "date": "2026-11-16",
+  "hash": "30cdf523de4e62d9"
+ },
+ "/benchmarks/compare/nova-pro-vs-gpt-4o/": {
+  "date": "2026-11-16",
+  "hash": "e1422dad0dc299a3"
+ },
+ "/benchmarks/compare/o3-vs-gpt-5/": {
+  "date": "2026-11-16",
+  "hash": "189b4c59b430e2a7"
+ },
+ "/benchmarks/compare/o4-mini-vs-gpt-5-mini/": {
+  "date": "2026-11-16",
+  "hash": "3e87280907750889"
+ },
+ "/benchmarks/compare/phi-4-vs-gemma-3-12b/": {
+  "date": "2026-11-16",
+  "hash": "d44c75437d5407ad"
+ },
+ "/benchmarks/compare/phi-4-vs-qwen3-14b/": {
+  "date": "2026-11-16",
+  "hash": "64a3ae902d015881"
+ },
+ "/benchmarks/compare/qwen3-14b-vs-gemma-3-12b/": {
+  "date": "2026-11-16",
+  "hash": "c553b9cea45c31c3"
+ },
+ "/benchmarks/compare/qwen3-235b-a22b-vs-deepseek-v3-2/": {
+  "date": "2026-11-16",
+  "hash": "d9a53a81e5224a8a"
+ },
+ "/benchmarks/compare/qwen3-4b-vs-gemma-3-4b/": {
+  "date": "2026-11-16",
+  "hash": "81806fbbbb897fe8"
+ },
+ "/benchmarks/compare/qwen3-5-397b-a17b-vs-qwen3-235b-a22b/": {
+  "date": "2026-11-16",
+  "hash": "c0cbc2a28a0e21b0"
+ },
+ "/benchmarks/compare/qwen3-8-27b-vs-gemma-3-27b/": {
+  "date": "2026-11-16",
+  "hash": "adf9a6ee789309a6"
+ },
+ "/benchmarks/compare/qwen3-8-max-vs-glm-5-3/": {
+  "date": "2026-11-26",
+  "hash": "2fa58a293e8a63bf"
+ },
+ "/benchmarks/compare/qwen3-8-max-vs-kimi-k3/": {
+  "date": "2026-11-26",
+  "hash": "7c32680bc4898b87"
+ },
+ "/benchmarks/compare/qwen3-8-max-vs-qwen3-max/": {
+  "date": "2026-11-26",
+  "hash": "238678b17e0cab61"
+ },
+ "/benchmarks/compare/qwen3-8b-vs-llama-3-1-8b/": {
+  "date": "2026-11-16",
+  "hash": "2dcc7478716d5d62"
+ },
+ "/benchmarks/compare/qwen3-coder-480b-vs-claude-sonnet-4-5/": {
+  "date": "2026-11-16",
+  "hash": "18639474ac6f95a1"
+ },
+ "/benchmarks/compare/qwen3-coder-480b-vs-glm-4-6/": {
+  "date": "2026-11-16",
+  "hash": "f282590f841f419f"
+ },
+ "/benchmarks/compare/qwen4-max-vs-qwen3-8-max/": {
+  "date": "2026-11-26",
+  "hash": "24fc5716a3a0a0ae"
+ },
+ "/benchmarks/compare/qwq-32b-vs-qwen3-32b/": {
+  "date": "2026-11-16",
+  "hash": "46464cfcbf11c64e"
+ },
+ "/benchmarks/leaderboard/": {
+  "date": "2026-11-26",
+  "hash": "1bd8e876959824e8"
+ },
+ "/benchmarks/models/arctic/": {
+  "date": "2026-11-16",
+  "hash": "1aefc97f7857675d"
+ },
+ "/benchmarks/models/claude-3-5-haiku/": {
+  "date": "2026-11-26",
+  "hash": "86192d0afb57f45a"
+ },
+ "/benchmarks/models/claude-3-5-sonnet/": {
+  "date": "2026-11-26",
+  "hash": "cb873c537a545a85"
+ },
+ "/benchmarks/models/claude-3-7-sonnet/": {
+  "date": "2026-11-26",
+  "hash": "71cbaedc8ba67705"
+ },
+ "/benchmarks/models/claude-3-opus/": {
+  "date": "2026-11-26",
+  "hash": "687dbd6be0171dd3"
+ },
+ "/benchmarks/models/claude-fable-5-1/": {
+  "date": "2026-11-26",
+  "hash": "7c574d5aee3abd5c"
+ },
+ "/benchmarks/models/claude-fable-5-2/": {
+  "date": "2026-11-26",
+  "hash": "b629cbafd5228c76"
+ },
+ "/benchmarks/models/claude-fable-5/": {
+  "date": "2026-11-26",
+  "hash": "15dc548e02610685"
+ },
+ "/benchmarks/models/claude-haiku-4-5/": {
+  "date": "2026-11-26",
+  "hash": "d918a3129f7a1629"
+ },
+ "/benchmarks/models/claude-haiku-5-5/": {
+  "date": "2026-11-26",
+  "hash": "a71f92123e77038e"
+ },
+ "/benchmarks/models/claude-mythos-5-1/": {
+  "date": "2026-11-26",
+  "hash": "94daed5cb3d761f9"
+ },
+ "/benchmarks/models/claude-mythos-5-2/": {
+  "date": "2026-11-26",
+  "hash": "80174625ef2a9752"
+ },
+ "/benchmarks/models/claude-mythos-5/": {
+  "date": "2026-11-26",
+  "hash": "c15fce23d3e56d2d"
+ },
+ "/benchmarks/models/claude-opus-4-1/": {
+  "date": "2026-11-26",
+  "hash": "866c6e1c5bfe30af"
+ },
+ "/benchmarks/models/claude-opus-4-5/": {
+  "date": "2026-11-26",
+  "hash": "d8a43e6991748477"
+ },
+ "/benchmarks/models/claude-opus-4-6/": {
+  "date": "2026-11-26",
+  "hash": "8b0aec44ef6fe436"
+ },
+ "/benchmarks/models/claude-opus-4-7/": {
+  "date": "2026-11-26",
+  "hash": "bc5e64f658e0d0c1"
+ },
+ "/benchmarks/models/claude-opus-4-8/": {
+  "date": "2026-11-26",
+  "hash": "49f5fc675387f740"
+ },
+ "/benchmarks/models/claude-opus-5-5/": {
+  "date": "2026-11-26",
+  "hash": "88d96962a7ef22d8"
+ },
+ "/benchmarks/models/claude-opus-5/": {
+  "date": "2026-11-26",
+  "hash": "ff7433b31911d356"
+ },
+ "/benchmarks/models/claude-sonnet-4-5/": {
+  "date": "2026-11-26",
+  "hash": "a4055145aff28e18"
+ },
+ "/benchmarks/models/claude-sonnet-4-6/": {
+  "date": "2026-11-26",
+  "hash": "c6a5332406025f4c"
+ },
+ "/benchmarks/models/claude-sonnet-4/": {
+  "date": "2026-11-26",
+  "hash": "15bea55975416c7c"
+ },
+ "/benchmarks/models/claude-sonnet-5-5/": {
+  "date": "2026-11-26",
+  "hash": "df65b83887f47421"
+ },
+ "/benchmarks/models/claude-sonnet-5/": {
+  "date": "2026-11-26",
+  "hash": "a4b6505c5bda7381"
+ },
+ "/benchmarks/models/codestral-2508/": {
+  "date": "2026-11-16",
+  "hash": "e2c2053bb7119be5"
+ },
+ "/benchmarks/models/command-a/": {
+  "date": "2026-11-16",
+  "hash": "4341cbdcb50ee55e"
+ },
+ "/benchmarks/models/command-r-plus/": {
+  "date": "2026-11-16",
+  "hash": "bfb2e752b28494e5"
+ },
+ "/benchmarks/models/command-r7b/": {
+  "date": "2026-11-16",
+  "hash": "91f5e70443d6cac4"
+ },
+ "/benchmarks/models/corx1-5/": {
+  "date": "2026-11-16",
+  "hash": "a226b459f864638c"
+ },
+ "/benchmarks/models/corx3-8-27b/": {
+  "date": "2026-11-16",
+  "hash": "d8070116e6220404"
+ },
+ "/benchmarks/models/dbrx/": {
+  "date": "2026-11-16",
+  "hash": "7264edccc6ec44f8"
+ },
+ "/benchmarks/models/deepseek-coder-v2/": {
+  "date": "2026-11-16",
+  "hash": "77883603186ec047"
+ },
+ "/benchmarks/models/deepseek-r1-distill-32b/": {
+  "date": "2026-11-26",
+  "hash": "46a8cf7d2b490a28"
+ },
+ "/benchmarks/models/deepseek-r1-distill-8b/": {
+  "date": "2026-11-16",
+  "hash": "029852e573c37182"
+ },
+ "/benchmarks/models/deepseek-r1/": {
+  "date": "2026-11-26",
+  "hash": "d6530b60f7828cfd"
+ },
+ "/benchmarks/models/deepseek-v3-1/": {
+  "date": "2026-11-26",
+  "hash": "125f7cc11ca2b923"
+ },
+ "/benchmarks/models/deepseek-v3-2/": {
+  "date": "2026-11-26",
+  "hash": "63dc439bed6f6eba"
+ },
+ "/benchmarks/models/deepseek-v3/": {
+  "date": "2026-11-26",
+  "hash": "5d742458940082d6"
+ },
+ "/benchmarks/models/deepseek-v4-1-flash/": {
+  "date": "2026-11-26",
+  "hash": "4e3fc1efb93cb21e"
+ },
+ "/benchmarks/models/deepseek-v4-pro/": {
+  "date": "2026-11-16",
+  "hash": "b61ea837e5fc5a33"
+ },
+ "/benchmarks/models/devstral-medium/": {
+  "date": "2026-11-16",
+  "hash": "967a2247d3b69996"
+ },
+ "/benchmarks/models/dots-llm1/": {
+  "date": "2026-11-16",
+  "hash": "d2172874ad963bd2"
+ },
+ "/benchmarks/models/ernie-4-5-300b/": {
+  "date": "2026-11-26",
+  "hash": "ec2181d626aa9bc3"
+ },
+ "/benchmarks/models/ernie-5-5-flash-preview/": {
+  "date": "2026-11-26",
+  "hash": "09fe5959330c6b61"
+ },
+ "/benchmarks/models/ernie-x1/": {
+  "date": "2026-11-26",
+  "hash": "34788564e9e1b0fd"
+ },
+ "/benchmarks/models/exaone-4-32b/": {
+  "date": "2026-11-26",
+  "hash": "ca08bce61313b02d"
+ },
+ "/benchmarks/models/falcon-180b/": {
+  "date": "2026-11-16",
+  "hash": "1ce4f7de3c9d4777"
+ },
+ "/benchmarks/models/falcon-3-10b/": {
+  "date": "2026-11-16",
+  "hash": "706047cf7d216d68"
+ },
+ "/benchmarks/models/falcon-h1-34b/": {
+  "date": "2026-11-16",
+  "hash": "cfd68cf5715a5509"
+ },
+ "/benchmarks/models/gemini-1-5-flash/": {
+  "date": "2026-11-26",
+  "hash": "fb9b3ba45929876f"
+ },
+ "/benchmarks/models/gemini-1-5-pro/": {
+  "date": "2026-11-26",
+  "hash": "385140367fb7a990"
+ },
+ "/benchmarks/models/gemini-2-0-flash-lite/": {
+  "date": "2026-11-26",
+  "hash": "5056b113ba04c1dd"
+ },
+ "/benchmarks/models/gemini-2-0-flash/": {
+  "date": "2026-11-26",
+  "hash": "f1e4139fb7056ef2"
+ },
+ "/benchmarks/models/gemini-2-5-flash-lite/": {
+  "date": "2026-11-26",
+  "hash": "f84f5603ee9cd88a"
+ },
+ "/benchmarks/models/gemini-2-5-flash/": {
+  "date": "2026-11-26",
+  "hash": "5bd456e61e2c995b"
+ },
+ "/benchmarks/models/gemini-2-5-pro/": {
+  "date": "2026-11-26",
+  "hash": "7bd15b38f4ea8667"
+ },
+ "/benchmarks/models/gemini-3-1-pro/": {
+  "date": "2026-11-26",
+  "hash": "2413d31421c6d77c"
+ },
+ "/benchmarks/models/gemini-3-5-flash/": {
+  "date": "2026-11-26",
+  "hash": "2f11bcc14db9f34e"
+ },
+ "/benchmarks/models/gemini-3-8-flash/": {
+  "date": "2026-11-26",
+  "hash": "89459babea6766cf"
+ },
+ "/benchmarks/models/gemini-3-flash/": {
+  "date": "2026-11-26",
+  "hash": "05a6333c1fef0252"
+ },
+ "/benchmarks/models/gemini-3-pro/": {
+  "date": "2026-11-26",
+  "hash": "4aecc86f468b190e"
+ },
+ "/benchmarks/models/gemini-4-argon/": {
+  "date": "2026-11-26",
+  "hash": "259412c5d4b1b807"
+ },
+ "/benchmarks/models/gemini-4-carbon/": {
+  "date": "2026-11-26",
+  "hash": "24dcb3c4e7d847e6"
+ },
+ "/benchmarks/models/gemini-4-hydrogen/": {
+  "date": "2026-11-26",
+  "hash": "0b1e7f050504f124"
+ },
+ "/benchmarks/models/gemini-4-neon/": {
+  "date": "2026-11-26",
+  "hash": "d0344c3f56549652"
+ },
+ "/benchmarks/models/gemma-2-27b/": {
+  "date": "2026-11-26",
+  "hash": "0e7283b48801f84a"
+ },
+ "/benchmarks/models/gemma-2-9b/": {
+  "date": "2026-11-26",
+  "hash": "945de820628852c9"
+ },
+ "/benchmarks/models/gemma-3-12b/": {
+  "date": "2026-11-26",
+  "hash": "85309ad8551306f6"
+ },
+ "/benchmarks/models/gemma-3-27b/": {
+  "date": "2026-11-26",
+  "hash": "81008e6072aea027"
+ },
+ "/benchmarks/models/gemma-3-4b/": {
+  "date": "2026-11-26",
+  "hash": "030d6c6e7e4cb54a"
+ },
+ "/benchmarks/models/glm-4-5-air/": {
+  "date": "2026-11-26",
+  "hash": "9bfb9ef86b907638"
+ },
+ "/benchmarks/models/glm-4-5/": {
+  "date": "2026-11-26",
+  "hash": "03c2a5ab87770b2c"
+ },
+ "/benchmarks/models/glm-4-6/": {
+  "date": "2026-11-26",
+  "hash": "6bbc8f8b90faabdb"
+ },
+ "/benchmarks/models/glm-4-9b/": {
+  "date": "2026-11-16",
+  "hash": "58dac1f080ead9c0"
+ },
+ "/benchmarks/models/glm-5-3/": {
+  "date": "2026-11-16",
+  "hash": "865977bbaeb578e3"
+ },
+ "/benchmarks/models/glm-5/": {
+  "date": "2026-11-16",
+  "hash": "ffb4132b1afc032d"
+ },
+ "/benchmarks/models/gpt-3-5-turbo/": {
+  "date": "2026-11-26",
+  "hash": "46c6fd0e69790d3d"
+ },
+ "/benchmarks/models/gpt-4-1-mini/": {
+  "date": "2026-11-26",
+  "hash": "dfd317eb6cef5013"
+ },
+ "/benchmarks/models/gpt-4-1-nano/": {
+  "date": "2026-11-26",
+  "hash": "6ecbd51162645b13"
+ },
+ "/benchmarks/models/gpt-4-1/": {
+  "date": "2026-11-26",
+  "hash": "9b8388e75dc42bc2"
+ },
+ "/benchmarks/models/gpt-4-turbo/": {
+  "date": "2026-11-26",
+  "hash": "04e9b8ca1f4b56d6"
+ },
+ "/benchmarks/models/gpt-4o-mini/": {
+  "date": "2026-11-26",
+  "hash": "8dd6098dde3570f4"
+ },
+ "/benchmarks/models/gpt-4o/": {
+  "date": "2026-11-26",
+  "hash": "76b2dcfd98d90037"
+ },
+ "/benchmarks/models/gpt-5-2/": {
+  "date": "2026-11-26",
+  "hash": "6b1c103f19dd06fe"
+ },
+ "/benchmarks/models/gpt-5-5/": {
+  "date": "2026-11-26",
+  "hash": "39377c24ba86953e"
+ },
+ "/benchmarks/models/gpt-5-6-luna/": {
+  "date": "2026-11-26",
+  "hash": "d9e652b64f372924"
+ },
+ "/benchmarks/models/gpt-5-6-sol/": {
+  "date": "2026-11-26",
+  "hash": "0581e2ed85c7a014"
+ },
+ "/benchmarks/models/gpt-5-6-terra/": {
+  "date": "2026-11-26",
+  "hash": "e935cb4a8e83a7a5"
+ },
+ "/benchmarks/models/gpt-5-mini/": {
+  "date": "2026-11-26",
+  "hash": "5047334391a50113"
+ },
+ "/benchmarks/models/gpt-5-nano/": {
+  "date": "2026-11-26",
+  "hash": "e2baeddf2a612c2a"
+ },
+ "/benchmarks/models/gpt-5/": {
+  "date": "2026-11-26",
+  "hash": "cfc9e041504fa469"
+ },
+ "/benchmarks/models/gpt-6-1-sol/": {
+  "date": "2026-11-26",
+  "hash": "c14e93145b4e6449"
+ },
+ "/benchmarks/models/gpt-6-1-terra/": {
+  "date": "2026-11-26",
+  "hash": "0188454caba003e4"
+ },
+ "/benchmarks/models/gpt-6-2-astra/": {
+  "date": "2026-11-26",
+  "hash": "4ecc01f9a9acc460"
+ },
+ "/benchmarks/models/gpt-6-2-sol/": {
+  "date": "2026-11-26",
+  "hash": "ffbd361c6ee8899c"
+ },
+ "/benchmarks/models/gpt-6-astra/": {
+  "date": "2026-11-26",
+  "hash": "f59e7b6e1d8a9058"
+ },
+ "/benchmarks/models/gpt-6-luna/": {
+  "date": "2026-11-26",
+  "hash": "f59b964ae69f38f6"
+ },
+ "/benchmarks/models/gpt-oss-120b/": {
+  "date": "2026-11-26",
+  "hash": "22d6f360538649b0"
+ },
+ "/benchmarks/models/gpt-oss-20b/": {
+  "date": "2026-11-26",
+  "hash": "b4354eea4e292a8a"
+ },
+ "/benchmarks/models/granite-3-3-8b/": {
+  "date": "2026-11-16",
+  "hash": "715c4cbed849f06a"
+ },
+ "/benchmarks/models/grok-2/": {
+  "date": "2026-11-26",
+  "hash": "36aa0b2b5f6c704b"
+ },
+ "/benchmarks/models/grok-3-mini/": {
+  "date": "2026-11-26",
+  "hash": "2d5d4549d1c4d445"
+ },
+ "/benchmarks/models/grok-3/": {
+  "date": "2026-11-26",
+  "hash": "4adb97cd436ff6d9"
+ },
+ "/benchmarks/models/grok-4-7/": {
+  "date": "2026-11-26",
+  "hash": "d12b433e69ed6aec"
+ },
+ "/benchmarks/models/grok-4-fast/": {
+  "date": "2026-11-26",
+  "hash": "7a461206ce6ce203"
+ },
+ "/benchmarks/models/grok-4/": {
+  "date": "2026-11-26",
+  "hash": "759b772ec0163e0c"
+ },
+ "/benchmarks/models/grok-code-fast-1/": {
+  "date": "2026-11-16",
+  "hash": "8f598cf3150bebdb"
+ },
+ "/benchmarks/models/hermes-4-405b/": {
+  "date": "2026-11-26",
+  "hash": "aadebf0c2d9d4795"
+ },
+ "/benchmarks/models/hunyuan-a13b/": {
+  "date": "2026-11-26",
+  "hash": "16bdaaeb1c46c253"
+ },
+ "/benchmarks/models/hunyuan-large/": {
+  "date": "2026-11-16",
+  "hash": "22ee10c84cef1ae5"
+ },
+ "/benchmarks/models/hyperclova-x-seed-14b/": {
+  "date": "2026-11-16",
+  "hash": "9a052087c1491bfa"
+ },
+ "/benchmarks/models/jamba-1-6-large/": {
+  "date": "2026-11-16",
+  "hash": "a87d697db8324f29"
+ },
+ "/benchmarks/models/jamba-1-6-mini/": {
+  "date": "2026-11-16",
+  "hash": "80f8a546322bca6d"
+ },
+ "/benchmarks/models/kimi-dev-72b/": {
+  "date": "2026-11-16",
+  "hash": "874cb8bfe62ea8b0"
+ },
+ "/benchmarks/models/kimi-k2-6/": {
+  "date": "2026-11-26",
+  "hash": "beec64066ba4cb2b"
+ },
+ "/benchmarks/models/kimi-k2-thinking/": {
+  "date": "2026-11-26",
+  "hash": "beb87cb60e631b4d"
+ },
+ "/benchmarks/models/kimi-k2/": {
+  "date": "2026-11-16",
+  "hash": "cc3297f3dcc44321"
+ },
+ "/benchmarks/models/kimi-k3/": {
+  "date": "2026-11-16",
+  "hash": "30e79ce820127745"
+ },
+ "/benchmarks/models/lfm2-8b-a1b/": {
+  "date": "2026-11-16",
+  "hash": "dbb2255d64e8f522"
+ },
+ "/benchmarks/models/ling-1t/": {
+  "date": "2026-11-16",
+  "hash": "63d75d466138f4e4"
+ },
+ "/benchmarks/models/llama-3-1-405b/": {
+  "date": "2026-11-26",
+  "hash": "bd6460ae76bbf997"
+ },
+ "/benchmarks/models/llama-3-1-70b/": {
+  "date": "2026-11-26",
+  "hash": "7f2e06ad96c7dc51"
+ },
+ "/benchmarks/models/llama-3-1-8b/": {
+  "date": "2026-11-26",
+  "hash": "e7e1b603ff0f24c3"
+ },
+ "/benchmarks/models/llama-3-2-11b/": {
+  "date": "2026-11-16",
+  "hash": "d2f6994363c51085"
+ },
+ "/benchmarks/models/llama-3-2-1b/": {
+  "date": "2026-11-16",
+  "hash": "2ef71077b739a198"
+ },
+ "/benchmarks/models/llama-3-2-3b/": {
+  "date": "2026-11-16",
+  "hash": "cbcc4dc7a6721f2e"
+ },
+ "/benchmarks/models/llama-3-2-90b/": {
+  "date": "2026-11-16",
+  "hash": "49dc23559cddaaf9"
+ },
+ "/benchmarks/models/llama-3-3-70b/": {
+  "date": "2026-11-26",
+  "hash": "700cafa543abece9"
+ },
+ "/benchmarks/models/llama-4-maverick/": {
+  "date": "2026-11-26",
+  "hash": "e8d27e1fbff05a77"
+ },
+ "/benchmarks/models/llama-4-scout/": {
+  "date": "2026-11-26",
+  "hash": "d8cfcc85f6127654"
+ },
+ "/benchmarks/models/magistral-medium/": {
+  "date": "2026-11-26",
+  "hash": "9fe343d05262f456"
+ },
+ "/benchmarks/models/magistral-small/": {
+  "date": "2026-11-26",
+  "hash": "c2fed8e465cab410"
+ },
+ "/benchmarks/models/mercury-coder/": {
+  "date": "2026-11-16",
+  "hash": "eaa33ef3b27f9df5"
+ },
+ "/benchmarks/models/minicpm4-8b/": {
+  "date": "2026-11-16",
+  "hash": "3dd4a951d2f2c094"
+ },
+ "/benchmarks/models/minimax-m1/": {
+  "date": "2026-11-26",
+  "hash": "89d9c727a350f629"
+ },
+ "/benchmarks/models/minimax-m2-5/": {
+  "date": "2026-11-26",
+  "hash": "115509ed0a18db93"
+ },
+ "/benchmarks/models/minimax-m2/": {
+  "date": "2026-11-26",
+  "hash": "83c439c523da911a"
+ },
+ "/benchmarks/models/minimax-m3-1-flash/": {
+  "date": "2026-11-26",
+  "hash": "7e314c38a74cb594"
+ },
+ "/benchmarks/models/minimax-m3/": {
+  "date": "2026-11-26",
+  "hash": "8b3b86774313a1e3"
+ },
+ "/benchmarks/models/ministral-8b/": {
+  "date": "2026-11-16",
+  "hash": "a60a108ed57d75b9"
+ },
+ "/benchmarks/models/mistral-7b/": {
+  "date": "2026-11-16",
+  "hash": "b7aabdbaa2ca02ae"
+ },
+ "/benchmarks/models/mistral-large-2/": {
+  "date": "2026-11-26",
+  "hash": "b2a7e6afe447bbbf"
+ },
+ "/benchmarks/models/mistral-large-4/": {
+  "date": "2026-11-26",
+  "hash": "4d9ea6c83d538e2d"
+ },
+ "/benchmarks/models/mistral-medium-3/": {
+  "date": "2026-11-26",
+  "hash": "d75a283cb96f0653"
+ },
+ "/benchmarks/models/mistral-nemo/": {
+  "date": "2026-11-16",
+  "hash": "bd202e42e2ed6bd1"
+ },
+ "/benchmarks/models/mistral-small-3-2/": {
+  "date": "2026-11-26",
+  "hash": "b2a52924a8dd1ac1"
+ },
+ "/benchmarks/models/mixtral-8x22b/": {
+  "date": "2026-11-16",
+  "hash": "ee61677a7d9dd398"
+ },
+ "/benchmarks/models/molmo-72b/": {
+  "date": "2026-11-16",
+  "hash": "5603f9a50684b215"
+ },
+ "/benchmarks/models/nemotron-nano-9b/": {
+  "date": "2026-11-26",
+  "hash": "c2944bb0d568b690"
+ },
+ "/benchmarks/models/nemotron-super-49b/": {
+  "date": "2026-11-26",
+  "hash": "3863efe26d17eae5"
+ },
+ "/benchmarks/models/nemotron-ultra-253b/": {
+  "date": "2026-11-26",
+  "hash": "65ad7852676e402b"
+ },
+ "/benchmarks/models/nova-lite/": {
+  "date": "2026-11-16",
+  "hash": "6978db4d74afe408"
+ },
+ "/benchmarks/models/nova-micro/": {
+  "date": "2026-11-16",
+  "hash": "46cba61b0e62e162"
+ },
+ "/benchmarks/models/nova-premier/": {
+  "date": "2026-11-26",
+  "hash": "a6ffbb7ac42d1cd5"
+ },
+ "/benchmarks/models/nova-pro/": {
+  "date": "2026-11-26",
+  "hash": "1289428c2af7b32c"
+ },
+ "/benchmarks/models/o1-mini/": {
+  "date": "2026-11-26",
+  "hash": "e85b1bc732fb6cb8"
+ },
+ "/benchmarks/models/o1/": {
+  "date": "2026-11-26",
+  "hash": "46e888ae88c43735"
+ },
+ "/benchmarks/models/o3-mini/": {
+  "date": "2026-11-26",
+  "hash": "f3d8810cd1ed74db"
+ },
+ "/benchmarks/models/o3/": {
+  "date": "2026-11-26",
+  "hash": "bfa2e8f88d427f45"
+ },
+ "/benchmarks/models/o4-mini/": {
+  "date": "2026-11-26",
+  "hash": "6586c0df0107a97e"
+ },
+ "/benchmarks/models/olmo-2-13b/": {
+  "date": "2026-11-16",
+  "hash": "ad6fe4fea0b2d6da"
+ },
+ "/benchmarks/models/olmo-2-32b/": {
+  "date": "2026-11-16",
+  "hash": "c40fafdd721f749d"
+ },
+ "/benchmarks/models/openelm-3b/": {
+  "date": "2026-11-16",
+  "hash": "e9fcb731933798bf"
+ },
+ "/benchmarks/models/palmyra-x5/": {
+  "date": "2026-11-16",
+  "hash": "4204f756aabb734c"
+ },
+ "/benchmarks/models/phi-3-5-moe/": {
+  "date": "2026-11-16",
+  "hash": "579c1d63989c4b06"
+ },
+ "/benchmarks/models/phi-4-multimodal/": {
+  "date": "2026-11-16",
+  "hash": "6cfdcbbbcd6c7753"
+ },
+ "/benchmarks/models/phi-4-reasoning-plus/": {
+  "date": "2026-11-26",
+  "hash": "796bdc38fa053e92"
+ },
+ "/benchmarks/models/phi-4/": {
+  "date": "2026-11-26",
+  "hash": "0600cb95eb22ae83"
+ },
+ "/benchmarks/models/pixtral-large/": {
+  "date": "2026-11-16",
+  "hash": "86aab0532b09488d"
+ },
+ "/benchmarks/models/qwen2-5-32b/": {
+  "date": "2026-11-26",
+  "hash": "93d851ae8465638e"
+ },
+ "/benchmarks/models/qwen2-5-72b/": {
+  "date": "2026-11-26",
+  "hash": "79d8338ad705d02c"
+ },
+ "/benchmarks/models/qwen2-5-7b/": {
+  "date": "2026-11-26",
+  "hash": "bd7a55dd434ee676"
+ },
+ "/benchmarks/models/qwen2-5-coder-32b/": {
+  "date": "2026-11-26",
+  "hash": "87cebbcaa4a5616a"
+ },
+ "/benchmarks/models/qwen2-5-vl-72b/": {
+  "date": "2026-11-26",
+  "hash": "5f403f0434031f71"
+ },
+ "/benchmarks/models/qwen3-14b/": {
+  "date": "2026-11-26",
+  "hash": "8e71a1be07a678cf"
+ },
+ "/benchmarks/models/qwen3-235b-a22b/": {
+  "date": "2026-11-26",
+  "hash": "146b97c9c9b34f3d"
+ },
+ "/benchmarks/models/qwen3-30b-a3b/": {
+  "date": "2026-11-26",
+  "hash": "945306cd0a3a2036"
+ },
+ "/benchmarks/models/qwen3-32b/": {
+  "date": "2026-11-26",
+  "hash": "8818911636d2dd9e"
+ },
+ "/benchmarks/models/qwen3-4b/": {
+  "date": "2026-11-26",
+  "hash": "920062a4bd6b6ee4"
+ },
+ "/benchmarks/models/qwen3-5-397b-a17b/": {
+  "date": "2026-11-26",
+  "hash": "6a9c81fb75a84d74"
+ },
+ "/benchmarks/models/qwen3-8-27b/": {
+  "date": "2026-11-26",
+  "hash": "cb26c541dab5c2cd"
+ },
+ "/benchmarks/models/qwen3-8-max/": {
+  "date": "2026-11-26",
+  "hash": "bbad1da39b7bc88d"
+ },
+ "/benchmarks/models/qwen3-8b/": {
+  "date": "2026-11-26",
+  "hash": "ff73f4817b979cfd"
+ },
+ "/benchmarks/models/qwen3-coder-480b/": {
+  "date": "2026-11-26",
+  "hash": "f8e8d48f8e73d3aa"
+ },
+ "/benchmarks/models/qwen3-max/": {
+  "date": "2026-11-26",
+  "hash": "ccc8faafefb56587"
+ },
+ "/benchmarks/models/qwen4-max/": {
+  "date": "2026-11-26",
+  "hash": "b93462f3ab83f35e"
+ },
+ "/benchmarks/models/qwq-32b/": {
+  "date": "2026-11-26",
+  "hash": "1414732604ccd05a"
+ },
+ "/benchmarks/models/r1-1776/": {
+  "date": "2026-11-16",
+  "hash": "fb4c06cbf5351858"
+ },
+ "/benchmarks/models/reka-core/": {
+  "date": "2026-11-16",
+  "hash": "fd8725c09521576e"
+ },
+ "/benchmarks/models/reka-flash-3/": {
+  "date": "2026-11-26",
+  "hash": "8de677a3a6793bd0"
+ },
+ "/benchmarks/models/sarvam-m/": {
+  "date": "2026-11-16",
+  "hash": "9971db60c607e52e"
+ },
+ "/benchmarks/models/seed-oss-36b/": {
+  "date": "2026-11-26",
+  "hash": "76cf5116a4b8f616"
+ },
+ "/benchmarks/models/solar-pro-2/": {
+  "date": "2026-11-16",
+  "hash": "3788a55579ee93ec"
+ },
+ "/benchmarks/models/sonar-pro/": {
+  "date": "2026-11-16",
+  "hash": "e078710f2a4ddab8"
+ },
+ "/benchmarks/models/sonar-reasoning-pro/": {
+  "date": "2026-11-26",
+  "hash": "f075e85f96ab8fb0"
+ },
+ "/benchmarks/models/step-3/": {
+  "date": "2026-11-16",
+  "hash": "eeb204bbb4a00222"
+ },
+ "/benchmarks/models/tristream-svs/": {
+  "date": "2026-11-16",
+  "hash": "35ab33138ac58c33"
+ },
+ "/benchmarks/models/xlam-2-70b/": {
+  "date": "2026-11-16",
+  "hash": "d63ef3a35a43a05e"
+ },
+ "/benchmarks/models/yi-1-5-34b/": {
+  "date": "2026-11-16",
+  "hash": "20ecac2bd8dc9043"
+ },
+ "/benchmarks/models/yi-large/": {
+  "date": "2026-11-16",
+  "hash": "519170dd1834f853"
+ },
+ "/benchmarks/tests/aime/": {
+  "date": "2026-11-26",
+  "hash": "5d5f1baacce995ab"
+ },
+ "/benchmarks/tests/arena/": {
+  "date": "2026-11-26",
+  "hash": "eaeac4df0434eeca"
+ },
+ "/benchmarks/tests/frontier/": {
+  "date": "2026-11-26",
+  "hash": "5df200a39d845d80"
+ },
+ "/benchmarks/tests/gpqa/": {
+  "date": "2026-11-26",
+  "hash": "e7c9cd1510bd5539"
+ },
+ "/benchmarks/tests/humaneval/": {
+  "date": "2026-11-26",
+  "hash": "5cdef8b3fb783b20"
+ },
+ "/benchmarks/tests/ifeval/": {
+  "date": "2026-11-26",
+  "hash": "ed73870779cc9177"
+ },
+ "/benchmarks/tests/lcb/": {
+  "date": "2026-11-26",
+  "hash": "e3a1eb6542c82408"
+ },
+ "/benchmarks/tests/math/": {
+  "date": "2026-11-26",
+  "hash": "57e060b00611a1b0"
+ },
+ "/benchmarks/tests/mmlu_pro/": {
+  "date": "2026-11-26",
+  "hash": "cdeeb646177c578d"
+ },
+ "/benchmarks/tests/mmmu/": {
+  "date": "2026-11-26",
+  "hash": "7be7e13458acc6e7"
+ },
+ "/benchmarks/tests/swe/": {
+  "date": "2026-11-26",
+  "hash": "d6f964fca47ad54a"
+ },
+ "/benchmarks/tests/swe_pro/": {
+  "date": "2026-11-26",
+  "hash": "595a452e258a9b0c"
+ },
+ "/benchmarks/tests/tbench/": {
+  "date": "2026-11-26",
+  "hash": "fc1dad1229b8dfa6"
+ },
+ "/benchmarks/tests/tbench20/": {
+  "date": "2026-11-26",
+  "hash": "6c881cc5722d9e60"
+ },
+ "/benchmarks/tests/tbench21/": {
+  "date": "2026-11-26",
+  "hash": "68215cc2d601e0e2"
+ }
+}

@@ -20,8 +20,12 @@ Rerun after editing tools/model_catalog.py. Output:
     /assets/data/models.json             the catalogue, for the compare tool
 """
 
+import datetime
+import hashlib
+import html as _html
 import json
 import os
+import re
 import shutil
 import sys
 
@@ -47,7 +51,34 @@ UPDATED = "2026-11-26"
 # ===========================================================================
 # Small helpers
 # ===========================================================================
+# Each page's own last-changed date, for its dateModified and the sitemap's lastmod. Rebuilding used to stamp
+# all of them with UPDATED, so every page claimed a change whenever one model was added, and a search engine
+# stops trusting a lastmod that is always new. A page whose text is the same as last time keeps its date; a
+# page whose text changed gets the day of the build. Markup, scripts and styles are not the page's text.
+LASTMOD_PATH = os.path.join(ROOT, "tools", "benchmarks-lastmod.json")
+try:
+    with open(LASTMOD_PATH, encoding="utf-8") as _f:
+        LASTMOD = json.load(_f)
+except FileNotFoundError:
+    LASTMOD = {}
+PAGE_DATES = {}
+BUILD_DAY = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
+_NOT_TEXT = re.compile(r"<(script|style)\b.*?</\1>|<[^>]+>", re.S | re.I)
+
+
+def text_hash(html_text):
+    """The words and numbers a reader sees on the page."""
+    text = " ".join(_html.unescape(_NOT_TEXT.sub(" ", html_text)).split())
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+
 def write(rel_path, html_text):
+    key = "/" + rel_path.strip("/") + "/"
+    digest = text_hash(html_text)
+    known = LASTMOD.get(key)
+    date = known["date"] if known and known.get("hash") == digest else BUILD_DAY
+    PAGE_DATES[key] = {"date": date, "hash": digest}
+    html_text = html_text.replace('"dateModified": "%s"' % UPDATED, '"dateModified": "%s"' % date)
     path = os.path.join(ROOT, rel_path.strip("/"), "index.html")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
@@ -760,7 +791,7 @@ def build_model(m):
         <h2 id="vs-title">%s compared</h2></div>
       <div class="bm-vs-grid">%s</div>
       <div class="btn-row" style="margin-top:20px">
-        <a class="btn btn-ghost" href="/benchmarks/compare/?m=%s">Compare with something else %s</a>
+        <a class="btn btn-ghost" href="/benchmarks/compare/#m=%s">Compare with something else %s</a>
       </div>
     </div>
   </section>""" % (esc(m["name"]), vs_html, esc(slug), ICON_ARROW)
@@ -769,7 +800,7 @@ def build_model(m):
   <section class="section-tight">
     <div class="shell">
       <div class="btn-row">
-        <a class="btn btn-primary" href="/benchmarks/compare/?m=%s">Compare %s with another model %s</a>
+        <a class="btn btn-primary" href="/benchmarks/compare/#m=%s">Compare %s with another model %s</a>
       </div>
     </div>
   </section>""" % (esc(slug), esc(m["name"]), ICON_ARROW)
@@ -795,7 +826,7 @@ def build_model(m):
     if m.get("local"):
         links.append('<a class="btn btn-primary" href="%s">Full model page %s</a>'
                      % (m["local"], ICON_ARROW))
-    if co.get("site") and "https://" + co["site"] == SITE:
+    if co.get("site") and co["site"].removeprefix("www.") == SITE.split("://", 1)[1].removeprefix("www."):
         # Our own models: the maker's site is this one, so stay in the tab.
         links.append('<a class="btn btn-ghost" href="/">%s %s</a>' % (esc(co["name"]), ICON_ARROW))
     elif co.get("site"):
@@ -1302,7 +1333,7 @@ def build_comparison(a_slug, b_slug):
       %(table)s
       <div style="margin-top:24px">%(provenance)s</div>
       <div class="btn-row" style="margin-top:22px">
-        <a class="btn btn-primary" href="/benchmarks/compare/?m=%(sa)s,%(sb)s">Add a third model %(arrow)s</a>
+        <a class="btn btn-primary" href="/benchmarks/compare/#m=%(sa)s,%(sb)s">Add a third model %(arrow)s</a>
         <a class="btn btn-ghost" href="/benchmarks/">Back to all models</a>
       </div>
     </div>
@@ -2048,7 +2079,7 @@ def build_corx_company(cid, meta):
         </div>
       </div>
       <div class="btn-row" style="margin-top:22px">
-        <a class="btn btn-primary" href="/benchmarks/compare/?m=%(slugs)s">Compare our models %(arrow)s</a>
+        <a class="btn btn-primary" href="/benchmarks/compare/#m=%(slugs)s">Compare our models %(arrow)s</a>
         <a class="btn btn-ghost" href="/benchmarks/">All %(total)d models in the index</a>
         <a class="btn btn-ghost" href="/models/">Our Products %(arrow)s</a>
       </div>
@@ -2244,7 +2275,7 @@ def write_sitemap_fragment():
     <priority>%s</priority>
     <xhtml:link rel="alternate" hreflang="en" href="%s%s"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="%s%s"/>
-  </url>""" % (SITE, loc, UPDATED, freq, priority, SITE, loc, SITE, loc))
+  </url>""" % (SITE, loc, PAGE_DATES.get(loc, {}).get("date", BUILD_DAY), freq, priority, SITE, loc, SITE, loc))
     frag = "\n".join(parts)
     path = os.path.join(ROOT, "tools", "sitemap-benchmarks.xml")
     with open(path, "w", encoding="utf-8") as f:
@@ -2275,6 +2306,9 @@ def main():
 
     json_path, json_size = export_json()
     write_sitemap_fragment()
+    with open(LASTMOD_PATH, "w", encoding="utf-8") as f:
+        json.dump(dict(sorted(PAGE_DATES.items())), f, indent=1)
+        f.write("\n")
 
     pages = 3 + len(MODELS) + len(COMPARISONS) + len(BENCHMARKS) + len(COMPANIES)
     print("Built %d pages:" % pages)
